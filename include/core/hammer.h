@@ -28,6 +28,10 @@ private:
     void hitMethod(const MethodAst &ast, Buf &buf);
     void hitBop(const BopAst &ast, Buf &buf);
 
+    void hitListBegin(const ListAst &ast, Buf &buf);
+    void hitListEnd(const ListAst &ast, Buf &buf);
+    void hitListSep(const ListAst &ast, Buf &buf, size_t pos);
+
 private:
     Tokens &tokens;
 };

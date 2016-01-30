@@ -4,7 +4,8 @@
 
 std::string BoneToken::syms[32]
 {
-    "class ", " {", "}", "void ", "(", ")", ";", " = "
+    "class ", " {", "}", "void ", "(", ")", ";",
+    " = ", " + ", " - ", " * ", " / "
 };
 
 BoneToken::BoneToken(const Ast *ast, Sym sym) :

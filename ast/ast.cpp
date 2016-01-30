@@ -106,8 +106,12 @@ size_t Ast::indexOf(const Ast *child) const
 int Ast::indentLevel() const
 {
     int ret = 0;
-    for (const Ast *a = this; a->parent != a; a = &a->getParent())
-        ret += Ast::isList(*a);
+    Type ptype = parent->type;
+    bool hasIndent = ptype == Type::METHOD_LIST
+            || ptype == Type::STMT_LIST;
+    if (hasIndent)
+        for (const Ast *a = this; a->parent != a; a = &a->getParent())
+            ret += Ast::isList(*a);
     return ret;
 }
 

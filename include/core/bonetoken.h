@@ -11,7 +11,7 @@ public:
         // MUST SYNC ORDER WITH 'SYMS'
         CLASS, LBRACE, RBRACE, VOID, LPAREN, RPAREN,
         SEMICOLON,
-        ASSIGN
+        ASSIGN, ADD, SUB, MUL, DIV
     };
 
     BoneToken(const Ast *ast, Sym sym);

@@ -3,6 +3,7 @@
 #include "core/fleshtoken.h"
 #include "core/bonetoken.h"
 #include "core/soultoken.h"
+#include "ast/termlistast.h"
 
 #include <cassert>
 
@@ -51,41 +52,14 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
 
 void Hammer::hitList(const ListAst &ast, Buf &buf)
 {
-    switch (ast.getType()) {
-    case Ast::Type::DECL_LIST:
-        buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
-        break;
-    default:
-        break;
-    }
+    hitListBegin(ast, buf);
 
     for (size_t i = 0; i < ast.size(); i++) {
         hitGeneral(ast.at(i), buf);
-        switch (ast.getType()) {
-        case Ast::Type::CLASS_LIST:
-        case Ast::Type::METHOD_LIST:
-            buf.push_back(nullptr);
-            buf.push_back(nullptr);
-            break;
-        case Ast::Type::DECL_LIST:
-            // TODO comma
-            break;
-        case Ast::Type::STMT_LIST:
-            buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
-            buf.push_back(nullptr);
-            break;
-        default:
-            break;
-        }
+        hitListSep(ast, buf, i);
     }
 
-    switch (ast.getType()) {
-    case Ast::Type::DECL_LIST:
-        buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
-        break;
-    default:
-        break;
-    }
+    hitListEnd(ast, buf);
 }
 
 void Hammer::hitClass(const ClassAst &ast, Buf &buf)
@@ -128,5 +102,66 @@ void Hammer::hitBop(const BopAst &ast, Hammer::Buf &buf)
 
     // rhs
     hitGeneral(ast.at(1), buf);
+}
+
+void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
+{
+    switch (ast.getType()) {
+    case Ast::Type::DECL_LIST:
+        buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
+        break;
+    default:
+        break;
+    }
+}
+
+void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
+{
+    switch (ast.getType()) {
+    case Ast::Type::DECL_LIST:
+        buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
+        break;
+    default:
+        break;
+    }
+}
+
+void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
+{
+    bool end = pos == ast.size() - 1;
+
+    switch (ast.getType()) {
+    case Ast::Type::CLASS_LIST:
+    case Ast::Type::METHOD_LIST:
+        buf.push_back(nullptr);
+        if (!end)
+            buf.push_back(nullptr);
+        break;
+    case Ast::Type::DECL_LIST:
+        // TODO comma
+        break;
+    case Ast::Type::STMT_LIST:
+        buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
+        buf.push_back(nullptr);
+        break;
+    case Ast::Type::ADDSUB_LIST:
+        if (!end) {
+            const TermListAst &tast = TermListAst::fromAst(ast);
+            BoneToken::Sym sym = tast.rasingAt(pos) ? BoneToken::Sym::ADD
+                                                    : BoneToken::Sym::SUB;
+            buf.push_back(new BoneToken(&ast, sym));
+        }
+        break;
+    case Ast::Type::MULDIV_LIST:
+        if (!end) {
+            const TermListAst &tast = TermListAst::fromAst(ast);
+            BoneToken::Sym sym = tast.rasingAt(pos) ? BoneToken::Sym::MUL
+                                                    : BoneToken::Sym::DIV;
+            buf.push_back(new BoneToken(&ast, sym));
+        }
+        break;
+    default:
+        break;
+    }
 }
 

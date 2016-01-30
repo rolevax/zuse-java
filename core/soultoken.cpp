@@ -17,11 +17,6 @@ const std::string &SoulToken::getText() const
     if (getRole() != Role::BEGIN)
         return tab[0];
 
-    Ast::Type pt = getAst()->getParent().getType();
-    if (pt == Ast::Type::METHOD_LIST || pt == Ast::Type::STMT_LIST) {
-        return tab[getAst()->indentLevel()];
-    } else {
-        return tab[0];
-    }
+    return tab[getAst()->indentLevel()];
 }
 
