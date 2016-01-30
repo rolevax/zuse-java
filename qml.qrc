@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Editor.qml</file>
+        <file>LightBar.qml</file>
+        <file>Street.qml</file>
+        <file>Asphalt.qml</file>
+        <file>HotLight.qml</file>
+    </qresource>
+</RCC>

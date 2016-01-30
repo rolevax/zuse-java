@@ -1,0 +1,80 @@
+#ifndef AST_H
+#define AST_H
+
+#include <cstddef>
+#include <memory>
+
+#include <iostream>
+
+class RootAst;
+
+class Ast
+{
+public:
+    /**
+     * @brief type of a node in the language tree
+     * KEYTAL means "keyword literal".
+     */
+    enum class Type {
+        /* deprecated */
+        ROOT, ARRAY, OBJECT, PAIR, KEY, STRING, KEYTAL,
+        /* in use */
+        /* MUST sync with isList() functions when change */
+        CLASS_LIST, METHOD_LIST, DECL_LIST, STMT_LIST,
+        ADDSUB_LIST, MULDIV_LIST,
+        /* MUST sync with isMap() functions when change */
+        CLASS, METHOD, DECL, STMT,
+        ASSIGN,
+        /* scalar types, by !isList() && !isMap() */
+        IDENT, NUMBER,
+    };
+    virtual void dump() const {}
+
+    // TODO: member?
+    static bool isList(Type type);
+    static bool isList(const Ast &a);
+    static bool isMap(Type type);
+    static bool isMap(const Ast &a);
+    static bool isScalar(Type type);
+    static bool isScalar(const Ast &a);
+    static bool isChangeable(Type type);
+    static bool isChangeable(const Ast &a);
+
+    Ast(Type t);
+    Ast(const Ast &copy) = delete;
+    Ast &operator=(const Ast &assign) = delete;
+    virtual ~Ast() = default;
+
+    /**
+     * @brief Recursive value deep copy
+     * @return Ast with same value but parent is null
+     */
+    virtual Ast *clone() const { return nullptr; }
+
+    Type getType() const;
+    Ast &getParent() const;
+
+    void insert(size_t pos, Ast *child);
+    void append(Ast *subtree)
+    {
+        insert(size(), subtree);
+    }
+
+    virtual std::unique_ptr<Ast> remove(size_t pos);
+    void change(size_t pos, Ast *next);
+    void nest(size_t pos, Ast *nester);
+    virtual size_t size() const;
+    virtual Ast &at(size_t pos) const;
+    virtual size_t indexOf(const Ast *child) const;
+    int indentLevel() const;
+
+protected:
+    virtual void doInsert(size_t pos, Ast *child);
+    virtual void doChange(size_t pos, Ast *next);
+
+protected:
+    Type type;
+    Ast *parent;
+};
+
+#endif // AST_H
