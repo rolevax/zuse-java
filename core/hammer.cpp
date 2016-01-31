@@ -147,16 +147,16 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
     case Ast::Type::ADDSUB_LIST:
         if (!end) {
             const TermListAst &tast = TermListAst::fromAst(ast);
-            BoneToken::Sym sym = tast.rasingAt(pos) ? BoneToken::Sym::ADD
-                                                    : BoneToken::Sym::SUB;
+            BoneToken::Sym sym = tast.rasingAt(pos + 1) ? BoneToken::Sym::ADD
+                                                        : BoneToken::Sym::SUB;
             buf.push_back(new BoneToken(&ast, sym));
         }
         break;
     case Ast::Type::MULDIV_LIST:
         if (!end) {
             const TermListAst &tast = TermListAst::fromAst(ast);
-            BoneToken::Sym sym = tast.rasingAt(pos) ? BoneToken::Sym::MUL
-                                                    : BoneToken::Sym::DIV;
+            BoneToken::Sym sym = tast.rasingAt(pos + 1) ? BoneToken::Sym::MUL
+                                                        : BoneToken::Sym::DIV;
             buf.push_back(new BoneToken(&ast, sym));
         }
         break;

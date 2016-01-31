@@ -51,6 +51,7 @@ TermListAst *TermListAst::makeBop(Ast *lhs, Ast *rhs, Op op)
         TermListAst *ret = new TermListAst(targetType);
         ret->append(lhs);
         ret->append(rhs);
+        ret->setRasingAt(1, midRaise);
         return ret;
     }
 }

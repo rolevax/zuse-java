@@ -373,6 +373,7 @@ void Tokens::joinLine(size_t r)
  * @param r row of token
  * @param c column of token
  * @return column index in terms of character
+ * "How many characters are there before the token?"
  */
 size_t Tokens::anchor(size_t r, size_t c)
 {
@@ -387,7 +388,12 @@ Region Tokens::anchor(const Region &r)
 {
    Region c(r);
    c.bc = anchor(c.br, c.bc);
-   c.ec = anchor(c.er, c.ec + 1);
+   if (r.ec == 0) {
+       c.er = r.er - 1;
+       c.ec = anchor(r.er - 1, rows[r.er - 1].size());
+   } else {
+       c.ec = anchor(c.er, c.ec + 1);
+   }
    return c;
 }
 

@@ -41,7 +41,8 @@ Window {
         nameFilters: [ "JSON files (*.java)", "All files (*)" ]
         onAccepted: {
             // slice() to get rid of "file://" prefix
-            editor.filename = fileUrl.toString().slice(7);
+            var filename = fileUrl.toString().slice(7);
+            editor.load(filename);
         }
     }
 

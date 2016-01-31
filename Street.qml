@@ -74,6 +74,9 @@ Item {
         var up = high ? highUp : lowUp;
         var down = high ? highDown : lowDown;
 
+        // suck tabs after bc
+        bc = Math.max(bc, asph.model.get(br).modelText.search(/\S/));
+
         // determine leftmost and rightmost non-space position
         var leftMost = bc;
         var rightMost = ec;

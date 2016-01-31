@@ -77,7 +77,8 @@ Rectangle {
         event.accepted = true;
     }
 
-    onFilenameChanged: {
+    function load(fn) {
+        filename = fn;
         pDoc.load(filename);
     }
 
