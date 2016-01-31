@@ -19,7 +19,7 @@ void StringInputMode::keyboard(char key)
         doc.pop();
         break;
     default:
-        assert(Ast::isScalar(doc.innerType()));
+        assert(doc.getInner().isScalar());
         doc.scalarAppend(key);
         break;
     }
@@ -28,7 +28,7 @@ void StringInputMode::keyboard(char key)
 void StringInputMode::onPushed()
 {
     if (clear) {
-        assert(Ast::isScalar(doc.innerType()));
+        assert(doc.getInner().isScalar());
         doc.scalarClear();
     }
 

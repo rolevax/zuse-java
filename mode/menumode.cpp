@@ -54,6 +54,7 @@ void MenuMode::emptyKeyboard(char key)
 void MenuMode::onPushed()
 {
     // early leave if only one choice
+    /*
     bool underTyrant = context != Context::ASSART
             && doc.outerType() == Ast::Type::OBJECT;
     bool intoTyrant = context == Context::ASSART
@@ -67,6 +68,7 @@ void MenuMode::onPushed()
     }
 
     doc.toggleTension(true);
+    */
 }
 
 void MenuMode::onPopped()

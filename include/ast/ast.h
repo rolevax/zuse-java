@@ -28,22 +28,18 @@ public:
         /* scalar types, by !isList() && !isMap() */
         IDENT, NUMBER,
     };
-    virtual void dump() const {}
-
-    // TODO: member?
-    static bool isList(Type type);
-    static bool isList(const Ast &a);
-    static bool isMap(Type type);
-    static bool isMap(const Ast &a);
-    static bool isScalar(Type type);
-    static bool isScalar(const Ast &a);
-    static bool isChangeable(Type type);
-    static bool isChangeable(const Ast &a);
 
     Ast(Type t);
     Ast(const Ast &copy) = delete;
     Ast &operator=(const Ast &assign) = delete;
     virtual ~Ast() = default;
+
+    virtual void dump() const {} // for debug use
+
+    bool isList() const;
+    bool isMap() const;
+    bool isScalar() const;
+    bool isChangeable() const;
 
     /**
      * @brief Recursive value deep copy

@@ -4,13 +4,13 @@
 
 ScalarAst &ScalarAst::fromAst(Ast &ast)
 {
-    assert(Ast::isScalar(ast));
+    assert(ast.isScalar());
     return static_cast<ScalarAst&>(ast);
 }
 
 const ScalarAst &ScalarAst::fromAst(const Ast &ast)
 {
-    assert(Ast::isScalar(ast));
+    assert(ast.isScalar());
     return static_cast<const ScalarAst&>(ast);
 }
 

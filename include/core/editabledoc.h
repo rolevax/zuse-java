@@ -14,8 +14,8 @@ public:
     virtual void push(Mode *mode) = 0;
     virtual void pop(Mode *nextPush = nullptr) = 0;
 
-    virtual Ast::Type outerType() = 0;
-    virtual Ast::Type innerType() = 0;
+    virtual const Ast &getOuter() const = 0;
+    virtual const Ast &getInner() const = 0;
 
     virtual void cursorIn() = 0;
     virtual void cursorForward() = 0;

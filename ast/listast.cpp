@@ -6,13 +6,13 @@
 
 ListAst &ListAst::fromAst(Ast &a)
 {
-    assert(Ast::isList(a));
+    assert(a.isList());
     return static_cast<ListAst&>(a);
 }
 
 const ListAst &ListAst::fromAst(const Ast &a)
 {
-    assert(Ast::isList(a));
+    assert(a.isList());
     return static_cast<const ListAst&>(a);
 }
 

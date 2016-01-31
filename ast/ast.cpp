@@ -2,51 +2,31 @@
 
 #include <cassert>
 
-bool Ast::isList(Ast::Type type)
-{
-    return Type::CLASS_LIST <= type && type <= Type::MULDIV_LIST;
-}
-
-bool Ast::isList(const Ast &a)
-{
-    return isList(a.type);
-}
-
-bool Ast::isMap(Ast::Type type)
-{
-    return Type::CLASS <= type && type <= Type::ASSIGN;
-}
-
-bool Ast::isMap(const Ast &a)
-{
-    return isMap(a.type);
-}
-
-bool Ast::isScalar(Ast::Type type)
-{
-    return !isList(type) && !isMap(type);
-}
-
-bool Ast::isScalar(const Ast &a)
-{
-    return isScalar(a.type);
-}
-
-bool Ast::isChangeable(Ast::Type type)
-{
-    return type != Type::KEY && type != Type::PAIR && type != Type::ROOT;
-}
-
-bool Ast::isChangeable(const Ast &a)
-{
-    return isChangeable(a.type);
-}
-
 Ast::Ast(Type t) :
     type(t),
     parent(nullptr)
 {
 
+}
+
+bool Ast::isList() const
+{
+    return Type::CLASS_LIST <= type && type <= Type::MULDIV_LIST;
+}
+
+bool Ast::isMap() const
+{
+    return Type::CLASS <= type && type <= Type::ASSIGN;
+}
+
+bool Ast::isScalar() const
+{
+    return !isList() && !isMap();
+}
+
+bool Ast::isChangeable() const
+{
+    return type != Type::KEY && type != Type::PAIR && type != Type::ROOT;
 }
 
 Ast::Type Ast::getType() const
@@ -111,7 +91,7 @@ int Ast::indentLevel() const
             || ptype == Type::STMT_LIST;
     if (hasIndent)
         for (const Ast *a = this; a->parent != a; a = &a->getParent())
-            ret += Ast::isList(*a);
+            ret += a->isList();
     return ret;
 }
 

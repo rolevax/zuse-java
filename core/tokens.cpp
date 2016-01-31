@@ -25,18 +25,10 @@ void Tokens::setHotLight(ssize_t back)
  */
 void Tokens::light(const Ast *inner)
 {
-    auto detab = [](Region &r, const Ast *a)
-    {
-        if (!Ast::isScalar(*a))
-            r.bc += a->indentLevel() * 4;
-    };
-
     Region in = anchor(locate(inner));
-    detab(in, inner);
 
     Ast *outer = &inner->getParent();
     Region out = anchor(locate(outer));
-    detab(out, outer);
 
     ob.observeLight(out.br, out.bc, out.er, out.ec,
                     in.br, in.bc, in.er, in.ec);
@@ -58,7 +50,7 @@ void Tokens::insert(const Ast *outer, size_t inner)
 
     if (outer->getType() == Ast::Type::CLASS_LIST) {
         hammer.hit(*outer, 0, 0);
-    } else if (Ast::isList(*outer)) {
+    } else if (outer->isList()) {
         if (outer->size() == 1) { // assart
             Ast *parent = &outer->getParent();
             size_t outerIndex = parent->indexOf(outer);
@@ -87,7 +79,7 @@ void Tokens::insert(const Ast *outer, size_t inner)
             hammer.hit(outer->at(inner), nextR, nextC);
             */
         }
-    } else if (Ast::isMap(*outer)) {
+    } else if (outer->isMap()) {
         Region out = locate(outer);
         // works only for JSON
         std::vector<std::unique_ptr<Token>> &row = rows[out.br];
@@ -118,11 +110,11 @@ void Tokens::remove(const Ast *outer, size_t inner)
 
     Region r = locate(&outer->at(inner));
     //suckIndent(r);
-    if (Ast::isList(*outer))
+    if (outer->isList())
         suckComma(r);
     erase(r);
 
-    if (Ast::isMap(*outer)) {
+    if (outer->isMap()) {
         Token *meta = new SoulToken(outer, Token::Role::META);
         rows[r.br].emplace(rows[r.br].begin() + r.bc, meta);
     }
@@ -142,7 +134,7 @@ void Tokens::clear()
  */
 void Tokens::updateScalar(const Ast *outer, size_t inner)
 {
-    assert(Ast::isScalar(outer->at(inner)));
+    assert(outer->at(inner).isScalar());
     Region r = locate(&outer->at(inner));
 
     ob.observeUpdateLine(r.br, pluck(r.br));
@@ -175,7 +167,7 @@ void Tokens::jackKick(Ast *&outer, size_t &inner, bool down)
             const Token &begin = *rows[i][j - 2];
             const Token &end = *rows[i][j];
             const Ast *a = end.getAst();
-            if (Ast::isScalar(*a)
+            if (a->isScalar()
                     || (a == begin.getAst()
                         && begin.getRole() == Token::Role::BEGIN
                         && end.getRole() == Token::Role::END)) {

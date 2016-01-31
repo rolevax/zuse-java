@@ -22,9 +22,9 @@ void Hammer::hit(const Ast &ast, size_t r, size_t c)
 
 void Hammer::hitGeneral(const Ast &ast, Buf &buf)
 {
-    if (Ast::isScalar(ast)) {
+    if (ast.isScalar()) {
         buf.push_back(new FleshToken(&ScalarAst::fromAst(ast)));
-    } else if (Ast::isList(ast)) {
+    } else if (ast.isList()) {
         buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
         hitList(ListAst::fromAst(ast), buf);
         buf.push_back(new SoulToken(&ast, Token::Role::END));

@@ -98,14 +98,14 @@ void Doc::pop(Mode *nextPush)
         modes.top()->onResume();
 }
 
-Ast::Type Doc::outerType()
+const Ast &Doc::getOuter() const
 {
-    return outer->getType();
+    return *outer;
 }
 
-Ast::Type Doc::innerType()
+const Ast &Doc::getInner() const
 {
-    return outer->at(inner).getType();
+    return outer->at(inner);
 }
 
 void Doc::cursorIn()
@@ -124,20 +124,19 @@ void Doc::fallIn()
     assert(inner < outer->size());
 
     Ast &focus = outer->at(inner);
-    Ast::Type type = focus.getType();
 
     if (focus.size() == 0) {
-        if (Ast::isList(type)) { // assart empty list
+        if (focus.isList()) { // assart empty list
             push(new MenuMode(*this, MenuMode::Context::ASSART));
         }
         return; // scalar
     }
 
-    if (Ast::isList(type)) {
+    if (focus.isList()) {
         outer = &focus;
         inner = 0;
     } else {
-        assert(Ast::isMap(type));
+        assert(focus.isMap());
         outer = &focus;
         inner = 0;
     }
@@ -219,7 +218,7 @@ void Doc::change(Ast::Type type)
 {
     assert(inner < outer->size());
 
-    if (!Ast::isChangeable(outer->at(inner)))
+    if (!outer->at(inner).isChangeable())
         return;
 
     tokens.remove(outer, inner);
@@ -232,7 +231,7 @@ void Doc::nest(Ast::Type type)
     assert(inner < outer->size());
 
     // nestable only if changeable
-    if (!Ast::isChangeable(outer->at(inner)))
+    if (!outer->at(inner).isChangeable())
         return;
 
     tokens.remove(outer, inner);

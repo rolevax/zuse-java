@@ -44,7 +44,7 @@ void ViewMode::keyboard(char key)
     // outer modification
     case 'o': // oh, append
     case 'i': // insert
-        if (Ast::isList(doc.outerType())) {
+        if (doc.getOuter().isList()) {
             MenuMode::Context context;
             context = 'o' == key ? MenuMode::Context::APPEND
                                  : MenuMode::Context::INSERT;
@@ -52,7 +52,7 @@ void ViewMode::keyboard(char key)
         }
         break;
     case 'r': // remove
-        if (Ast::isList(doc.outerType()) || doc.outerType() == Ast::Type::ROOT)
+        if (doc.getOuter().isList())
             doc.remove();
         // TODO get to clipboard
         break;
@@ -64,18 +64,18 @@ void ViewMode::keyboard(char key)
 
     // inner modification
     case 'c': // change
-        if (Ast::isChangeable(doc.innerType())) {
+        if (doc.getOuter().isChangeable()) {
             doc.push(new MenuMode(doc, MenuMode::Context::CHANGE));
         }
         break;
     case 'n': // nest
-        if (Ast::isChangeable(doc.innerType())) {
+        if (doc.getOuter().isChangeable()) {
             doc.push(new MenuMode(doc, MenuMode::Context::NEST));
         }
         break;
     case 'm': // modify
     case 'M':
-        switch (doc.innerType()) {
+        switch (doc.getInner().getType()) {
         case Ast::Type::STRING:
         case Ast::Type::KEY:
             doc.push(new StringInputMode(doc, key == 'M'));

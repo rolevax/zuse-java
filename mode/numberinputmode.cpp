@@ -13,7 +13,7 @@ NumberInputMode::NumberInputMode(EditableDoc &doc, bool clear) :
 
 void NumberInputMode::keyboard(char key)
 {
-    assert(doc.innerType() == Ast::Type::NUMBER);
+    assert(doc.getInner().getType() == Ast::Type::NUMBER);
 
     if (' ' == key) {
         doc.pop();
@@ -46,7 +46,7 @@ void NumberInputMode::keyboard(char key)
 void NumberInputMode::onPushed()
 {
     if (clear) {
-        assert(doc.innerType() == Ast::Type::NUMBER);
+        assert(doc.getInner().getType() == Ast::Type::NUMBER);
         doc.scalarClear();
     }
 

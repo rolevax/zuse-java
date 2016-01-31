@@ -26,8 +26,8 @@ private:
     void push(Mode *mode) override;
     void pop(Mode *nextPush) override;
 
-    Ast::Type outerType() override;
-    Ast::Type innerType() override;
+    const Ast &getOuter() const override;
+    const Ast &getInner() const override;
 
     void cursorIn() override;
     void cursorForward() override;
