@@ -1,7 +1,6 @@
 class FuckClass {
 	void fuckMethod() {
-		fuckVar = 17 + 21;
-		fuckVar = shitVar + 12;
+		fuckVar = 17 + sin(14) + haha(7, val - 3);
 	}
 }
 

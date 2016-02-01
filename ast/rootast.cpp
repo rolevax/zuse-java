@@ -5,5 +5,4 @@
 RootAst::RootAst() :
     ListAst(Type::CLASS_LIST)
 {
-    parent = this;
 }

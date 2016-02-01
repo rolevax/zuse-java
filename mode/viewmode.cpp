@@ -76,6 +76,7 @@ void ViewMode::keyboard(char key)
     case 'm': // modify
     case 'M':
         switch (doc.getInner().getType()) {
+        /*
         case Ast::Type::STRING:
         case Ast::Type::KEY:
             doc.push(new StringInputMode(doc, key == 'M'));
@@ -83,6 +84,7 @@ void ViewMode::keyboard(char key)
         case Ast::Type::NUMBER:
             doc.push(new NumberInputMode(doc, key == 'M'));
             break;
+            */
         default:
             break;
         }

@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     ast/classast.cpp \
     ast/methodast.cpp \
     ast/termlistast.cpp \
-    ast/bopast.cpp
+    ast/bopast.cpp \
+    ast/parenast.cpp
 
 RESOURCES += qml.qrc
 
@@ -67,5 +68,6 @@ HEADERS += \
     include/ast/classast.h \
     include/ast/methodast.h \
     include/ast/termlistast.h \
-    include/ast/bopast.h
+    include/ast/bopast.h \
+    include/ast/parenast.h
 

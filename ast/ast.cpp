@@ -4,7 +4,7 @@
 
 Ast::Ast(Type t) :
     type(t),
-    parent(nullptr)
+    parent(t == Type::CLASS_LIST ? this : nullptr)
 {
 
 }
@@ -16,7 +16,7 @@ bool Ast::isList() const
 
 bool Ast::isMap() const
 {
-    return Type::CLASS <= type && type <= Type::ASSIGN;
+    return Type::CLASS <= type && type <= Type::CALL;
 }
 
 bool Ast::isScalar() const
@@ -26,7 +26,8 @@ bool Ast::isScalar() const
 
 bool Ast::isChangeable() const
 {
-    return type != Type::KEY && type != Type::PAIR && type != Type::ROOT;
+    //return type != Type::KEY && type != Type::PAIR && type != Type::ROOT;
+    return false; // TODO
 }
 
 Ast::Type Ast::getType() const
@@ -45,6 +46,11 @@ void Ast::insert(size_t pos, Ast *child)
     doInsert(pos, child);
 }
 
+void Ast::append(Ast *subtree)
+{
+    insert(size(), subtree);
+}
+
 std::unique_ptr<Ast> Ast::remove(size_t pos)
 {
     (void) pos;
@@ -59,7 +65,8 @@ void Ast::change(size_t pos, Ast *next)
 
 void Ast::nest(size_t pos, Ast *nester)
 {
-    assert(nester->type == Type::ARRAY && nester->size() == 0);
+    //assert(nester->type == Type::ARRAY && nester->size() == 0);
+    // TODO
 
     std::unique_ptr<Ast> nestee = remove(pos);
     insert(pos, nester);

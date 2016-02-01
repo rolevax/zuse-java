@@ -7,6 +7,7 @@ class RootAst : public ListAst
 {
 public:
     RootAst();
+    // TODO consider to delete this class
 };
 
 #endif // ROOTAST_H

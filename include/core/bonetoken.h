@@ -8,9 +8,9 @@ class BoneToken : public Token
 public:
     enum class Sym
     {
-        // MUST SYNC ORDER WITH 'SYMS'
+        // MUST sync order with 'syms'
         CLASS, LBRACE, RBRACE, VOID, LPAREN, RPAREN,
-        SEMICOLON,
+        SEMICOLON, COMMA,
         ASSIGN, ADD, SUB, MUL, DIV
     };
 

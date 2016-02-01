@@ -43,6 +43,7 @@ blank [ \t]
 "void"		return yy::BisonParser::make_VOID(loc);
 
 ";"		return yy::BisonParser::make_SEMICOLON(loc);
+","		return yy::BisonParser::make_COMMA(loc);
 "+"		return yy::BisonParser::make_ADD(loc);
 "-"		return yy::BisonParser::make_SUB(loc);
 "*"		return yy::BisonParser::make_MUL(loc);

@@ -23,7 +23,7 @@ ScalarAst::ScalarAst(Type t, const std::string &text)
 
 ScalarAst *ScalarAst::clone() const
 {
-    ScalarAst *ret = new ScalarAst(type, text);
+    ScalarAst *ret = new ScalarAst(getType(), text);
     return ret;
 }
 

@@ -16,16 +16,15 @@ public:
      * KEYTAL means "keyword literal".
      */
     enum class Type {
-        /* deprecated */
-        ROOT, ARRAY, OBJECT, PAIR, KEY, STRING, KEYTAL,
-        /* in use */
         /* MUST sync with isList() functions when change */
         CLASS_LIST, METHOD_LIST, DECL_LIST, STMT_LIST,
+        ARG_LIST,
         ADDSUB_LIST, MULDIV_LIST,
         /* MUST sync with isMap() functions when change */
         CLASS, METHOD, DECL, STMT,
-        ASSIGN,
-        /* scalar types, by !isList() && !isMap() */
+        PAREN,
+        ASSIGN, CALL,
+        /* isScalar() == !isList() && !isMap() */
         IDENT, NUMBER,
     };
 
@@ -51,11 +50,7 @@ public:
     Ast &getParent() const;
 
     void insert(size_t pos, Ast *child);
-    void append(Ast *subtree)
-    {
-        insert(size(), subtree);
-    }
-
+    void append(Ast *subtree);
     virtual std::unique_ptr<Ast> remove(size_t pos);
     void change(size_t pos, Ast *next);
     void nest(size_t pos, Ast *nester);
@@ -68,7 +63,7 @@ protected:
     virtual void doInsert(size_t pos, Ast *child);
     virtual void doChange(size_t pos, Ast *next);
 
-protected:
+private:
     Type type;
     Ast *parent;
 };

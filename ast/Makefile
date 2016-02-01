@@ -1,6 +1,6 @@
 CXX=clang++ -std=c++11 -I. -I../include 
 ASTSRC=ast.cpp rootast.cpp listast.cpp termlistast.cpp\
-	   classast.cpp methodast.cpp bopast.cpp\
+	   classast.cpp methodast.cpp bopast.cpp parenast.cpp\
 	   scalarast.cpp
 
 all: parser

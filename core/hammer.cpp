@@ -38,8 +38,15 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Ast::Type::METHOD:
             hitMethod(MethodAst::fromAst(ast), buf);
             break;
+        case Ast::Type::PAREN:
+            hitParen(ParenAst::fromAst(ast), buf);
+            break;
         case Ast::Type::ASSIGN:
-            hitBop(BopAst::fromAst(ast), buf);
+            hitInfixBop(BopAst::fromAst(ast), buf);
+            break;
+        case Ast::Type::CALL:
+            hitGeneral(ast.at(0), buf); // method name
+            hitGeneral(ast.at(1), buf); // arg list
             break;
         default:
             assert("unhandled map type in hammer" && false);
@@ -93,21 +100,25 @@ void Hammer::hitMethod(const MethodAst &ast, Hammer::Buf &buf)
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
 }
 
-void Hammer::hitBop(const BopAst &ast, Hammer::Buf &buf)
+void Hammer::hitParen(const ParenAst &ast, Hammer::Buf &buf)
 {
-    // lhs
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
     hitGeneral(ast.at(0), buf);
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
+}
 
+void Hammer::hitInfixBop(const BopAst &ast, Hammer::Buf &buf)
+{
+    hitGeneral(ast.at(0), buf); // lhs
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::ASSIGN));
-
-    // rhs
-    hitGeneral(ast.at(1), buf);
+    hitGeneral(ast.at(1), buf); // rhs
 }
 
 void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
 {
     switch (ast.getType()) {
     case Ast::Type::DECL_LIST:
+    case Ast::Type::ARG_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
         break;
     default:
@@ -119,6 +130,7 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
 {
     switch (ast.getType()) {
     case Ast::Type::DECL_LIST:
+    case Ast::Type::ARG_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
         break;
     default:
@@ -143,6 +155,11 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
     case Ast::Type::STMT_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
         buf.push_back(nullptr);
+        break;
+    case Ast::Type::ARG_LIST:
+        if (!end) {
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::COMMA));
+        }
         break;
     case Ast::Type::ADDSUB_LIST:
         if (!end) {

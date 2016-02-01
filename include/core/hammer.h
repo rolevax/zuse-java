@@ -5,6 +5,7 @@
 #include "ast/listast.h"
 #include "ast/classast.h"
 #include "ast/methodast.h"
+#include "ast/parenast.h"
 #include "ast/bopast.h"
 
 class Token;
@@ -26,7 +27,8 @@ private:
     void hitList(const ListAst &ast, Buf &buf);
     void hitClass(const ClassAst &ast, Buf &buf);
     void hitMethod(const MethodAst &ast, Buf &buf);
-    void hitBop(const BopAst &ast, Buf &buf);
+    void hitParen(const ParenAst &ast, Buf &buf);
+    void hitInfixBop(const BopAst &ast, Buf &buf);
 
     void hitListBegin(const ListAst &ast, Buf &buf);
     void hitListEnd(const ListAst &ast, Buf &buf);

@@ -24,7 +24,7 @@ ListAst::ListAst(Type t)
 
 ListAst *ListAst::clone() const
 {
-    ListAst *ret = new ListAst(type);
+    ListAst *ret = new ListAst(getType());
     for (const std::unique_ptr<Ast> &sub : subtrees)
         ret->subtrees.emplace_back(sub->clone());
     return ret;

@@ -17,20 +17,20 @@
 	#include "ast/classast.h"
 	#include "ast/methodast.h"
 	#include "ast/scalarast.h"
+	#include "ast/parenast.h"
 	#include "ast/bopast.h"
 	class ParseException;
 }
 
-// The parsing context.
+/* The parsing context. */
 %param { const std::string &filename }
 %param { RootAst *result }
 
 %locations
 %initial-action
 {
-	// Initialize the initial location.
-
-	// position.filename is a non-const pointer somehow
+	/* Initialize the initial location. */ 
+	/* position.filename is a non-const pointer somehow */
 	static std::string s_filename(filename);
 	@$.begin.filename = @$.end.filename = &s_filename;
 };
@@ -45,7 +45,7 @@
 
 %define api.token.prefix {TOK_}
 
-/* ==== token defs ==== */
+/* ============ token defs ============ */
 
 %token
 	END	0		"EOF"
@@ -60,6 +60,7 @@
 	VOID		"void"
 
 	SEMICOLON	";"
+	COMMA		","
 	LBRACE		"{"
 	RBRACE		"}"
 	LPAREN		"("
@@ -72,12 +73,19 @@
 %type	<ListAst*>		method_list
 %type	<ListAst*>		decl_list
 %type	<ListAst*>		stmt_list
+%type	<ListAst*>		arg_list
+%type	<ListAst*>		arg_list_noemp
 %type	<Ast*>			class
 %type	<Ast*>			method
 %type	<Ast*>			expr
+%type	<Ast*>			name
 %printer { yyoutput << $$; } <*>;
 
-%% /* ==== rules ==== */
+%% /* ============ rules ============ */
+/* all list non-terminals exclude begin/end deliminators
+ * and include internal separator dealings 
+ * for those internal-only separators, do with xxx_noemp
+ */
 
 %start class_list;
 
@@ -122,13 +130,32 @@ expr: expr "+" expr
 				{ $$ = TermListAst::makeBop($1, $3, TermListAst::Op::DIV); }
 	| expr "=" expr
 				{ $$ = new BopAst(Ast::Type::ASSIGN, $1, $3); } 
+	| name "(" arg_list ")"
+				{ $$ = new BopAst(Ast::Type::CALL, $1, $3); } 
 	| "(" expr ")"
-				{ $$ = $2; } 
-	| "identifier"
-				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
+				{ $$ = new ParenAst($2); } 
+	| name
+				{ $$ = $1; } 
 	| "number"
 				{ $$ = new ScalarAst(Ast::Type::NUMBER, $1); }
 	;
+
+name: "identifier"
+				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
+	;
+
+arg_list: %empty
+		 		{ $$ = new ListAst(Ast::Type::ARG_LIST); }
+		| arg_list_noemp
+		 		{ $$ = $1; }
+		;
+
+arg_list_noemp: expr
+		 		{ $$ = new ListAst(Ast::Type::ARG_LIST); $$->append($1); }
+			  | arg_list_noemp "," expr
+		 		{ $1->append($3); $$ = $1; }
+			  ;
+
 
 
 %%

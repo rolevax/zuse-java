@@ -17,6 +17,7 @@ MenuMode::MenuMode(EditableDoc &doc, Context context) :
 void MenuMode::keyboard(char key)
 {
     switch (key) {
+    /*
     case ' ':
         doc.pop();
         break;
@@ -41,6 +42,7 @@ void MenuMode::keyboard(char key)
     case 'o':
         work(Ast::Type::OBJECT);
         break;
+        */
     default:
         break;
     }
@@ -89,6 +91,7 @@ const char *MenuMode::name()
  */
 void MenuMode::work(Ast::Type type, const char *keytal)
 {
+    (void) keytal; // TODO
     if (context == Context::CHANGE) {
         doc.change(type);
     } else if (context == Context::NEST) {
@@ -105,6 +108,7 @@ void MenuMode::work(Ast::Type type, const char *keytal)
     }
 
     switch (type) {
+    /*
     case Ast::Type::STRING:
         doc.pop(new StringInputMode(doc, false));
         break;
@@ -117,11 +121,12 @@ void MenuMode::work(Ast::Type type, const char *keytal)
     case Ast::Type::KEYTAL:
         assert(nullptr != keytal);
         doc.scalarAppend(keytal);
-        /* fall through */
+        // fall through
     case Ast::Type::ARRAY:
     case Ast::Type::OBJECT:
         doc.pop();
         break;
+        */
     default:
         throw "MenuMode: work(): unhandled ast type";
         break;
