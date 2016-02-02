@@ -52,9 +52,11 @@
 	#include "ast/scalarast.h"
 	#include "ast/parenast.h"
 	#include "ast/bopast.h"
+	#include "ast/declast.h"
+	#include "ast/declbeanast.h"
 	class ParseException;
 
-#line 58 "bison.hh" // lalr1.cc:377
+#line 60 "bison.hh" // lalr1.cc:377
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -131,7 +133,7 @@
 
 
 namespace yy {
-#line 135 "bison.hh" // lalr1.cc:377
+#line 137 "bison.hh" // lalr1.cc:377
 
 
 
@@ -302,14 +304,18 @@ namespace yy {
       // method
       // expr
       // name
+      // decl
+      // decl_bean
+      // type
       char dummy1[sizeof(Ast*)];
 
       // class_list
       // method_list
-      // decl_list
+      // param_list
       // stmt_list
       // arg_list
       // arg_list_noemp
+      // decl_bean_list
       char dummy2[sizeof(ListAst*)];
 
       // "identifier"
@@ -610,9 +616,9 @@ namespace yy {
   // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
   // positive, shift that token.  If negative, reduce the rule whose
   // number is the opposite.  If YYTABLE_NINF, syntax error.
-  static const unsigned char yytable_[];
+  static const signed char yytable_[];
 
-  static const signed char yycheck_[];
+  static const unsigned char yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -732,8 +738,8 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 47,     ///< Last index in yytable_.
-      yynnts_ = 11,  ///< Number of nonterminal symbols.
+      yylast_ = 55,     ///< Last index in yytable_.
+      yynnts_ = 15,  ///< Number of nonterminal symbols.
       yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -821,15 +827,19 @@ namespace yy {
       case 22: // method
       case 25: // expr
       case 26: // name
+      case 29: // decl
+      case 31: // decl_bean
+      case 32: // type
         value.copy< Ast* > (other.value);
         break;
 
       case 19: // class_list
       case 21: // method_list
-      case 23: // decl_list
+      case 23: // param_list
       case 24: // stmt_list
       case 27: // arg_list
       case 28: // arg_list_noemp
+      case 30: // decl_bean_list
         value.copy< ListAst* > (other.value);
         break;
 
@@ -859,15 +869,19 @@ namespace yy {
       case 22: // method
       case 25: // expr
       case 26: // name
+      case 29: // decl
+      case 31: // decl_bean
+      case 32: // type
         value.copy< Ast* > (v);
         break;
 
       case 19: // class_list
       case 21: // method_list
-      case 23: // decl_list
+      case 23: // param_list
       case 24: // stmt_list
       case 27: // arg_list
       case 28: // arg_list_noemp
+      case 30: // decl_bean_list
         value.copy< ListAst* > (v);
         break;
 
@@ -942,15 +956,19 @@ namespace yy {
       case 22: // method
       case 25: // expr
       case 26: // name
+      case 29: // decl
+      case 31: // decl_bean
+      case 32: // type
         value.template destroy< Ast* > ();
         break;
 
       case 19: // class_list
       case 21: // method_list
-      case 23: // decl_list
+      case 23: // param_list
       case 24: // stmt_list
       case 27: // arg_list
       case 28: // arg_list_noemp
+      case 30: // decl_bean_list
         value.template destroy< ListAst* > ();
         break;
 
@@ -986,15 +1004,19 @@ namespace yy {
       case 22: // method
       case 25: // expr
       case 26: // name
+      case 29: // decl
+      case 31: // decl_bean
+      case 32: // type
         value.move< Ast* > (s.value);
         break;
 
       case 19: // class_list
       case 21: // method_list
-      case 23: // decl_list
+      case 23: // param_list
       case 24: // stmt_list
       case 27: // arg_list
       case 28: // arg_list_noemp
+      case 30: // decl_bean_list
         value.move< ListAst* > (s.value);
         break;
 
@@ -1163,7 +1185,7 @@ namespace yy {
 
 
 } // yy
-#line 1167 "bison.hh" // lalr1.cc:377
+#line 1189 "bison.hh" // lalr1.cc:377
 
 
 

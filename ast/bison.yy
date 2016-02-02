@@ -19,6 +19,8 @@
 	#include "ast/scalarast.h"
 	#include "ast/parenast.h"
 	#include "ast/bopast.h"
+	#include "ast/declast.h"
+	#include "ast/declbeanast.h"
 	class ParseException;
 }
 
@@ -71,14 +73,18 @@
 %token	<std::string>	NUMBER		"number"
 %type	<ListAst*>		class_list
 %type	<ListAst*>		method_list
-%type	<ListAst*>		decl_list
+%type	<ListAst*>		param_list
 %type	<ListAst*>		stmt_list
 %type	<ListAst*>		arg_list
 %type	<ListAst*>		arg_list_noemp
+%type	<ListAst*>		decl_bean_list
 %type	<Ast*>			class
 %type	<Ast*>			method
 %type	<Ast*>			expr
+%type	<Ast*>			decl
+%type	<Ast*>			decl_bean
 %type	<Ast*>			name
+%type	<Ast*>			type
 %printer { yyoutput << $$; } <*>;
 
 %% /* ============ rules ============ */
@@ -103,17 +109,19 @@ method_list: %empty
 				{ $1->append($2); $$ = $1; }
 		   ;
 
-method: "void" "identifier" "(" decl_list ")" "{" stmt_list "}"
+method: "void" "identifier" "(" param_list ")" "{" stmt_list "}"
  				{ $$ = new MethodAst($2, $4, $7); }
 	  ;
 
-decl_list: %empty
-		 		{ $$ = new ListAst(Ast::Type::DECL_LIST); }
-		 ;
+param_list: %empty
+		 		{ $$ = new ListAst(Ast::Type::DECL_PARAM_LIST); } 
+		  ;
 
 stmt_list: %empty
 		 		{ $$ = new ListAst(Ast::Type::STMT_LIST); }
 		 | stmt_list expr ";"
+				{ $1->append($2); $$ = $1; }
+		 | stmt_list decl ";"
 				{ $1->append($2); $$ = $1; }
 		 ;
 
@@ -156,7 +164,26 @@ arg_list_noemp: expr
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
+decl: type decl_bean_list
+		 		{ $$ = new DeclAst($1, $2); }
+	;
 
+decl_bean_list: decl_bean
+		 		{ $$ = new ListAst(Ast::Type::DECL_BEAN_LIST); 
+				  $$->append($1); }
+			  | decl_bean_list "," decl_bean
+		 		{ $1->append($3); $$ = $1; }
+			  ;
+
+decl_bean: "identifier"
+		 		{ $$ = new DeclBeanAst($1); }
+		 | "identifier" "=" expr
+		 		{ $$ = new DeclBeanAst($1, $3); }
+		 ;
+
+type: name
+				{ $$ = $1; }
+	;
 
 %%
 

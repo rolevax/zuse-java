@@ -7,6 +7,7 @@
 #include "ast/methodast.h"
 #include "ast/parenast.h"
 #include "ast/bopast.h"
+#include "ast/declbeanast.h"
 
 class Token;
 class Tokens;
@@ -27,6 +28,7 @@ private:
     void hitList(const ListAst &ast, Buf &buf);
     void hitClass(const ClassAst &ast, Buf &buf);
     void hitMethod(const MethodAst &ast, Buf &buf);
+    void hitDeclBean(const DeclBeanAst &ast, Buf &buf);
     void hitParen(const ParenAst &ast, Buf &buf);
     void hitInfixBop(const BopAst &ast, Buf &buf);
 

@@ -17,11 +17,11 @@ public:
      */
     enum class Type {
         /* MUST sync with isList() functions when change */
-        CLASS_LIST, METHOD_LIST, DECL_LIST, STMT_LIST,
-        ARG_LIST,
+        CLASS_LIST, METHOD_LIST, DECL_PARAM_LIST, STMT_LIST,
+        ARG_LIST, DECL_BEAN_LIST,
         ADDSUB_LIST, MULDIV_LIST,
         /* MUST sync with isMap() functions when change */
-        CLASS, METHOD, DECL, STMT,
+        CLASS, METHOD, DECL, DECL_BEAN, DECL_PARAM, STMT,
         PAREN,
         ASSIGN, CALL,
         /* isScalar() == !isList() && !isMap() */

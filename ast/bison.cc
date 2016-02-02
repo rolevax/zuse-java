@@ -49,7 +49,7 @@
 
 #line 51 "bison.cc" // lalr1.cc:412
 // Unqualified %code blocks.
-#line 41 "bison.yy" // lalr1.cc:413
+#line 43 "bison.yy" // lalr1.cc:413
 
 	#include "ast/lexproto.h"
 	#include "ast/parseexception.h"
@@ -257,15 +257,19 @@ namespace yy {
       case 22: // method
       case 25: // expr
       case 26: // name
+      case 29: // decl
+      case 31: // decl_bean
+      case 32: // type
         value.move< Ast* > (that.value);
         break;
 
       case 19: // class_list
       case 21: // method_list
-      case 23: // decl_list
+      case 23: // param_list
       case 24: // stmt_list
       case 27: // arg_list
       case 28: // arg_list_noemp
+      case 30: // decl_bean_list
         value.move< ListAst* > (that.value);
         break;
 
@@ -293,15 +297,19 @@ namespace yy {
       case 22: // method
       case 25: // expr
       case 26: // name
+      case 29: // decl
+      case 31: // decl_bean
+      case 32: // type
         value.copy< Ast* > (that.value);
         break;
 
       case 19: // class_list
       case 21: // method_list
-      case 23: // decl_list
+      case 23: // param_list
       case 24: // stmt_list
       case 27: // arg_list
       case 28: // arg_list_noemp
+      case 30: // decl_bean_list
         value.copy< ListAst* > (that.value);
         break;
 
@@ -348,86 +356,114 @@ namespace yy {
     {
             case 16: // "identifier"
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< std::string > (); }
-#line 354 "bison.cc" // lalr1.cc:636
+#line 362 "bison.cc" // lalr1.cc:636
         break;
 
       case 17: // "number"
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< std::string > (); }
-#line 361 "bison.cc" // lalr1.cc:636
+#line 369 "bison.cc" // lalr1.cc:636
         break;
 
       case 19: // class_list
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< ListAst* > (); }
-#line 368 "bison.cc" // lalr1.cc:636
+#line 376 "bison.cc" // lalr1.cc:636
         break;
 
       case 20: // class
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< Ast* > (); }
-#line 375 "bison.cc" // lalr1.cc:636
+#line 383 "bison.cc" // lalr1.cc:636
         break;
 
       case 21: // method_list
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< ListAst* > (); }
-#line 382 "bison.cc" // lalr1.cc:636
+#line 390 "bison.cc" // lalr1.cc:636
         break;
 
       case 22: // method
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< Ast* > (); }
-#line 389 "bison.cc" // lalr1.cc:636
+#line 397 "bison.cc" // lalr1.cc:636
         break;
 
-      case 23: // decl_list
+      case 23: // param_list
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< ListAst* > (); }
-#line 396 "bison.cc" // lalr1.cc:636
+#line 404 "bison.cc" // lalr1.cc:636
         break;
 
       case 24: // stmt_list
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< ListAst* > (); }
-#line 403 "bison.cc" // lalr1.cc:636
+#line 411 "bison.cc" // lalr1.cc:636
         break;
 
       case 25: // expr
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< Ast* > (); }
-#line 410 "bison.cc" // lalr1.cc:636
+#line 418 "bison.cc" // lalr1.cc:636
         break;
 
       case 26: // name
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< Ast* > (); }
-#line 417 "bison.cc" // lalr1.cc:636
+#line 425 "bison.cc" // lalr1.cc:636
         break;
 
       case 27: // arg_list
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< ListAst* > (); }
-#line 424 "bison.cc" // lalr1.cc:636
+#line 432 "bison.cc" // lalr1.cc:636
         break;
 
       case 28: // arg_list_noemp
 
-#line 82 "bison.yy" // lalr1.cc:636
+#line 88 "bison.yy" // lalr1.cc:636
         { yyoutput << yysym.value.template as< ListAst* > (); }
-#line 431 "bison.cc" // lalr1.cc:636
+#line 439 "bison.cc" // lalr1.cc:636
+        break;
+
+      case 29: // decl
+
+#line 88 "bison.yy" // lalr1.cc:636
+        { yyoutput << yysym.value.template as< Ast* > (); }
+#line 446 "bison.cc" // lalr1.cc:636
+        break;
+
+      case 30: // decl_bean_list
+
+#line 88 "bison.yy" // lalr1.cc:636
+        { yyoutput << yysym.value.template as< ListAst* > (); }
+#line 453 "bison.cc" // lalr1.cc:636
+        break;
+
+      case 31: // decl_bean
+
+#line 88 "bison.yy" // lalr1.cc:636
+        { yyoutput << yysym.value.template as< Ast* > (); }
+#line 460 "bison.cc" // lalr1.cc:636
+        break;
+
+      case 32: // type
+
+#line 88 "bison.yy" // lalr1.cc:636
+        { yyoutput << yysym.value.template as< Ast* > (); }
+#line 467 "bison.cc" // lalr1.cc:636
         break;
 
 
@@ -540,7 +576,7 @@ namespace yy {
 
 
     // User initialization code.
-    #line 31 "bison.yy" // lalr1.cc:741
+    #line 33 "bison.yy" // lalr1.cc:741
 {
 	/* Initialize the initial location. */ 
 	/* position.filename is a non-const pointer somehow */
@@ -548,7 +584,7 @@ namespace yy {
 	yyla.location.begin.filename = yyla.location.end.filename = &s_filename;
 }
 
-#line 552 "bison.cc" // lalr1.cc:741
+#line 588 "bison.cc" // lalr1.cc:741
 
     /* Initialize the stack.  The initial state will be set in
        yynewstate, since the latter expects the semantical and the
@@ -642,15 +678,19 @@ namespace yy {
       case 22: // method
       case 25: // expr
       case 26: // name
+      case 29: // decl
+      case 31: // decl_bean
+      case 32: // type
         yylhs.value.build< Ast* > ();
         break;
 
       case 19: // class_list
       case 21: // method_list
-      case 23: // decl_list
+      case 23: // param_list
       case 24: // stmt_list
       case 27: // arg_list
       case 28: // arg_list_noemp
+      case 30: // decl_bean_list
         yylhs.value.build< ListAst* > ();
         break;
 
@@ -677,145 +717,188 @@ namespace yy {
           switch (yyn)
             {
   case 2:
-#line 92 "bison.yy" // lalr1.cc:859
+#line 98 "bison.yy" // lalr1.cc:859
     { /* already newwed as 'result' */ }
-#line 683 "bison.cc" // lalr1.cc:859
+#line 723 "bison.cc" // lalr1.cc:859
     break;
 
   case 3:
-#line 93 "bison.yy" // lalr1.cc:859
+#line 99 "bison.yy" // lalr1.cc:859
     { result->append(yystack_[0].value.as< Ast* > ()); }
-#line 689 "bison.cc" // lalr1.cc:859
+#line 729 "bison.cc" // lalr1.cc:859
     break;
 
   case 4:
-#line 97 "bison.yy" // lalr1.cc:859
+#line 103 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new ClassAst(yystack_[3].value.as< std::string > (), yystack_[1].value.as< ListAst* > ()); }
-#line 695 "bison.cc" // lalr1.cc:859
+#line 735 "bison.cc" // lalr1.cc:859
     break;
 
   case 5:
-#line 101 "bison.yy" // lalr1.cc:859
+#line 107 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::METHOD_LIST); }
-#line 701 "bison.cc" // lalr1.cc:859
+#line 741 "bison.cc" // lalr1.cc:859
     break;
 
   case 6:
-#line 103 "bison.yy" // lalr1.cc:859
+#line 109 "bison.yy" // lalr1.cc:859
     { yystack_[1].value.as< ListAst* > ()->append(yystack_[0].value.as< Ast* > ()); yylhs.value.as< ListAst* > () = yystack_[1].value.as< ListAst* > (); }
-#line 707 "bison.cc" // lalr1.cc:859
+#line 747 "bison.cc" // lalr1.cc:859
     break;
 
   case 7:
-#line 107 "bison.yy" // lalr1.cc:859
+#line 113 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new MethodAst(yystack_[6].value.as< std::string > (), yystack_[4].value.as< ListAst* > (), yystack_[1].value.as< ListAst* > ()); }
-#line 713 "bison.cc" // lalr1.cc:859
+#line 753 "bison.cc" // lalr1.cc:859
     break;
 
   case 8:
-#line 111 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::DECL_LIST); }
-#line 719 "bison.cc" // lalr1.cc:859
+#line 117 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::DECL_PARAM_LIST); }
+#line 759 "bison.cc" // lalr1.cc:859
     break;
 
   case 9:
-#line 115 "bison.yy" // lalr1.cc:859
+#line 121 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::STMT_LIST); }
-#line 725 "bison.cc" // lalr1.cc:859
+#line 765 "bison.cc" // lalr1.cc:859
     break;
 
   case 10:
-#line 117 "bison.yy" // lalr1.cc:859
+#line 123 "bison.yy" // lalr1.cc:859
     { yystack_[2].value.as< ListAst* > ()->append(yystack_[1].value.as< Ast* > ()); yylhs.value.as< ListAst* > () = yystack_[2].value.as< ListAst* > (); }
-#line 731 "bison.cc" // lalr1.cc:859
+#line 771 "bison.cc" // lalr1.cc:859
     break;
 
   case 11:
-#line 124 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = TermListAst::makeBop(yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), TermListAst::Op::ADD); }
-#line 737 "bison.cc" // lalr1.cc:859
+#line 125 "bison.yy" // lalr1.cc:859
+    { yystack_[2].value.as< ListAst* > ()->append(yystack_[1].value.as< Ast* > ()); yylhs.value.as< ListAst* > () = yystack_[2].value.as< ListAst* > (); }
+#line 777 "bison.cc" // lalr1.cc:859
     break;
 
   case 12:
-#line 126 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = TermListAst::makeBop(yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), TermListAst::Op::SUB); }
-#line 743 "bison.cc" // lalr1.cc:859
+#line 132 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = TermListAst::makeBop(yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), TermListAst::Op::ADD); }
+#line 783 "bison.cc" // lalr1.cc:859
     break;
 
   case 13:
-#line 128 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = TermListAst::makeBop(yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), TermListAst::Op::MUL); }
-#line 749 "bison.cc" // lalr1.cc:859
+#line 134 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = TermListAst::makeBop(yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), TermListAst::Op::SUB); }
+#line 789 "bison.cc" // lalr1.cc:859
     break;
 
   case 14:
-#line 130 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = TermListAst::makeBop(yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), TermListAst::Op::DIV); }
-#line 755 "bison.cc" // lalr1.cc:859
+#line 136 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = TermListAst::makeBop(yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), TermListAst::Op::MUL); }
+#line 795 "bison.cc" // lalr1.cc:859
     break;
 
   case 15:
-#line 132 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = new BopAst(Ast::Type::ASSIGN, yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > ()); }
-#line 761 "bison.cc" // lalr1.cc:859
+#line 138 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = TermListAst::makeBop(yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), TermListAst::Op::DIV); }
+#line 801 "bison.cc" // lalr1.cc:859
     break;
 
   case 16:
-#line 134 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = new BopAst(Ast::Type::CALL, yystack_[3].value.as< Ast* > (), yystack_[1].value.as< ListAst* > ()); }
-#line 767 "bison.cc" // lalr1.cc:859
+#line 140 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = new BopAst(Ast::Type::ASSIGN, yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > ()); }
+#line 807 "bison.cc" // lalr1.cc:859
     break;
 
   case 17:
-#line 136 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = new ParenAst(yystack_[1].value.as< Ast* > ()); }
-#line 773 "bison.cc" // lalr1.cc:859
+#line 142 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = new BopAst(Ast::Type::CALL, yystack_[3].value.as< Ast* > (), yystack_[1].value.as< ListAst* > ()); }
+#line 813 "bison.cc" // lalr1.cc:859
     break;
 
   case 18:
-#line 138 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = yystack_[0].value.as< Ast* > (); }
-#line 779 "bison.cc" // lalr1.cc:859
+#line 144 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = new ParenAst(yystack_[1].value.as< Ast* > ()); }
+#line 819 "bison.cc" // lalr1.cc:859
     break;
 
   case 19:
-#line 140 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = new ScalarAst(Ast::Type::NUMBER, yystack_[0].value.as< std::string > ()); }
-#line 785 "bison.cc" // lalr1.cc:859
+#line 146 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = yystack_[0].value.as< Ast* > (); }
+#line 825 "bison.cc" // lalr1.cc:859
     break;
 
   case 20:
-#line 144 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = new ScalarAst(Ast::Type::IDENT, yystack_[0].value.as< std::string > ()); }
-#line 791 "bison.cc" // lalr1.cc:859
+#line 148 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = new ScalarAst(Ast::Type::NUMBER, yystack_[0].value.as< std::string > ()); }
+#line 831 "bison.cc" // lalr1.cc:859
     break;
 
   case 21:
-#line 148 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::ARG_LIST); }
-#line 797 "bison.cc" // lalr1.cc:859
+#line 152 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = new ScalarAst(Ast::Type::IDENT, yystack_[0].value.as< std::string > ()); }
+#line 837 "bison.cc" // lalr1.cc:859
     break;
 
   case 22:
-#line 150 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< ListAst* > () = yystack_[0].value.as< ListAst* > (); }
-#line 803 "bison.cc" // lalr1.cc:859
+#line 156 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::ARG_LIST); }
+#line 843 "bison.cc" // lalr1.cc:859
     break;
 
   case 23:
-#line 154 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::ARG_LIST); yylhs.value.as< ListAst* > ()->append(yystack_[0].value.as< Ast* > ()); }
-#line 809 "bison.cc" // lalr1.cc:859
+#line 158 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< ListAst* > () = yystack_[0].value.as< ListAst* > (); }
+#line 849 "bison.cc" // lalr1.cc:859
     break;
 
   case 24:
-#line 156 "bison.yy" // lalr1.cc:859
+#line 162 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::ARG_LIST); yylhs.value.as< ListAst* > ()->append(yystack_[0].value.as< Ast* > ()); }
+#line 855 "bison.cc" // lalr1.cc:859
+    break;
+
+  case 25:
+#line 164 "bison.yy" // lalr1.cc:859
     { yystack_[2].value.as< ListAst* > ()->append(yystack_[0].value.as< Ast* > ()); yylhs.value.as< ListAst* > () = yystack_[2].value.as< ListAst* > (); }
-#line 815 "bison.cc" // lalr1.cc:859
+#line 861 "bison.cc" // lalr1.cc:859
+    break;
+
+  case 26:
+#line 168 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = new DeclAst(yystack_[1].value.as< Ast* > (), yystack_[0].value.as< ListAst* > ()); }
+#line 867 "bison.cc" // lalr1.cc:859
+    break;
+
+  case 27:
+#line 172 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::DECL_BEAN_LIST); 
+				  yylhs.value.as< ListAst* > ()->append(yystack_[0].value.as< Ast* > ()); }
+#line 874 "bison.cc" // lalr1.cc:859
+    break;
+
+  case 28:
+#line 175 "bison.yy" // lalr1.cc:859
+    { yystack_[2].value.as< ListAst* > ()->append(yystack_[0].value.as< Ast* > ()); yylhs.value.as< ListAst* > () = yystack_[2].value.as< ListAst* > (); }
+#line 880 "bison.cc" // lalr1.cc:859
+    break;
+
+  case 29:
+#line 179 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = new DeclBeanAst(yystack_[0].value.as< std::string > ()); }
+#line 886 "bison.cc" // lalr1.cc:859
+    break;
+
+  case 30:
+#line 181 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = new DeclBeanAst(yystack_[2].value.as< std::string > (), yystack_[0].value.as< Ast* > ()); }
+#line 892 "bison.cc" // lalr1.cc:859
+    break;
+
+  case 31:
+#line 185 "bison.yy" // lalr1.cc:859
+    { yylhs.value.as< Ast* > () = yystack_[0].value.as< Ast* > (); }
+#line 898 "bison.cc" // lalr1.cc:859
     break;
 
 
-#line 819 "bison.cc" // lalr1.cc:859
+#line 902 "bison.cc" // lalr1.cc:859
             default:
               break;
             }
@@ -1072,60 +1155,64 @@ namespace yy {
 
   const signed char BisonParser::yypact_ninf_ = -19;
 
-  const signed char BisonParser::yytable_ninf_ = -1;
+  const signed char BisonParser::yytable_ninf_ = -32;
 
   const signed char
   BisonParser::yypact_[] =
   {
-     -19,    11,   -19,    13,   -19,    18,   -19,     7,    22,   -19,
-     -19,    27,   -19,    28,    30,   -19,     1,   -19,    23,   -19,
-     -19,    21,    31,    -2,    23,    23,    23,    23,    23,   -19,
-      23,   -19,    29,    15,    15,   -19,   -19,    29,    32,    33,
-     -19,    23,    29
+     -19,     8,   -19,   -15,   -19,    -5,   -19,    18,    12,   -19,
+     -19,    16,   -19,    32,    27,   -19,     9,   -19,    24,   -19,
+     -19,    14,    28,    33,    34,    -1,    35,    24,    24,    24,
+      24,    24,   -19,    24,   -19,    45,    40,   -19,   -19,    30,
+      39,    39,   -19,   -19,    30,    37,    42,    24,    34,   -19,
+      24,    30,   -19,    30
   };
 
   const unsigned char
   BisonParser::yydefact_[] =
   {
        2,     0,     1,     0,     3,     0,     5,     0,     0,     4,
-       6,     0,     8,     0,     0,     9,     0,     7,     0,    20,
-      19,     0,    18,     0,     0,     0,     0,     0,     0,    10,
-      21,    17,    15,    12,    11,    13,    14,    23,     0,    22,
-      16,     0,    24
+       6,     0,     8,     0,     0,     9,     0,     7,     0,    21,
+      20,     0,    19,     0,     0,     0,    19,     0,     0,     0,
+       0,     0,    10,    22,    11,    29,    26,    27,    18,    16,
+      13,    12,    14,    15,    24,     0,    23,     0,     0,    17,
+       0,    30,    28,    25
   };
 
   const signed char
   BisonParser::yypgoto_[] =
   {
-     -19,   -19,   -19,   -19,   -19,   -19,   -19,   -18,   -19,   -19,
-     -19
+     -19,   -19,   -19,   -19,   -19,   -19,   -19,   -18,    38,   -19,
+     -19,   -19,   -19,     7,   -19
   };
 
   const signed char
   BisonParser::yydefgoto_[] =
   {
-      -1,     1,     4,     7,    10,    13,    16,    21,    22,    38,
-      39
-  };
-
-  const unsigned char
-  BisonParser::yytable_[] =
-  {
-      23,    24,    25,    26,    27,    28,    32,    33,    34,    35,
-      36,     2,    37,    31,    17,    18,     8,    19,    20,     3,
-       9,    27,    28,    42,    24,    25,    26,    27,    28,     5,
-       6,    29,    24,    25,    26,    27,    28,    18,    11,    19,
-      20,    12,    15,    14,    41,    30,     0,    40
+      -1,     1,     4,     7,    10,    13,    16,    21,    26,    45,
+      46,    23,    36,    37,    24
   };
 
   const signed char
+  BisonParser::yytable_[] =
+  {
+      25,     5,    27,    28,    29,    30,    31,     6,     2,    39,
+      40,    41,    42,    43,    38,    44,     3,    27,    28,    29,
+      30,    31,    17,    18,    32,    19,    20,     8,    11,    51,
+      12,     9,    53,    27,    28,    29,    30,    31,    18,    15,
+      19,    20,    33,    34,   -31,    30,    31,    14,    47,    33,
+      35,    48,    49,    50,    22,    52
+  };
+
+  const unsigned char
   BisonParser::yycheck_[] =
   {
-      18,     3,     4,     5,     6,     7,    24,    25,    26,    27,
-      28,     0,    30,    15,    13,    14,     9,    16,    17,     8,
-      13,     6,     7,    41,     3,     4,     5,     6,     7,    16,
-      12,    10,     3,     4,     5,     6,     7,    14,    16,    16,
-      17,    14,    12,    15,    11,    14,    -1,    15
+      18,    16,     3,     4,     5,     6,     7,    12,     0,    27,
+      28,    29,    30,    31,    15,    33,     8,     3,     4,     5,
+       6,     7,    13,    14,    10,    16,    17,     9,    16,    47,
+      14,    13,    50,     3,     4,     5,     6,     7,    14,    12,
+      16,    17,    14,    10,    16,     6,     7,    15,     3,    14,
+      16,    11,    15,    11,    16,    48
   };
 
   const unsigned char
@@ -1133,25 +1220,28 @@ namespace yy {
   {
        0,    19,     0,     8,    20,    16,    12,    21,     9,    13,
       22,    16,    14,    23,    15,    12,    24,    13,    14,    16,
-      17,    25,    26,    25,     3,     4,     5,     6,     7,    10,
-      14,    15,    25,    25,    25,    25,    25,    25,    27,    28,
-      15,    11,    25
+      17,    25,    26,    29,    32,    25,    26,     3,     4,     5,
+       6,     7,    10,    14,    10,    16,    30,    31,    15,    25,
+      25,    25,    25,    25,    25,    27,    28,     3,    11,    15,
+      11,    25,    31,    25
   };
 
   const unsigned char
   BisonParser::yyr1_[] =
   {
        0,    18,    19,    19,    20,    21,    21,    22,    23,    24,
-      24,    25,    25,    25,    25,    25,    25,    25,    25,    25,
-      26,    27,    27,    28,    28
+      24,    24,    25,    25,    25,    25,    25,    25,    25,    25,
+      25,    26,    27,    27,    28,    28,    29,    30,    30,    31,
+      31,    32
   };
 
   const unsigned char
   BisonParser::yyr2_[] =
   {
        0,     2,     0,     2,     5,     0,     2,     8,     0,     0,
-       3,     3,     3,     3,     3,     3,     4,     3,     1,     1,
-       1,     0,     1,     1,     3
+       3,     3,     3,     3,     3,     3,     3,     4,     3,     1,
+       1,     1,     0,     1,     1,     3,     2,     1,     3,     1,
+       3,     1
   };
 
 
@@ -1164,17 +1254,19 @@ namespace yy {
   "\"EOF\"", "error", "$undefined", "\"=\"", "\"-\"", "\"+\"", "\"*\"",
   "\"/\"", "\"class\"", "\"void\"", "\";\"", "\",\"", "\"{\"", "\"}\"",
   "\"(\"", "\")\"", "\"identifier\"", "\"number\"", "$accept",
-  "class_list", "class", "method_list", "method", "decl_list", "stmt_list",
-  "expr", "name", "arg_list", "arg_list_noemp", YY_NULLPTR
+  "class_list", "class", "method_list", "method", "param_list",
+  "stmt_list", "expr", "name", "arg_list", "arg_list_noemp", "decl",
+  "decl_bean_list", "decl_bean", "type", YY_NULLPTR
   };
 
 #if YYDEBUG
   const unsigned char
   BisonParser::yyrline_[] =
   {
-       0,    92,    92,    93,    96,   100,   102,   106,   110,   114,
-     116,   123,   125,   127,   129,   131,   133,   135,   137,   139,
-     143,   147,   149,   153,   155
+       0,    98,    98,    99,   102,   106,   108,   112,   116,   120,
+     122,   124,   131,   133,   135,   137,   139,   141,   143,   145,
+     147,   151,   155,   157,   161,   163,   167,   171,   174,   178,
+     180,   184
   };
 
   // Print the state stack on the debug stream.
@@ -1209,8 +1301,8 @@ namespace yy {
 
 
 } // yy
-#line 1213 "bison.cc" // lalr1.cc:1167
-#line 161 "bison.yy" // lalr1.cc:1168
+#line 1305 "bison.cc" // lalr1.cc:1167
+#line 188 "bison.yy" // lalr1.cc:1168
 
 
 void yy::BisonParser::error(const location_type& l,

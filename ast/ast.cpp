@@ -59,7 +59,8 @@ std::unique_ptr<Ast> Ast::remove(size_t pos)
 
 void Ast::change(size_t pos, Ast *next)
 {
-    next->parent = this;
+    if (next != nullptr)
+        next->parent = this;
     doChange(pos, next);
 }
 

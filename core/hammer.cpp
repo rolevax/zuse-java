@@ -38,6 +38,13 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Ast::Type::METHOD:
             hitMethod(MethodAst::fromAst(ast), buf);
             break;
+        case Ast::Type::DECL:
+            hitGeneral(ast.at(0), buf); // type
+            hitGeneral(ast.at(1), buf); // decl bean list
+            break;
+        case Ast::Type::DECL_BEAN:
+            hitDeclBean(DeclBeanAst::fromAst(ast), buf);
+            break;
         case Ast::Type::PAREN:
             hitParen(ParenAst::fromAst(ast), buf);
             break;
@@ -100,6 +107,16 @@ void Hammer::hitMethod(const MethodAst &ast, Hammer::Buf &buf)
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
 }
 
+void Hammer::hitDeclBean(const DeclBeanAst &ast, Hammer::Buf &buf)
+{
+    hitGeneral(ast.at(0), buf); // identifier
+    if (ast.size() == 2) {
+        // TODO: which ast for map sep token?
+        buf.push_back(new BoneToken(&ast.at(1), BoneToken::Sym::ASSIGN));
+        hitGeneral(ast.at(1), buf); // initialization
+    }
+}
+
 void Hammer::hitParen(const ParenAst &ast, Hammer::Buf &buf)
 {
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
@@ -117,9 +134,12 @@ void Hammer::hitInfixBop(const BopAst &ast, Hammer::Buf &buf)
 void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
 {
     switch (ast.getType()) {
-    case Ast::Type::DECL_LIST:
+    case Ast::Type::DECL_PARAM_LIST:
     case Ast::Type::ARG_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
+        break;
+    case Ast::Type::DECL_BEAN_LIST:
+        buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
         break;
     default:
         break;
@@ -129,7 +149,7 @@ void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
 void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
 {
     switch (ast.getType()) {
-    case Ast::Type::DECL_LIST:
+    case Ast::Type::DECL_PARAM_LIST:
     case Ast::Type::ARG_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
         break;
@@ -149,13 +169,12 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         if (!end)
             buf.push_back(nullptr);
         break;
-    case Ast::Type::DECL_LIST:
-        // TODO comma
-        break;
     case Ast::Type::STMT_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
         buf.push_back(nullptr);
         break;
+    case Ast::Type::DECL_BEAN_LIST:
+    case Ast::Type::DECL_PARAM_LIST:
     case Ast::Type::ARG_LIST:
         if (!end) {
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::COMMA));
