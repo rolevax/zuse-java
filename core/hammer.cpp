@@ -40,10 +40,16 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             break;
         case Ast::Type::DECL:
             hitGeneral(ast.at(0), buf); // type
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
             hitGeneral(ast.at(1), buf); // decl bean list
             break;
         case Ast::Type::DECL_BEAN:
             hitDeclBean(DeclBeanAst::fromAst(ast), buf);
+            break;
+        case Ast::Type::DECL_PARAM:
+            hitGeneral(ast.at(0), buf); // type
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
+            hitGeneral(ast.at(1), buf); // identifier
             break;
         case Ast::Type::PAREN:
             hitParen(ParenAst::fromAst(ast), buf);
@@ -137,9 +143,6 @@ void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
     case Ast::Type::DECL_PARAM_LIST:
     case Ast::Type::ARG_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
-        break;
-    case Ast::Type::DECL_BEAN_LIST:
-        buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
         break;
     default:
         break;

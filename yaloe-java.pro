@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     ast/bopast.cpp \
     ast/parenast.cpp \
     ast/declbeanast.cpp \
-    ast/declast.cpp
+    ast/declast.cpp \
+    ast/declparamast.cpp
 
 RESOURCES += qml.qrc
 
@@ -73,5 +74,6 @@ HEADERS += \
     include/ast/bopast.h \
     include/ast/parenast.h \
     include/ast/declbeanast.h \
-    include/ast/declast.h
+    include/ast/declast.h \
+    include/ast/declparamast.h
 

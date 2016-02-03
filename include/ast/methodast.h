@@ -15,6 +15,9 @@ public:
     void dump() const override
     {
         std::cout << "method " << id->getText() << ':' << std::endl;
+        std::cout << "params: ";
+        params->dump();
+        std::cout << std::endl;
         stmts->dump();
     }
     size_t size() const override;

@@ -1,7 +1,7 @@
 CXX=clang++ -std=c++11 -I. -I../include 
 ASTSRC=ast.cpp rootast.cpp listast.cpp termlistast.cpp\
 	   classast.cpp methodast.cpp bopast.cpp parenast.cpp\
-	   declast.cpp declbeanast.cpp scalarast.cpp
+	   declast.cpp declbeanast.cpp declparamast.cpp scalarast.cpp
 
 all: parser
 	@${CXX} mian.cpp parser.cpp bison.cc lex.cpp ${ASTSRC}

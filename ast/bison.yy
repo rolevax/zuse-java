@@ -21,6 +21,7 @@
 	#include "ast/bopast.h"
 	#include "ast/declast.h"
 	#include "ast/declbeanast.h"
+	#include "ast/declparamast.h"
 	class ParseException;
 }
 
@@ -74,6 +75,7 @@
 %type	<ListAst*>		class_list
 %type	<ListAst*>		method_list
 %type	<ListAst*>		param_list
+%type	<ListAst*>		param_list_noemp
 %type	<ListAst*>		stmt_list
 %type	<ListAst*>		arg_list
 %type	<ListAst*>		arg_list_noemp
@@ -83,6 +85,7 @@
 %type	<Ast*>			expr
 %type	<Ast*>			decl
 %type	<Ast*>			decl_bean
+%type	<Ast*>			decl_param
 %type	<Ast*>			name
 %type	<Ast*>			type
 %printer { yyoutput << $$; } <*>;
@@ -115,6 +118,18 @@ method: "void" "identifier" "(" param_list ")" "{" stmt_list "}"
 
 param_list: %empty
 		 		{ $$ = new ListAst(Ast::Type::DECL_PARAM_LIST); } 
+		  | param_list_noemp
+		 		{ $$ = $1; }
+
+param_list_noemp: decl_param
+		 		{ $$ = new ListAst(Ast::Type::DECL_PARAM_LIST); 
+				  $$->append($1); } 
+		  | param_list_noemp "," decl_param
+				{ $1->append($3); $$ = $1; }
+		  ;
+
+decl_param: type "identifier"
+		 		{ $$ = new DeclParamAst($1, $2); } 
 		  ;
 
 stmt_list: %empty
