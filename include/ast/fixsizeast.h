@@ -42,7 +42,7 @@ FixSizeAst<N>::FixSizeAst(Type t, T... ts)
     static_assert(sizeof...(ts) == N, "FixSizeAst bound check");
     std::array<Ast*, N> tmp{ ts... };
     for (size_t i = 0; i < N; i++)
-        subtrees[i].reset(tmp[i]);
+        change(i, tmp[i]);
 }
 
 template<std::size_t N>

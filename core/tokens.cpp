@@ -44,18 +44,21 @@ void Tokens::light(const Ast *inner)
  * meta soul token left by Tokens::remove().
  * Deal with commas when outer is list.
  */
-void Tokens::insert(const Ast *outer, size_t inner)
+void Tokens::insert(const ListAst *outer, size_t inner)
 {
-    assert(outer->size() > 0 && inner < outer->size());
+    // TODO list? var-size?
+    assert(inner < outer->size());
 
     if (outer->getType() == Ast::Type::CLASS_LIST) {
         hammer.hit(*outer, 0, 0);
     } else if (outer->isList()) {
         if (outer->size() == 1) { // assart
+            /* TODO
             Ast *parent = &outer->getParent();
             size_t outerIndex = parent->indexOf(outer);
             remove(parent, outerIndex);
             insert(parent, outerIndex);
+            */
             /* recursion terminates when outer is root */
         } else if (inner < outer->size() - 1) { // not very end
             Region younger = locate(&outer->at(inner + 1));
@@ -106,6 +109,8 @@ void Tokens::insert(const Ast *outer, size_t inner)
  */
 void Tokens::remove(const Ast *outer, size_t inner)
 {
+    (void) outer; (void) inner;
+    /*
     assert(inner < outer->size());
 
     Region r = locate(&outer->at(inner));
@@ -118,6 +123,7 @@ void Tokens::remove(const Ast *outer, size_t inner)
         Token *meta = new SoulToken(outer, Token::Role::META);
         rows[r.br].emplace(rows[r.br].begin() + r.bc, meta);
     }
+    */
 }
 
 void Tokens::clear()
@@ -132,7 +138,7 @@ void Tokens::clear()
 /**
  * @brief Apply a scalar change. Assuming it is a one-line change.
  */
-void Tokens::updateScalar(const Ast *outer, size_t inner)
+void Tokens::updateScalar(const InternalAst *outer, size_t inner)
 {
     assert(outer->at(inner).isScalar());
     Region r = locate(&outer->at(inner));
@@ -157,7 +163,7 @@ std::string Tokens::pluck(size_t r)
 /**
  * @brief Vertical concrete cursor moving
  */
-void Tokens::jackKick(Ast *&outer, size_t &inner, bool down)
+void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
 {
     Region r = locate(&outer->at(inner));
     for (ssize_t i = down ? r.er + 1 : r.br - 1;
@@ -318,7 +324,7 @@ Region Tokens::locate(const Ast *tar)
 void Tokens::suckComma(Region &r)
 {
     const Ast *in = rows[r.br][r.bc]->getAst();
-    const Ast &par = in->getParent();
+    const InternalAst &par = in->getParent();
     if (par.size() > 1) {
         if (par.indexOf(in) == par.size() - 1) {
             /* very end of a non-single-element list

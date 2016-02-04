@@ -15,6 +15,7 @@ void InternalAst::change(size_t pos, Ast *next)
 
 void InternalAst::nest(size_t pos, Ast *nester)
 {
+    (void) pos; (void) nester;
     //assert(nester->type == Type::ARRAY && nester->size() == 0);
     // TODO
 

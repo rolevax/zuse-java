@@ -16,12 +16,12 @@ public:
 
     void setHotLight(ssize_t back);
     void light(const Ast *inner);
-    void insert(const Ast *outer, size_t inner);
+    void insert(const ListAst *outer, size_t inner);
     void remove(const Ast *outer, size_t inner);
     void clear();
-    void updateScalar(const Ast *outer, size_t inner);
+    void updateScalar(const InternalAst *outer, size_t inner);
     std::string pluck(size_t r);
-    void jackKick(Ast *&outer, size_t &inner, bool down);
+    void jackKick(InternalAst *&outer, size_t &inner, bool down);
 
     /// @name Hammer's Interface
     ///@{

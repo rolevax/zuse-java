@@ -58,7 +58,7 @@ private:
 private:
     std::stack<std::unique_ptr<Mode>> modes;
     std::unique_ptr<RootAst> root = nullptr;
-    Ast *outer = nullptr;
+    InternalAst *outer = nullptr;
     size_t inner = 0;
     std::unique_ptr<Ast> clipboard = nullptr;
     Tokens tokens;

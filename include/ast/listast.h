@@ -8,9 +8,6 @@
 class ListAst : public InternalAst
 {
 public:
-    static ListAst &fromAst(Ast &a);
-    static const ListAst &fromAst(const Ast &a);
-
     ListAst(Type t);
     virtual ~ListAst() = default;
 

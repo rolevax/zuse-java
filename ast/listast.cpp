@@ -4,18 +4,6 @@
 #include <algorithm>
 #include <cassert>
 
-ListAst &ListAst::fromAst(Ast &a)
-{
-    assert(a.isList());
-    return static_cast<ListAst&>(a);
-}
-
-const ListAst &ListAst::fromAst(const Ast &a)
-{
-    assert(a.isList());
-    return static_cast<const ListAst&>(a);
-}
-
 ListAst::ListAst(Type t)
     : InternalAst(t)
 {

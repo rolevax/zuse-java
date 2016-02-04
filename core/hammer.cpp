@@ -4,6 +4,7 @@
 #include "core/bonetoken.h"
 #include "core/soultoken.h"
 #include "ast/termlistast.h"
+#include "ast/fixsizeast.h"
 
 #include <cassert>
 
@@ -26,40 +27,40 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         buf.push_back(new FleshToken(&ScalarAst::fromAst(ast)));
     } else if (ast.isList()) {
         buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
-        hitList(ListAst::fromAst(ast), buf);
+        hitList(ast.asList(), buf);
         buf.push_back(new SoulToken(&ast, Token::Role::END));
     } else {
         buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
 
         switch (ast.getType()) {
         case Ast::Type::CLASS:
-            hitClass(ClassAst::fromAst(ast), buf);
+            hitClass(ast.asFixSize<2>(), buf);
             break;
         case Ast::Type::METHOD:
-            hitMethod(MethodAst::fromAst(ast), buf);
+            hitMethod(ast.asFixSize<3>(), buf);
             break;
         case Ast::Type::DECL:
-            hitGeneral(ast.at(0), buf); // type
+            hitGeneral(ast.asFixSize<2>().at(0), buf); // type
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
-            hitGeneral(ast.at(1), buf); // decl bean list
+            hitGeneral(ast.asFixSize<2>().at(1), buf); // decl bean list
             break;
         case Ast::Type::DECL_BEAN:
             hitDeclBean(DeclBeanAst::fromAst(ast), buf);
             break;
         case Ast::Type::DECL_PARAM:
-            hitGeneral(ast.at(0), buf); // type
+            hitGeneral(ast.asFixSize<2>().at(0), buf); // type
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
-            hitGeneral(ast.at(1), buf); // identifier
+            hitGeneral(ast.asFixSize<2>().at(1), buf); // identifier
             break;
         case Ast::Type::PAREN:
-            hitParen(ParenAst::fromAst(ast), buf);
+            hitParen(ast.asFixSize<1>(), buf);
             break;
         case Ast::Type::ASSIGN:
-            hitInfixBop(BopAst::fromAst(ast), buf);
+            hitInfixBop(ast.asFixSize<2>(), buf);
             break;
         case Ast::Type::CALL:
-            hitGeneral(ast.at(0), buf); // method name
-            hitGeneral(ast.at(1), buf); // arg list
+            hitGeneral(ast.asFixSize<2>().at(0), buf); // method name
+            hitGeneral(ast.asFixSize<2>().at(1), buf); // arg list
             break;
         default:
             assert("unhandled map type in hammer" && false);

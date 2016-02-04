@@ -34,7 +34,7 @@ void Doc::load(const std::string &filename)
     inner = 0;
 
     tokens.clear();
-    tokens.insert(outer, inner);
+    tokens.insert(&outer->asList(), inner);
     tokens.light(&outer->at(inner));
 }
 
@@ -110,7 +110,7 @@ const Ast &Doc::getInner() const
 
 void Doc::cursorIn()
 {
-    outer = &outer->at(inner);
+    outer = &outer->at(inner).asInternal();
     inner = 0;
 }
 
@@ -123,18 +123,18 @@ void Doc::fallIn()
 {
     assert(inner < outer->size());
 
-    Ast &focus = outer->at(inner);
+    if (outer->at(inner).isScalar())
+        return; // cannot fall in scalar
 
-    if (focus.size() == 0) {
-        if (focus.isList()) { // assart empty list
-            push(new MenuMode(*this, MenuMode::Context::ASSART));
-        }
-        return; // scalar
-    }
+    InternalAst &focus = outer->at(inner).asInternal();
 
     if (focus.isList()) {
-        outer = &focus;
-        inner = 0;
+        if (focus.size() == 0) {
+            push(new MenuMode(*this, MenuMode::Context::ASSART));
+        } else {
+            outer = &focus;
+            inner = 0;
+        }
     } else {
         assert(focus.isMap());
         outer = &focus;
@@ -147,7 +147,7 @@ void Doc::digOut()
     if (outer == root.get())
         return;
 
-    Ast *nextOuter = &outer->getParent();
+    InternalAst *nextOuter = &outer->getParent();
     inner = nextOuter->indexOf(outer);
     outer = nextOuter;
 }
@@ -186,8 +186,9 @@ void Doc::insert(Ast::Type type)
 
     Ast *a = newTree(type);
 
-    outer->insert(inner, a);
-    tokens.insert(outer, inner);
+    // TODO list? var-size?
+    outer->asList().insert(inner, a);
+    tokens.insert(&outer->asList(), inner);
 }
 
 void Doc::remove()
@@ -223,7 +224,7 @@ void Doc::change(Ast::Type type)
 
     tokens.remove(outer, inner);
     outer->change(inner, newTree(type));
-    tokens.insert(outer, inner);
+    tokens.insert(&outer->asList(), inner);
 }
 
 void Doc::nest(Ast::Type type)
@@ -236,7 +237,7 @@ void Doc::nest(Ast::Type type)
 
     tokens.remove(outer, inner);
     outer->nest(inner, newTree(type));
-    tokens.insert(outer, inner);
+    tokens.insert(&outer->asList(), inner);
 }
 
 void Doc::scalarAppend(const char *str)
