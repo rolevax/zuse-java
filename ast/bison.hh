@@ -44,20 +44,15 @@
 
 	#include <string>
 	#include "ast/ast.h"
-	#include "ast/rootast.h"
+	#include "ast/scalarast.h"
+	#include "ast/fixsizeast.h"
 	#include "ast/listast.h"
 	#include "ast/termlistast.h"
-	#include "ast/classast.h"
-	#include "ast/methodast.h"
-	#include "ast/scalarast.h"
-	#include "ast/parenast.h"
-	#include "ast/bopast.h"
-	#include "ast/declast.h"
+	#include "ast/rootast.h"
 	#include "ast/declbeanast.h"
-	#include "ast/declparamast.h"
 	class ParseException;
 
-#line 61 "bison.hh" // lalr1.cc:377
+#line 56 "bison.hh" // lalr1.cc:377
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -134,7 +129,7 @@
 
 
 namespace yy {
-#line 138 "bison.hh" // lalr1.cc:377
+#line 133 "bison.hh" // lalr1.cc:377
 
 
 
@@ -306,6 +301,7 @@ namespace yy {
       // decl_param
       // expr
       // name
+      // new_name
       // decl
       // decl_bean
       // type
@@ -741,8 +737,8 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 69,     ///< Last index in yytable_.
-      yynnts_ = 17,  ///< Number of nonterminal symbols.
+      yylast_ = 63,     ///< Last index in yytable_.
+      yynnts_ = 18,  ///< Number of nonterminal symbols.
       yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -831,9 +827,10 @@ namespace yy {
       case 25: // decl_param
       case 27: // expr
       case 28: // name
-      case 31: // decl
-      case 33: // decl_bean
-      case 34: // type
+      case 29: // new_name
+      case 32: // decl
+      case 34: // decl_bean
+      case 35: // type
         value.copy< Ast* > (other.value);
         break;
 
@@ -842,9 +839,9 @@ namespace yy {
       case 23: // param_list
       case 24: // param_list_noemp
       case 26: // stmt_list
-      case 29: // arg_list
-      case 30: // arg_list_noemp
-      case 32: // decl_bean_list
+      case 30: // arg_list
+      case 31: // arg_list_noemp
+      case 33: // decl_bean_list
         value.copy< ListAst* > (other.value);
         break;
 
@@ -875,9 +872,10 @@ namespace yy {
       case 25: // decl_param
       case 27: // expr
       case 28: // name
-      case 31: // decl
-      case 33: // decl_bean
-      case 34: // type
+      case 29: // new_name
+      case 32: // decl
+      case 34: // decl_bean
+      case 35: // type
         value.copy< Ast* > (v);
         break;
 
@@ -886,9 +884,9 @@ namespace yy {
       case 23: // param_list
       case 24: // param_list_noemp
       case 26: // stmt_list
-      case 29: // arg_list
-      case 30: // arg_list_noemp
-      case 32: // decl_bean_list
+      case 30: // arg_list
+      case 31: // arg_list_noemp
+      case 33: // decl_bean_list
         value.copy< ListAst* > (v);
         break;
 
@@ -964,9 +962,10 @@ namespace yy {
       case 25: // decl_param
       case 27: // expr
       case 28: // name
-      case 31: // decl
-      case 33: // decl_bean
-      case 34: // type
+      case 29: // new_name
+      case 32: // decl
+      case 34: // decl_bean
+      case 35: // type
         value.template destroy< Ast* > ();
         break;
 
@@ -975,9 +974,9 @@ namespace yy {
       case 23: // param_list
       case 24: // param_list_noemp
       case 26: // stmt_list
-      case 29: // arg_list
-      case 30: // arg_list_noemp
-      case 32: // decl_bean_list
+      case 30: // arg_list
+      case 31: // arg_list_noemp
+      case 33: // decl_bean_list
         value.template destroy< ListAst* > ();
         break;
 
@@ -1014,9 +1013,10 @@ namespace yy {
       case 25: // decl_param
       case 27: // expr
       case 28: // name
-      case 31: // decl
-      case 33: // decl_bean
-      case 34: // type
+      case 29: // new_name
+      case 32: // decl
+      case 34: // decl_bean
+      case 35: // type
         value.move< Ast* > (s.value);
         break;
 
@@ -1025,9 +1025,9 @@ namespace yy {
       case 23: // param_list
       case 24: // param_list_noemp
       case 26: // stmt_list
-      case 29: // arg_list
-      case 30: // arg_list_noemp
-      case 32: // decl_bean_list
+      case 30: // arg_list
+      case 31: // arg_list_noemp
+      case 33: // decl_bean_list
         value.move< ListAst* > (s.value);
         break;
 

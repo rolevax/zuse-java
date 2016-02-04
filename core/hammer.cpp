@@ -82,7 +82,7 @@ void Hammer::hitList(const ListAst &ast, Buf &buf)
     hitListEnd(ast, buf);
 }
 
-void Hammer::hitClass(const ClassAst &ast, Buf &buf)
+void Hammer::hitClass(const FixSizeAst<2> &ast, Buf &buf)
 {
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::CLASS));
     hitGeneral(ast.at(0), buf); // identifier
@@ -95,7 +95,7 @@ void Hammer::hitClass(const ClassAst &ast, Buf &buf)
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
 }
 
-void Hammer::hitMethod(const MethodAst &ast, Hammer::Buf &buf)
+void Hammer::hitMethod(const FixSizeAst<3> &ast, Hammer::Buf &buf)
 {
     // return type TODO
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::VOID));
@@ -123,14 +123,14 @@ void Hammer::hitDeclBean(const DeclBeanAst &ast, Hammer::Buf &buf)
     }
 }
 
-void Hammer::hitParen(const ParenAst &ast, Hammer::Buf &buf)
+void Hammer::hitParen(const FixSizeAst<1> &ast, Hammer::Buf &buf)
 {
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
     hitGeneral(ast.at(0), buf);
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
 }
 
-void Hammer::hitInfixBop(const BopAst &ast, Hammer::Buf &buf)
+void Hammer::hitInfixBop(const FixSizeAst<2> &ast, Hammer::Buf &buf)
 {
     hitGeneral(ast.at(0), buf); // lhs
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::ASSIGN));

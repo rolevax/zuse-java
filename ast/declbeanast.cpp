@@ -14,10 +14,10 @@ const DeclBeanAst &DeclBeanAst::fromAst(const Ast &a)
     return static_cast<const DeclBeanAst&>(a);
 }
 
-DeclBeanAst::DeclBeanAst(const std::string &id, Ast *init)
-    : Ast(Type::DECL_BEAN)
+DeclBeanAst::DeclBeanAst(Ast *id, Ast *init)
+    : InternalAst(Type::DECL_BEAN)
 {
-    change(0, new ScalarAst(Type::IDENT, id));
+    change(0, id);
     change(1, init);
 }
 

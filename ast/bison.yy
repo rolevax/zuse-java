@@ -11,17 +11,12 @@
 {
 	#include <string>
 	#include "ast/ast.h"
-	#include "ast/rootast.h"
+	#include "ast/scalarast.h"
+	#include "ast/fixsizeast.h"
 	#include "ast/listast.h"
 	#include "ast/termlistast.h"
-	#include "ast/classast.h"
-	#include "ast/methodast.h"
-	#include "ast/scalarast.h"
-	#include "ast/parenast.h"
-	#include "ast/bopast.h"
-	#include "ast/declast.h"
+	#include "ast/rootast.h"
 	#include "ast/declbeanast.h"
-	#include "ast/declparamast.h"
 	class ParseException;
 }
 
@@ -87,6 +82,7 @@
 %type	<Ast*>			decl_bean
 %type	<Ast*>			decl_param
 %type	<Ast*>			name
+%type	<Ast*>			new_name
 %type	<Ast*>			type
 %printer { yyoutput << $$; } <*>;
 
@@ -102,8 +98,8 @@ class_list: %empty					{ /* already newwed as 'result' */ }
 		  | class_list class		{ result->append($2); }
 		  ;
 
-class: "class" "identifier" "{" method_list "}"	
-	 			{ $$ = new ClassAst($2, $4); }
+class: "class" new_name"{" method_list "}"	
+	 			{ $$ = new FixSizeAst<2>(Ast::Type::CLASS, $2, $4); }
 	 ;
 
 method_list: %empty					
@@ -112,8 +108,8 @@ method_list: %empty
 				{ $1->append($2); $$ = $1; }
 		   ;
 
-method: "void" "identifier" "(" param_list ")" "{" stmt_list "}"
- 				{ $$ = new MethodAst($2, $4, $7); }
+method: "void" new_name "(" param_list ")" "{" stmt_list "}"
+ 				{ $$ = new FixSizeAst<3>(Ast::Type::METHOD, $2, $4, $7); }
 	  ;
 
 param_list: %empty
@@ -128,8 +124,8 @@ param_list_noemp: decl_param
 				{ $1->append($3); $$ = $1; }
 		  ;
 
-decl_param: type "identifier"
-		 		{ $$ = new DeclParamAst($1, $2); } 
+decl_param: type new_name
+		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_PARAM, $1, $2); } 
 		  ;
 
 stmt_list: %empty
@@ -152,11 +148,11 @@ expr: expr "+" expr
 	| expr "/" expr
 				{ $$ = TermListAst::makeBop($1, $3, TermListAst::Op::DIV); }
 	| expr "=" expr
-				{ $$ = new BopAst(Ast::Type::ASSIGN, $1, $3); } 
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
 	| name "(" arg_list ")"
-				{ $$ = new BopAst(Ast::Type::CALL, $1, $3); } 
+				{ $$ = new FixSizeAst<2>(Ast::Type::CALL, $1, $3); } 
 	| "(" expr ")"
-				{ $$ = new ParenAst($2); } 
+				{ $$ = new FixSizeAst<1>(Ast::Type::PAREN, $2); } 
 	| name
 				{ $$ = $1; } 
 	| "number"
@@ -166,6 +162,10 @@ expr: expr "+" expr
 name: "identifier"
 				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
 	;
+
+new_name: "identifier"
+				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
+		;
 
 arg_list: %empty
 		 		{ $$ = new ListAst(Ast::Type::ARG_LIST); }
@@ -180,7 +180,7 @@ arg_list_noemp: expr
 			  ;
 
 decl: type decl_bean_list
-		 		{ $$ = new DeclAst($1, $2); }
+		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL, $1, $2); }
 	;
 
 decl_bean_list: decl_bean
@@ -190,9 +190,9 @@ decl_bean_list: decl_bean
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
-decl_bean: "identifier"
+decl_bean: new_name
 		 		{ $$ = new DeclBeanAst($1); }
-		 | "identifier" "=" expr
+		 | new_name "=" expr
 		 		{ $$ = new DeclBeanAst($1, $3); }
 		 ;
 

@@ -28,14 +28,9 @@ SOURCES += main.cpp \
     mode/stringinputmode.cpp \
     mode/numberinputmode.cpp \
     mode/pairinputmode.cpp \
-    ast/classast.cpp \
-    ast/methodast.cpp \
     ast/termlistast.cpp \
-    ast/bopast.cpp \
-    ast/parenast.cpp \
     ast/declbeanast.cpp \
-    ast/declast.cpp \
-    ast/declparamast.cpp
+    ast/internalast.cpp
 
 RESOURCES += qml.qrc
 
@@ -68,12 +63,8 @@ HEADERS += \
     include/mode/numberinputmode.h \
     include/mode/pairinputmode.h \
     include/core/editabledoc.h \
-    include/ast/classast.h \
-    include/ast/methodast.h \
     include/ast/termlistast.h \
-    include/ast/bopast.h \
-    include/ast/parenast.h \
     include/ast/declbeanast.h \
-    include/ast/declast.h \
-    include/ast/declparamast.h
+    include/ast/internalast.h \
+    include/ast/fixsizeast.h
 

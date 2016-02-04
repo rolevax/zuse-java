@@ -17,7 +17,7 @@ const ListAst &ListAst::fromAst(const Ast &a)
 }
 
 ListAst::ListAst(Type t)
-    : Ast(t)
+    : InternalAst(t)
 {
 
 }
@@ -40,14 +40,6 @@ Ast &ListAst::at(size_t pos) const
     return *subtrees[pos];
 }
 
-std::unique_ptr<Ast> ListAst::remove(size_t pos)
-{
-    assert(pos < subtrees.size());
-    std::unique_ptr<Ast> res = std::move(subtrees[pos]);
-    subtrees.erase(subtrees.begin() + pos);
-    return res;
-}
-
 size_t ListAst::indexOf(const Ast *child) const
 {
     auto eq = [child](const std::unique_ptr<Ast> &a) {
@@ -59,6 +51,25 @@ size_t ListAst::indexOf(const Ast *child) const
         return assert(false && "child not found"), 0;
     else
         return it - subtrees.begin();
+}
+
+void ListAst::insert(size_t pos, Ast *child)
+{
+    child->parent = this;
+    doInsert(pos, child);
+}
+
+void ListAst::append(Ast *subtree)
+{
+    insert(size(), subtree);
+}
+
+std::unique_ptr<Ast> ListAst::remove(size_t pos)
+{
+    assert(pos < subtrees.size());
+    std::unique_ptr<Ast> res = std::move(subtrees[pos]);
+    subtrees.erase(subtrees.begin() + pos);
+    return res;
 }
 
 void ListAst::doInsert(size_t pos, Ast *child)

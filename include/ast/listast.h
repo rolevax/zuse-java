@@ -1,11 +1,11 @@
 #ifndef LISTAST_H
 #define LISTAST_H
 
-#include "ast/ast.h"
+#include "internalast.h"
 
 #include <vector>
 
-class ListAst : public Ast
+class ListAst : public InternalAst
 {
 public:
     static ListAst &fromAst(Ast &a);
@@ -29,11 +29,15 @@ public:
     ListAst *clone() const override;
     size_t size() const override;
     Ast &at(size_t pos) const override;
-    std::unique_ptr<Ast> remove(size_t pos) override;
     size_t indexOf(const Ast *child) const override;
 
+    // TODO move to VarSizeAst
+    void insert(size_t pos, Ast *child);
+    void append(Ast *subtree);
+    virtual std::unique_ptr<Ast> remove(size_t pos);
+
 protected:
-    void doInsert(size_t pos, Ast *child) override;
+    virtual void doInsert(size_t pos, Ast *child); // TODO move?
     void doChange(size_t pos, Ast *next) override;
 
 private:

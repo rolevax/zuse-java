@@ -1,15 +1,16 @@
 #ifndef DECLBEANAST_H
 #define DECLBEANAST_H
 
-#include "ast/scalarast.h"
+#include "scalarast.h"
+#include "internalast.h"
 
-class DeclBeanAst : public Ast
+class DeclBeanAst : public InternalAst
 {
 public:
     static DeclBeanAst &fromAst(Ast &a);
     static const DeclBeanAst &fromAst(const Ast &a);
 
-    DeclBeanAst(const std::string &id, Ast *init = nullptr);
+    DeclBeanAst(Ast *id, Ast *init = nullptr);
 
     void dump() const override
     {

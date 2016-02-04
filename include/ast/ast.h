@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-class RootAst;
-
 class Ast
 {
 public:
@@ -49,22 +47,11 @@ public:
     Type getType() const;
     Ast &getParent() const;
 
-    void insert(size_t pos, Ast *child);
-    void append(Ast *subtree);
-    virtual std::unique_ptr<Ast> remove(size_t pos);
-    void change(size_t pos, Ast *next);
-    void nest(size_t pos, Ast *nester);
-    virtual size_t size() const;
-    virtual Ast &at(size_t pos) const;
-    virtual size_t indexOf(const Ast *child) const;
     int indentLevel() const;
-
-protected:
-    virtual void doInsert(size_t pos, Ast *child);
-    virtual void doChange(size_t pos, Ast *next);
 
 private:
     Type type;
+public: // TODO: properly handle this
     Ast *parent;
 };
 

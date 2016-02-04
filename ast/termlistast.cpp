@@ -38,7 +38,7 @@ TermListAst *TermListAst::makeBop(Ast *lhs, Ast *rhs, Op op)
         return tlhs;
     } else if (leftList) {
         TermListAst *tlhs = &TermListAst::fromAst(*lhs);
-        tlhs->insert(lhs->size(), rhs);
+        tlhs->insert(tlhs->size(), rhs);
         tlhs->setRasingAt(tlhs->size() - 1, midRaise);
         return tlhs;
     } else if (rightList) {

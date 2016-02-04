@@ -40,57 +40,6 @@ Ast &Ast::getParent() const
     return *parent;
 }
 
-void Ast::insert(size_t pos, Ast *child)
-{
-    child->parent = this;
-    doInsert(pos, child);
-}
-
-void Ast::append(Ast *subtree)
-{
-    insert(size(), subtree);
-}
-
-std::unique_ptr<Ast> Ast::remove(size_t pos)
-{
-    (void) pos;
-    throw 2048;
-}
-
-void Ast::change(size_t pos, Ast *next)
-{
-    if (next != nullptr)
-        next->parent = this;
-    doChange(pos, next);
-}
-
-void Ast::nest(size_t pos, Ast *nester)
-{
-    //assert(nester->type == Type::ARRAY && nester->size() == 0);
-    // TODO
-
-    std::unique_ptr<Ast> nestee = remove(pos);
-    insert(pos, nester);
-    at(pos).insert(0, nestee.release());
-}
-
-size_t Ast::size() const
-{
-    return 0;
-}
-
-Ast &Ast::at(size_t pos) const
-{
-    (void) pos;
-    throw 2048;
-}
-
-size_t Ast::indexOf(const Ast *child) const
-{
-    (void) child;
-    return -1;
-}
-
 int Ast::indentLevel() const
 {
     int ret = 0;
@@ -101,20 +50,6 @@ int Ast::indentLevel() const
         for (const Ast *a = this; a->parent != a; a = &a->getParent())
             ret += a->isList();
     return ret;
-}
-
-void Ast::doInsert(size_t pos, Ast *child)
-{
-    (void) pos;
-    (void) child;
-    throw 2048;
-}
-
-void Ast::doChange(size_t pos, Ast *next)
-{
-    (void) pos;
-    (void) next;
-    throw 2048;
 }
 
 
