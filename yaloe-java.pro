@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     mode/pairinputmode.cpp \
     ast/termlistast.cpp \
     ast/declbeanast.cpp \
-    ast/internalast.cpp
+    ast/internalast.cpp \
+    ast/fixsizeast.cpp
 
 RESOURCES += qml.qrc
 
