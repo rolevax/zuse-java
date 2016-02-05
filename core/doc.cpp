@@ -242,7 +242,7 @@ void Doc::nest(Ast::Type type)
 
 void Doc::scalarAppend(const char *str)
 {
-    ScalarAst &scalar = ScalarAst::fromAst(outer->at(inner));
+    ScalarAst &scalar = outer->at(inner).asScalar();
     while ('\0' != *str)
         scalar.append(*str++);
     tokens.updateScalar(outer, inner);
@@ -250,13 +250,13 @@ void Doc::scalarAppend(const char *str)
 
 void Doc::scalarAppend(char c)
 {
-    ScalarAst::fromAst(outer->at(inner)).append(c);
+    outer->at(inner).asScalar().append(c);
     tokens.updateScalar(outer, inner);
 }
 
 void Doc::scalarClear()
 {
-    ScalarAst::fromAst(outer->at(inner)).clear();
+    outer->at(inner).asScalar().clear();
     tokens.updateScalar(outer, inner);
 }
 

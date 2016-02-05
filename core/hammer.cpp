@@ -24,7 +24,7 @@ void Hammer::hit(const Ast &ast, size_t r, size_t c)
 void Hammer::hitGeneral(const Ast &ast, Buf &buf)
 {
     if (ast.isScalar()) {
-        buf.push_back(new FleshToken(&ScalarAst::fromAst(ast)));
+        buf.push_back(new FleshToken(&ast.asScalar()));
     } else if (ast.isList()) {
         buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
         hitList(ast.asList(), buf);
@@ -102,7 +102,7 @@ void Hammer::hitMethod(const FixSizeAst<3> &ast, Hammer::Buf &buf)
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::VOID));
 
     // id
-    buf.push_back(new FleshToken(&ScalarAst::fromAst(ast.at(0))));
+    hitGeneral(ast.at(0), buf);
 
     // param list
     hitGeneral(ast.at(1), buf);

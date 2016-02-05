@@ -2,18 +2,6 @@
 
 #include <cassert>
 
-ScalarAst &ScalarAst::fromAst(Ast &ast)
-{
-    assert(ast.isScalar());
-    return static_cast<ScalarAst&>(ast);
-}
-
-const ScalarAst &ScalarAst::fromAst(const Ast &ast)
-{
-    assert(ast.isScalar());
-    return static_cast<const ScalarAst&>(ast);
-}
-
 ScalarAst::ScalarAst(Type t, const std::string &text)
     : Ast(t),
       text(text)

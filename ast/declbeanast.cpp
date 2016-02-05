@@ -46,7 +46,7 @@ void DeclBeanAst::doChange(size_t pos, Ast *next)
 {
     assert(pos == 0 || pos == 1);
     if (pos == 0)
-        id.reset(&ScalarAst::fromAst(*next));
+        id.reset(&next->asScalar());
     else
         init.reset(next);
 }

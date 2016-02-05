@@ -9,9 +9,6 @@
 class ScalarAst : public Ast
 {
 public:
-    static ScalarAst &fromAst(Ast &ast);
-    static const ScalarAst &fromAst(const Ast &ast);
-
     ScalarAst(Type t, const std::string &text);
 
     void dump() const override
