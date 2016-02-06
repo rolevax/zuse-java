@@ -41,6 +41,7 @@ blank [ \t]
 
 "class"		return yy::BisonParser::make_CLASS(loc);
 "void"		return yy::BisonParser::make_VOID(loc);
+"return"	return yy::BisonParser::make_RETURN(loc);
 
 ";"		return yy::BisonParser::make_SEMICOLON(loc);
 ","		return yy::BisonParser::make_COMMA(loc);

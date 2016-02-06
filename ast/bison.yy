@@ -56,6 +56,7 @@
 
 	CLASS		"class"
 	VOID		"void"
+	RETURN		"return"
 
 	SEMICOLON	";"
 	COMMA		","
@@ -81,6 +82,7 @@
 %type	<Ast*>			decl
 %type	<Ast*>			decl_bean
 %type	<Ast*>			decl_param
+%type	<Ast*>			return_stmt
 %type	<Ast*>			name
 %type	<Ast*>			new_name
 %type	<Ast*>			type
@@ -133,6 +135,8 @@ stmt_list: %empty
 		 | stmt_list expr ";"
 				{ $1->append($2); $$ = $1; }
 		 | stmt_list decl ";"
+				{ $1->append($2); $$ = $1; }
+		 | stmt_list return_stmt ";"
 				{ $1->append($2); $$ = $1; }
 		 ;
 
@@ -199,6 +203,9 @@ decl_bean: new_name
 type: name
 				{ $$ = $1; }
 	;
+
+return_stmt: "return" expr
+		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }
 
 %%
 

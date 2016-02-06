@@ -52,6 +52,10 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
             hitGeneral(ast.asFixSize<2>().at(1), buf); // identifier
             break;
+        case Ast::Type::RETURN:
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::RETURN));
+            hitGeneral(ast.asFixSize<2>().at(0), buf); // expr
+            break;
         case Ast::Type::PAREN:
             hitParen(ast.asFixSize<1>(), buf);
             break;
