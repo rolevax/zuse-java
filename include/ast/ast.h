@@ -25,7 +25,7 @@ public:
 
         /* MUST sync with isMap() functions when change */
         CLASS, METHOD, DECL, DECL_BEAN, DECL_PARAM, STMT,
-        RETURN,
+        RETURN, WHILE,
         PAREN,
         ASSIGN, CALL,
 

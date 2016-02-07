@@ -299,13 +299,15 @@ namespace yy {
       // class
       // method
       // decl_param
+      // stmt
       // expr
       // name
       // new_name
-      // decl
+      // decl_stmt
       // decl_bean
       // type
       // return_stmt
+      // while_stmt
       char dummy1[sizeof(Ast*)];
 
       // class_list
@@ -352,14 +354,15 @@ namespace yy {
         TOK_CLASS = 263,
         TOK_VOID = 264,
         TOK_RETURN = 265,
-        TOK_SEMICOLON = 266,
-        TOK_COMMA = 267,
-        TOK_LBRACE = 268,
-        TOK_RBRACE = 269,
-        TOK_LPAREN = 270,
-        TOK_RPAREN = 271,
-        TOK_IDENTIFIER = 272,
-        TOK_NUMBER = 273
+        TOK_WHILE = 266,
+        TOK_SEMICOLON = 267,
+        TOK_COMMA = 268,
+        TOK_LBRACE = 269,
+        TOK_RBRACE = 270,
+        TOK_LPAREN = 271,
+        TOK_RPAREN = 272,
+        TOK_IDENTIFIER = 273,
+        TOK_NUMBER = 274
       };
     };
 
@@ -505,6 +508,10 @@ namespace yy {
     static inline
     symbol_type
     make_RETURN (const location_type& l);
+
+    static inline
+    symbol_type
+    make_WHILE (const location_type& l);
 
     static inline
     symbol_type
@@ -743,12 +750,12 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 65,     ///< Last index in yytable_.
-      yynnts_ = 19,  ///< Number of nonterminal symbols.
+      yylast_ = 87,     ///< Last index in yytable_.
+      yynnts_ = 21,  ///< Number of nonterminal symbols.
       yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 19  ///< Number of tokens.
+      yyntokens_ = 20  ///< Number of tokens.
     };
 
 
@@ -793,9 +800,9 @@ namespace yy {
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18
+      15,    16,    17,    18,    19
     };
-    const unsigned int user_token_number_max_ = 273;
+    const unsigned int user_token_number_max_ = 274;
     const token_number_type undef_token_ = 2;
 
     if (static_cast<int>(t) <= yyeof_)
@@ -828,32 +835,34 @@ namespace yy {
   {
       switch (other.type_get ())
     {
-      case 21: // class
-      case 23: // method
-      case 26: // decl_param
-      case 28: // expr
-      case 29: // name
-      case 30: // new_name
-      case 33: // decl
-      case 35: // decl_bean
-      case 36: // type
-      case 37: // return_stmt
+      case 22: // class
+      case 24: // method
+      case 27: // decl_param
+      case 29: // stmt
+      case 30: // expr
+      case 31: // name
+      case 32: // new_name
+      case 35: // decl_stmt
+      case 37: // decl_bean
+      case 38: // type
+      case 39: // return_stmt
+      case 40: // while_stmt
         value.copy< Ast* > (other.value);
         break;
 
-      case 20: // class_list
-      case 22: // method_list
-      case 24: // param_list
-      case 25: // param_list_noemp
-      case 27: // stmt_list
-      case 31: // arg_list
-      case 32: // arg_list_noemp
-      case 34: // decl_bean_list
+      case 21: // class_list
+      case 23: // method_list
+      case 25: // param_list
+      case 26: // param_list_noemp
+      case 28: // stmt_list
+      case 33: // arg_list
+      case 34: // arg_list_noemp
+      case 36: // decl_bean_list
         value.copy< ListAst* > (other.value);
         break;
 
-      case 17: // "identifier"
-      case 18: // "number"
+      case 18: // "identifier"
+      case 19: // "number"
         value.copy< std::string > (other.value);
         break;
 
@@ -874,32 +883,34 @@ namespace yy {
     (void) v;
       switch (this->type_get ())
     {
-      case 21: // class
-      case 23: // method
-      case 26: // decl_param
-      case 28: // expr
-      case 29: // name
-      case 30: // new_name
-      case 33: // decl
-      case 35: // decl_bean
-      case 36: // type
-      case 37: // return_stmt
+      case 22: // class
+      case 24: // method
+      case 27: // decl_param
+      case 29: // stmt
+      case 30: // expr
+      case 31: // name
+      case 32: // new_name
+      case 35: // decl_stmt
+      case 37: // decl_bean
+      case 38: // type
+      case 39: // return_stmt
+      case 40: // while_stmt
         value.copy< Ast* > (v);
         break;
 
-      case 20: // class_list
-      case 22: // method_list
-      case 24: // param_list
-      case 25: // param_list_noemp
-      case 27: // stmt_list
-      case 31: // arg_list
-      case 32: // arg_list_noemp
-      case 34: // decl_bean_list
+      case 21: // class_list
+      case 23: // method_list
+      case 25: // param_list
+      case 26: // param_list_noemp
+      case 28: // stmt_list
+      case 33: // arg_list
+      case 34: // arg_list_noemp
+      case 36: // decl_bean_list
         value.copy< ListAst* > (v);
         break;
 
-      case 17: // "identifier"
-      case 18: // "number"
+      case 18: // "identifier"
+      case 19: // "number"
         value.copy< std::string > (v);
         break;
 
@@ -965,32 +976,34 @@ namespace yy {
     // Type destructor.
     switch (yytype)
     {
-      case 21: // class
-      case 23: // method
-      case 26: // decl_param
-      case 28: // expr
-      case 29: // name
-      case 30: // new_name
-      case 33: // decl
-      case 35: // decl_bean
-      case 36: // type
-      case 37: // return_stmt
+      case 22: // class
+      case 24: // method
+      case 27: // decl_param
+      case 29: // stmt
+      case 30: // expr
+      case 31: // name
+      case 32: // new_name
+      case 35: // decl_stmt
+      case 37: // decl_bean
+      case 38: // type
+      case 39: // return_stmt
+      case 40: // while_stmt
         value.template destroy< Ast* > ();
         break;
 
-      case 20: // class_list
-      case 22: // method_list
-      case 24: // param_list
-      case 25: // param_list_noemp
-      case 27: // stmt_list
-      case 31: // arg_list
-      case 32: // arg_list_noemp
-      case 34: // decl_bean_list
+      case 21: // class_list
+      case 23: // method_list
+      case 25: // param_list
+      case 26: // param_list_noemp
+      case 28: // stmt_list
+      case 33: // arg_list
+      case 34: // arg_list_noemp
+      case 36: // decl_bean_list
         value.template destroy< ListAst* > ();
         break;
 
-      case 17: // "identifier"
-      case 18: // "number"
+      case 18: // "identifier"
+      case 19: // "number"
         value.template destroy< std::string > ();
         break;
 
@@ -1017,32 +1030,34 @@ namespace yy {
     super_type::move(s);
       switch (this->type_get ())
     {
-      case 21: // class
-      case 23: // method
-      case 26: // decl_param
-      case 28: // expr
-      case 29: // name
-      case 30: // new_name
-      case 33: // decl
-      case 35: // decl_bean
-      case 36: // type
-      case 37: // return_stmt
+      case 22: // class
+      case 24: // method
+      case 27: // decl_param
+      case 29: // stmt
+      case 30: // expr
+      case 31: // name
+      case 32: // new_name
+      case 35: // decl_stmt
+      case 37: // decl_bean
+      case 38: // type
+      case 39: // return_stmt
+      case 40: // while_stmt
         value.move< Ast* > (s.value);
         break;
 
-      case 20: // class_list
-      case 22: // method_list
-      case 24: // param_list
-      case 25: // param_list_noemp
-      case 27: // stmt_list
-      case 31: // arg_list
-      case 32: // arg_list_noemp
-      case 34: // decl_bean_list
+      case 21: // class_list
+      case 23: // method_list
+      case 25: // param_list
+      case 26: // param_list_noemp
+      case 28: // stmt_list
+      case 33: // arg_list
+      case 34: // arg_list_noemp
+      case 36: // decl_bean_list
         value.move< ListAst* > (s.value);
         break;
 
-      case 17: // "identifier"
-      case 18: // "number"
+      case 18: // "identifier"
+      case 19: // "number"
         value.move< std::string > (s.value);
         break;
 
@@ -1102,7 +1117,7 @@ namespace yy {
     yytoken_number_[] =
     {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271,   272,   273
+     265,   266,   267,   268,   269,   270,   271,   272,   273,   274
     };
     return static_cast<token_type> (yytoken_number_[type]);
   }
@@ -1162,6 +1177,12 @@ namespace yy {
   }
 
   BisonParser::symbol_type
+  BisonParser::make_WHILE (const location_type& l)
+  {
+    return symbol_type (token::TOK_WHILE, l);
+  }
+
+  BisonParser::symbol_type
   BisonParser::make_SEMICOLON (const location_type& l)
   {
     return symbol_type (token::TOK_SEMICOLON, l);
@@ -1212,7 +1233,7 @@ namespace yy {
 
 
 } // yy
-#line 1216 "bison.hh" // lalr1.cc:377
+#line 1237 "bison.hh" // lalr1.cc:377
 
 
 

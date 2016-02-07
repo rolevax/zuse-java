@@ -57,6 +57,7 @@
 	CLASS		"class"
 	VOID		"void"
 	RETURN		"return"
+	WHILE		"while"
 
 	SEMICOLON	";"
 	COMMA		","
@@ -78,11 +79,13 @@
 %type	<ListAst*>		decl_bean_list
 %type	<Ast*>			class
 %type	<Ast*>			method
+%type	<Ast*>			stmt
 %type	<Ast*>			expr
-%type	<Ast*>			decl
+%type	<Ast*>			decl_stmt
 %type	<Ast*>			decl_bean
 %type	<Ast*>			decl_param
 %type	<Ast*>			return_stmt
+%type	<Ast*>			while_stmt
 %type	<Ast*>			name
 %type	<Ast*>			new_name
 %type	<Ast*>			type
@@ -132,13 +135,19 @@ decl_param: type new_name
 
 stmt_list: %empty
 		 		{ $$ = new ListAst(Ast::Type::STMT_LIST); }
-		 | stmt_list expr ";"
-				{ $1->append($2); $$ = $1; }
-		 | stmt_list decl ";"
-				{ $1->append($2); $$ = $1; }
-		 | stmt_list return_stmt ";"
+		 | stmt_list stmt
 				{ $1->append($2); $$ = $1; }
 		 ;
+
+stmt: expr ";"
+				{ $$ = $1; }
+	| decl_stmt
+				{ $$ = $1; }
+	| return_stmt
+				{ $$ = $1; }
+	| while_stmt
+				{ $$ = $1; }
+	;
 
 %right	"=";
 %left	"+" "-";
@@ -183,7 +192,7 @@ arg_list_noemp: expr
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
-decl: type decl_bean_list
+decl_stmt: type decl_bean_list ";"
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL, $1, $2); }
 	;
 
@@ -204,8 +213,11 @@ type: name
 				{ $$ = $1; }
 	;
 
-return_stmt: "return" expr
+return_stmt: "return" expr ";"
 		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }
+
+while_stmt: "while" "(" expr ")" stmt
+		 		{ $$ = new FixSizeAst<2>(Ast::Type::WHILE, $3, $5); }
 
 %%
 

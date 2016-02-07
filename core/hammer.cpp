@@ -43,6 +43,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             hitGeneral(ast.asFixSize<2>().at(0), buf); // type
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
             hitGeneral(ast.asFixSize<2>().at(1), buf); // decl bean list
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
             break;
         case Ast::Type::DECL_BEAN:
             hitDeclBean(DeclBeanAst::fromAst(ast), buf);
@@ -55,6 +56,16 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Ast::Type::RETURN:
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::RETURN));
             hitGeneral(ast.asFixSize<2>().at(0), buf); // expr
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
+            break;
+        case Ast::Type::WHILE:
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::WHILE));
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
+            hitGeneral(ast.asFixSize<2>().at(0), buf); // expr
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
+            buf.push_back(nullptr);
+            hitGeneral(ast.asFixSize<2>().at(1), buf); // stmt
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
             break;
         case Ast::Type::PAREN:
             hitParen(ast.asFixSize<1>(), buf);
@@ -178,7 +189,6 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
             buf.push_back(nullptr);
         break;
     case Ast::Type::STMT_LIST:
-        buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
         buf.push_back(nullptr);
         break;
     case Ast::Type::DECL_BEAN_LIST:
