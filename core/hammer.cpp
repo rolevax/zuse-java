@@ -63,8 +63,22 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
             hitGeneral(ast.asFixSize<2>().at(0), buf); // expr
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::LBRACE));
             buf.push_back(nullptr);
             hitGeneral(ast.asFixSize<2>().at(1), buf); // stmt
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
+            break;
+        case Ast::Type::DO_WHILE:
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::DO));
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::LBRACE));
+            buf.push_back(nullptr);
+            hitGeneral(ast.asFixSize<2>().at(0), buf); // stmt
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::WHILE));
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
+            hitGeneral(ast.asFixSize<2>().at(1), buf); // expr
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
             break;
         case Ast::Type::PAREN:

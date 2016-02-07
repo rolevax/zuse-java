@@ -58,6 +58,7 @@
 	VOID		"void"
 	RETURN		"return"
 	WHILE		"while"
+	DO			"do"
 
 	SEMICOLON	";"
 	COMMA		","
@@ -86,6 +87,7 @@
 %type	<Ast*>			decl_param
 %type	<Ast*>			return_stmt
 %type	<Ast*>			while_stmt
+%type	<Ast*>			do_while_stmt
 %type	<Ast*>			name
 %type	<Ast*>			new_name
 %type	<Ast*>			type
@@ -147,6 +149,10 @@ stmt: expr ";"
 				{ $$ = $1; }
 	| while_stmt
 				{ $$ = $1; }
+	| do_while_stmt
+				{ $$ = $1; }
+	| "{" stmt_list "}"
+				{ $$ = $2; }
 	;
 
 %right	"=";
@@ -217,7 +223,24 @@ return_stmt: "return" expr ";"
 		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }
 
 while_stmt: "while" "(" expr ")" stmt
-		 		{ $$ = new FixSizeAst<2>(Ast::Type::WHILE, $3, $5); }
+		 		{ ListAst *body;
+				  if ($5->getType() == Ast::Type::STMT_LIST) {
+				  	body = &$5->asList();
+				  } else {
+				  	body = new ListAst(Ast::Type::STMT_LIST);;
+					body->append($5);
+				  }
+				  $$ = new FixSizeAst<2>(Ast::Type::WHILE, $3, body); }
+
+do_while_stmt: "do" stmt "while" "(" expr ")" ";"
+		 		{ ListAst *body;
+				  if ($2->getType() == Ast::Type::STMT_LIST) {
+				  	body = &$2->asList();
+				  } else {
+				  	body = new ListAst(Ast::Type::STMT_LIST);;
+					body->append($2);
+				  }
+				  $$ = new FixSizeAst<2>(Ast::Type::DO_WHILE, body, $5); }
 
 %%
 
