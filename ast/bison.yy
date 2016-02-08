@@ -59,6 +59,8 @@
 	RETURN		"return"
 	WHILE		"while"
 	DO			"do"
+	IF			"if"
+	ELSE		"else"
 
 	SEMICOLON	";"
 	COMMA		","
@@ -75,6 +77,7 @@
 %type	<ListAst*>		param_list
 %type	<ListAst*>		param_list_noemp
 %type	<ListAst*>		stmt_list
+%type	<ListAst*>		if_list
 %type	<ListAst*>		arg_list
 %type	<ListAst*>		arg_list_noemp
 %type	<ListAst*>		decl_bean_list
@@ -151,6 +154,8 @@ stmt: expr ";"
 				{ $$ = $1; }
 	| do_while_stmt
 				{ $$ = $1; }
+	| if_list
+				{ $$ = $1; }
 	| "{" stmt_list "}"
 				{ $$ = $2; }
 	;
@@ -223,24 +228,35 @@ return_stmt: "return" expr ";"
 		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }
 
 while_stmt: "while" "(" expr ")" stmt
-		 		{ ListAst *body;
-				  if ($5->getType() == Ast::Type::STMT_LIST) {
-				  	body = &$5->asList();
-				  } else {
-				  	body = new ListAst(Ast::Type::STMT_LIST);;
-					body->append($5);
-				  }
+		 		{ ListAst *body = $5->bodify();
 				  $$ = new FixSizeAst<2>(Ast::Type::WHILE, $3, body); }
 
 do_while_stmt: "do" stmt "while" "(" expr ")" ";"
-		 		{ ListAst *body;
-				  if ($2->getType() == Ast::Type::STMT_LIST) {
-				  	body = &$2->asList();
-				  } else {
-				  	body = new ListAst(Ast::Type::STMT_LIST);;
-					body->append($2);
-				  }
+		 		{ ListAst *body = $2->bodify();
 				  $$ = new FixSizeAst<2>(Ast::Type::DO_WHILE, body, $5); }
+
+%right	"then" "else";
+
+if_list: "if" "(" expr ")" stmt %prec "then"
+				{ Ast *cond = new FixSizeAst<2>(Ast::Type::IF_CONDBODY,
+												$3, $5->bodify()); 
+				  $$ = new ListAst(Ast::Type::IF_LIST);
+				  $$->append(cond); }
+	   | "if" "(" expr ")" stmt "else" stmt
+				{ Ast *cond = new FixSizeAst<2>(Ast::Type::IF_CONDBODY,
+												$3, $5->bodify()); 
+				  $$ = new ListAst(Ast::Type::IF_LIST);
+				  $$->append(cond); 
+				  if ($7->getType() == Ast::Type::IF_LIST) {
+					  ListAst *tail = &$7->asList();
+					  for (size_t i = 0; i < tail->size(); i++)
+						  $$->append(tail->remove(i).release());
+				  } else {
+					  Ast *elze = new FixSizeAst<1>(Ast::Type::IF_ELSEBODY,
+													$7->bodify()); 
+					  $$->append(elze);
+				  } }
+	   ;
 
 %%
 

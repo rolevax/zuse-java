@@ -94,6 +94,16 @@ const ListAst &Ast::asList() const
     return static_cast<const ListAst&>(*this);
 }
 
+ListAst *Ast::bodify()
+{
+    if (getType() == Type::STMT_LIST)
+        return &this->asList();
+
+    ListAst *ret = new ListAst(Type::STMT_LIST);
+    ret->append(this);
+    return ret;
+}
+
 Ast::Type Ast::getType() const
 {
     return type;

@@ -81,6 +81,12 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
             break;
+        case Ast::Type::IF_CONDBODY:
+            hitIfCondBody(ast.asFixSize<2>(), buf);
+            break;
+        case Ast::Type::IF_ELSEBODY:
+            hitIfElseBody(ast.asFixSize<1>(), buf);
+            break;
         case Ast::Type::PAREN:
             hitParen(ast.asFixSize<1>(), buf);
             break;
@@ -151,6 +157,29 @@ void Hammer::hitDeclBean(const DeclBeanAst &ast, Hammer::Buf &buf)
         buf.push_back(new BoneToken(&ast.at(1), BoneToken::Sym::ASSIGN));
         hitGeneral(ast.at(1), buf); // initialization
     }
+}
+
+void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Hammer::Buf &buf)
+{
+    if (ast.getParent().indexOf(&ast) != 0)
+        buf.push_back(new BoneToken(&ast, BoneToken::Sym::ELSE));
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::IF));
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
+    hitGeneral(ast.at(0), buf);
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::LBRACE));
+    buf.push_back(nullptr);
+    hitGeneral(ast.at(1), buf);
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
+}
+
+void Hammer::hitIfElseBody(const FixSizeAst<1> &ast, Hammer::Buf &buf)
+{
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::ELSE));
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::LBRACE));
+    buf.push_back(nullptr);
+    hitGeneral(ast.at(0), buf);
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
 }
 
 void Hammer::hitParen(const FixSizeAst<1> &ast, Hammer::Buf &buf)

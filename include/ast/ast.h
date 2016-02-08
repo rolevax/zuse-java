@@ -20,12 +20,13 @@ public:
     enum class Type {
         /* MUST sync with isList() functions when change */
         CLASS_LIST, METHOD_LIST, DECL_PARAM_LIST, STMT_LIST,
+        IF_LIST,
         ARG_LIST, DECL_BEAN_LIST,
         ADDSUB_LIST, MULDIV_LIST,
 
         /* MUST sync with isMap() functions when change */
         CLASS, METHOD, DECL, DECL_BEAN, DECL_PARAM, STMT,
-        RETURN, WHILE, DO_WHILE,
+        RETURN, WHILE, DO_WHILE, IF_CONDBODY, IF_ELSEBODY,
         PAREN,
         ASSIGN, CALL,
 
@@ -53,6 +54,8 @@ public:
     template<std::size_t N> const FixSizeAst<N> &asFixSize() const;
     ListAst &asList();
     const ListAst &asList() const;
+
+    ListAst *bodify();
 
     /**
      * @brief Recursive value deep copy

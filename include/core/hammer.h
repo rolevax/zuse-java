@@ -26,6 +26,8 @@ private:
     void hitClass(const FixSizeAst<2> &ast, Buf &buf);
     void hitMethod(const FixSizeAst<3> &ast, Buf &buf);
     void hitDeclBean(const DeclBeanAst &ast, Buf &buf);
+    void hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf);
+    void hitIfElseBody(const FixSizeAst<1> &ast, Buf &buf);
     void hitParen(const FixSizeAst<1> &ast, Buf &buf);
     void hitInfixBop(const FixSizeAst<2> &ast, Buf &buf);
 

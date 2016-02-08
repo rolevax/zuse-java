@@ -6,8 +6,13 @@
 template<std::size_t N>
 void FixSizeAst<N>::dump() const
 {
-    for (const auto &p : subtrees)
-        p->dump();
+    std::cout << "(";
+    for (size_t i = 0; i < N; i++) {
+        subtrees[i]->dump();
+        if (i != N - 1)
+            std::cout << ", ";
+    }
+    std::cout << ")";
 }
 
 template<std::size_t N>
