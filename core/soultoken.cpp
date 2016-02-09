@@ -1,5 +1,6 @@
 #include "core/soultoken.h"
 
+#include <vector>
 #include <cassert>
 
 SoulToken::SoulToken(const Ast *ast, Role role) :
@@ -10,13 +11,16 @@ SoulToken::SoulToken(const Ast *ast, Role role) :
 
 const std::string &SoulToken::getText() const
 {
-    static const std::string tab[4] = {
-        "", "    ", "        ", "            "
-    };
+    static std::vector<std::string> tab;
 
     if (getRole() != Role::BEGIN)
         return tab[0];
 
-    return tab[getAst()->indentLevel()];
+    size_t level = getAst()->indentLevel();
+    if (level >= tab.size())
+        for (size_t i = tab.size(); i <= level; i++)
+            tab.emplace_back(4 * i, ' ');
+
+    return tab[level];
 }
 
