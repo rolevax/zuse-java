@@ -312,7 +312,7 @@ namespace yy {
       char dummy1[sizeof(Ast*)];
 
       // class_list
-      // method_list
+      // member_list
       // param_list
       // param_list_noemp
       // stmt_list
@@ -767,7 +767,7 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 139,     ///< Last index in yytable_.
+      yylast_ = 154,     ///< Last index in yytable_.
       yynnts_ = 23,  ///< Number of nonterminal symbols.
       yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
@@ -869,7 +869,7 @@ namespace yy {
         break;
 
       case 25: // class_list
-      case 27: // method_list
+      case 27: // member_list
       case 29: // param_list
       case 30: // param_list_noemp
       case 32: // stmt_list
@@ -919,7 +919,7 @@ namespace yy {
         break;
 
       case 25: // class_list
-      case 27: // method_list
+      case 27: // member_list
       case 29: // param_list
       case 30: // param_list_noemp
       case 32: // stmt_list
@@ -1014,7 +1014,7 @@ namespace yy {
         break;
 
       case 25: // class_list
-      case 27: // method_list
+      case 27: // member_list
       case 29: // param_list
       case 30: // param_list_noemp
       case 32: // stmt_list
@@ -1070,7 +1070,7 @@ namespace yy {
         break;
 
       case 25: // class_list
-      case 27: // method_list
+      case 27: // member_list
       case 29: // param_list
       case 30: // param_list_noemp
       case 32: // stmt_list

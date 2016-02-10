@@ -123,12 +123,12 @@ int Ast::indentLevel() const
 {
     int ret = 0;
     Type ptype = parent->type;
-    bool hasIndent = ptype == Type::METHOD_LIST
+    bool hasIndent = ptype == Type::MEMBER_LIST
             || ptype == Type::STMT_LIST;
     if (hasIndent)
         for (const Ast *a = parent; a->parent != a; a = &a->getParent())
             if (a->getType() == Type::STMT_LIST
-                    || a->getType() == Type::METHOD_LIST)
+                    || a->getType() == Type::MEMBER_LIST)
                 ++ret;
     return ret;
 }

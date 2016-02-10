@@ -19,7 +19,7 @@ public:
      */
     enum class Type {
         /* MUST sync with isList() functions when change */
-        CLASS_LIST, METHOD_LIST, DECL_PARAM_LIST, STMT_LIST,
+        CLASS_LIST, MEMBER_LIST, DECL_PARAM_LIST, STMT_LIST,
         IF_LIST,
         ARG_LIST, DECL_BEAN_LIST,
         ADDSUB_LIST, MULDIV_LIST,

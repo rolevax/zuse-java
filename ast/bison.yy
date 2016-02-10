@@ -73,7 +73,7 @@
 %token	<std::string>	IDENTIFIER	"identifier"
 %token	<std::string>	NUMBER		"number"
 %type	<ListAst*>		class_list
-%type	<ListAst*>		method_list
+%type	<ListAst*>		member_list
 %type	<ListAst*>		param_list
 %type	<ListAst*>		param_list_noemp
 %type	<ListAst*>		stmt_list
@@ -108,13 +108,15 @@ class_list: %empty					{ /* already newwed as 'result' */ }
 		  | class_list class		{ result->append($2); }
 		  ;
 
-class: "class" new_name"{" method_list "}"	
+class: "class" new_name"{" member_list "}"	
 	 			{ $$ = new FixSizeAst<2>(Ast::Type::CLASS, $2, $4); }
 	 ;
 
-method_list: %empty					
-		   		{ $$ = new ListAst(Ast::Type::METHOD_LIST); }
-		   | method_list method		
+member_list: %empty					
+		   		{ $$ = new ListAst(Ast::Type::MEMBER_LIST); }
+		   | member_list method		
+				{ $1->append($2); $$ = $1; }
+		   | member_list decl_stmt
 				{ $1->append($2); $$ = $1; }
 		   ;
 

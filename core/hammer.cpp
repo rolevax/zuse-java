@@ -221,7 +221,7 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
 
     switch (ast.getType()) {
     case Ast::Type::CLASS_LIST:
-    case Ast::Type::METHOD_LIST:
+    case Ast::Type::MEMBER_LIST:
         buf.push_back(nullptr);
         if (!end)
             buf.push_back(nullptr);
