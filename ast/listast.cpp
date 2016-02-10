@@ -43,7 +43,7 @@ size_t ListAst::indexOf(const Ast *child) const
 
 void ListAst::insert(size_t pos, Ast *child)
 {
-    child->parent = this;
+    child->setParent(this);
     doInsert(pos, child);
 }
 

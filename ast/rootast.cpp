@@ -5,6 +5,5 @@
 RootAst::RootAst() :
     ListAst(Type::CLASS_LIST)
 {
-    // TODO bad design
-    parent = this;
+    setParent(this);
 }

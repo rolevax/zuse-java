@@ -9,7 +9,7 @@ InternalAst::InternalAst(Type t)
 void InternalAst::change(size_t pos, Ast *next)
 {
     if (next != nullptr)
-        next->parent = this;
+        next->setParent(this);
     doChange(pos, next);
 }
 

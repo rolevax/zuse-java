@@ -65,12 +65,12 @@ public:
 
     Type getType() const;
     InternalAst &getParent() const;
+    void setParent(InternalAst *next);
 
     int indentLevel() const;
 
 private:
     Type type;
-public: // TODO: properly handle this
     InternalAst *parent;
 };
 

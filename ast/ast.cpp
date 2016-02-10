@@ -114,6 +114,11 @@ InternalAst &Ast::getParent() const
     return *parent;
 }
 
+void Ast::setParent(InternalAst *next)
+{
+    parent = next;
+}
+
 int Ast::indentLevel() const
 {
     int ret = 0;
@@ -122,7 +127,9 @@ int Ast::indentLevel() const
             || ptype == Type::STMT_LIST;
     if (hasIndent)
         for (const Ast *a = parent; a->parent != a; a = &a->getParent())
-            ret += a->getType() == Type::STMT_LIST;
+            if (a->getType() == Type::STMT_LIST
+                    || a->getType() == Type::METHOD_LIST)
+                ++ret;
     return ret;
 }
 
