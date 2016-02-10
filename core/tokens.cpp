@@ -300,8 +300,10 @@ Region Tokens::locate(const Ast *tar)
                     found = true;
                     break;
                 } else if (role == Token::Role::FLESH) {
-                    res.br = res.er = rit - rows.begin();
-                    res.bc = res.ec = cit - rit->begin();
+                    res.er = rit - rows.begin();
+                    res.br = res.er;
+                    res.ec = cit - rit->begin();
+                    res.bc = res.ec;
                     found = true;
                     break;
                 }
@@ -386,7 +388,7 @@ Region Tokens::anchor(const Region &r)
 {
    Region c(r);
    c.bc = anchor(c.br, c.bc);
-   if (r.ec == 0) {
+   if (r.br != r.er && r.ec == 0) {
        c.er = r.er - 1;
        c.ec = anchor(r.er - 1, rows[r.er - 1].size());
    } else {
