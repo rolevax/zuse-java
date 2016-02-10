@@ -1,2 +1,6 @@
 yaloe-java.pro.user
+ast/a.out
+ast/*.cc
+ast/*.hh
+ast/lex.cpp
 
