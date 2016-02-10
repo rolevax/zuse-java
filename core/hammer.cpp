@@ -161,8 +161,6 @@ void Hammer::hitDeclBean(const DeclBeanAst &ast, Hammer::Buf &buf)
 
 void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Hammer::Buf &buf)
 {
-    if (ast.getParent().indexOf(&ast) != 0)
-        buf.push_back(new BoneToken(&ast, BoneToken::Sym::ELSE));
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::IF));
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
     hitGeneral(ast.at(0), buf);
@@ -170,16 +168,13 @@ void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Hammer::Buf &buf)
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::LBRACE));
     buf.push_back(nullptr);
     hitGeneral(ast.at(1), buf);
-    buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
 }
 
 void Hammer::hitIfElseBody(const FixSizeAst<1> &ast, Hammer::Buf &buf)
 {
-    buf.push_back(new BoneToken(&ast, BoneToken::Sym::ELSE));
-    buf.push_back(new BoneToken(&ast, BoneToken::Sym::LBRACE));
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::LBRACE_NS));
     buf.push_back(nullptr);
     hitGeneral(ast.at(0), buf);
-    buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
 }
 
 void Hammer::hitParen(const FixSizeAst<1> &ast, Hammer::Buf &buf)
@@ -240,6 +235,11 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         if (!end) {
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::COMMA));
         }
+        break;
+    case Ast::Type::IF_LIST:
+        buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
+        if (!end)
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::ELSE));
         break;
     case Ast::Type::ADDSUB_LIST:
         if (!end) {

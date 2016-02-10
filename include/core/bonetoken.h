@@ -9,7 +9,7 @@ public:
     enum class Sym
     {
         // MUST sync order with 'syms'
-        CLASS, LBRACE, RBRACE, VOID, LPAREN, RPAREN,
+        CLASS, LBRACE, LBRACE_NS, RBRACE, VOID, LPAREN, RPAREN,
         RETURN, IF, ELSE, WHILE, DO, FOR,
         SPACE, SEMICOLON, COMMA,
         ASSIGN, ADD, SUB, MUL, DIV

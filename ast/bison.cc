@@ -1080,19 +1080,20 @@ namespace yy {
 				  yylhs.value.as< ListAst* > () = new ListAst(Ast::Type::IF_LIST);
 				  yylhs.value.as< ListAst* > ()->append(cond); 
 				  if (yystack_[0].value.as< Ast* > ()->getType() == Ast::Type::IF_LIST) {
-					  ListAst *tail = &yystack_[0].value.as< Ast* > ()->asList();
-					  for (size_t i = 0; i < tail->size(); i++)
-						  yylhs.value.as< ListAst* > ()->append(tail->remove(i).release());
+					  ListAst &tail = yystack_[0].value.as< Ast* > ()->asList();
+					  size_t size = tail.size();
+					  for (size_t i = 0; i < size; i++)
+						  yylhs.value.as< ListAst* > ()->append(tail.remove(0).release());
 				  } else {
 					  Ast *elze = new FixSizeAst<1>(Ast::Type::IF_ELSEBODY,
 													yystack_[0].value.as< Ast* > ()->bodify()); 
 					  yylhs.value.as< ListAst* > ()->append(elze);
 				  } }
-#line 1092 "bison.cc" // lalr1.cc:859
+#line 1093 "bison.cc" // lalr1.cc:859
     break;
 
 
-#line 1096 "bison.cc" // lalr1.cc:859
+#line 1097 "bison.cc" // lalr1.cc:859
             default:
               break;
             }
@@ -1531,8 +1532,8 @@ namespace yy {
 
 
 } // yy
-#line 1535 "bison.cc" // lalr1.cc:1167
-#line 261 "bison.yy" // lalr1.cc:1168
+#line 1536 "bison.cc" // lalr1.cc:1167
+#line 262 "bison.yy" // lalr1.cc:1168
 
 
 void yy::BisonParser::error(const location_type& l,

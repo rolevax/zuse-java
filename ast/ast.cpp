@@ -122,7 +122,7 @@ int Ast::indentLevel() const
             || ptype == Type::STMT_LIST;
     if (hasIndent)
         for (const Ast *a = parent; a->parent != a; a = &a->getParent())
-            ret += a->isList();
+            ret += a->getType() == Type::STMT_LIST;
     return ret;
 }
 

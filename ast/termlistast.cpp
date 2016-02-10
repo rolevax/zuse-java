@@ -27,7 +27,8 @@ TermListAst *TermListAst::makeBop(Ast *lhs, Ast *rhs, Op op)
     if (leftList && rightList) {
         TermListAst *tlhs = &TermListAst::fromAst(*lhs);
         TermListAst *trhs = &TermListAst::fromAst(*rhs);
-        for (size_t i = 0; i < trhs->size(); i++) {
+        size_t size = trhs->size();
+        for (size_t i = 0; i < size; i++) {
             bool raising = trhs->rasingAt(0);
             tlhs->append(trhs->remove(0).release());
             /* this is syntax level concat. only the first raise-sign

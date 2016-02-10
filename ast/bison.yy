@@ -248,9 +248,10 @@ if_list: "if" "(" expr ")" stmt %prec "then"
 				  $$ = new ListAst(Ast::Type::IF_LIST);
 				  $$->append(cond); 
 				  if ($7->getType() == Ast::Type::IF_LIST) {
-					  ListAst *tail = &$7->asList();
-					  for (size_t i = 0; i < tail->size(); i++)
-						  $$->append(tail->remove(i).release());
+					  ListAst &tail = $7->asList();
+					  size_t size = tail.size();
+					  for (size_t i = 0; i < size; i++)
+						  $$->append(tail.remove(0).release());
 				  } else {
 					  Ast *elze = new FixSizeAst<1>(Ast::Type::IF_ELSEBODY,
 													$7->bodify()); 
