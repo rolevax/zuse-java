@@ -288,6 +288,15 @@ Ast *Doc::newTree(Ast::Type type)
         a = new FixSizeAst<2>(Ast::Type::CLASS, id, ml);
         break;
     }
+    case Ast::Type::DECL_STMT: {
+        Ast *type = new ScalarAst(Ast::Type::IDENT, "Type");
+        Ast *id = new ScalarAst(Ast::Type::IDENT, "ident");
+        ListAst *dbl = new ListAst(Ast::Type::DECL_BEAN_LIST);
+        Ast *db = new DeclBeanAst(id) ;
+        dbl->append(db);
+        a = new FixSizeAst<2>(Ast::Type::DECL_STMT, type, dbl);
+        break;
+    }
     default:
         throw "newTree: untreated type";
     }

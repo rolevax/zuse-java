@@ -25,7 +25,7 @@ public:
         ADDSUB_LIST, MULDIV_LIST,
 
         /* MUST sync with isMap() functions when change */
-        CLASS, METHOD, DECL, DECL_BEAN, DECL_PARAM, STMT,
+        CLASS, METHOD, DECL_STMT, DECL_BEAN, DECL_PARAM, STMT,
         RETURN, WHILE, DO_WHILE, IF_CONDBODY, IF_ELSEBODY,
         PAREN,
         ASSIGN, CALL,

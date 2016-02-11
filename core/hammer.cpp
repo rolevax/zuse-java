@@ -39,7 +39,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Ast::Type::METHOD:
             hitMethod(ast.asFixSize<3>(), buf);
             break;
-        case Ast::Type::DECL:
+        case Ast::Type::DECL_STMT:
             hitGeneral(ast.asFixSize<2>().at(0), buf); // type
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
             hitGeneral(ast.asFixSize<2>().at(1), buf); // decl bean list

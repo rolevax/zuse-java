@@ -16,17 +16,16 @@ MenuMode::MenuMode(EditableDoc &doc, Context context) :
 
 void MenuMode::keyboard(char key)
 {
+    Ast::Type otype = doc.getOuter().getType();
     switch (key) {
-    /*
     case ' ':
         doc.pop();
         break;
-    case 's':
-        work(Ast::Type::STRING);
+    case 'f':
+        if (otype == Ast::Type::MEMBER_LIST)
+            work(Ast::Type::DECL_STMT);
         break;
-    case 'n':
-        work(Ast::Type::NUMBER);
-        break;
+        /*
     case 'x':
         work(Ast::Type::KEYTAL, "null");
         break;
@@ -35,12 +34,6 @@ void MenuMode::keyboard(char key)
         break;
     case 'f':
         work(Ast::Type::KEYTAL, "false");
-        break;
-    case 'a':
-        work(Ast::Type::ARRAY);
-        break;
-    case 'o':
-        work(Ast::Type::OBJECT);
         break;
         */
     default:
@@ -120,13 +113,12 @@ void MenuMode::work(Ast::Type type, const char *keytal)
     case Ast::Type::KEYTAL:
         assert(nullptr != keytal);
         doc.scalarAppend(keytal);
-        // fall through
-    case Ast::Type::ARRAY:
-    case Ast::Type::OBJECT:
         doc.pop();
         break;
         */
+    // no more input mode to push
     case Ast::Type::CLASS:
+    case Ast::Type::DECL_STMT:
         doc.pop();
         break;
     default:

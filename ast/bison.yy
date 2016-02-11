@@ -206,7 +206,7 @@ arg_list_noemp: expr
 			  ;
 
 decl_stmt: type decl_bean_list ";"
-		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL, $1, $2); }
+		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_STMT, $1, $2); }
 	;
 
 decl_bean_list: decl_bean
