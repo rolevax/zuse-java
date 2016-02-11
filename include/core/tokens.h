@@ -19,6 +19,7 @@ public:
     void insert(const ListAst *outer, size_t inner);
     void remove(const Ast *outer, size_t inner);
     void clear();
+    void sync(const ListAst *root);
     void updateScalar(const InternalAst *outer, size_t inner);
     std::string pluck(size_t r);
     void jackKick(InternalAst *&outer, size_t &inner, bool down);

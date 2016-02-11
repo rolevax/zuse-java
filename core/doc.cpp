@@ -33,8 +33,7 @@ void Doc::load(const std::string &filename)
     outer = root.get();
     inner = 0;
 
-    tokens.clear();
-    tokens.insert(&outer->asList(), inner);
+    tokens.sync(root.get());
     tokens.light(&outer->at(inner));
 }
 
@@ -58,7 +57,7 @@ void Doc::keyboard(char key)
     if (root->size() > 0)
         modes.top()->keyboard(key);
     else
-        modes.top()->emptyKeyboard(key);
+        modes.top()->emptyKeyboard(key); // TODO might be useless
     tokens.light(&outer->at(inner));
 }
 
@@ -188,7 +187,10 @@ void Doc::insert(Ast::Type type)
 
     // TODO list? var-size?
     outer->asList().insert(inner, a);
-    tokens.insert(&outer->asList(), inner);
+
+    //tokens.insert(&outer->asList(), inner);
+    // TODO lead performance problem?
+    tokens.sync(root.get());
 }
 
 void Doc::remove()
@@ -280,6 +282,12 @@ Ast *Doc::newTree(Ast::Type type)
     Ast *a = nullptr;
 
     switch (type) {
+    case Ast::Type::CLASS: {
+        Ast *id = new ScalarAst(Ast::Type::IDENT, "C0");
+        Ast *ml = new ListAst(Ast::Type::MEMBER_LIST);
+        a = new FixSizeAst<2>(Ast::Type::CLASS, id, ml);
+        break;
+    }
     default:
         throw "newTree: untreated type";
     }

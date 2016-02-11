@@ -50,6 +50,7 @@ void Tokens::insert(const ListAst *outer, size_t inner)
     assert(inner < outer->size());
 
     if (outer->getType() == Ast::Type::CLASS_LIST) {
+        // FIXIT: betrayed meaning of parameters
         hammer.hit(*outer, 0, 0);
     } else if (outer->isList()) {
         if (outer->size() == 1) { // assart
@@ -133,6 +134,13 @@ void Tokens::clear()
     rows.clear();
     rows.emplace_back();
     ob.observeUpdateLine(0, pluck(0));
+}
+
+void Tokens::sync(const ListAst *root)
+{
+    assert(root->getType() == Ast::Type::CLASS_LIST);
+    clear();
+    hammer.hit(*root, 0, 0);
 }
 
 /**

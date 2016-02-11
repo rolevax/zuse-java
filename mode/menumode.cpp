@@ -56,21 +56,20 @@ void MenuMode::emptyKeyboard(char key)
 void MenuMode::onPushed()
 {
     // early leave if only one choice
-    /*
     bool underTyrant = context != Context::ASSART
-            && doc.outerType() == Ast::Type::OBJECT;
+            && doc.getOuter().getType() == Ast::Type::CLASS_LIST;
     bool intoTyrant = context == Context::ASSART
-            && doc.innerType() == Ast::Type::OBJECT;
+            && doc.getInner().getType() == Ast::Type::CLASS_LIST;
     if (underTyrant || intoTyrant) {
-        work(Ast::Type::PAIR);
+        work(Ast::Type::CLASS);
         return;
     } else if (context == Context::NEST) {
-        work(Ast::Type::ARRAY);
+        // TODO
+        //work(Ast::Type::ARRAY);
         return;
     }
 
     doc.toggleTension(true);
-    */
 }
 
 void MenuMode::onPopped()
@@ -127,6 +126,9 @@ void MenuMode::work(Ast::Type type, const char *keytal)
         doc.pop();
         break;
         */
+    case Ast::Type::CLASS:
+        doc.pop();
+        break;
     default:
         throw "MenuMode: work(): unhandled ast type";
         break;
