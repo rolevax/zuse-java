@@ -19,7 +19,7 @@ Rectangle {
         }
 
         onTension: {
-            street.setTension(b);
+            showPad.setTension(b);
         }
 
         onPushed: {
@@ -30,18 +30,18 @@ Rectangle {
             modesModel.remove(modesModel.count - 1, 1);
         }
 
-        onInsertLine: { street.insertLine(r, ct); }
-        onRemoveLine: { street.removeLine(r, ct); }
-        onUpdateLine: { street.updateLine(r, str); }
-        onHotLighted: { street.setHotLight(back); }
+        onInsertLine: { showPad.insertLine(r, ct); }
+        onRemoveLine: { showPad.removeLine(r, ct); }
+        onUpdateLine: { showPad.updateLine(r, str); }
+        onHotLighted: { showPad.setHotLight(back); }
         onLighted: {
-            street.light(false, lbr, lbc, ler, lec);
-            street.light(true, hbr, hbc, her, hec);
+            showPad.light(false, lbr, lbc, ler, lec);
+            showPad.light(true, hbr, hbc, her, hec);
         }
     }
 
-    Street {
-        id: street
+    ShowPad {
+        id: showPad
         anchors.fill: parent
     }
 
@@ -73,6 +73,8 @@ Rectangle {
     }
 
     Keys.onPressed: {
+        if (event.text === "z")
+            showPad.test();
         pDoc.keyboard(event.text, event.modifiers);
         event.accepted = true;
     }

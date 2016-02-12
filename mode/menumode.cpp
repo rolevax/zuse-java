@@ -25,6 +25,10 @@ void MenuMode::keyboard(char key)
         if (otype == Ast::Type::MEMBER_LIST)
             work(Ast::Type::DECL_STMT);
         break;
+    case 'm':
+        if (otype == Ast::Type::MEMBER_LIST)
+            work(Ast::Type::METHOD);
+        break;
         /*
     case 'x':
         work(Ast::Type::KEYTAL, "null");
@@ -119,6 +123,7 @@ void MenuMode::work(Ast::Type type, const char *keytal)
     // no more input mode to push
     case Ast::Type::CLASS:
     case Ast::Type::DECL_STMT:
+    case Ast::Type::METHOD:
         doc.pop();
         break;
     default:

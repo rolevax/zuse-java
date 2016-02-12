@@ -297,6 +297,13 @@ Ast *Doc::newTree(Ast::Type type)
         a = new FixSizeAst<2>(Ast::Type::DECL_STMT, type, dbl);
         break;
     }
+    case Ast::Type::METHOD: {
+        Ast *id = new ScalarAst(Ast::Type::IDENT, "m0");
+        Ast *dpl = new ListAst(Ast::Type::DECL_PARAM_LIST);
+        Ast *sl = new ListAst(Ast::Type::STMT_LIST);
+        a = new FixSizeAst<3>(Ast::Type::METHOD, id, dpl, sl);
+        break;
+    }
     default:
         throw "newTree: untreated type";
     }
