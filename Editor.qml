@@ -73,8 +73,6 @@ Rectangle {
     }
 
     Keys.onPressed: {
-        if (event.text === "z")
-            showPad.test();
         pDoc.keyboard(event.text, event.modifiers);
         event.accepted = true;
     }

@@ -11,7 +11,6 @@ Item {
         id: leftText
         color: hotLight.color
         font.family: "Monospace"
-        font.pixelSize: 20
     }
 
     Rectangle {

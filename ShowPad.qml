@@ -21,37 +21,51 @@ ListView {
         }
     }
 
-    delegate: Item {
+    delegate: Row {
         width: parent.width
         height: 20
         objectName: "delegateItem"
         property int rowId: index
+        spacing: 5
 
-        LightBar { // low light
-            visible: lowUpIndex <= index && index <= lowDownIndex
-            property bool up: index == lowUpIndex
-            property bool down: index == lowDownIndex
-            property bool mid: lowUpIndex < index && index < lowDownIndex
-            lightColor: "#303040"
-            leftOff: up ? lowUpLeft : lowDownLeft
-            rightOff: up || mid ? lowUpRight : lowDownRight
-        }
-
-        LightBar { // high light
-            visible: highUpIndex <= index && index <= highDownIndex
-            property bool up: index == highUpIndex
-            property bool down: index == highDownIndex
-            property bool mid: highUpIndex < index && index < highDownIndex
-            lightColor: "#443399"
-            leftOff: up ? highUpLeft : highDownLeft
-            rightOff: up || mid ? highUpRight : highDownRight
-        }
-
-        Text { // source text line
-            text: modelText
+        Text { // line number
+            text: "" + index
             color: "white"
             font.family: "Monospace"
             font.pixelSize: parent.height
+            horizontalAlignment: Text.AlignRight
+            width: 50
+        }
+
+        Item {
+            height: parent.height
+            width: 1 // just non-zero
+            LightBar { // low light
+                visible: lowUpIndex <= index && index <= lowDownIndex
+                property bool up: index == lowUpIndex
+                property bool down: index == lowDownIndex
+                property bool mid: lowUpIndex < index && index < lowDownIndex
+                lightColor: "#303040"
+                leftOff: up ? lowUpLeft : lowDownLeft
+                rightOff: up || mid ? lowUpRight : lowDownRight
+            }
+
+            LightBar { // high light
+                visible: highUpIndex <= index && index <= highDownIndex
+                property bool up: index == highUpIndex
+                property bool down: index == highDownIndex
+                property bool mid: highUpIndex < index && index < highDownIndex
+                lightColor: "#443399"
+                leftOff: up ? highUpLeft : highDownLeft
+                rightOff: up || mid ? highUpRight : highDownRight
+            }
+
+            Text { // source text line
+                text: modelText
+                color: "white"
+                font.family: "Monospace"
+                font.pixelSize: parent.height
+            }
         }
     }
 
@@ -124,6 +138,12 @@ ListView {
             highDownLeft = leftMost;
             highDownRight = ec;
             highDownIndex = er;
+
+            // position current line to center of window
+            var windTop = contentY / 20; // TODO: de-magic
+            var windBottom = (contentY + height) / 20;
+            if (br < windTop || br > windBottom)
+                positionViewAtIndex(br, ListView.Center);
         } else {
             lowUpLeft = bc;
             lowUpRight = rightMost;
