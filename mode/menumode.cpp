@@ -4,6 +4,7 @@
 #include "mode/numberinputmode.h"
 #include "mode/pairinputmode.h"
 
+#include <cctype>
 #include <cassert>
 #include <QDebug>
 
@@ -16,30 +17,31 @@ MenuMode::MenuMode(EditableDoc &doc, Context context) :
 
 void MenuMode::keyboard(char key)
 {
-    Ast::Type otype = doc.getOuter().getType();
-    switch (key) {
-    case ' ':
+    if (key == ' ') {
         doc.pop();
-        break;
-    case 'f':
-        if (otype == Ast::Type::MEMBER_LIST)
+        return;
+    }
+
+    // TODO: data-ize the fucking design
+    switch(doc.getOuter().getType()) {
+    case Ast::Type::MEMBER_LIST:
+        switch (key) {
+        case 'f':
             work(Ast::Type::DECL_STMT);
-        break;
-    case 'm':
-        if (otype == Ast::Type::MEMBER_LIST)
+            break;
+        case 'm':
             work(Ast::Type::METHOD);
+            break;
+        default:
+            break;
+        }
         break;
-        /*
-    case 'x':
-        work(Ast::Type::KEYTAL, "null");
+    case Ast::Type::STMT_LIST:
+        if (std::isalpha(key)) {
+            char tmp[2] = { key, '\0' };
+            work(Ast::Type::IDENT, tmp);
+        }
         break;
-    case 't':
-        work(Ast::Type::KEYTAL, "true");
-        break;
-    case 'f':
-        work(Ast::Type::KEYTAL, "false");
-        break;
-        */
     default:
         break;
     }
@@ -103,23 +105,21 @@ void MenuMode::work(Ast::Type type, const char *keytal)
         doc.insert(type);
     }
 
+    if (nullptr != keytal)
+        doc.scalarAppend(keytal);
+
     switch (type) {
     /*
     case Ast::Type::STRING:
         doc.pop(new StringInputMode(doc, false));
         break;
-    case Ast::Type::NUMBER:
-        doc.pop(new NumberInputMode(doc, false));
-        break;
     case Ast::Type::PAIR:
         doc.pop(new PairInputMode(doc));
         break;
-    case Ast::Type::KEYTAL:
-        assert(nullptr != keytal);
-        doc.scalarAppend(keytal);
-        doc.pop();
-        break;
         */
+    case Ast::Type::IDENT:
+        // TODO: push ident input mode
+        // fall through
     // no more input mode to push
     case Ast::Type::CLASS:
     case Ast::Type::DECL_STMT:

@@ -304,6 +304,10 @@ Ast *Doc::newTree(Ast::Type type)
         a = new FixSizeAst<3>(Ast::Type::METHOD, id, dpl, sl);
         break;
     }
+    case Ast::Type::IDENT: {
+        a = new ScalarAst(Ast::Type::IDENT, "ident");
+        break;
+    }
     default:
         throw "newTree: untreated type";
     }
