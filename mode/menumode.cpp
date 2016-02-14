@@ -24,7 +24,9 @@ void MenuMode::keyboard(char key)
     }
 
     // TODO: data-ize the fucking design
-    switch(doc.getOuter().getType()) {
+    Ast::Type type = context == Context::ASSART ? doc.getInner().getType()
+                                                : doc.getOuter().getType();
+    switch(type) {
     case Ast::Type::MEMBER_LIST:
         switch (key) {
         case 'f':
