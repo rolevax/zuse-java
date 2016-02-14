@@ -305,7 +305,7 @@ Ast *Doc::newTree(Ast::Type type)
         break;
     }
     case Ast::Type::IDENT: {
-        a = new ScalarAst(Ast::Type::IDENT, "ident");
+        a = new ScalarAst(Ast::Type::IDENT, "");
         break;
     }
     default:

@@ -23,15 +23,13 @@ void Hammer::hit(const Ast &ast, size_t r, size_t c)
 
 void Hammer::hitGeneral(const Ast &ast, Buf &buf)
 {
+    buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
+
     if (ast.isScalar()) {
         buf.push_back(new FleshToken(&ast.asScalar()));
     } else if (ast.isList()) {
-        buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
         hitList(ast.asList(), buf);
-        buf.push_back(new SoulToken(&ast, Token::Role::END));
     } else {
-        buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
-
         switch (ast.getType()) {
         case Ast::Type::CLASS:
             hitClass(ast.asFixSize<2>(), buf);
@@ -101,9 +99,9 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             assert("unhandled map type in hammer" && false);
             break;
         }
-
-        buf.push_back(new SoulToken(&ast, Token::Role::END));
     }
+
+    buf.push_back(new SoulToken(&ast, Token::Role::END));
 }
 
 void Hammer::hitList(const ListAst &ast, Buf &buf)

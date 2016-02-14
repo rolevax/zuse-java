@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     ast/termlistast.cpp \
     ast/declbeanast.cpp \
     ast/internalast.cpp \
-    ast/fixsizeast.cpp
+    ast/fixsizeast.cpp \
+    mode/identinputmode.cpp
 
 RESOURCES += qml.qrc
 
@@ -67,5 +68,6 @@ HEADERS += \
     include/ast/termlistast.h \
     include/ast/declbeanast.h \
     include/ast/internalast.h \
-    include/ast/fixsizeast.h
+    include/ast/fixsizeast.h \
+    include/mode/identinputmode.h
 

@@ -1,5 +1,6 @@
 #include "core/editabledoc.h"
 #include "mode/menumode.h"
+#include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
 #include "mode/pairinputmode.h"
@@ -78,7 +79,7 @@ void MenuMode::onPopped()
 
 const char *MenuMode::name()
 {
-    return "Select Type";
+    return "op pending";
 }
 
 /**
@@ -118,8 +119,8 @@ void MenuMode::work(Ast::Type type, const char *keytal)
         break;
         */
     case Ast::Type::IDENT:
-        // TODO: push ident input mode
-        // fall through
+        doc.pop(new IdentInputMode(doc, false));
+        break;
     // no more input mode to push
     case Ast::Type::CLASS:
     case Ast::Type::DECL_STMT:

@@ -292,7 +292,7 @@ std::ostream &operator<<(std::ostream &os, const Tokens &ts)
 Region Tokens::locate(const Ast *tar)
 {
     Region res;
-    bool found = false;
+    bool found = false; // debug use
 
     for (auto rit = rows.begin(); rit != rows.end(); ++rit) {
         for (auto cit = rit->begin(); cit != rit->end(); ++cit) {
@@ -305,13 +305,6 @@ Region Tokens::locate(const Ast *tar)
                 } else if (role == Token::Role::END) {
                     res.er = rit - rows.begin();
                     res.ec = cit - rit->begin();
-                    found = true;
-                    break;
-                } else if (role == Token::Role::FLESH) {
-                    res.er = rit - rows.begin();
-                    res.br = res.er;
-                    res.ec = cit - rit->begin();
-                    res.bc = res.ec;
                     found = true;
                     break;
                 }
