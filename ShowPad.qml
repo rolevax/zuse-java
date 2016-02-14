@@ -13,6 +13,8 @@ ListView {
     property int lowDownLeft;
     property int lowDownRight;
     property int lowDownIndex;
+    property bool tension: false;
+    property int hotLightBack: -1;
 
     model: ListModel {
         id: listModel
@@ -51,13 +53,20 @@ ListView {
             }
 
             LightBar { // high light
+                id: highLight
                 visible: highUpIndex <= index && index <= highDownIndex
                 property bool up: index == highUpIndex
                 property bool down: index == highDownIndex
                 property bool mid: highUpIndex < index && index < highDownIndex
-                lightColor: "#443399"
+                lightColor: tension ? "#22AA22" : "#443399"
                 leftOff: up ? highUpLeft : highDownLeft
                 rightOff: up || mid ? highUpRight : highDownRight
+            }
+
+            HotLight {
+                anchors.left: highLight.right
+                width: 10; height: 20
+                visible: index == highUpIndex && hotLightBack >= 0
             }
 
             Text { // source text line
@@ -80,39 +89,12 @@ ListView {
         return undefined;
     }
 
-    /*
-    LightBar {
-        property bool tension: false
-        id: highUp
-        lightColor: tension ? "#22AA22" : "#443399"
-    }
-    */
-
-    /*
-    HotLight {
-        id: hotLight
-        leftOff: highUp.rightOff
-        anchors.top: highUp.top
-        width: 10; height: 20
-        visible: false
-    }
-    */
-
     function setHotLight(back) {
-        /*
-        if (back < 0) {
-            hotLight.visible = false;
-        } else {
-            hotLight.back = back;
-            hotLight.visible = true;
-        }
-        */
+        hotLightBack = back;
     }
 
     function setTension(b) {
-        /*
-        highUp.tension = b;
-        */
+        tension = b;
     }
 
     function light(high, br, bc, er, ec) {
