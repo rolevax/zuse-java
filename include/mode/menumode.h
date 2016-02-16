@@ -8,8 +8,10 @@ class MenuMode : public Mode
 public:
     enum class Context
     {
-        INSERT, APPEND, ASSART, CHANGE, NEST
+        INSERT, APPEND, ASSART, CHANGE, NEST,
+        FLY_IN, DOG_OUT
     };
+
     MenuMode(EditableDoc &doc, Context context);
 
     void keyboard(char key) override;
@@ -19,6 +21,7 @@ public:
     const char *name() override;
 
 private:
+    static Ast::Type keyToType(char key);
     void work(Ast::Type type, const char *keytal = nullptr);
 
 private:

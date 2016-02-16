@@ -11,6 +11,7 @@
 
 // utilities
 #include <stdexcept>
+#include <queue>
 
 // headers for debug uses
 #include <QDebug>
@@ -170,6 +171,29 @@ void Doc::hackLead(bool right)
     if (outerType() == Ast::Type::PAIR && inner == 0)
         sibling(right ? +1 : -1);
         */
+}
+
+void Doc::flyIn(Ast::Type type)
+{
+    std::queue<Ast*> queue;
+    queue.push(&outer->at(inner));
+
+    // breadth-first search
+    while (!queue.empty()) {
+        Ast *test = queue.front();
+        queue.pop();
+        if (test->getType() == type) {
+            outer = &test->getParent();
+            inner = outer->indexOf(test);
+            break;
+        } else if (!test->isScalar()) {
+            InternalAst &inTest = test->asInternal();
+            for (size_t i = 0; i < inTest.size(); i++)
+                queue.push(&inTest.at(i));
+        }
+    }
+
+    // do nothing if not found
 }
 
 /**

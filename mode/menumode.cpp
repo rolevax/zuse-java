@@ -23,6 +23,17 @@ void MenuMode::keyboard(char key)
         return;
     }
 
+    if (context == Context::FLY_IN) {
+        switch (key) {
+        // TODO: non-(node-type) cases
+        default:
+            doc.flyIn(keyToType(key));
+        }
+
+        doc.pop();
+        return;
+    }
+
     // TODO: data-ize the fucking design
     Ast::Type type = context == Context::ASSART ? doc.getInner().getType()
                                                 : doc.getOuter().getType();
@@ -57,18 +68,22 @@ void MenuMode::emptyKeyboard(char key)
 
 void MenuMode::onPushed()
 {
-    // early leave if only one choice
-    bool underTyrant = context != Context::ASSART
-            && doc.getOuter().getType() == Ast::Type::CLASS_LIST;
-    bool intoTyrant = context == Context::ASSART
-            && doc.getInner().getType() == Ast::Type::CLASS_LIST;
-    if (underTyrant || intoTyrant) {
-        work(Ast::Type::CLASS);
-        return;
-    } else if (context == Context::NEST) {
-        // TODO
-        //work(Ast::Type::ARRAY);
-        return;
+    if (context == Context::INSERT || context == Context::APPEND
+            || context == Context::ASSART || context == Context::CHANGE
+            || context == Context::NEST) {
+        // early leave if only one choice
+        bool underTyrant = context != Context::ASSART
+                && doc.getOuter().getType() == Ast::Type::CLASS_LIST;
+        bool intoTyrant = context == Context::ASSART
+                && doc.getInner().getType() == Ast::Type::CLASS_LIST;
+        if (underTyrant || intoTyrant) {
+            work(Ast::Type::CLASS);
+            return;
+        } else if (context == Context::NEST) {
+            // TODO
+            //work(Ast::Type::ARRAY);
+            return;
+        }
     }
 
     doc.toggleTension(true);
@@ -82,6 +97,22 @@ void MenuMode::onPopped()
 const char *MenuMode::name()
 {
     return "op pending";
+}
+
+Ast::Type MenuMode::keyToType(char key)
+{
+    switch (key) {
+    case '.':
+        return Ast::Type::IDENT;
+    case 'i':
+        return Ast::Type::IF_LIST;
+    case 'm':
+        return Ast::Type::METHOD;
+    case 'v':
+        return Ast::Type::DECL_STMT;
+    default: // TODO: a 'nothing' type?
+        return Ast::Type::IDENT;
+    }
 }
 
 /**

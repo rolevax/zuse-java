@@ -20,11 +20,17 @@ void ViewMode::keyboard(char key)
     case 's': // senior previous node
         doc.sibling(-1);
         break;
-    case 'f': // fall in
+    case 'f': // raw fall-in
         doc.fallIn();
         break;
-    case 'd': // dig out
+    case 'F':
+        doc.push(new MenuMode(doc, MenuMode::Context::FLY_IN));
+        break;
+    case 'd': // raw dig out
         doc.digOut();
+        break;
+    case 'D':
+        doc.push(new MenuMode(doc, MenuMode::Context::DOG_OUT));
         break;
 
     // concrete cursor moving
