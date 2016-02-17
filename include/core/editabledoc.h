@@ -5,6 +5,7 @@
 #include "mode/mode.h"
 
 #include <string>
+#include <functional>
 
 class EditableDoc
 {
@@ -25,7 +26,7 @@ public:
     virtual void sibling(int step) = 0;
     virtual void jackKick(bool down) = 0;
     virtual void hackLead(bool right) = 0;
-    virtual void flyIn(Ast::Type type) = 0;
+    virtual void flyIn(std::function<bool(const Ast*)> &match) = 0;
     virtual void insert(Ast::Type type) = 0;
     virtual void remove() = 0;
     virtual void change(Ast::Type type) = 0;

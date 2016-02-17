@@ -37,7 +37,7 @@ private:
     void sibling(int step) override;
     void jackKick(bool down) override;
     void hackLead(bool right) override;
-    void flyIn(Ast::Type type) override;
+    void flyIn(std::function<bool(const Ast*)> &match) override;
     void insert(Ast::Type type) override;
     void remove() override;
     void change(Ast::Type type) override;

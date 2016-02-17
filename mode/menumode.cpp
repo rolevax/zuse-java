@@ -27,7 +27,12 @@ void MenuMode::keyboard(char key)
         switch (key) {
         // TODO: non-(node-type) cases
         default:
-            doc.flyIn(keyToType(key));
+            Ast::Type t = keyToType(key);
+            std::function<bool(const Ast *)> match = [t](const Ast *a)
+            {
+                return a->getType() == t;
+            };
+            doc.flyIn(match);
         }
 
         doc.pop();

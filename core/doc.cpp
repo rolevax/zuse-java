@@ -173,7 +173,7 @@ void Doc::hackLead(bool right)
         */
 }
 
-void Doc::flyIn(Ast::Type type)
+void Doc::flyIn(std::function<bool(const Ast *)> &match)
 {
     std::queue<Ast*> queue;
     queue.push(&outer->at(inner));
@@ -182,7 +182,7 @@ void Doc::flyIn(Ast::Type type)
     while (!queue.empty()) {
         Ast *test = queue.front();
         queue.pop();
-        if (test->getType() == type) {
+        if (match(test)) {
             outer = &test->getParent();
             inner = outer->indexOf(test);
             break;
