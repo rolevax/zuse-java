@@ -160,8 +160,7 @@ void Doc::sibling(int step)
 
 void Doc::jackKick(bool down)
 {
-    (void) down;
-    //tokens.jackKick(outer, inner, down);
+    tokens.jackKick(outer, inner, down);
 }
 
 void Doc::hackLead(bool right)

@@ -1,7 +1,9 @@
 #include "core/tokens.h"
 #include "core/bonetoken.h"
 #include "core/soultoken.h"
+
 #include <cassert>
+#include <cstdlib>
 
 #include <QDebug>
 #include <iostream>
@@ -174,24 +176,53 @@ std::string Tokens::pluck(size_t r)
 void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
 {
     Region r = locate(&outer->at(inner));
-    for (ssize_t i = down ? r.er + 1 : r.br - 1;
-         down ? size_t(i) < rows.size() : i >= 0;
-         down ? i++ : i--) {
-        for (ssize_t j = rows[i].size() - 1; j - 2 >= 0; j--) {
-            const Token &begin = *rows[i][j - 2];
-            const Token &end = *rows[i][j];
-            const Ast *a = end.getAst();
-            if (a->isScalar()
-                    || (a == begin.getAst()
-                        && begin.getRole() == Token::Role::BEGIN
-                        && end.getRole() == Token::Role::END)) {
-                outer = &a->getParent();
-                inner = outer->indexOf(a);
-                light(a);
-                return;
-            }
-        }
+    if (r.br == 0 && !down)
+        return; // prevent overflow of 'i' in the loop
+
+    // preferred target column index
+    size_t sugg;
+    if (r.br == r.er) {
+        Region anc = anchor(r);
+        sugg = (anc.bc + anc.ec) / 2;
+    } else {
+        sugg = 0;
     }
+
+    for (size_t i = down ? r.er + 1 : r.br - 1;
+         down ? i < rows.size() : i > 0; down ? i++ : i--) {
+        std::vector<size_t> fleshes;
+        for (size_t j = 0; j < rows[i].size(); j++)
+            if (rows[i][j]->getRole() == Token::Role::FLESH)
+                fleshes.push_back(j);
+
+        if (!fleshes.empty()) {
+            auto evalDiff = [this, i, sugg](size_t j)
+            {
+                size_t left = anchor(i, j);
+                size_t right = left + rows[i][j]->getText().size();
+                size_t mid = (left + right) / 2;
+                return std::abs(ssize_t(mid) - ssize_t(sugg));
+            };
+
+            size_t tar = fleshes[0];
+            size_t diff = evalDiff(tar);
+
+            for (auto it = fleshes.begin() + 1; it != fleshes.end(); ++it) {
+                size_t j = *it;
+                size_t nextDiff = evalDiff(j);
+                if (nextDiff < diff) {
+                    diff = nextDiff;
+                    tar = j;
+                }
+            }
+
+            const Ast *a = rows[i][tar]->getAst();
+            outer = &a->getParent();
+            inner = outer->indexOf(a);
+
+            break; // big loop
+        } // end if
+    } // end for
 }
 
 /**
