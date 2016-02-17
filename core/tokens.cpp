@@ -194,6 +194,32 @@ void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
     }
 }
 
+/**
+ * @brief Horizontal concrete cursor moving
+ */
+void Tokens::hackLead(InternalAst *&outer, size_t &inner, bool right)
+{
+    Region r = locate(&outer->at(inner));
+    // flesh token cannot have column index 0 since it's
+    // surrounded by soul tokens.
+    // this condition is also preventing 'i' in the loop below
+    // from overflow.
+    if (r.br != r.er || r.bc == 0)
+        return;
+
+    for (size_t i = right ? r.ec + 1 : r.bc - 1;
+         right ? i < rows[r.br].size() : i > 0; right ? i++ : i--) {
+        if (rows[r.br][i]->getRole() == Token::Role::FLESH) {
+            const Ast *a = rows[r.br][i]->getAst();
+            outer = &a->getParent();
+            inner = outer->indexOf(a);
+            break;
+        }
+    }
+
+    // do nothing if not found
+}
+
 void Tokens::put(size_t r, size_t c, const std::vector<Token *> &ts)
 {
     size_t origR = r;

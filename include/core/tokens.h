@@ -23,6 +23,7 @@ public:
     void updateScalar(const InternalAst *outer, size_t inner);
     std::string pluck(size_t r);
     void jackKick(InternalAst *&outer, size_t &inner, bool down);
+    void hackLead(InternalAst *&outer, size_t &inner, bool right);
 
     /// @name Hammer's Interface
     ///@{

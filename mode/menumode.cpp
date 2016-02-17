@@ -28,6 +28,7 @@ void MenuMode::keyboard(char key)
         // TODO: non-(node-type) cases
         default:
             Ast::Type t = keyToType(key);
+            // TODO: do-nothing if no map
             std::function<bool(const Ast *)> match = [t](const Ast *a)
             {
                 return a->getType() == t;

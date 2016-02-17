@@ -166,11 +166,7 @@ void Doc::jackKick(bool down)
 
 void Doc::hackLead(bool right)
 {
-    (void) right;
-    /*
-    if (outerType() == Ast::Type::PAIR && inner == 0)
-        sibling(right ? +1 : -1);
-        */
+    tokens.hackLead(outer, inner, right);
 }
 
 void Doc::flyIn(std::function<bool(const Ast *)> &match)
