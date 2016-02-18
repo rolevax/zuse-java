@@ -21,6 +21,11 @@ DeclBeanAst::DeclBeanAst(Ast *id, Ast *init)
     change(1, init);
 }
 
+DeclBeanAst *DeclBeanAst::clone() const
+{
+    return new DeclBeanAst(id->clone(), init->clone());
+}
+
 size_t DeclBeanAst::size() const
 {
     return init ? 2 : 1;

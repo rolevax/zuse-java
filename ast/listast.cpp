@@ -13,8 +13,8 @@ ListAst::ListAst(Type t)
 ListAst *ListAst::clone() const
 {
     ListAst *ret = new ListAst(getType());
-    for (const std::unique_ptr<Ast> &sub : subtrees)
-        ret->subtrees.emplace_back(sub->clone());
+    for (size_t i = 0; i < size(); i++)
+        ret->append(at(i).clone());
     return ret;
 }
 

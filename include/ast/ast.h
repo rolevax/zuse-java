@@ -61,7 +61,7 @@ public:
      * @brief Recursive value deep copy
      * @return Ast with same value but parent is null
      */
-    virtual Ast *clone() const { return nullptr; }
+    virtual Ast *clone() const = 0;
 
     Type getType() const;
     InternalAst &getParent() const;

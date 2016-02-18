@@ -16,6 +16,15 @@ void FixSizeAst<N>::dump() const
 }
 
 template<std::size_t N>
+FixSizeAst<N> *FixSizeAst<N>::clone() const
+{
+    FixSizeAst<N> *ret = new FixSizeAst<N>(getType());
+    for (size_t i = 0; i < N; i++)
+        ret->change(i, at(i).clone());
+    return ret;
+}
+
+template<std::size_t N>
 size_t FixSizeAst<N>::size() const
 {
     return N;
@@ -42,6 +51,13 @@ void FixSizeAst<N>::doChange(size_t pos, Ast *next)
 {
     assert(pos < N);
     subtrees[pos].reset(next);
+}
+
+template<std::size_t N>
+FixSizeAst<N>::FixSizeAst(Ast::Type t)
+    : InternalAst(t)
+{
+
 }
 
 template class FixSizeAst<1>;

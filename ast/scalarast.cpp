@@ -9,6 +9,11 @@ ScalarAst::ScalarAst(Type t, const std::string &text)
 
 }
 
+void ScalarAst::dump() const
+{
+    std::cout << text;
+}
+
 ScalarAst *ScalarAst::clone() const
 {
     ScalarAst *ret = new ScalarAst(getType(), text);

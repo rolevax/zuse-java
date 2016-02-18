@@ -13,12 +13,9 @@ public:
 
     static TermListAst *makeBop(Ast *lhs, Ast *rhs, Op op);
 
-    void dump() const override
-    {
-        std::cout << "TML:";
-        ListAst::dump();
-    }
     TermListAst(Ast::Type t);
+    void dump() const override;
+    TermListAst *clone() const override;
 
     bool rasingAt(size_t pos) const;
     void setRasingAt(size_t pos, bool b);

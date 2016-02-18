@@ -11,10 +11,7 @@ class ScalarAst : public Ast
 public:
     ScalarAst(Type t, const std::string &text);
 
-    void dump() const override
-    {
-        std::cout << text;
-    }
+    void dump() const override;
     ScalarAst *clone() const override;
 
     const std::string &getText() const;

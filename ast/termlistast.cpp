@@ -63,6 +63,20 @@ TermListAst::TermListAst(Type t)
 
 }
 
+void TermListAst::dump() const
+{
+    std::cout << "TML:";
+    ListAst::dump();
+}
+
+TermListAst *TermListAst::clone() const
+{
+    ListAst *lret = ListAst::clone();
+    TermListAst *ret = &fromAst(*lret);
+    ret->rasing = rasing;
+    return ret;
+}
+
 bool TermListAst::rasingAt(size_t pos) const
 {
     assert(pos < size());

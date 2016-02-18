@@ -20,6 +20,7 @@ public:
             init->dump();
         }
     }
+    DeclBeanAst *clone() const override;
     size_t size() const override;
     Ast &at(size_t pos) const override;
     size_t indexOf(const Ast *child) const override;
