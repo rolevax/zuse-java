@@ -23,7 +23,7 @@ public:
     bool rasingAt(size_t pos) const;
     void setRasingAt(size_t pos, bool b);
 
-    std::unique_ptr<Ast> remove(size_t pos) override;
+    Ast *remove(size_t pos) override;
 
 protected:
     void doInsert(size_t pos, Ast *child) override;

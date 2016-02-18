@@ -30,7 +30,7 @@ TermListAst *TermListAst::makeBop(Ast *lhs, Ast *rhs, Op op)
         size_t size = trhs->size();
         for (size_t i = 0; i < size; i++) {
             bool raising = trhs->rasingAt(0);
-            tlhs->append(trhs->remove(0).release());
+            tlhs->append(trhs->remove(0));
             /* this is syntax level concat. only the first raise-sign
              * can be affected. actually that should always be rasing */
             bool nextRaise = i == 0 ? !(raising ^ midRaise) : raising;
@@ -75,9 +75,9 @@ void TermListAst::setRasingAt(size_t pos, bool b)
     rasing[pos] = b;
 }
 
-std::unique_ptr<Ast> TermListAst::remove(size_t pos)
+Ast *TermListAst::remove(size_t pos)
 {
-    std::unique_ptr<Ast> ret = ListAst::remove(pos);
+    Ast *ret = ListAst::remove(pos);
     rasing.erase(rasing.begin() + pos);
     return ret;
 }

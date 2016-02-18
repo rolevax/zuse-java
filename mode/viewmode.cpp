@@ -50,9 +50,10 @@ void ViewMode::keyboard(char key)
 
     // outer modification
     case 'o': // oh, append - shortcut
+        menulessListOp(true);
         break;
     case 'i': // insert - shortcut
-        menulessInsert();
+        menulessListOp(false);
         break;
     case 'O': // oh, append - menu
         if (doc.getOuter().isList())
@@ -115,7 +116,7 @@ const char *ViewMode::name()
     return "View";
 }
 
-void ViewMode::menulessInsert()
+void ViewMode::menulessListOp(bool append)
 {
     if (!doc.getOuter().isList())
         return;
@@ -135,7 +136,10 @@ void ViewMode::menulessInsert()
         return; // silently do nothing
     }
 
-    doc.insert(tar);
+    if (append)
+        doc.append(tar);
+    else
+        doc.insert(tar);
 
     // after insertion jobs
     switch (doc.getOuter().getType()) {

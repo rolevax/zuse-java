@@ -13,7 +13,7 @@ public:
     const char *name() override;
 
 private:
-    void menulessInsert();
+    void menulessListOp(bool append);
 };
 
 #endif // VIEWMODE_H

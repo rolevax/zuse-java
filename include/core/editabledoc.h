@@ -29,7 +29,7 @@ public:
     virtual void assart(Ast::Type type) = 0;
     virtual void remove() = 0;
     virtual void change(Ast::Type type) = 0;
-    virtual void nest(Ast::Type type) = 0;
+    virtual void nestAsLeft(Ast::Type type) = 0;
 
     virtual void scalarAppend(const char *str) = 0;
     virtual void scalarAppend(char c) = 0;

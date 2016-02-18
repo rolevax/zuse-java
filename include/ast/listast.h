@@ -31,7 +31,7 @@ public:
     // TODO move to VarSizeAst
     void insert(size_t pos, Ast *child);
     void append(Ast *subtree);
-    virtual std::unique_ptr<Ast> remove(size_t pos);
+    virtual Ast *remove(size_t pos);
 
 protected:
     virtual void doInsert(size_t pos, Ast *child); // TODO move?

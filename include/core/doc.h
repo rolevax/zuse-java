@@ -40,7 +40,7 @@ private:
     void assart(Ast::Type type) override;
     void remove() override;
     void change(Ast::Type type) override;
-    void nest(Ast::Type type) override;
+    void nestAsLeft(Ast::Type type) override;
 
     void scalarAppend(const char *str) override;
     void scalarAppend(char c) override;

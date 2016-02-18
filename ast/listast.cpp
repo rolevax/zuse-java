@@ -52,10 +52,10 @@ void ListAst::append(Ast *subtree)
     insert(size(), subtree);
 }
 
-std::unique_ptr<Ast> ListAst::remove(size_t pos)
+Ast *ListAst::remove(size_t pos)
 {
     assert(pos < subtrees.size());
-    std::unique_ptr<Ast> res = std::move(subtrees[pos]);
+    Ast *res = subtrees[pos].release();
     subtrees.erase(subtrees.begin() + pos);
     return res;
 }

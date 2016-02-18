@@ -248,11 +248,17 @@ void Doc::change(Ast::Type type)
     tokens.insert(&outer->asList(), inner);
 }
 
-void Doc::nest(Ast::Type type)
+void Doc::nestAsLeft(Ast::Type type)
 {
     assert(inner < outer->size());
 
-    outer->nest(inner, newTree(type));
+    InternalAst *nester = &newTree(type)->asInternal();
+    // allowing removing inside a non-list ast breaks
+    // the principle of consistency through ast's interface.
+    // thus clone() is used here to enhance the integrity of
+    // the interface design in a cost of effeciency.
+    nester->change(0, outer->at(inner).clone());
+    outer->change(inner, nester);
     tokens.sync(root.get());
 }
 
@@ -316,6 +322,12 @@ Ast *Doc::newTree(Ast::Type type)
         Ast *dpl = new ListAst(Ast::Type::DECL_PARAM_LIST);
         Ast *sl = new ListAst(Ast::Type::STMT_LIST);
         a = new FixSizeAst<3>(Ast::Type::METHOD, id, dpl, sl);
+        break;
+    }
+    case Ast::Type::ASSIGN: {
+        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
+        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
+        a = new FixSizeAst<2>(Ast::Type::ASSIGN, lhs, rhs);
         break;
     }
     case Ast::Type::IDENT: {

@@ -23,9 +23,10 @@ void MenuMode::keyboard(char key)
         return;
     }
 
-    if (context == Context::FLY_IN) {
+    switch (context) {
+    case Context::FLY_IN:
         switch (key) {
-        // TODO: non-(node-type) cases
+        // TODO: pattern matching cases
         default:
             Ast::Type t = keyToType(key);
             // TODO: do-nothing if no map
@@ -36,11 +37,21 @@ void MenuMode::keyboard(char key)
             doc.flyIn(match);
         }
 
-        doc.pop();
-        return;
-    } else { // TODO: other non-modifying context
-        work(keyToType(key));
+        break;
+    case Context::NEST:
+        switch (key) {
+        // TODO: smart condition check (nester cannot be scalar)
+        case 'a':
+            doc.nestAsLeft(Ast::Type::ASSIGN);
+            break;
+        }
+
+        break;
+    default:
+        break;
     }
+
+    doc.pop();
 }
 
 void MenuMode::emptyKeyboard(char key)
@@ -93,7 +104,7 @@ void MenuMode::work(Ast::Type type, const char *keytal)
     if (context == Context::CHANGE) {
         doc.change(type);
     } else if (context == Context::NEST) {
-        doc.nest(type);
+        doc.nestAsLeft(type);
     } else if (context == Context::APPEND) {
         doc.append(type);
     } else if (context == Context::ASSART) {

@@ -13,16 +13,3 @@ void InternalAst::change(size_t pos, Ast *next)
     doChange(pos, next);
 }
 
-void InternalAst::nest(size_t pos, Ast *nester)
-{
-    (void) pos; (void) nester;
-    //assert(nester->type == Type::ARRAY && nester->size() == 0);
-    // TODO
-
-    /*
-    std::unique_ptr<Ast> nestee = remove(pos);
-    insert(pos, nester);
-    at(pos).insert(0, nestee.release());
-    */
-}
-
