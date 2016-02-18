@@ -108,17 +108,6 @@ const Ast &Doc::getInner() const
     return outer->at(inner);
 }
 
-void Doc::cursorIn()
-{
-    outer = &outer->at(inner).asInternal();
-    inner = 0;
-}
-
-void Doc::cursorForward()
-{
-    ++inner;
-}
-
 void Doc::fallIn()
 {
     assert(inner < outer->size());
@@ -207,9 +196,20 @@ void Doc::insert(Ast::Type type)
     // TODO list? var-size?
     outer->asList().insert(inner, a);
 
-    //tokens.insert(&outer->asList(), inner);
-    // TODO lead performance problem?
     tokens.sync(root.get());
+}
+
+void Doc::append(Ast::Type type)
+{
+    ++inner;
+    insert(type);
+}
+
+void Doc::assart(Ast::Type type)
+{
+    outer = &outer->at(inner).asInternal();
+    inner = 0;
+    insert(type);
 }
 
 void Doc::remove()
@@ -252,13 +252,8 @@ void Doc::nest(Ast::Type type)
 {
     assert(inner < outer->size());
 
-    // nestable only if changeable
-    if (!outer->at(inner).isChangeable())
-        return;
-
-    tokens.remove(outer, inner);
     outer->nest(inner, newTree(type));
-    tokens.insert(&outer->asList(), inner);
+    tokens.sync(root.get());
 }
 
 void Doc::scalarAppend(const char *str)

@@ -1,6 +1,7 @@
 #include "core/editabledoc.h"
 #include "mode/viewmode.h"
 #include "mode/menumode.h"
+#include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
 
@@ -48,14 +49,18 @@ void ViewMode::keyboard(char key)
         break;
 
     // outer modification
-    case 'o': // oh, append
-    case 'i': // insert
-        if (doc.getOuter().isList()) {
-            MenuMode::Context context;
-            context = 'o' == key ? MenuMode::Context::APPEND
-                                 : MenuMode::Context::INSERT;
-            doc.push(new MenuMode(doc, context));
-        }
+    case 'o': // oh, append - shortcut
+        break;
+    case 'i': // insert - shortcut
+        menulessInsert();
+        break;
+    case 'O': // oh, append - menu
+        if (doc.getOuter().isList())
+            doc.push(new MenuMode(doc, MenuMode::Context::APPEND));
+        break;
+    case 'I': // insert - menu
+        if (doc.getOuter().isList())
+            doc.push(new MenuMode(doc, MenuMode::Context::INSERT));
         break;
     case 'r': // remove
         if (doc.getOuter().isList())
@@ -75,9 +80,7 @@ void ViewMode::keyboard(char key)
         }
         break;
     case 'n': // nest
-        if (doc.getOuter().isChangeable()) {
-            doc.push(new MenuMode(doc, MenuMode::Context::NEST));
-        }
+        doc.push(new MenuMode(doc, MenuMode::Context::NEST));
         break;
     case 'm': // modify
     case 'M':
@@ -110,6 +113,38 @@ void ViewMode::emptyKeyboard(char key)
 const char *ViewMode::name()
 {
     return "View";
+}
+
+void ViewMode::menulessInsert()
+{
+    if (!doc.getOuter().isList())
+        return;
+
+    Ast::Type tar;
+    switch (doc.getOuter().getType()) {
+    case Ast::Type::CLASS_LIST:
+        tar = Ast::Type::CLASS;
+        break;
+    case Ast::Type::STMT_LIST:
+        tar = Ast::Type::IDENT;
+        break;
+    case Ast::Type::DECL_PARAM_LIST:
+        tar = Ast::Type::DECL_PARAM;
+        break;
+    default:
+        return; // silently do nothing
+    }
+
+    doc.insert(tar);
+
+    // after insertion jobs
+    switch (doc.getOuter().getType()) {
+    case Ast::Type::STMT_LIST:
+        doc.push(new IdentInputMode(doc, false));
+        break;
+    default:
+        break;
+    }
 }
 
 

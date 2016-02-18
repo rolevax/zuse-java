@@ -18,9 +18,6 @@ public:
     virtual const Ast &getOuter() const = 0;
     virtual const Ast &getInner() const = 0;
 
-    virtual void cursorIn() = 0;
-    virtual void cursorForward() = 0;
-
     virtual void fallIn() = 0;
     virtual void digOut() = 0;
     virtual void sibling(int step) = 0;
@@ -28,6 +25,8 @@ public:
     virtual void hackLead(bool right) = 0;
     virtual void flyIn(std::function<bool(const Ast*)> &match) = 0;
     virtual void insert(Ast::Type type) = 0;
+    virtual void append(Ast::Type type) = 0;
+    virtual void assart(Ast::Type type) = 0;
     virtual void remove() = 0;
     virtual void change(Ast::Type type) = 0;
     virtual void nest(Ast::Type type) = 0;

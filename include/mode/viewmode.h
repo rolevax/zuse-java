@@ -11,6 +11,9 @@ public:
     void keyboard(char key) override;
     void emptyKeyboard(char key) override;
     const char *name() override;
+
+private:
+    void menulessInsert();
 };
 
 #endif // VIEWMODE_H

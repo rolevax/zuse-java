@@ -38,32 +38,8 @@ void MenuMode::keyboard(char key)
 
         doc.pop();
         return;
-    }
-
-    // TODO: data-ize the fucking design
-    Ast::Type type = context == Context::ASSART ? doc.getInner().getType()
-                                                : doc.getOuter().getType();
-    switch(type) {
-    case Ast::Type::MEMBER_LIST:
-        switch (key) {
-        case 'f':
-            work(Ast::Type::DECL_STMT);
-            break;
-        case 'm':
-            work(Ast::Type::METHOD);
-            break;
-        default:
-            break;
-        }
-        break;
-    case Ast::Type::STMT_LIST:
-        if (std::isalpha(key)) {
-            char tmp[2] = { key, '\0' };
-            work(Ast::Type::IDENT, tmp);
-        }
-        break;
-    default:
-        break;
+    } else { // TODO: other non-modifying context
+        work(keyToType(key));
     }
 }
 
@@ -74,24 +50,6 @@ void MenuMode::emptyKeyboard(char key)
 
 void MenuMode::onPushed()
 {
-    if (context == Context::INSERT || context == Context::APPEND
-            || context == Context::ASSART || context == Context::CHANGE
-            || context == Context::NEST) {
-        // early leave if only one choice
-        bool underTyrant = context != Context::ASSART
-                && doc.getOuter().getType() == Ast::Type::CLASS_LIST;
-        bool intoTyrant = context == Context::ASSART
-                && doc.getInner().getType() == Ast::Type::CLASS_LIST;
-        if (underTyrant || intoTyrant) {
-            work(Ast::Type::CLASS);
-            return;
-        } else if (context == Context::NEST) {
-            // TODO
-            //work(Ast::Type::ARRAY);
-            return;
-        }
-    }
-
     doc.toggleTension(true);
 }
 
@@ -110,6 +68,8 @@ Ast::Type MenuMode::keyToType(char key)
     switch (key) {
     case '.':
         return Ast::Type::IDENT;
+    case 'C':
+        return Ast::Type::CLASS;
     case 'i':
         return Ast::Type::IF_LIST;
     case 'm':
@@ -134,15 +94,14 @@ void MenuMode::work(Ast::Type type, const char *keytal)
         doc.change(type);
     } else if (context == Context::NEST) {
         doc.nest(type);
-    } else {
-        // prepare cursor
-        if (context == Context::APPEND) {
-            doc.cursorForward();
-        } else if (context == Context::ASSART) {
-            doc.cursorIn();
-        }
-
+    } else if (context == Context::APPEND) {
+        doc.append(type);
+    } else if (context == Context::ASSART) {
+        doc.assart(type);
+    } else if (context == Context::INSERT) {
         doc.insert(type);
+    } else {
+        assert(false && "WTF??");
     }
 
     if (nullptr != keytal)

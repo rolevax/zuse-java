@@ -29,9 +29,6 @@ private:
     const Ast &getOuter() const override;
     const Ast &getInner() const override;
 
-    void cursorIn() override;
-    void cursorForward() override;
-
     void fallIn() override;
     void digOut() override;
     void sibling(int step) override;
@@ -39,6 +36,8 @@ private:
     void hackLead(bool right) override;
     void flyIn(std::function<bool(const Ast*)> &match) override;
     void insert(Ast::Type type) override;
+    void append(Ast::Type type) override;
+    void assart(Ast::Type type) override;
     void remove() override;
     void change(Ast::Type type) override;
     void nest(Ast::Type type) override;
