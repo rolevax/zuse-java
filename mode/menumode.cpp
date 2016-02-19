@@ -41,8 +41,21 @@ void MenuMode::keyboard(char key)
     case Context::NEST:
         switch (key) {
         // TODO: smart condition check (nester cannot be scalar)
-        case 'a':
+        case '=':
             doc.nestAsLeft(Ast::Type::ASSIGN);
+            break;
+        case '+':
+            doc.nestAsLeft(Ast::Type::ADDSUB_LIST);
+            break;
+        case '-':
+            doc.nestAsLeft(Ast::Type::ADDSUB_LIST);
+            //TODO set rasing
+            break;
+        case '*':
+            doc.nestAsLeft(Ast::Type::MULDIV_LIST);
+            break;
+        case '/':
+            doc.nestAsLeft(Ast::Type::MULDIV_LIST);
             break;
         }
 

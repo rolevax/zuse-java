@@ -330,6 +330,18 @@ Ast *Doc::newTree(Ast::Type type)
         a = new FixSizeAst<2>(Ast::Type::ASSIGN, lhs, rhs);
         break;
     }
+    case Ast::Type::ADDSUB_LIST: {
+        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
+        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
+        a = TermListAst::makeBop(lhs, rhs, TermListAst::Op::ADD);
+        break;
+    }
+    case Ast::Type::MULDIV_LIST: {
+        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
+        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
+        a = TermListAst::makeBop(lhs, rhs, TermListAst::Op::MUL);
+        break;
+    }
     case Ast::Type::IDENT: {
         a = new ScalarAst(Ast::Type::IDENT, "");
         break;

@@ -71,9 +71,11 @@ void TermListAst::dump() const
 
 TermListAst *TermListAst::clone() const
 {
-    ListAst *lret = ListAst::clone();
-    TermListAst *ret = &fromAst(*lret);
-    ret->rasing = rasing;
+    TermListAst *ret = new TermListAst(getType());
+    for (size_t i = 0; i < size(); i++) {
+        ret->append(at(i).clone());
+        ret->setRasingAt(i, rasingAt(i));
+    }
     return ret;
 }
 
