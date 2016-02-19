@@ -25,6 +25,11 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
 {
     buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
 
+    bool autoParen = ast.precedence() > 0
+            && ast.precedence() < ast.getParent().precedence();
+    if (autoParen)
+        buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
+
     if (ast.isScalar()) {
         buf.push_back(new FleshToken(&ast.asScalar()));
     } else if (ast.isList()) {
@@ -100,6 +105,9 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             break;
         }
     }
+
+    if (autoParen)
+        buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
 
     buf.push_back(new SoulToken(&ast, Token::Role::END));
 }

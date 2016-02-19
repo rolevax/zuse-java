@@ -104,6 +104,20 @@ ListAst *Ast::bodify()
     return ret;
 }
 
+int Ast::precedence() const
+{
+    switch (type) {
+    case Type::ASSIGN:
+        return 5;
+    case Type::ADDSUB_LIST:
+        return 10;
+    case Type::MULDIV_LIST:
+        return 11;
+    default:
+        return 0;
+    }
+}
+
 Ast::Type Ast::getType() const
 {
     return type;

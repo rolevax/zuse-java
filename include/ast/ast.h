@@ -56,6 +56,7 @@ public:
     const ListAst &asList() const;
 
     ListAst *bodify();
+    int precedence() const;
 
     /**
      * @brief Recursive value deep copy
