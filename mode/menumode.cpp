@@ -57,6 +57,9 @@ void MenuMode::keyboard(char key)
         case '/':
             doc.nestAsLeft(Ast::Type::MULDIV_LIST);
             break;
+        case '(':
+            doc.nestAsLeft(Ast::Type::CALL);
+            break;
         }
 
         break;

@@ -342,6 +342,12 @@ Ast *Doc::newTree(Ast::Type type)
         a = TermListAst::makeBop(lhs, rhs, TermListAst::Op::MUL);
         break;
     }
+    case Ast::Type::CALL: {
+        Ast *id = new ScalarAst(Ast::Type::IDENT, "meth");
+        Ast *args = new ListAst(Ast::Type::ARG_LIST);
+        a = new FixSizeAst<2>(Ast::Type::CALL, id, args);
+        break;
+    }
     case Ast::Type::IDENT: {
         a = new ScalarAst(Ast::Type::IDENT, "");
         break;
