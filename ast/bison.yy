@@ -91,9 +91,7 @@
 %type	<Ast*>			return_stmt
 %type	<Ast*>			while_stmt
 %type	<Ast*>			do_while_stmt
-%type	<Ast*>			name
-%type	<Ast*>			new_name
-%type	<Ast*>			type
+%type	<Ast*>			ident
 %printer { yyoutput << $$; } <*>;
 
 %% /* ============ rules ============ */
@@ -108,7 +106,7 @@ class_list: %empty					{ /* already newwed as 'result' */ }
 		  | class_list class		{ result->append($2); }
 		  ;
 
-class: "class" new_name"{" member_list "}"	
+class: "class" ident"{" member_list "}"	
 	 			{ $$ = new FixSizeAst<2>(Ast::Type::CLASS, $2, $4); }
 	 ;
 
@@ -120,7 +118,7 @@ member_list: %empty
 				{ $1->append($2); $$ = $1; }
 		   ;
 
-method: "void" new_name "(" param_list ")" "{" stmt_list "}"
+method: "void" ident "(" param_list ")" "{" stmt_list "}"
  				{ $$ = new FixSizeAst<3>(Ast::Type::METHOD, $2, $4, $7); }
 	  ;
 
@@ -136,7 +134,7 @@ param_list_noemp: decl_param
 				{ $1->append($3); $$ = $1; }
 		  ;
 
-decl_param: type new_name
+decl_param: ident ident
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_PARAM, $1, $2); } 
 		  ;
 
@@ -175,21 +173,17 @@ expr: expr "+" expr
 				{ $$ = TermListAst::makeBop($1, $3, TermListAst::Op::DIV); }
 	| expr "=" expr
 				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
-	| name "(" arg_list ")"
+	| ident "(" arg_list ")"
 				{ $$ = new FixSizeAst<2>(Ast::Type::CALL, $1, $3); } 
 	| "(" expr ")"
 				{ $$ = new FixSizeAst<1>(Ast::Type::PAREN, $2); } 
-	| name
-				{ $$ = $1; } 
+	| ident
+				{ $$ = $1; }
 	| "number"
 				{ $$ = new ScalarAst(Ast::Type::NUMBER, $1); }
 	;
 
-name: "identifier"
-				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
-	;
-
-new_name: "identifier"
+ident: "identifier"
 				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
 		;
 
@@ -205,7 +199,7 @@ arg_list_noemp: expr
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
-decl_stmt: type decl_bean_list ";"
+decl_stmt: ident decl_bean_list ";"
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_STMT, $1, $2); }
 	;
 
@@ -216,15 +210,11 @@ decl_bean_list: decl_bean
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
-decl_bean: new_name
+decl_bean: ident
 		 		{ $$ = new DeclBeanAst($1); }
-		 | new_name "=" expr
+		 | ident "=" expr
 		 		{ $$ = new DeclBeanAst($1, $3); }
 		 ;
-
-type: name
-				{ $$ = $1; }
-	;
 
 return_stmt: "return" expr ";"
 		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }

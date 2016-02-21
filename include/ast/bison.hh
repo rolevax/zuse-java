@@ -301,11 +301,9 @@ namespace yy {
       // decl_param
       // stmt
       // expr
-      // name
-      // new_name
+      // ident
       // decl_stmt
       // decl_bean
-      // type
       // return_stmt
       // while_stmt
       // do_while_stmt
@@ -645,7 +643,7 @@ namespace yy {
   // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
   // positive, shift that token.  If negative, reduce the rule whose
   // number is the opposite.  If YYTABLE_NINF, syntax error.
-  static const signed char yytable_[];
+  static const unsigned char yytable_[];
 
   static const signed char yycheck_[];
 
@@ -767,8 +765,8 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 154,     ///< Last index in yytable_.
-      yynnts_ = 23,  ///< Number of nonterminal symbols.
+      yylast_ = 146,     ///< Last index in yytable_.
+      yynnts_ = 21,  ///< Number of nonterminal symbols.
       yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -857,14 +855,12 @@ namespace yy {
       case 31: // decl_param
       case 33: // stmt
       case 34: // expr
-      case 35: // name
-      case 36: // new_name
-      case 39: // decl_stmt
-      case 41: // decl_bean
-      case 42: // type
-      case 43: // return_stmt
-      case 44: // while_stmt
-      case 45: // do_while_stmt
+      case 35: // ident
+      case 38: // decl_stmt
+      case 40: // decl_bean
+      case 41: // return_stmt
+      case 42: // while_stmt
+      case 43: // do_while_stmt
         value.copy< Ast* > (other.value);
         break;
 
@@ -873,10 +869,10 @@ namespace yy {
       case 29: // param_list
       case 30: // param_list_noemp
       case 32: // stmt_list
-      case 37: // arg_list
-      case 38: // arg_list_noemp
-      case 40: // decl_bean_list
-      case 46: // if_list
+      case 36: // arg_list
+      case 37: // arg_list_noemp
+      case 39: // decl_bean_list
+      case 44: // if_list
         value.copy< ListAst* > (other.value);
         break;
 
@@ -907,14 +903,12 @@ namespace yy {
       case 31: // decl_param
       case 33: // stmt
       case 34: // expr
-      case 35: // name
-      case 36: // new_name
-      case 39: // decl_stmt
-      case 41: // decl_bean
-      case 42: // type
-      case 43: // return_stmt
-      case 44: // while_stmt
-      case 45: // do_while_stmt
+      case 35: // ident
+      case 38: // decl_stmt
+      case 40: // decl_bean
+      case 41: // return_stmt
+      case 42: // while_stmt
+      case 43: // do_while_stmt
         value.copy< Ast* > (v);
         break;
 
@@ -923,10 +917,10 @@ namespace yy {
       case 29: // param_list
       case 30: // param_list_noemp
       case 32: // stmt_list
-      case 37: // arg_list
-      case 38: // arg_list_noemp
-      case 40: // decl_bean_list
-      case 46: // if_list
+      case 36: // arg_list
+      case 37: // arg_list_noemp
+      case 39: // decl_bean_list
+      case 44: // if_list
         value.copy< ListAst* > (v);
         break;
 
@@ -1002,14 +996,12 @@ namespace yy {
       case 31: // decl_param
       case 33: // stmt
       case 34: // expr
-      case 35: // name
-      case 36: // new_name
-      case 39: // decl_stmt
-      case 41: // decl_bean
-      case 42: // type
-      case 43: // return_stmt
-      case 44: // while_stmt
-      case 45: // do_while_stmt
+      case 35: // ident
+      case 38: // decl_stmt
+      case 40: // decl_bean
+      case 41: // return_stmt
+      case 42: // while_stmt
+      case 43: // do_while_stmt
         value.template destroy< Ast* > ();
         break;
 
@@ -1018,10 +1010,10 @@ namespace yy {
       case 29: // param_list
       case 30: // param_list_noemp
       case 32: // stmt_list
-      case 37: // arg_list
-      case 38: // arg_list_noemp
-      case 40: // decl_bean_list
-      case 46: // if_list
+      case 36: // arg_list
+      case 37: // arg_list_noemp
+      case 39: // decl_bean_list
+      case 44: // if_list
         value.template destroy< ListAst* > ();
         break;
 
@@ -1058,14 +1050,12 @@ namespace yy {
       case 31: // decl_param
       case 33: // stmt
       case 34: // expr
-      case 35: // name
-      case 36: // new_name
-      case 39: // decl_stmt
-      case 41: // decl_bean
-      case 42: // type
-      case 43: // return_stmt
-      case 44: // while_stmt
-      case 45: // do_while_stmt
+      case 35: // ident
+      case 38: // decl_stmt
+      case 40: // decl_bean
+      case 41: // return_stmt
+      case 42: // while_stmt
+      case 43: // do_while_stmt
         value.move< Ast* > (s.value);
         break;
 
@@ -1074,10 +1064,10 @@ namespace yy {
       case 29: // param_list
       case 30: // param_list_noemp
       case 32: // stmt_list
-      case 37: // arg_list
-      case 38: // arg_list_noemp
-      case 40: // decl_bean_list
-      case 46: // if_list
+      case 36: // arg_list
+      case 37: // arg_list_noemp
+      case 39: // decl_bean_list
+      case 44: // if_list
         value.move< ListAst* > (s.value);
         break;
 
@@ -1277,7 +1267,7 @@ namespace yy {
 
 
 } // yy
-#line 1281 "bison.hh" // lalr1.cc:377
+#line 1271 "bison.hh" // lalr1.cc:377
 
 
 
