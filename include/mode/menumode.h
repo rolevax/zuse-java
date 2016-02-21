@@ -21,8 +21,8 @@ public:
     const char *name() override;
 
 private:
+    Mode *modeFor(Ast::Type t);
     static Ast::Type keyToType(char key);
-    void work(Ast::Type type, const char *keytal = nullptr);
 
 private:
     Context context;

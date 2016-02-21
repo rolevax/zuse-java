@@ -23,16 +23,33 @@ void MenuMode::keyboard(char key)
         return;
     }
 
+    Ast::Type keyType = keyToType(key);
+    Mode *nextMode = nullptr;
+
     switch (context) {
+    case Context::INSERT: {
+        doc.insert(keyType);
+        nextMode = modeFor(keyType);
+        break;
+    }
+    case Context::APPEND: {
+        doc.insert(keyType);
+        nextMode = modeFor(keyType);
+        break;
+    }
+    case Context::ASSART: {
+        doc.assart(keyType);
+        nextMode = modeFor(keyType);
+        break;
+    }
     case Context::FALL_SEARCH:
         switch (key) {
-        // TODO: pattern matching cases
+        // TODO: pattern matching cases keyToPattern
         default:
-            Ast::Type t = keyToType(key);
             // TODO: do-nothing if no map
-            std::function<bool(const Ast *)> match = [t](const Ast *a)
+            std::function<bool(const Ast *)> match = [keyType](const Ast *a)
             {
-                return a->getType() == t;
+                return a->getType() == keyType;
             };
             doc.flyIn(match);
         }
@@ -67,7 +84,7 @@ void MenuMode::keyboard(char key)
         break;
     }
 
-    doc.pop();
+    doc.pop(nextMode);
 }
 
 void MenuMode::emptyKeyboard(char key)
@@ -90,6 +107,16 @@ const char *MenuMode::name()
     return "op pending";
 }
 
+Mode *MenuMode::modeFor(Ast::Type t)
+{
+    switch (t) {
+    case Ast::Type::IDENT:
+        return new IdentInputMode(doc, false);
+    default:
+        return nullptr;
+    }
+}
+
 Ast::Type MenuMode::keyToType(char key)
 {
     switch (key) {
@@ -108,54 +135,5 @@ Ast::Type MenuMode::keyToType(char key)
     }
 }
 
-/**
- * @brief MenuMode::work
- * @param type The type of the new node
- * Insert into or change inside 'outer', with
- * position specified by 'inner'.
- */
-void MenuMode::work(Ast::Type type, const char *keytal)
-{
-    (void) keytal; // TODO
-    if (context == Context::CHANGE) {
-        doc.change(type);
-    } else if (context == Context::NEST) {
-        doc.nestAsLeft(type);
-    } else if (context == Context::APPEND) {
-        doc.append(type);
-    } else if (context == Context::ASSART) {
-        doc.assart(type);
-    } else if (context == Context::INSERT) {
-        doc.insert(type);
-    } else {
-        assert(false && "WTF??");
-    }
-
-    if (nullptr != keytal)
-        doc.scalarAppend(keytal);
-
-    switch (type) {
-    /*
-    case Ast::Type::STRING:
-        doc.pop(new StringInputMode(doc, false));
-        break;
-    case Ast::Type::PAIR:
-        doc.pop(new PairInputMode(doc));
-        break;
-        */
-    case Ast::Type::IDENT:
-        doc.pop(new IdentInputMode(doc, false));
-        break;
-    // no more input mode to push
-    case Ast::Type::CLASS:
-    case Ast::Type::DECL_STMT:
-    case Ast::Type::METHOD:
-        doc.pop();
-        break;
-    default:
-        throw "MenuMode: work(): unhandled ast type";
-        break;
-    }
-}
 
 

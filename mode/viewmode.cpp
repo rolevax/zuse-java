@@ -23,7 +23,7 @@ void ViewMode::keyboard(char key)
     case 's': // senior previous node
         doc.sibling(-1);
         break;
-    case 'f': // fall-in or assart
+    case 'f': // fall-in or quick-assart
         if (!doc.getInner().isScalar()) {
             if (doc.getInner().asInternal().size() > 0)
                 doc.fallIn();
@@ -31,8 +31,13 @@ void ViewMode::keyboard(char key)
                 menulessListOp(ListOp::ASSART);
         }
         break;
-    case 'F': // fall-search
-        doc.push(new MenuMode(doc, MenuMode::Context::FALL_SEARCH));
+    case 'F': // fall-search or quick-assart
+        if (!doc.getInner().isScalar()) {
+            if (doc.getInner().asInternal().size() > 0)
+                doc.push(new MenuMode(doc, MenuMode::Context::FALL_SEARCH));
+            else
+                doc.push(new MenuMode(doc, MenuMode::Context::ASSART));
+        }
         break;
     case 'd': // dig-out
         doc.digOut();
@@ -56,17 +61,17 @@ void ViewMode::keyboard(char key)
         break;
 
     // outer modification
-    case 'o': // oh, append - shortcut
+    case 'o': // oh, quick-append
         menulessListOp(ListOp::APPEND);
         break;
-    case 'i': // insert - shortcut
+    case 'i': // quick-insert
         menulessListOp(ListOp::INSERT);
         break;
-    case 'O': // oh, append - menu
+    case 'O': // oh, append
         if (doc.getOuter().isList())
             doc.push(new MenuMode(doc, MenuMode::Context::APPEND));
         break;
-    case 'I': // insert - menu
+    case 'I': // insert
         if (doc.getOuter().isList())
             doc.push(new MenuMode(doc, MenuMode::Context::INSERT));
         break;
