@@ -13,7 +13,8 @@ public:
     const char *name() override;
 
 private:
-    void menulessListOp(bool append);
+    enum class ListOp { INSERT, APPEND, ASSART };
+    void menulessListOp(ListOp op);
 };
 
 #endif // VIEWMODE_H

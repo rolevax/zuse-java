@@ -24,7 +24,7 @@ void MenuMode::keyboard(char key)
     }
 
     switch (context) {
-    case Context::FLY_IN:
+    case Context::FALL_SEARCH:
         switch (key) {
         // TODO: pattern matching cases
         default:

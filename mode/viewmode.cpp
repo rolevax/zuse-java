@@ -1,10 +1,11 @@
-#include "core/editabledoc.h"
 #include "mode/viewmode.h"
 #include "mode/menumode.h"
 #include "mode/scalarinputmode.h"
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
+#include "core/editabledoc.h"
+#include "ast/listast.h"
 
 ViewMode::ViewMode(EditableDoc &doc) :
     Mode(doc)
@@ -15,27 +16,32 @@ ViewMode::ViewMode(EditableDoc &doc) :
 void ViewMode::keyboard(char key)
 {
     switch (key) {
-    // abstract cursor moving
+    // tree-wise cursor moving
     case 'g': // get next node
         doc.sibling(+1);
         break;
     case 's': // senior previous node
         doc.sibling(-1);
         break;
-    case 'f': // raw fall-in
-        doc.fallIn();
+    case 'f': // fall-in or assart
+        if (!doc.getInner().isScalar()) {
+            if (doc.getInner().asInternal().size() > 0)
+                doc.fallIn();
+            else
+                menulessListOp(ListOp::ASSART);
+        }
         break;
-    case 'F':
-        doc.push(new MenuMode(doc, MenuMode::Context::FLY_IN));
+    case 'F': // fall-search
+        doc.push(new MenuMode(doc, MenuMode::Context::FALL_SEARCH));
         break;
-    case 'd': // raw dig out
+    case 'd': // dig-out
         doc.digOut();
         break;
-    case 'D':
-        doc.push(new MenuMode(doc, MenuMode::Context::DOG_OUT));
+    case 'D': // dig-search
+        doc.push(new MenuMode(doc, MenuMode::Context::DIG_SEARCH));
         break;
 
-    // concrete cursor moving
+    // token-wise cursor moving
     case 'h': // hack left
         doc.hackLead(false);
         break;
@@ -51,10 +57,10 @@ void ViewMode::keyboard(char key)
 
     // outer modification
     case 'o': // oh, append - shortcut
-        menulessListOp(true);
+        menulessListOp(ListOp::APPEND);
         break;
     case 'i': // insert - shortcut
-        menulessListOp(false);
+        menulessListOp(ListOp::INSERT);
         break;
     case 'O': // oh, append - menu
         if (doc.getOuter().isList())
@@ -112,13 +118,13 @@ const char *ViewMode::name()
     return "View";
 }
 
-void ViewMode::menulessListOp(bool append)
+void ViewMode::menulessListOp(ListOp op)
 {
-    if (!doc.getOuter().isList())
-        return;
-
+    const ListAst &l = (op == ListOp::ASSART ? doc.getInner()
+                                             : doc.getOuter()).asList();
     Ast::Type tar;
-    switch (doc.getOuter().getType()) {
+
+    switch (l.getType()) {
     case Ast::Type::CLASS_LIST:
         tar = Ast::Type::CLASS;
         break;
@@ -132,10 +138,17 @@ void ViewMode::menulessListOp(bool append)
         return; // silently do nothing
     }
 
-    if (append)
-        doc.append(tar);
-    else
+    switch (op) {
+    case ListOp::INSERT:
         doc.insert(tar);
+        break;
+    case ListOp::APPEND:
+        doc.append(tar);
+        break;
+    case ListOp::ASSART:
+        doc.assart(tar);
+        break;
+    }
 
     // after insertion jobs
     switch (doc.getOuter().getType()) {

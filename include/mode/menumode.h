@@ -9,7 +9,7 @@ public:
     enum class Context
     {
         INSERT, APPEND, ASSART, CHANGE, NEST,
-        FLY_IN, DOG_OUT
+        FALL_SEARCH, DIG_SEARCH
     };
 
     MenuMode(EditableDoc &doc, Context context);

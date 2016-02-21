@@ -112,18 +112,12 @@ void Doc::fallIn()
 {
     assert(inner < outer->size());
 
-    if (outer->at(inner).isScalar())
-        return; // cannot fall in scalar
-
     InternalAst &focus = outer->at(inner).asInternal();
+    assert(focus.size() > 0);
 
     if (focus.isList()) {
-        if (focus.size() == 0) {
-            push(new MenuMode(*this, MenuMode::Context::ASSART));
-        } else {
-            outer = &focus;
-            inner = 0;
-        }
+        outer = &focus;
+        inner = 0;
     } else {
         assert(focus.isMap());
         outer = &focus;
