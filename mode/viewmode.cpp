@@ -85,21 +85,16 @@ void ViewMode::keyboard(char key)
         doc.push(new MenuMode(doc, MenuMode::Context::NEST));
         break;
     case 'm': // modify
-    case 'M':
+    case 'M': {
+        bool clear = key == 'M';
         switch (doc.getInner().getType()) {
-        /*
-        case Ast::Type::STRING:
-        case Ast::Type::KEY:
-            doc.push(new StringInputMode(doc, key == 'M'));
-            break;
-        case Ast::Type::NUMBER:
-            doc.push(new NumberInputMode(doc, key == 'M'));
-            break;
-            */
+        case Ast::Type::IDENT:
+            doc.push(new IdentInputMode(doc, clear));
         default:
             break;
         }
         break;
+    }
     default:
         break;
     }
