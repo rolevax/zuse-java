@@ -32,12 +32,12 @@ void StringInputMode::onPushed()
         doc.scalarClear();
     }
 
-    doc.setHotLight(true);
+    doc.setHotLight(EditableDoc::HotLightLevel::POINT);
 }
 
 void StringInputMode::onPopped()
 {
-    doc.setHotLight(false);
+    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
 }
 
 const char *StringInputMode::name()

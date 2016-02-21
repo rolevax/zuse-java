@@ -3,7 +3,6 @@
         <file>main.qml</file>
         <file>Editor.qml</file>
         <file>LightBar.qml</file>
-        <file>HotLight.qml</file>
         <file>ShowPad.qml</file>
     </qresource>
 </RCC>

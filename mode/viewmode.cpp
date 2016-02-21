@@ -1,6 +1,7 @@
 #include "core/editabledoc.h"
 #include "mode/viewmode.h"
 #include "mode/menumode.h"
+#include "mode/scalarinputmode.h"
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
@@ -144,7 +145,7 @@ void ViewMode::menulessListOp(bool append)
     // after insertion jobs
     switch (doc.getOuter().getType()) {
     case Ast::Type::STMT_LIST:
-        doc.push(new IdentInputMode(doc, false));
+        doc.push(new ScalarInputMode(doc));
         break;
     default:
         break;

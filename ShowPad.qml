@@ -42,6 +42,7 @@ ListView {
         Item {
             height: parent.height
             width: 1 // just non-zero
+
             LightBar { // low light
                 visible: lowUpIndex <= index && index <= lowDownIndex
                 property bool up: index == lowUpIndex
@@ -58,14 +59,16 @@ ListView {
                 property bool up: index == highUpIndex
                 property bool down: index == highDownIndex
                 property bool mid: highUpIndex < index && index < highDownIndex
-                lightColor: tension ? "#22AA22" : "#443399"
+                lightColor: hotLightBack == -2 ? "#EE3333"
+                                               :  tension ? "#22AA22" : "#443399"
                 leftOff: up ? highUpLeft : highDownLeft
                 rightOff: up || mid ? highUpRight : highDownRight
             }
 
-            HotLight {
+            Rectangle { // hot light
                 anchors.left: highLight.right
                 width: 10; height: 20
+                color: "#EE3333"
                 visible: index == highUpIndex && hotLightBack >= 0
             }
 

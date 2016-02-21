@@ -10,6 +10,8 @@
 class EditableDoc
 {
 public:
+    enum class HotLightLevel { OFF, POINT, AREA };
+
     virtual ~EditableDoc() = default;
 
     virtual void push(Mode *mode) = 0;
@@ -35,7 +37,7 @@ public:
     virtual void scalarAppend(char c) = 0;
     virtual void scalarClear() = 0;
 
-    virtual void setHotLight(bool b) = 0;
+    virtual void setHotLight(HotLightLevel level) = 0;
     virtual void toggleTension(bool b) = 0;
 };
 

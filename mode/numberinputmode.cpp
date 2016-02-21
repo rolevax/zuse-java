@@ -50,12 +50,12 @@ void NumberInputMode::onPushed()
         doc.scalarClear();
     }
 
-    doc.setHotLight(true);
+    doc.setHotLight(EditableDoc::HotLightLevel::POINT);
 }
 
 void NumberInputMode::onPopped()
 {
-    doc.setHotLight(false);
+    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
 }
 
 const char *NumberInputMode::name()

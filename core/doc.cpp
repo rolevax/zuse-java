@@ -282,13 +282,20 @@ void Doc::scalarClear()
     tokens.updateScalar(outer, inner);
 }
 
-void Doc::setHotLight(bool b)
+void Doc::setHotLight(HotLightLevel level)
 {
-    if (b) {
+    switch (level) {
+    case HotLightLevel::OFF:
+        tokens.setHotLight(-1); // TODO: de-magic
+        break;
+    case HotLightLevel::POINT: {
         ssize_t back = 0; // TODO: consider quote, etc.
         tokens.setHotLight(back);
-    } else {
-        tokens.setHotLight(-1);
+        break;
+    }
+    case HotLightLevel::AREA:
+        tokens.setHotLight(-2); // TODO: de-magic
+        break;
     }
 }
 
@@ -349,7 +356,7 @@ Ast *Doc::newTree(Ast::Type type)
         break;
     }
     case Ast::Type::IDENT: {
-        a = new ScalarAst(Ast::Type::IDENT, "");
+        a = new ScalarAst(Ast::Type::IDENT, "ident");
         break;
     }
     default:

@@ -46,7 +46,7 @@ private:
     void scalarAppend(char c) override;
     void scalarClear() override;
 
-    void setHotLight(bool b) override;
+    void setHotLight(HotLightLevel level) override;
     void toggleTension(bool b) override;
     ///@}
 

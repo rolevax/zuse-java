@@ -27,12 +27,12 @@ void IdentInputMode::onPushed()
         doc.scalarClear();
     }
 
-    doc.setHotLight(true);
+    doc.setHotLight(EditableDoc::HotLightLevel::POINT);
 }
 
 void IdentInputMode::onPopped()
 {
-    doc.setHotLight(false);
+    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
 }
 
 const char *IdentInputMode::name()
