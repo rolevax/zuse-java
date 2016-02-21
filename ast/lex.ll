@@ -48,6 +48,7 @@ blank [ \t]
 "else"		return yy::BisonParser::make_ELSE(loc);
 
 ";"		return yy::BisonParser::make_SEMICOLON(loc);
+"."		return yy::BisonParser::make_DOT(loc);
 ","		return yy::BisonParser::make_COMMA(loc);
 "+"		return yy::BisonParser::make_ADD(loc);
 "-"		return yy::BisonParser::make_SUB(loc);

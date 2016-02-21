@@ -235,12 +235,15 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
     case Ast::Type::STMT_LIST:
         buf.push_back(nullptr);
         break;
+    case Ast::Type::DOT_LIST:
+        if (!end)
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::DOT));
+        break;
     case Ast::Type::DECL_BEAN_LIST:
     case Ast::Type::DECL_PARAM_LIST:
     case Ast::Type::ARG_LIST:
-        if (!end) {
+        if (!end)
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::COMMA));
-        }
         break;
     case Ast::Type::IF_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));

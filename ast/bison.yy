@@ -63,6 +63,7 @@
 	ELSE		"else"
 
 	SEMICOLON	";"
+	DOT			"."
 	COMMA		","
 	LBRACE		"{"
 	RBRACE		"}"
@@ -81,6 +82,7 @@
 %type	<ListAst*>		arg_list
 %type	<ListAst*>		arg_list_noemp
 %type	<ListAst*>		decl_bean_list
+%type	<ListAst*>		dot_list
 %type	<Ast*>			class
 %type	<Ast*>			method
 %type	<Ast*>			stmt
@@ -175,6 +177,10 @@ expr: expr "+" expr
 				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
 	| ident "(" arg_list ")"
 				{ $$ = new FixSizeAst<2>(Ast::Type::CALL, $1, $3); } 
+	| dot_list "(" arg_list ")"
+				{ $$ = new FixSizeAst<2>(Ast::Type::CALL, $1, $3); } 
+	| dot_list
+				{ $$ = $1; }
 	| "(" expr ")"
 				{ $$ = new FixSizeAst<1>(Ast::Type::PAREN, $2); } 
 	| ident
@@ -198,6 +204,14 @@ arg_list_noemp: expr
 			  | arg_list_noemp "," expr
 		 		{ $1->append($3); $$ = $1; }
 			  ;
+
+dot_list: ident "." ident
+		 		{ $$ = new ListAst(Ast::Type::DOT_LIST); 
+				  $$->append($1);
+				  $$->append($3); }
+		| dot_list "." ident
+		 		{ $1->append($3); $$ = $1; }
+		;
 
 decl_stmt: ident decl_bean_list ";"
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_STMT, $1, $2); }

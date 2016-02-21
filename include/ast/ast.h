@@ -22,6 +22,7 @@ public:
         CLASS_LIST, MEMBER_LIST, DECL_PARAM_LIST, STMT_LIST,
         IF_LIST,
         ARG_LIST, DECL_BEAN_LIST,
+        DOT_LIST,
         ADDSUB_LIST, MULDIV_LIST,
 
         /* MUST sync with isMap() functions when change */
