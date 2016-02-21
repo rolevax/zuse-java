@@ -41,6 +41,7 @@ private:
     void remove() override;
     void change(Ast::Type type) override;
     void nestAsLeft(Ast::Type type) override;
+    void expose() override;
 
     void scalarAppend(const char *str) override;
     void scalarAppend(char c) override;

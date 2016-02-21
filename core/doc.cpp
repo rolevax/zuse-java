@@ -214,26 +214,29 @@ void Doc::assart(Ast::Type type)
 
 void Doc::remove()
 {
-    /*
     assert(inner < outer->size());
 
-    tokens.remove(outer, inner);
-    clipboard = outer->remove(inner);
-    if (outer->getType() == Ast::Type::ROOT) {
-        // nothing to do yet, just leave it here
-    } else if (Ast::isList(*outer)) {
-        if (inner == outer->size()) {
-            if (inner > 0) {
-                --inner;
-            } else { // outer became empty
-                digOut();
-                // re-insert to generate special empty look
-                tokens.remove(outer, inner);
-                tokens.insert(outer, inner);
-            }
-        }
+    if (outer->isList()) {
+        ListAst *l = &outer->asList();
+        l->remove(inner);
+
+        bool toRemoveSelf = l->illZero();
+        bool toExposeChild = l->illOne();
+
+        if (outer->size() == 0)
+            digOut();
+        else if (inner >= outer->size())
+            --inner;
+
+        if (toRemoveSelf)
+            remove();
+        else if (toExposeChild)
+            expose();
     }
-    */
+    // TODO: else if outer->isFixSize, type <- outer->placeholderAt(inner)...
+    // TODO: else if outer->isLimitSize
+
+    tokens.sync(root.get());
 }
 
 void Doc::change(Ast::Type type)
@@ -259,6 +262,16 @@ void Doc::nestAsLeft(Ast::Type type)
     // the interface design in a cost of effeciency.
     nester->change(0, outer->at(inner).clone());
     outer->change(inner, nester);
+    tokens.sync(root.get());
+}
+
+void Doc::expose()
+{
+    assert(inner < outer->size());
+
+    Ast *exposee = outer->at(inner).clone();
+    digOut();
+    outer->change(inner, exposee);
     tokens.sync(root.get());
 }
 

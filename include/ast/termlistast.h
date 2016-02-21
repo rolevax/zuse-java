@@ -22,6 +22,8 @@ public:
 
     Ast *remove(size_t pos) override;
 
+    bool illOne() const override;
+
 protected:
     void doInsert(size_t pos, Ast *child) override;
 

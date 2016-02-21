@@ -33,6 +33,9 @@ public:
     void append(Ast *subtree);
     virtual Ast *remove(size_t pos);
 
+    bool illZero() const;
+    virtual bool illOne() const;
+
 protected:
     virtual void doInsert(size_t pos, Ast *child); // TODO move?
     void doChange(size_t pos, Ast *next) override;

@@ -98,6 +98,11 @@ Ast *TermListAst::remove(size_t pos)
     return ret;
 }
 
+bool TermListAst::illOne() const
+{
+    return size() == 1 && rasingAt(0);
+}
+
 void TermListAst::doInsert(size_t pos, Ast *child)
 {
     ListAst::doInsert(pos, child);

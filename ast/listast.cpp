@@ -60,6 +60,22 @@ Ast *ListAst::remove(size_t pos)
     return res;
 }
 
+bool ListAst::illZero() const
+{
+    if (0 != size())
+        return false;
+    Ast::Type t = getType();
+    return t == Type::ADDSUB_LIST || t == Type::MULDIV_LIST;
+}
+
+bool ListAst::illOne() const
+{
+    if (1 != size())
+        return false;
+    Ast::Type t = getType();
+    return t == Type::DOT_LIST;
+}
+
 void ListAst::doInsert(size_t pos, Ast *child)
 {
     subtrees.emplace(subtrees.begin() + pos, child);
