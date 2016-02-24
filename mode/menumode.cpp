@@ -33,7 +33,7 @@ void MenuMode::keyboard(char key)
         break;
     }
     case Context::APPEND: {
-        doc.insert(keyType);
+        doc.append(keyType);
         nextMode = modeFor(keyType);
         break;
     }

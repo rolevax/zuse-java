@@ -62,10 +62,12 @@ void ViewMode::keyboard(char key)
 
     // outer modification
     case 'o': // oh, quick-append
-        menulessListOp(ListOp::APPEND);
+        if (doc.getOuter().isList())
+            menulessListOp(ListOp::APPEND);
         break;
     case 'i': // quick-insert
-        menulessListOp(ListOp::INSERT);
+        if (doc.getOuter().isList())
+            menulessListOp(ListOp::INSERT);
         break;
     case 'O': // oh, append
         if (doc.getOuter().isList())
