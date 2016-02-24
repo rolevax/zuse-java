@@ -325,10 +325,9 @@ Ast *Doc::newTree(Ast::Type type)
     case Ast::Type::DECL_STMT: {
         Ast *type = new ScalarAst(Ast::Type::IDENT, "Type");
         Ast *id = new ScalarAst(Ast::Type::IDENT, "ident");
-        ListAst *dbl = new ListAst(Ast::Type::DECL_BEAN_LIST);
-        Ast *db = new DeclBeanAst(id) ;
-        dbl->append(db);
-        a = new FixSizeAst<2>(Ast::Type::DECL_STMT, type, dbl);
+        ListAst *cl = new ListAst(Ast::Type::COMMA_LIST);
+        cl->append(id);
+        a = new FixSizeAst<2>(Ast::Type::DECL_STMT, type, cl);
         break;
     }
     case Ast::Type::METHOD: {
@@ -358,7 +357,7 @@ Ast *Doc::newTree(Ast::Type type)
     }
     case Ast::Type::CALL: {
         Ast *id = new ScalarAst(Ast::Type::IDENT, "meth");
-        Ast *args = new ListAst(Ast::Type::ARG_LIST);
+        Ast *args = new ListAst(Ast::Type::COMMA_LIST);
         a = new FixSizeAst<2>(Ast::Type::CALL, id, args);
         break;
     }

@@ -48,9 +48,6 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             hitGeneral(ast.asFixSize<2>().at(1), buf); // decl bean list
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::SEMICOLON));
             break;
-        case Ast::Type::DECL_BEAN:
-            hitDeclBean(DeclBeanAst::fromAst(ast), buf);
-            break;
         case Ast::Type::DECL_PARAM:
             hitGeneral(ast.asFixSize<2>().at(0), buf); // type
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
@@ -155,16 +152,6 @@ void Hammer::hitMethod(const FixSizeAst<3> &ast, Hammer::Buf &buf)
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
 }
 
-void Hammer::hitDeclBean(const DeclBeanAst &ast, Hammer::Buf &buf)
-{
-    hitGeneral(ast.at(0), buf); // identifier
-    if (ast.size() == 2) {
-        // TODO: which ast for map sep token?
-        buf.push_back(new BoneToken(&ast.at(1), BoneToken::Sym::ASSIGN));
-        hitGeneral(ast.at(1), buf); // initialization
-    }
-}
-
 void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Hammer::Buf &buf)
 {
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::IF));
@@ -201,7 +188,7 @@ void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
 {
     switch (ast.getType()) {
     case Ast::Type::DECL_PARAM_LIST:
-    case Ast::Type::ARG_LIST:
+    case Ast::Type::COMMA_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
         break;
     default:
@@ -213,7 +200,7 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
 {
     switch (ast.getType()) {
     case Ast::Type::DECL_PARAM_LIST:
-    case Ast::Type::ARG_LIST:
+    case Ast::Type::COMMA_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
         break;
     default:
@@ -239,9 +226,8 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         if (!end)
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::DOT));
         break;
-    case Ast::Type::DECL_BEAN_LIST:
     case Ast::Type::DECL_PARAM_LIST:
-    case Ast::Type::ARG_LIST:
+    case Ast::Type::COMMA_LIST:
         if (!end)
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::COMMA));
         break;

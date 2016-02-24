@@ -4,7 +4,6 @@
 #include "ast/scalarast.h"
 #include "ast/fixsizeast.h"
 #include "ast/listast.h"
-#include "ast/declbeanast.h"
 
 class Token;
 class Tokens;
@@ -25,7 +24,6 @@ private:
     void hitList(const ListAst &ast, Buf &buf);
     void hitClass(const FixSizeAst<2> &ast, Buf &buf);
     void hitMethod(const FixSizeAst<3> &ast, Buf &buf);
-    void hitDeclBean(const DeclBeanAst &ast, Buf &buf);
     void hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf);
     void hitIfElseBody(const FixSizeAst<1> &ast, Buf &buf);
     void hitParen(const FixSizeAst<1> &ast, Buf &buf);

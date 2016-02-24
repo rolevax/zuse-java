@@ -111,7 +111,7 @@ Mode *MenuMode::modeFor(Ast::Type t)
 {
     switch (t) {
     case Ast::Type::IDENT:
-        return new IdentInputMode(doc, false);
+        return new IdentInputMode(doc, true);
     default:
         return nullptr;
     }

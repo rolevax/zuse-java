@@ -16,7 +16,6 @@
 	#include "ast/listast.h"
 	#include "ast/termlistast.h"
 	#include "ast/rootast.h"
-	#include "ast/declbeanast.h"
 	class ParseException;
 }
 
@@ -79,16 +78,14 @@
 %type	<ListAst*>		param_list_noemp
 %type	<ListAst*>		stmt_list
 %type	<ListAst*>		if_list
-%type	<ListAst*>		arg_list
-%type	<ListAst*>		arg_list_noemp
-%type	<ListAst*>		decl_bean_list
+%type	<ListAst*>		comma_list
+%type	<ListAst*>		comma_list_noemp
 %type	<ListAst*>		dot_list
 %type	<Ast*>			class
 %type	<Ast*>			method
 %type	<Ast*>			stmt
 %type	<Ast*>			expr
 %type	<Ast*>			decl_stmt
-%type	<Ast*>			decl_bean
 %type	<Ast*>			decl_param
 %type	<Ast*>			return_stmt
 %type	<Ast*>			while_stmt
@@ -175,9 +172,9 @@ expr: expr "+" expr
 				{ $$ = TermListAst::makeBop($1, $3, TermListAst::Op::DIV); }
 	| expr "=" expr
 				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
-	| ident "(" arg_list ")"
+	| ident "(" comma_list ")"
 				{ $$ = new FixSizeAst<2>(Ast::Type::CALL, $1, $3); } 
-	| dot_list "(" arg_list ")"
+	| dot_list "(" comma_list ")"
 				{ $$ = new FixSizeAst<2>(Ast::Type::CALL, $1, $3); } 
 	| dot_list
 				{ $$ = $1; }
@@ -193,15 +190,15 @@ ident: "identifier"
 				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
 		;
 
-arg_list: %empty
-		 		{ $$ = new ListAst(Ast::Type::ARG_LIST); }
-		| arg_list_noemp
+comma_list: %empty
+		 		{ $$ = new ListAst(Ast::Type::COMMA_LIST); }
+		| comma_list_noemp
 		 		{ $$ = $1; }
 		;
 
-arg_list_noemp: expr
-		 		{ $$ = new ListAst(Ast::Type::ARG_LIST); $$->append($1); }
-			  | arg_list_noemp "," expr
+comma_list_noemp: expr
+		 		{ $$ = new ListAst(Ast::Type::COMMA_LIST); $$->append($1); }
+			  | comma_list_noemp "," expr
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
@@ -213,22 +210,9 @@ dot_list: ident "." ident
 		 		{ $1->append($3); $$ = $1; }
 		;
 
-decl_stmt: ident decl_bean_list ";"
+decl_stmt: ident comma_list_noemp ";"
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_STMT, $1, $2); }
 	;
-
-decl_bean_list: decl_bean
-		 		{ $$ = new ListAst(Ast::Type::DECL_BEAN_LIST); 
-				  $$->append($1); }
-			  | decl_bean_list "," decl_bean
-		 		{ $1->append($3); $$ = $1; }
-			  ;
-
-decl_bean: ident
-		 		{ $$ = new DeclBeanAst($1); }
-		 | ident "=" expr
-		 		{ $$ = new DeclBeanAst($1, $3); }
-		 ;
 
 return_stmt: "return" expr ";"
 		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }

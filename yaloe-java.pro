@@ -29,7 +29,6 @@ SOURCES += main.cpp \
     mode/numberinputmode.cpp \
     mode/pairinputmode.cpp \
     ast/termlistast.cpp \
-    ast/declbeanast.cpp \
     ast/internalast.cpp \
     ast/fixsizeast.cpp \
     mode/identinputmode.cpp \
@@ -67,7 +66,6 @@ HEADERS += \
     include/mode/pairinputmode.h \
     include/core/editabledoc.h \
     include/ast/termlistast.h \
-    include/ast/declbeanast.h \
     include/ast/internalast.h \
     include/ast/fixsizeast.h \
     include/mode/identinputmode.h \

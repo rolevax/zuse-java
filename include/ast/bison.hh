@@ -49,10 +49,9 @@
 	#include "ast/listast.h"
 	#include "ast/termlistast.h"
 	#include "ast/rootast.h"
-	#include "ast/declbeanast.h"
 	class ParseException;
 
-#line 56 "bison.hh" // lalr1.cc:377
+#line 55 "bison.hh" // lalr1.cc:377
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -129,7 +128,7 @@
 
 
 namespace yy {
-#line 133 "bison.hh" // lalr1.cc:377
+#line 132 "bison.hh" // lalr1.cc:377
 
 
 
@@ -303,7 +302,6 @@ namespace yy {
       // expr
       // ident
       // decl_stmt
-      // decl_bean
       // return_stmt
       // while_stmt
       // do_while_stmt
@@ -314,10 +312,9 @@ namespace yy {
       // param_list
       // param_list_noemp
       // stmt_list
-      // arg_list
-      // arg_list_noemp
+      // comma_list
+      // comma_list_noemp
       // dot_list
-      // decl_bean_list
       // if_list
       char dummy2[sizeof(ListAst*)];
 
@@ -771,8 +768,8 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 158,     ///< Last index in yytable_.
-      yynnts_ = 22,  ///< Number of nonterminal symbols.
+      yylast_ = 152,     ///< Last index in yytable_.
+      yynnts_ = 20,  ///< Number of nonterminal symbols.
       yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -863,10 +860,9 @@ namespace yy {
       case 35: // expr
       case 36: // ident
       case 40: // decl_stmt
-      case 42: // decl_bean
-      case 43: // return_stmt
-      case 44: // while_stmt
-      case 45: // do_while_stmt
+      case 41: // return_stmt
+      case 42: // while_stmt
+      case 43: // do_while_stmt
         value.copy< Ast* > (other.value);
         break;
 
@@ -875,11 +871,10 @@ namespace yy {
       case 30: // param_list
       case 31: // param_list_noemp
       case 33: // stmt_list
-      case 37: // arg_list
-      case 38: // arg_list_noemp
+      case 37: // comma_list
+      case 38: // comma_list_noemp
       case 39: // dot_list
-      case 41: // decl_bean_list
-      case 46: // if_list
+      case 44: // if_list
         value.copy< ListAst* > (other.value);
         break;
 
@@ -912,10 +907,9 @@ namespace yy {
       case 35: // expr
       case 36: // ident
       case 40: // decl_stmt
-      case 42: // decl_bean
-      case 43: // return_stmt
-      case 44: // while_stmt
-      case 45: // do_while_stmt
+      case 41: // return_stmt
+      case 42: // while_stmt
+      case 43: // do_while_stmt
         value.copy< Ast* > (v);
         break;
 
@@ -924,11 +918,10 @@ namespace yy {
       case 30: // param_list
       case 31: // param_list_noemp
       case 33: // stmt_list
-      case 37: // arg_list
-      case 38: // arg_list_noemp
+      case 37: // comma_list
+      case 38: // comma_list_noemp
       case 39: // dot_list
-      case 41: // decl_bean_list
-      case 46: // if_list
+      case 44: // if_list
         value.copy< ListAst* > (v);
         break;
 
@@ -1006,10 +999,9 @@ namespace yy {
       case 35: // expr
       case 36: // ident
       case 40: // decl_stmt
-      case 42: // decl_bean
-      case 43: // return_stmt
-      case 44: // while_stmt
-      case 45: // do_while_stmt
+      case 41: // return_stmt
+      case 42: // while_stmt
+      case 43: // do_while_stmt
         value.template destroy< Ast* > ();
         break;
 
@@ -1018,11 +1010,10 @@ namespace yy {
       case 30: // param_list
       case 31: // param_list_noemp
       case 33: // stmt_list
-      case 37: // arg_list
-      case 38: // arg_list_noemp
+      case 37: // comma_list
+      case 38: // comma_list_noemp
       case 39: // dot_list
-      case 41: // decl_bean_list
-      case 46: // if_list
+      case 44: // if_list
         value.template destroy< ListAst* > ();
         break;
 
@@ -1061,10 +1052,9 @@ namespace yy {
       case 35: // expr
       case 36: // ident
       case 40: // decl_stmt
-      case 42: // decl_bean
-      case 43: // return_stmt
-      case 44: // while_stmt
-      case 45: // do_while_stmt
+      case 41: // return_stmt
+      case 42: // while_stmt
+      case 43: // do_while_stmt
         value.move< Ast* > (s.value);
         break;
 
@@ -1073,11 +1063,10 @@ namespace yy {
       case 30: // param_list
       case 31: // param_list_noemp
       case 33: // stmt_list
-      case 37: // arg_list
-      case 38: // arg_list_noemp
+      case 37: // comma_list
+      case 38: // comma_list_noemp
       case 39: // dot_list
-      case 41: // decl_bean_list
-      case 46: // if_list
+      case 44: // if_list
         value.move< ListAst* > (s.value);
         break;
 
@@ -1283,7 +1272,7 @@ namespace yy {
 
 
 } // yy
-#line 1287 "bison.hh" // lalr1.cc:377
+#line 1276 "bison.hh" // lalr1.cc:377
 
 
 
