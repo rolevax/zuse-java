@@ -55,11 +55,9 @@ void Doc::save(const std::string &filename)
 void Doc::keyboard(char key)
 {
     assert(modes.size() > 0);
+    modes.top()->keyboard(key);
     if (root->size() > 0)
-        modes.top()->keyboard(key);
-    else
-        modes.top()->emptyKeyboard(key); // TODO might be useless
-    tokens.light(&outer->at(inner));
+        tokens.light(&outer->at(inner));
 }
 
 /**
@@ -98,7 +96,7 @@ void Doc::pop(Mode *nextPush)
         modes.top()->onResume();
 }
 
-const Ast &Doc::getOuter() const
+const InternalAst &Doc::getOuter() const
 {
     return *outer;
 }
@@ -353,6 +351,20 @@ Ast *Doc::newTree(Ast::Type type)
         Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
         Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
         a = TermListAst::makeBop(lhs, rhs, TermListAst::Op::MUL);
+        break;
+    }
+    case Ast::Type::DOT_LIST: {
+        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
+        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
+        a = new ListAst(Ast::Type::DOT_LIST);
+        a->asList().append(lhs);
+        a->asList().append(rhs);
+        break;
+    }
+    case Ast::Type::DECL_PARAM: {
+        Ast *type = new ScalarAst(Ast::Type::IDENT, "Type");
+        Ast *id = new ScalarAst(Ast::Type::IDENT, "ident");
+        a = new FixSizeAst<2>(Ast::Type::DECL_PARAM, type, id);
         break;
     }
     case Ast::Type::CALL: {

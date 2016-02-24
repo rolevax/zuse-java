@@ -15,6 +15,11 @@ ViewMode::ViewMode(EditableDoc &doc) :
 
 void ViewMode::keyboard(char key)
 {
+    if (doc.getOuter().getType() == Ast::Type::CLASS_LIST
+            && doc.getOuter().size() == 0
+            && key != 'i' && key != 'I')
+        return;
+
     switch (key) {
     // tree-wise cursor moving
     case 'g': // get next node
@@ -111,13 +116,6 @@ void ViewMode::keyboard(char key)
     default:
         break;
     }
-}
-
-void ViewMode::emptyKeyboard(char key)
-{
-    // insert to empty document
-    if (key == 'i')
-        doc.push(new MenuMode(doc, MenuMode::Context::INSERT));
 }
 
 const char *ViewMode::name()

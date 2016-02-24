@@ -17,7 +17,7 @@ public:
     virtual void push(Mode *mode) = 0;
     virtual void pop(Mode *nextPush = nullptr) = 0;
 
-    virtual const Ast &getOuter() const = 0;
+    virtual const InternalAst &getOuter() const = 0;
     virtual const Ast &getInner() const = 0;
 
     virtual void fallIn() = 0;

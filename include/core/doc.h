@@ -26,7 +26,7 @@ private:
     void push(Mode *mode) override;
     void pop(Mode *nextPush) override;
 
-    const Ast &getOuter() const override;
+    const InternalAst &getOuter() const override;
     const Ast &getInner() const override;
 
     void fallIn() override;

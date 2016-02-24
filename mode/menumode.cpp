@@ -73,9 +73,13 @@ void MenuMode::keyboard(char key)
             break;
         case '/':
             doc.nestAsLeft(Ast::Type::MULDIV_LIST);
+            //TODO set rasing
             break;
         case '(':
             doc.nestAsLeft(Ast::Type::CALL);
+            break;
+        case '.':
+            doc.nestAsLeft(Ast::Type::DOT_LIST);
             break;
         }
 
@@ -85,11 +89,6 @@ void MenuMode::keyboard(char key)
     }
 
     doc.pop(nextMode);
-}
-
-void MenuMode::emptyKeyboard(char key)
-{
-    keyboard(key);
 }
 
 void MenuMode::onPushed()
@@ -121,7 +120,7 @@ Ast::Type MenuMode::keyToType(char key)
 {
     switch (key) {
     case '.':
-        return Ast::Type::IDENT;
+        return Ast::Type::DOT_LIST;
     case 'C':
         return Ast::Type::CLASS;
     case 'i':

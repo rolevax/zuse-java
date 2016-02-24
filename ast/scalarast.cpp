@@ -27,7 +27,7 @@ const std::string &ScalarAst::getText() const
 
 void ScalarAst::append(char c)
 {
-    if (c == '\b') {
+    if (c == '\b' && !text.empty()) {
         text.pop_back();
     } else {
         text += c;

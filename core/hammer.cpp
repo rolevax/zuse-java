@@ -188,8 +188,12 @@ void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
 {
     switch (ast.getType()) {
     case Ast::Type::DECL_PARAM_LIST:
-    case Ast::Type::COMMA_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
+        break;
+    case Ast::Type::COMMA_LIST:
+        if (ast.getParent().getType() == Ast::Type::CALL)
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
+        // else if array 'initializer', etc.
         break;
     default:
         break;
@@ -200,8 +204,11 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
 {
     switch (ast.getType()) {
     case Ast::Type::DECL_PARAM_LIST:
-    case Ast::Type::COMMA_LIST:
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
+        break;
+    case Ast::Type::COMMA_LIST:
+        if (ast.getParent().getType() == Ast::Type::CALL)
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
         break;
     default:
         break;

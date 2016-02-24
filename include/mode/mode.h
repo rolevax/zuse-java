@@ -13,7 +13,6 @@ public:
     virtual ~Mode() = default;
 
     virtual void keyboard(char key) { (void) key; }
-    virtual void emptyKeyboard(char key) { (void) key; }
     virtual void onPushed() {}
     virtual void onPopped() {}
     virtual void onResume() {}
