@@ -65,7 +65,7 @@ bool ListAst::illZero() const
     if (0 != size())
         return false;
     Ast::Type t = getType();
-    return t == Type::ADDSUB_LIST || t == Type::MULDIV_LIST;
+    return t == Type::ADD_BOP_LIST || t == Type::MUL_BOP_LIST;
 }
 
 bool ListAst::illOne() const

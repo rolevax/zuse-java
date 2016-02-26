@@ -3,6 +3,7 @@
 #include "ast/fixsizeast.h"
 #include "ast/internalast.h"
 #include "ast/listast.h"
+#include "ast/boplistast.h"
 
 #include <cassert>
 
@@ -15,7 +16,12 @@ Ast::Ast(Type t) :
 
 bool Ast::isList() const
 {
-    return Type::CLASS_LIST <= type && type <= Type::MULDIV_LIST;
+    return Type::CLASS_LIST <= type && type <= Type::MUL_BOP_LIST;
+}
+
+bool Ast::isBopList() const
+{
+    return Type::ADD_BOP_LIST <= type && type <= Type::MUL_BOP_LIST;
 }
 
 bool Ast::isMap() const
@@ -94,6 +100,18 @@ const ListAst &Ast::asList() const
     return static_cast<const ListAst&>(*this);
 }
 
+BopListAst &Ast::asBopList()
+{
+    assert(isBopList());
+    return static_cast<BopListAst&>(*this);
+}
+
+const BopListAst &Ast::asBopList() const
+{
+    assert(isBopList());
+    return static_cast<const BopListAst&>(*this);
+}
+
 ListAst *Ast::bodify()
 {
     if (getType() == Type::STMT_LIST)
@@ -109,9 +127,9 @@ int Ast::precedence() const
     switch (type) {
     case Type::ASSIGN:
         return 5;
-    case Type::ADDSUB_LIST:
+    case Type::ADD_BOP_LIST:
         return 10;
-    case Type::MULDIV_LIST:
+    case Type::MUL_BOP_LIST:
         return 11;
     default:
         return 0;

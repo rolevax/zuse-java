@@ -62,17 +62,17 @@ void MenuMode::keyboard(char key)
             doc.nestAsLeft(Ast::Type::ASSIGN);
             break;
         case '+':
-            doc.nestAsLeft(Ast::Type::ADDSUB_LIST);
+            doc.nestAsLeft(Ast::Type::ADD_BOP_LIST);
             break;
         case '-':
-            doc.nestAsLeft(Ast::Type::ADDSUB_LIST);
+            doc.nestAsLeft(Ast::Type::ADD_BOP_LIST);
             //TODO set rasing
             break;
         case '*':
-            doc.nestAsLeft(Ast::Type::MULDIV_LIST);
+            doc.nestAsLeft(Ast::Type::MUL_BOP_LIST);
             break;
         case '/':
-            doc.nestAsLeft(Ast::Type::MULDIV_LIST);
+            doc.nestAsLeft(Ast::Type::MUL_BOP_LIST);
             //TODO set rasing
             break;
         case '(':

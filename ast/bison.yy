@@ -14,7 +14,7 @@
 	#include "ast/scalarast.h"
 	#include "ast/fixsizeast.h"
 	#include "ast/listast.h"
-	#include "ast/termlistast.h"
+	#include "ast/boplistast.h"
 	#include "ast/rootast.h"
 	class ParseException;
 }
@@ -159,17 +159,24 @@ stmt: expr ";"
 				{ $$ = $2; }
 	;
 
+%left	",";
 %right	"=";
 %left	"+" "-";
 %left	"*" "/";
+%left	".";
+/* TODO: re-design grammar, expr: add_list | mul_list | ... */
 expr: expr "+" expr
-				{ $$ = TermListAst::makeBop($1, $3, TermListAst::Op::ADD); }
+				{ $$ = new BopListAst(Ast::Type::ADD_BOP_LIST, $1, $3, 
+									  BopListAst::ADD); }
 	| expr "-" expr
-				{ $$ = TermListAst::makeBop($1, $3, TermListAst::Op::SUB); }
+				{ $$ = new BopListAst(Ast::Type::ADD_BOP_LIST, $1, $3, 
+									  BopListAst::SUB); }
 	| expr "*" expr
-				{ $$ = TermListAst::makeBop($1, $3, TermListAst::Op::MUL); }
+				{ $$ = new BopListAst(Ast::Type::MUL_BOP_LIST, $1, $3, 
+									  BopListAst::MUL); }
 	| expr "/" expr
-				{ $$ = TermListAst::makeBop($1, $3, TermListAst::Op::DIV); }
+				{ $$ = new BopListAst(Ast::Type::MUL_BOP_LIST, $1, $3, 
+									  BopListAst::DIV); }
 	| expr "=" expr
 				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
 	| ident "(" comma_list ")"

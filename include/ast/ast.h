@@ -9,6 +9,7 @@ class ScalarAst;
 class InternalAst;
 template<std::size_t N> class FixSizeAst;
 class ListAst;
+class BopListAst;
 
 class Ast
 {
@@ -18,13 +19,15 @@ public:
      * KEYTAL means "keyword literal".
      */
     enum class Type {
-        /* MUST sync with isList() functions when change */
+        /* MUST sync with isList() definition */
         CLASS_LIST, MEMBER_LIST, DECL_PARAM_LIST, STMT_LIST,
         IF_LIST,
         COMMA_LIST, DOT_LIST,
-        ADDSUB_LIST, MULDIV_LIST,
 
-        /* MUST sync with isMap() functions when change */
+        /* MUST sync with isBopList() and isList() definition */
+        ADD_BOP_LIST, MUL_BOP_LIST,
+
+        /* MUST sync with isMap() definition */
         CLASS, METHOD, DECL_STMT, DECL_PARAM, STMT,
         RETURN, WHILE, DO_WHILE, IF_CONDBODY, IF_ELSEBODY,
         PAREN,
@@ -42,6 +45,7 @@ public:
     virtual void dump() const {} // for debug use
 
     bool isList() const;
+    bool isBopList() const;
     bool isMap() const;
     bool isScalar() const;
     bool isChangeable() const;
@@ -54,6 +58,8 @@ public:
     template<std::size_t N> const FixSizeAst<N> &asFixSize() const;
     ListAst &asList();
     const ListAst &asList() const;
+    BopListAst &asBopList();
+    const BopListAst &asBopList() const;
 
     ListAst *bodify();
     int precedence() const;

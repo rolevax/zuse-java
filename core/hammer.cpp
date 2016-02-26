@@ -3,7 +3,7 @@
 #include "core/fleshtoken.h"
 #include "core/bonetoken.h"
 #include "core/soultoken.h"
-#include "ast/termlistast.h"
+#include "ast/boplistast.h"
 #include "ast/fixsizeast.h"
 
 #include <cassert>
@@ -243,19 +243,19 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         if (!end)
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::ELSE));
         break;
-    case Ast::Type::ADDSUB_LIST:
+    case Ast::Type::ADD_BOP_LIST:
         if (!end) {
-            const TermListAst &tast = TermListAst::fromAst(ast);
-            BoneToken::Sym sym = tast.rasingAt(pos + 1) ? BoneToken::Sym::ADD
-                                                        : BoneToken::Sym::SUB;
+            const BopListAst &bast = ast.asBopList();
+            BoneToken::Sym sym = bast.opAt(pos + 1) == 0 ? BoneToken::Sym::ADD
+                                                         : BoneToken::Sym::SUB;
             buf.push_back(new BoneToken(&ast, sym));
         }
         break;
-    case Ast::Type::MULDIV_LIST:
+    case Ast::Type::MUL_BOP_LIST:
         if (!end) {
-            const TermListAst &tast = TermListAst::fromAst(ast);
-            BoneToken::Sym sym = tast.rasingAt(pos + 1) ? BoneToken::Sym::MUL
-                                                        : BoneToken::Sym::DIV;
+            const BopListAst &bast = ast.asBopList();
+            BoneToken::Sym sym = bast.opAt(pos + 1) == 0 ? BoneToken::Sym::MUL
+                                                         : BoneToken::Sym::DIV;
             buf.push_back(new BoneToken(&ast, sym));
         }
         break;

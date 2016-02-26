@@ -47,7 +47,7 @@
 	#include "ast/scalarast.h"
 	#include "ast/fixsizeast.h"
 	#include "ast/listast.h"
-	#include "ast/termlistast.h"
+	#include "ast/boplistast.h"
 	#include "ast/rootast.h"
 	class ParseException;
 
