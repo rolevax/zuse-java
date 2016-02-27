@@ -75,11 +75,13 @@ void MenuMode::keyboard(char key)
             doc.nestAsLeft(Ast::Type::MUL_BOP_LIST);
             //TODO set rasing
             break;
+            /*
         case '(':
             doc.nestAsLeft(Ast::Type::CALL);
             break;
+            */
         case '.':
-            doc.nestAsLeft(Ast::Type::DOT_LIST);
+            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST);
             break;
         }
 
@@ -120,7 +122,7 @@ Ast::Type MenuMode::keyToType(char key)
 {
     switch (key) {
     case '.':
-        return Ast::Type::DOT_LIST;
+        return Ast::Type::DOT_BOP_LIST;
     case 'C':
         return Ast::Type::CLASS;
     case 'i':

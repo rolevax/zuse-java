@@ -22,16 +22,16 @@ public:
         /* MUST sync with isList() definition */
         CLASS_LIST, MEMBER_LIST, DECL_PARAM_LIST, STMT_LIST,
         IF_LIST,
-        COMMA_LIST, DOT_LIST,
+        COMMA_LIST,
 
         /* MUST sync with isBopList() and isList() definition */
-        ADD_BOP_LIST, MUL_BOP_LIST,
+        DOT_BOP_LIST, MUL_BOP_LIST, ADD_BOP_LIST,
 
         /* MUST sync with isMap() definition */
         CLASS, METHOD, DECL_STMT, DECL_PARAM, STMT,
         RETURN, WHILE, DO_WHILE, IF_CONDBODY, IF_ELSEBODY,
         PAREN,
-        ASSIGN, CALL,
+        ASSIGN,
 
         /* isScalar() == !isList() && !isMap() */
         IDENT, NUMBER,

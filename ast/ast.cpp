@@ -16,17 +16,17 @@ Ast::Ast(Type t) :
 
 bool Ast::isList() const
 {
-    return Type::CLASS_LIST <= type && type <= Type::MUL_BOP_LIST;
+    return Type::CLASS_LIST <= type && type <= Type::ADD_BOP_LIST;
 }
 
 bool Ast::isBopList() const
 {
-    return Type::ADD_BOP_LIST <= type && type <= Type::MUL_BOP_LIST;
+    return Type::DOT_BOP_LIST <= type && type <= Type::ADD_BOP_LIST;
 }
 
 bool Ast::isMap() const
 {
-    return Type::CLASS <= type && type <= Type::CALL;
+    return Type::CLASS <= type && type <= Type::ASSIGN;
 }
 
 bool Ast::isScalar() const

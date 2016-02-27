@@ -47,20 +47,26 @@
 %token
 	END	0		"EOF"
 
-	ASSIGN		"="
-	SUB			"-"
-	ADD			"+"
-	MUL			"*"
-	DIV			"/"
-
 	CLASS		"class"
-	VOID		"void"
 	RETURN		"return"
 	WHILE		"while"
 	DO			"do"
 	IF			"if"
 	ELSE		"else"
+	INSTANCEOF	"instanceof"
+	JNULL		"null"
+	THIS		"this"
+	SUPER		"super"
+	NEW			"new"
 
+	ASSIGN		"="
+	SUB			"-"
+	ADD			"+"
+	MUL			"*"
+	DIV			"/" 
+	MOD			"%"
+	COLON		":"
+	QUESTION	"?"
 	SEMICOLON	";"
 	DOT			"."
 	COMMA		","
@@ -68,10 +74,31 @@
 	RBRACE		"}"
 	LPAREN		"("
 	RPAREN		")"
+	LOGIC_OR	"||"
+	LOGIC_AND	"&&"
+	LOGIC_NOT	"!"
+	BIT_OR		"|"
+	BIT_AND		"&"
+	BIT_XOR		"^"
+	BIT_NOT		"~"
+	EQ			"=="
+	NEQ			"!="
+	LT			"<"
+	GT			">"
+	LEQ			"<="
+	GEQ			">="
+	SHL			"<<"
+	SHR			">>"
+	SHRA		">>>"
+	INC			"++"
+	DEC			"--"
+	DIM			"[]"
 ;
 
 %token	<std::string>	IDENTIFIER	"identifier"
 %token	<std::string>	NUMBER		"number"
+%token	<std::string>	VOID		"void"
+
 %type	<ListAst*>		class_list
 %type	<ListAst*>		member_list
 %type	<ListAst*>		param_list
@@ -80,17 +107,53 @@
 %type	<ListAst*>		if_list
 %type	<ListAst*>		comma_list
 %type	<ListAst*>		comma_list_noemp
-%type	<ListAst*>		dot_list
+%type	<ListAst*>		dector_list
+
 %type	<Ast*>			class
 %type	<Ast*>			method
 %type	<Ast*>			stmt
-%type	<Ast*>			expr
 %type	<Ast*>			decl_stmt
 %type	<Ast*>			decl_param
+%type	<Ast*>			dector
+%type	<Ast*>			dector_name
 %type	<Ast*>			return_stmt
 %type	<Ast*>			while_stmt
 %type	<Ast*>			do_while_stmt
 %type	<Ast*>			ident
+%type	<Ast*>			type
+%type	<Ast*>			ptype
+
+%type	<Ast*>			expr
+%type	<Ast*>			expr_lv0
+%type	<Ast*>			expr_lv1
+%type	<Ast*>			expr_lv2
+%type	<Ast*>			expr_lv3
+%type	<Ast*>			expr_lv4
+%type	<Ast*>			expr_lv5
+%type	<Ast*>			expr_lv6
+%type	<Ast*>			expr_lv7
+%type	<Ast*>			expr_lv8
+%type	<Ast*>			expr_lv9
+%type	<Ast*>			expr_lv10
+%type	<Ast*>			expr_lv11
+%type	<Ast*>			expr_lv12
+%type	<Ast*>			expr_ptype
+%type	<Ast*>			expr_unary
+%type	<Ast*>			expr_unary_logic
+%type	<Ast*>			expr_post
+%type	<Ast*>			expr_pp
+%type	<Ast*>			expr_prime
+%type	<Ast*>			expr_prime_noname
+%type	<Ast*>			expr_prime_cx
+%type	<Ast*>			expr_prime_cx_nude
+%type	<Ast*>			expr_call
+%type	<Ast*>			expr_field
+%type	<Ast*>			expr_new
+%type	<Ast*>			expr_new_plain
+%type	<Ast*>			callee
+%type	<Ast*>			name
+%type	<Ast*>			special_name
+
 %printer { yyoutput << $$; } <*>;
 
 %% /* ============ rules ============ */
@@ -100,6 +163,14 @@
  */
 
 %start class_list;
+
+type: ptype
+	| name
+	;
+
+ptype: "void"
+	 			{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
+	 ;
 
 class_list: %empty					{ /* already newwed as 'result' */ }
 		  | class_list class		{ result->append($2); }
@@ -159,40 +230,6 @@ stmt: expr ";"
 				{ $$ = $2; }
 	;
 
-%left	",";
-%right	"=";
-%left	"+" "-";
-%left	"*" "/";
-%left	".";
-/* TODO: re-design grammar, expr: add_list | mul_list | ... */
-expr: expr "+" expr
-				{ $$ = new BopListAst(Ast::Type::ADD_BOP_LIST, $1, $3, 
-									  BopListAst::ADD); }
-	| expr "-" expr
-				{ $$ = new BopListAst(Ast::Type::ADD_BOP_LIST, $1, $3, 
-									  BopListAst::SUB); }
-	| expr "*" expr
-				{ $$ = new BopListAst(Ast::Type::MUL_BOP_LIST, $1, $3, 
-									  BopListAst::MUL); }
-	| expr "/" expr
-				{ $$ = new BopListAst(Ast::Type::MUL_BOP_LIST, $1, $3, 
-									  BopListAst::DIV); }
-	| expr "=" expr
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
-	| ident "(" comma_list ")"
-				{ $$ = new FixSizeAst<2>(Ast::Type::CALL, $1, $3); } 
-	| dot_list "(" comma_list ")"
-				{ $$ = new FixSizeAst<2>(Ast::Type::CALL, $1, $3); } 
-	| dot_list
-				{ $$ = $1; }
-	| "(" expr ")"
-				{ $$ = new FixSizeAst<1>(Ast::Type::PAREN, $2); } 
-	| ident
-				{ $$ = $1; }
-	| "number"
-				{ $$ = new ScalarAst(Ast::Type::NUMBER, $1); }
-	;
-
 ident: "identifier"
 				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
 		;
@@ -209,17 +246,31 @@ comma_list_noemp: expr
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
-dot_list: ident "." ident
-		 		{ $$ = new ListAst(Ast::Type::DOT_LIST); 
-				  $$->append($1);
-				  $$->append($3); }
-		| dot_list "." ident
-		 		{ $1->append($3); $$ = $1; }
-		;
-
-decl_stmt: ident comma_list_noemp ";"
+decl_stmt: ident dector ";"
+		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_STMT, $1, $2); }
+		 | ident dector_list ";" 
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_STMT, $1, $2); }
 	;
+
+dector_list: dector "," dector
+		 		{ $$ = new ListAst(Ast::Type::COMMA_LIST); 
+				  $$->append($1); $$->append($3); }
+		   | dector_list "," dector
+		 		{ $1->append($3); $$ = $1; }
+		   ;
+
+dector: dector_name
+				{ $$ = $1; }
+	  | dector_name "=" expr // TODO: array init
+				// TODO: change to ASS_BOP_LIST
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
+	  ;
+
+dector_name: ident
+				{ $$ = $1; }
+		   | dector_name "[]"
+				{ $$ = $1; } // TODO: scalar.dim++ (?)
+		   ;
 
 return_stmt: "return" expr ";"
 		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }
@@ -255,6 +306,234 @@ if_list: "if" "(" expr ")" stmt %prec "then"
 					  $$->append(elze);
 				  } }
 	   ;
+
+/* expression */ 
+expr: expr_lv0
+				{ $$ = $1; }
+	;
+
+expr_lv0: expr_lv1
+				{ $$ = $1; }
+		| expr_unary "=" expr_lv0
+				// TODO: change to ASS_BOP_LIST
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
+		;
+
+expr_lv1: expr_lv2
+				{ $$ = $1; }
+		| expr_lv2 "?" expr ":" expr_lv1
+				{ $$=$1; }
+		;
+
+expr_lv2: expr_lv3
+				{ $$ = $1; }
+		| expr_lv2 "||" expr_lv3
+				{ $$=$1; }
+		;
+
+expr_lv3: expr_lv4
+				{ $$ = $1; }
+		| expr_lv3 "&&" expr_lv4
+				{ $$=$1; }
+		;
+
+expr_lv4: expr_lv5
+				{ $$ = $1; }
+		| expr_lv4 "|" expr_lv5
+				{ $$=$1; }
+		;
+
+expr_lv5: expr_lv6
+				{ $$ = $1; }
+		| expr_lv5 "^" expr_lv6
+				{ $$=$1; }
+		;
+
+expr_lv6: expr_lv7
+				{ $$ = $1; }
+		| expr_lv6 "&" expr_lv7
+				{ $$=$1; }
+		;
+
+expr_lv7: expr_lv8
+				{ $$ = $1; }
+		| expr_lv7 "==" expr_lv8
+				{ $$=$1; }
+		| expr_lv7 "!=" expr_lv8
+				{ $$=$1; }
+		;
+
+expr_lv8: expr_lv9
+				{ $$ = $1; }
+		| expr_lv8 "<" expr_lv9
+				{ $$=$1; }
+		| expr_lv8 ">" expr_lv9
+				{ $$=$1; }
+		| expr_lv8 "<=" expr_lv9
+				{ $$=$1; }
+		| expr_lv8 ">=" expr_lv9
+				{ $$=$1; }
+		| expr_lv8 "instanceof" expr_lv9
+				{ $$=$1; }
+		;
+
+expr_lv9: expr_lv10
+				{ $$ = $1; }
+		| expr_lv9 "<<" expr_lv10
+				{ $$=$1; }
+		| expr_lv9 ">>" expr_lv10
+				{ $$=$1; }
+		| expr_lv9 ">>>" expr_lv10
+				{ $$=$1; }
+		;
+
+
+expr_lv10: expr_lv11
+				{ $$ = $1; }
+		 | expr_lv10 "+" expr_lv11
+				{ $$ = new BopListAst(Ast::Type::ADD_BOP_LIST, $1, $3, 
+									  BopListAst::ADD); }
+		 | expr_lv10 "-" expr_lv11
+				{ $$ = new BopListAst(Ast::Type::ADD_BOP_LIST, $1, $3, 
+									  BopListAst::SUB); }
+		 ;
+
+expr_lv11: expr_lv12
+				{ $$ = $1; }
+		 | expr_lv11 "*" expr_lv12
+				{ $$ = new BopListAst(Ast::Type::MUL_BOP_LIST, $1, $3, 
+									  BopListAst::MUL); }
+		 | expr_lv11 "/" expr_lv12
+				{ $$ = new BopListAst(Ast::Type::MUL_BOP_LIST, $1, $3, 
+									  BopListAst::DIV); }
+		 | expr_lv11 "%" expr_lv12
+				{ $$=$1; }
+		 ;
+
+expr_lv12: expr_unary
+				{ $$ = $1; } 
+		 | "(" expr_ptype ")" expr_lv12
+				{ $$=$2; } 
+		 | "(" name dims ")" expr_lv12
+				{ $$=$2; } 
+		 | "(" expr ")" expr_unary_logic
+				{ $$=$2; } 
+		 ;
+
+expr_ptype: ptype
+				{ $$ = $1; } 
+		  | ptype dims
+				{ $$=$1; } 
+		  ;
+
+expr_unary: "++" expr_unary
+				{ $$=$2; }
+		  | "--" expr_unary
+				{ $$=$2; }
+		  | "+" expr_lv12
+				{ $$=$2; }
+		  | "-" expr_lv12
+				{ $$=$2; }
+		  | expr_unary_logic
+				{ $$ = $1; }
+		  ;
+
+expr_unary_logic: expr_pp
+				{ $$ = $1; }
+				| "~" expr_unary
+				{ $$=$2; }
+				| "!" expr_unary
+				{ $$=$2; }
+				;
+
+expr_pp: expr_post
+				{ $$ = $1; }
+	   | expr_prime
+				{ $$ = $1; }
+	   ;
+
+expr_post: expr_pp "++"
+				{ $$=$1; }
+		 | expr_pp "--"
+				{ $$=$1; }
+		 ;
+
+expr_prime: name
+				{ $$ = $1; }
+		  | expr_prime_noname
+				{ $$ = $1; }
+		  ;
+
+expr_prime_noname: expr_prime_cx
+				{ $$ = $1; }
+				 | special_name
+				{ $$ = $1; }
+				 | expr_new
+				{ $$ = $1; }
+				 ;
+
+expr_prime_cx: "(" expr ")"
+				{ $$ = new FixSizeAst<1>(Ast::Type::PAREN, $2); } 
+			 | expr_prime_cx_nude
+				{ $$ = $1; }
+			 ;
+
+expr_prime_cx_nude: "number"
+				{ $$ = new ScalarAst(Ast::Type::NUMBER, $1); }
+				  | expr_call
+				{ $$ = $1; }
+				  | expr_field
+				{ $$ = $1; }
+			;
+
+expr_call: callee "(" comma_list ")"
+				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
+									  BopListAst::DOT); }
+	;
+
+expr_field: expr_prime_noname "." ident
+				{ $$=$1; }
+		  | expr_post "." ident
+				{ $$=$1; }
+		  ;
+
+expr_new: expr_new_plain
+				{ $$ = $1; }
+		| name "." expr_new_plain
+				{ $$=$1; }
+		;
+
+expr_new_plain: "new" type "(" comma_list ")"
+				{ $$=$2; }
+			  // TODO various new
+			  ;
+
+callee: expr_prime_cx_nude
+				{ $$ = $1; }
+	  | special_name
+				{ $$ = $1; }
+	  | name
+				{ $$ = $1; }
+	  ;
+
+name: ident
+				{ $$ = $1; }
+	| name "." ident
+				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
+									  BopListAst::DOT); }
+	;
+
+special_name: "this"
+				{ $$= new ScalarAst(Ast::Type::IDENT,"xxx"); }
+			| "super"
+				{ $$= new ScalarAst(Ast::Type::IDENT,"xxx"); }
+			| "null"
+				{ $$= new ScalarAst(Ast::Type::IDENT,"xxx"); }
+			;
+
+dims: "[]"
+	| dims "[]"
+	;
 
 %%
 

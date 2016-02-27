@@ -93,10 +93,6 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Ast::Type::ASSIGN:
             hitInfixBop(ast.asFixSize<2>(), buf);
             break;
-        case Ast::Type::CALL:
-            hitGeneral(ast.asFixSize<2>().at(0), buf); // method name
-            hitGeneral(ast.asFixSize<2>().at(1), buf); // arg list
-            break;
         default:
             assert("unhandled map type in hammer" && false);
             break;
@@ -191,8 +187,10 @@ void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
         break;
     case Ast::Type::COMMA_LIST:
+        /*
         if (ast.getParent().getType() == Ast::Type::CALL)
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
+            */
         // else if array 'initializer', etc.
         break;
     default:
@@ -207,8 +205,10 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
         break;
     case Ast::Type::COMMA_LIST:
+        /*
         if (ast.getParent().getType() == Ast::Type::CALL)
             buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
+            */
         break;
     default:
         break;
@@ -228,10 +228,6 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         break;
     case Ast::Type::STMT_LIST:
         buf.push_back(nullptr);
-        break;
-    case Ast::Type::DOT_LIST:
-        if (!end)
-            buf.push_back(new BoneToken(&ast, BoneToken::Sym::DOT));
         break;
     case Ast::Type::DECL_PARAM_LIST:
     case Ast::Type::COMMA_LIST:
@@ -256,6 +252,14 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
             const BopListAst &bast = ast.asBopList();
             BoneToken::Sym sym = bast.opAt(pos + 1) == 0 ? BoneToken::Sym::MUL
                                                          : BoneToken::Sym::DIV;
+            buf.push_back(new BoneToken(&ast, sym));
+        }
+        break;
+    case Ast::Type::DOT_BOP_LIST:
+        if (!end) {
+            const BopListAst &bast = ast.asBopList();
+            BoneToken::Sym sym = bast.opAt(pos + 1) == 0 ? BoneToken::Sym::DOT
+                                                         : BoneToken::Sym::VOID;
             buf.push_back(new BoneToken(&ast, sym));
         }
         break;

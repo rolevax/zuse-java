@@ -353,24 +353,16 @@ Ast *Doc::newTree(Ast::Type type)
         a = new BopListAst(Ast::Type::MUL_BOP_LIST, lhs, rhs, BopListAst::MUL);
         break;
     }
-    case Ast::Type::DOT_LIST: {
+    case Ast::Type::DOT_BOP_LIST: {
         Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
         Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
-        a = new ListAst(Ast::Type::DOT_LIST);
-        a->asList().append(lhs);
-        a->asList().append(rhs);
+        a = new BopListAst(Ast::Type::MUL_BOP_LIST, lhs, rhs, BopListAst::DOT);
         break;
     }
     case Ast::Type::DECL_PARAM: {
         Ast *type = new ScalarAst(Ast::Type::IDENT, "Type");
         Ast *id = new ScalarAst(Ast::Type::IDENT, "ident");
         a = new FixSizeAst<2>(Ast::Type::DECL_PARAM, type, id);
-        break;
-    }
-    case Ast::Type::CALL: {
-        Ast *id = new ScalarAst(Ast::Type::IDENT, "meth");
-        Ast *args = new ListAst(Ast::Type::COMMA_LIST);
-        a = new FixSizeAst<2>(Ast::Type::CALL, id, args);
         break;
     }
     case Ast::Type::IDENT: {

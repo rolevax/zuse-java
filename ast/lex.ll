@@ -40,13 +40,21 @@ blank [ \t]
 [\n]+      loc.lines(yyleng); loc.step();
 
 "class"		return yy::BisonParser::make_CLASS(loc);
-"void"		return yy::BisonParser::make_VOID(loc);
 "return"	return yy::BisonParser::make_RETURN(loc);
 "while"		return yy::BisonParser::make_WHILE(loc);
 "do"		return yy::BisonParser::make_DO(loc);
 "if"		return yy::BisonParser::make_IF(loc);
 "else"		return yy::BisonParser::make_ELSE(loc);
+"instanceof"return yy::BisonParser::make_INSTANCEOF(loc);
+"this"		return yy::BisonParser::make_THIS(loc);
+"super"		return yy::BisonParser::make_SUPER(loc);
+"null"		return yy::BisonParser::make_JNULL(loc);
+"new"		return yy::BisonParser::make_NEW(loc);
 
+"void"		return yy::BisonParser::make_VOID(yytext, loc);
+
+":"		return yy::BisonParser::make_COLON(loc);
+"?"		return yy::BisonParser::make_QUESTION(loc);
 ";"		return yy::BisonParser::make_SEMICOLON(loc);
 "."		return yy::BisonParser::make_DOT(loc);
 ","		return yy::BisonParser::make_COMMA(loc);
@@ -55,11 +63,29 @@ blank [ \t]
 "*"		return yy::BisonParser::make_MUL(loc);
 "/"		return yy::BisonParser::make_DIV(loc);
 "="		return yy::BisonParser::make_ASSIGN(loc);
+"|"		return yy::BisonParser::make_BIT_OR(loc);
+"&"		return yy::BisonParser::make_BIT_AND(loc);
+"^"		return yy::BisonParser::make_BIT_XOR(loc);
+"~"		return yy::BisonParser::make_BIT_NOT(loc);
 
 "{"		return yy::BisonParser::make_LBRACE(loc);
 "}"		return yy::BisonParser::make_RBRACE(loc);
 "("		return yy::BisonParser::make_LPAREN(loc);
 ")"		return yy::BisonParser::make_RPAREN(loc);
+
+"||"	return yy::BisonParser::make_LOGIC_OR(loc);
+"&&"	return yy::BisonParser::make_LOGIC_AND(loc);
+"!"		return yy::BisonParser::make_LOGIC_NOT(loc);
+"=="	return yy::BisonParser::make_EQ(loc);
+"!="	return yy::BisonParser::make_NEQ(loc);
+"<"		return yy::BisonParser::make_LT(loc);
+">"		return yy::BisonParser::make_GT(loc);
+"<="	return yy::BisonParser::make_LEQ(loc);
+">="	return yy::BisonParser::make_GEQ(loc);
+"<<"	return yy::BisonParser::make_SHL(loc);
+">>"	return yy::BisonParser::make_SHR(loc);
+">>>"	return yy::BisonParser::make_SHRA(loc);
+"[]"	return yy::BisonParser::make_DIM(loc);
 
 
 {int}      {

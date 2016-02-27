@@ -295,16 +295,49 @@ namespace yy {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // type
+      // ptype
       // class
       // method
       // decl_param
       // stmt
-      // expr
       // ident
       // decl_stmt
+      // dector
+      // dector_name
       // return_stmt
       // while_stmt
       // do_while_stmt
+      // expr
+      // expr_lv0
+      // expr_lv1
+      // expr_lv2
+      // expr_lv3
+      // expr_lv4
+      // expr_lv5
+      // expr_lv6
+      // expr_lv7
+      // expr_lv8
+      // expr_lv9
+      // expr_lv10
+      // expr_lv11
+      // expr_lv12
+      // expr_ptype
+      // expr_unary
+      // expr_unary_logic
+      // expr_pp
+      // expr_post
+      // expr_prime
+      // expr_prime_noname
+      // expr_prime_cx
+      // expr_prime_cx_nude
+      // expr_call
+      // expr_field
+      // expr_new
+      // expr_new_plain
+      // callee
+      // name
+      // special_name
       char dummy1[sizeof(Ast*)];
 
       // class_list
@@ -314,12 +347,13 @@ namespace yy {
       // stmt_list
       // comma_list
       // comma_list_noemp
-      // dot_list
+      // dector_list
       // if_list
       char dummy2[sizeof(ListAst*)];
 
       // "identifier"
       // "number"
+      // "void"
       char dummy3[sizeof(std::string)];
 };
 
@@ -344,27 +378,54 @@ namespace yy {
       enum yytokentype
       {
         TOK_END = 0,
-        TOK_ASSIGN = 258,
-        TOK_SUB = 259,
-        TOK_ADD = 260,
-        TOK_MUL = 261,
-        TOK_DIV = 262,
-        TOK_CLASS = 263,
-        TOK_VOID = 264,
-        TOK_RETURN = 265,
-        TOK_WHILE = 266,
-        TOK_DO = 267,
-        TOK_IF = 268,
-        TOK_ELSE = 269,
-        TOK_SEMICOLON = 270,
-        TOK_DOT = 271,
-        TOK_COMMA = 272,
-        TOK_LBRACE = 273,
-        TOK_RBRACE = 274,
-        TOK_LPAREN = 275,
-        TOK_RPAREN = 276,
-        TOK_IDENTIFIER = 277,
-        TOK_NUMBER = 278
+        TOK_CLASS = 258,
+        TOK_RETURN = 259,
+        TOK_WHILE = 260,
+        TOK_DO = 261,
+        TOK_IF = 262,
+        TOK_ELSE = 263,
+        TOK_INSTANCEOF = 264,
+        TOK_JNULL = 265,
+        TOK_THIS = 266,
+        TOK_SUPER = 267,
+        TOK_NEW = 268,
+        TOK_ASSIGN = 269,
+        TOK_SUB = 270,
+        TOK_ADD = 271,
+        TOK_MUL = 272,
+        TOK_DIV = 273,
+        TOK_MOD = 274,
+        TOK_COLON = 275,
+        TOK_QUESTION = 276,
+        TOK_SEMICOLON = 277,
+        TOK_DOT = 278,
+        TOK_COMMA = 279,
+        TOK_LBRACE = 280,
+        TOK_RBRACE = 281,
+        TOK_LPAREN = 282,
+        TOK_RPAREN = 283,
+        TOK_LOGIC_OR = 284,
+        TOK_LOGIC_AND = 285,
+        TOK_LOGIC_NOT = 286,
+        TOK_BIT_OR = 287,
+        TOK_BIT_AND = 288,
+        TOK_BIT_XOR = 289,
+        TOK_BIT_NOT = 290,
+        TOK_EQ = 291,
+        TOK_NEQ = 292,
+        TOK_LT = 293,
+        TOK_GT = 294,
+        TOK_LEQ = 295,
+        TOK_GEQ = 296,
+        TOK_SHL = 297,
+        TOK_SHR = 298,
+        TOK_SHRA = 299,
+        TOK_INC = 300,
+        TOK_DEC = 301,
+        TOK_DIM = 302,
+        TOK_IDENTIFIER = 303,
+        TOK_NUMBER = 304,
+        TOK_VOID = 305
       };
     };
 
@@ -481,31 +542,7 @@ namespace yy {
 
     static inline
     symbol_type
-    make_ASSIGN (const location_type& l);
-
-    static inline
-    symbol_type
-    make_SUB (const location_type& l);
-
-    static inline
-    symbol_type
-    make_ADD (const location_type& l);
-
-    static inline
-    symbol_type
-    make_MUL (const location_type& l);
-
-    static inline
-    symbol_type
-    make_DIV (const location_type& l);
-
-    static inline
-    symbol_type
     make_CLASS (const location_type& l);
-
-    static inline
-    symbol_type
-    make_VOID (const location_type& l);
 
     static inline
     symbol_type
@@ -526,6 +563,58 @@ namespace yy {
     static inline
     symbol_type
     make_ELSE (const location_type& l);
+
+    static inline
+    symbol_type
+    make_INSTANCEOF (const location_type& l);
+
+    static inline
+    symbol_type
+    make_JNULL (const location_type& l);
+
+    static inline
+    symbol_type
+    make_THIS (const location_type& l);
+
+    static inline
+    symbol_type
+    make_SUPER (const location_type& l);
+
+    static inline
+    symbol_type
+    make_NEW (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ASSIGN (const location_type& l);
+
+    static inline
+    symbol_type
+    make_SUB (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ADD (const location_type& l);
+
+    static inline
+    symbol_type
+    make_MUL (const location_type& l);
+
+    static inline
+    symbol_type
+    make_DIV (const location_type& l);
+
+    static inline
+    symbol_type
+    make_MOD (const location_type& l);
+
+    static inline
+    symbol_type
+    make_COLON (const location_type& l);
+
+    static inline
+    symbol_type
+    make_QUESTION (const location_type& l);
 
     static inline
     symbol_type
@@ -557,11 +646,91 @@ namespace yy {
 
     static inline
     symbol_type
+    make_LOGIC_OR (const location_type& l);
+
+    static inline
+    symbol_type
+    make_LOGIC_AND (const location_type& l);
+
+    static inline
+    symbol_type
+    make_LOGIC_NOT (const location_type& l);
+
+    static inline
+    symbol_type
+    make_BIT_OR (const location_type& l);
+
+    static inline
+    symbol_type
+    make_BIT_AND (const location_type& l);
+
+    static inline
+    symbol_type
+    make_BIT_XOR (const location_type& l);
+
+    static inline
+    symbol_type
+    make_BIT_NOT (const location_type& l);
+
+    static inline
+    symbol_type
+    make_EQ (const location_type& l);
+
+    static inline
+    symbol_type
+    make_NEQ (const location_type& l);
+
+    static inline
+    symbol_type
+    make_LT (const location_type& l);
+
+    static inline
+    symbol_type
+    make_GT (const location_type& l);
+
+    static inline
+    symbol_type
+    make_LEQ (const location_type& l);
+
+    static inline
+    symbol_type
+    make_GEQ (const location_type& l);
+
+    static inline
+    symbol_type
+    make_SHL (const location_type& l);
+
+    static inline
+    symbol_type
+    make_SHR (const location_type& l);
+
+    static inline
+    symbol_type
+    make_SHRA (const location_type& l);
+
+    static inline
+    symbol_type
+    make_INC (const location_type& l);
+
+    static inline
+    symbol_type
+    make_DEC (const location_type& l);
+
+    static inline
+    symbol_type
+    make_DIM (const location_type& l);
+
+    static inline
+    symbol_type
     make_IDENTIFIER (const std::string& v, const location_type& l);
 
     static inline
     symbol_type
     make_NUMBER (const std::string& v, const location_type& l);
+
+    static inline
+    symbol_type
+    make_VOID (const std::string& v, const location_type& l);
 
 
     /// Build a parser object.
@@ -638,17 +807,17 @@ namespace yy {
   static const unsigned char yydefact_[];
 
   // YYPGOTO[NTERM-NUM].
-  static const signed char yypgoto_[];
+  static const short int yypgoto_[];
 
   // YYDEFGOTO[NTERM-NUM].
-  static const signed char yydefgoto_[];
+  static const short int yydefgoto_[];
 
   // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
   // positive, shift that token.  If negative, reduce the rule whose
   // number is the opposite.  If YYTABLE_NINF, syntax error.
-  static const unsigned char yytable_[];
+  static const short int yytable_[];
 
-  static const signed char yycheck_[];
+  static const short int yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -669,7 +838,7 @@ namespace yy {
     static const char* const yytname_[];
 #if YYDEBUG
   // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-  static const unsigned char yyrline_[];
+  static const unsigned short int yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r);
     /// Print the state stack on the debug stream.
@@ -768,12 +937,12 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 152,     ///< Last index in yytable_.
-      yynnts_ = 20,  ///< Number of nonterminal symbols.
+      yylast_ = 348,     ///< Last index in yytable_.
+      yynnts_ = 54,  ///< Number of nonterminal symbols.
       yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 25  ///< Number of tokens.
+      yyntokens_ = 52  ///< Number of tokens.
     };
 
 
@@ -818,9 +987,12 @@ namespace yy {
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22,    23,    24
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
+      45,    46,    47,    48,    49,    50,    51
     };
-    const unsigned int user_token_number_max_ = 279;
+    const unsigned int user_token_number_max_ = 306;
     const token_number_type undef_token_ = 2;
 
     if (static_cast<int>(t) <= yyeof_)
@@ -853,33 +1025,67 @@ namespace yy {
   {
       switch (other.type_get ())
     {
-      case 27: // class
-      case 29: // method
-      case 32: // decl_param
-      case 34: // stmt
-      case 35: // expr
-      case 36: // ident
-      case 40: // decl_stmt
-      case 41: // return_stmt
-      case 42: // while_stmt
-      case 43: // do_while_stmt
+      case 53: // type
+      case 54: // ptype
+      case 56: // class
+      case 58: // method
+      case 61: // decl_param
+      case 63: // stmt
+      case 64: // ident
+      case 67: // decl_stmt
+      case 69: // dector
+      case 70: // dector_name
+      case 71: // return_stmt
+      case 72: // while_stmt
+      case 73: // do_while_stmt
+      case 75: // expr
+      case 76: // expr_lv0
+      case 77: // expr_lv1
+      case 78: // expr_lv2
+      case 79: // expr_lv3
+      case 80: // expr_lv4
+      case 81: // expr_lv5
+      case 82: // expr_lv6
+      case 83: // expr_lv7
+      case 84: // expr_lv8
+      case 85: // expr_lv9
+      case 86: // expr_lv10
+      case 87: // expr_lv11
+      case 88: // expr_lv12
+      case 89: // expr_ptype
+      case 90: // expr_unary
+      case 91: // expr_unary_logic
+      case 92: // expr_pp
+      case 93: // expr_post
+      case 94: // expr_prime
+      case 95: // expr_prime_noname
+      case 96: // expr_prime_cx
+      case 97: // expr_prime_cx_nude
+      case 98: // expr_call
+      case 99: // expr_field
+      case 100: // expr_new
+      case 101: // expr_new_plain
+      case 102: // callee
+      case 103: // name
+      case 104: // special_name
         value.copy< Ast* > (other.value);
         break;
 
-      case 26: // class_list
-      case 28: // member_list
-      case 30: // param_list
-      case 31: // param_list_noemp
-      case 33: // stmt_list
-      case 37: // comma_list
-      case 38: // comma_list_noemp
-      case 39: // dot_list
-      case 44: // if_list
+      case 55: // class_list
+      case 57: // member_list
+      case 59: // param_list
+      case 60: // param_list_noemp
+      case 62: // stmt_list
+      case 65: // comma_list
+      case 66: // comma_list_noemp
+      case 68: // dector_list
+      case 74: // if_list
         value.copy< ListAst* > (other.value);
         break;
 
-      case 22: // "identifier"
-      case 23: // "number"
+      case 48: // "identifier"
+      case 49: // "number"
+      case 50: // "void"
         value.copy< std::string > (other.value);
         break;
 
@@ -900,33 +1106,67 @@ namespace yy {
     (void) v;
       switch (this->type_get ())
     {
-      case 27: // class
-      case 29: // method
-      case 32: // decl_param
-      case 34: // stmt
-      case 35: // expr
-      case 36: // ident
-      case 40: // decl_stmt
-      case 41: // return_stmt
-      case 42: // while_stmt
-      case 43: // do_while_stmt
+      case 53: // type
+      case 54: // ptype
+      case 56: // class
+      case 58: // method
+      case 61: // decl_param
+      case 63: // stmt
+      case 64: // ident
+      case 67: // decl_stmt
+      case 69: // dector
+      case 70: // dector_name
+      case 71: // return_stmt
+      case 72: // while_stmt
+      case 73: // do_while_stmt
+      case 75: // expr
+      case 76: // expr_lv0
+      case 77: // expr_lv1
+      case 78: // expr_lv2
+      case 79: // expr_lv3
+      case 80: // expr_lv4
+      case 81: // expr_lv5
+      case 82: // expr_lv6
+      case 83: // expr_lv7
+      case 84: // expr_lv8
+      case 85: // expr_lv9
+      case 86: // expr_lv10
+      case 87: // expr_lv11
+      case 88: // expr_lv12
+      case 89: // expr_ptype
+      case 90: // expr_unary
+      case 91: // expr_unary_logic
+      case 92: // expr_pp
+      case 93: // expr_post
+      case 94: // expr_prime
+      case 95: // expr_prime_noname
+      case 96: // expr_prime_cx
+      case 97: // expr_prime_cx_nude
+      case 98: // expr_call
+      case 99: // expr_field
+      case 100: // expr_new
+      case 101: // expr_new_plain
+      case 102: // callee
+      case 103: // name
+      case 104: // special_name
         value.copy< Ast* > (v);
         break;
 
-      case 26: // class_list
-      case 28: // member_list
-      case 30: // param_list
-      case 31: // param_list_noemp
-      case 33: // stmt_list
-      case 37: // comma_list
-      case 38: // comma_list_noemp
-      case 39: // dot_list
-      case 44: // if_list
+      case 55: // class_list
+      case 57: // member_list
+      case 59: // param_list
+      case 60: // param_list_noemp
+      case 62: // stmt_list
+      case 65: // comma_list
+      case 66: // comma_list_noemp
+      case 68: // dector_list
+      case 74: // if_list
         value.copy< ListAst* > (v);
         break;
 
-      case 22: // "identifier"
-      case 23: // "number"
+      case 48: // "identifier"
+      case 49: // "number"
+      case 50: // "void"
         value.copy< std::string > (v);
         break;
 
@@ -992,33 +1232,67 @@ namespace yy {
     // Type destructor.
     switch (yytype)
     {
-      case 27: // class
-      case 29: // method
-      case 32: // decl_param
-      case 34: // stmt
-      case 35: // expr
-      case 36: // ident
-      case 40: // decl_stmt
-      case 41: // return_stmt
-      case 42: // while_stmt
-      case 43: // do_while_stmt
+      case 53: // type
+      case 54: // ptype
+      case 56: // class
+      case 58: // method
+      case 61: // decl_param
+      case 63: // stmt
+      case 64: // ident
+      case 67: // decl_stmt
+      case 69: // dector
+      case 70: // dector_name
+      case 71: // return_stmt
+      case 72: // while_stmt
+      case 73: // do_while_stmt
+      case 75: // expr
+      case 76: // expr_lv0
+      case 77: // expr_lv1
+      case 78: // expr_lv2
+      case 79: // expr_lv3
+      case 80: // expr_lv4
+      case 81: // expr_lv5
+      case 82: // expr_lv6
+      case 83: // expr_lv7
+      case 84: // expr_lv8
+      case 85: // expr_lv9
+      case 86: // expr_lv10
+      case 87: // expr_lv11
+      case 88: // expr_lv12
+      case 89: // expr_ptype
+      case 90: // expr_unary
+      case 91: // expr_unary_logic
+      case 92: // expr_pp
+      case 93: // expr_post
+      case 94: // expr_prime
+      case 95: // expr_prime_noname
+      case 96: // expr_prime_cx
+      case 97: // expr_prime_cx_nude
+      case 98: // expr_call
+      case 99: // expr_field
+      case 100: // expr_new
+      case 101: // expr_new_plain
+      case 102: // callee
+      case 103: // name
+      case 104: // special_name
         value.template destroy< Ast* > ();
         break;
 
-      case 26: // class_list
-      case 28: // member_list
-      case 30: // param_list
-      case 31: // param_list_noemp
-      case 33: // stmt_list
-      case 37: // comma_list
-      case 38: // comma_list_noemp
-      case 39: // dot_list
-      case 44: // if_list
+      case 55: // class_list
+      case 57: // member_list
+      case 59: // param_list
+      case 60: // param_list_noemp
+      case 62: // stmt_list
+      case 65: // comma_list
+      case 66: // comma_list_noemp
+      case 68: // dector_list
+      case 74: // if_list
         value.template destroy< ListAst* > ();
         break;
 
-      case 22: // "identifier"
-      case 23: // "number"
+      case 48: // "identifier"
+      case 49: // "number"
+      case 50: // "void"
         value.template destroy< std::string > ();
         break;
 
@@ -1045,33 +1319,67 @@ namespace yy {
     super_type::move(s);
       switch (this->type_get ())
     {
-      case 27: // class
-      case 29: // method
-      case 32: // decl_param
-      case 34: // stmt
-      case 35: // expr
-      case 36: // ident
-      case 40: // decl_stmt
-      case 41: // return_stmt
-      case 42: // while_stmt
-      case 43: // do_while_stmt
+      case 53: // type
+      case 54: // ptype
+      case 56: // class
+      case 58: // method
+      case 61: // decl_param
+      case 63: // stmt
+      case 64: // ident
+      case 67: // decl_stmt
+      case 69: // dector
+      case 70: // dector_name
+      case 71: // return_stmt
+      case 72: // while_stmt
+      case 73: // do_while_stmt
+      case 75: // expr
+      case 76: // expr_lv0
+      case 77: // expr_lv1
+      case 78: // expr_lv2
+      case 79: // expr_lv3
+      case 80: // expr_lv4
+      case 81: // expr_lv5
+      case 82: // expr_lv6
+      case 83: // expr_lv7
+      case 84: // expr_lv8
+      case 85: // expr_lv9
+      case 86: // expr_lv10
+      case 87: // expr_lv11
+      case 88: // expr_lv12
+      case 89: // expr_ptype
+      case 90: // expr_unary
+      case 91: // expr_unary_logic
+      case 92: // expr_pp
+      case 93: // expr_post
+      case 94: // expr_prime
+      case 95: // expr_prime_noname
+      case 96: // expr_prime_cx
+      case 97: // expr_prime_cx_nude
+      case 98: // expr_call
+      case 99: // expr_field
+      case 100: // expr_new
+      case 101: // expr_new_plain
+      case 102: // callee
+      case 103: // name
+      case 104: // special_name
         value.move< Ast* > (s.value);
         break;
 
-      case 26: // class_list
-      case 28: // member_list
-      case 30: // param_list
-      case 31: // param_list_noemp
-      case 33: // stmt_list
-      case 37: // comma_list
-      case 38: // comma_list_noemp
-      case 39: // dot_list
-      case 44: // if_list
+      case 55: // class_list
+      case 57: // member_list
+      case 59: // param_list
+      case 60: // param_list_noemp
+      case 62: // stmt_list
+      case 65: // comma_list
+      case 66: // comma_list_noemp
+      case 68: // dector_list
+      case 74: // if_list
         value.move< ListAst* > (s.value);
         break;
 
-      case 22: // "identifier"
-      case 23: // "number"
+      case 48: // "identifier"
+      case 49: // "number"
+      case 50: // "void"
         value.move< std::string > (s.value);
         break;
 
@@ -1132,7 +1440,10 @@ namespace yy {
     {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278,   279
+     275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
+     285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
+     295,   296,   297,   298,   299,   300,   301,   302,   303,   304,
+     305,   306
     };
     return static_cast<token_type> (yytoken_number_[type]);
   }
@@ -1141,6 +1452,72 @@ namespace yy {
   BisonParser::make_END (const location_type& l)
   {
     return symbol_type (token::TOK_END, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_CLASS (const location_type& l)
+  {
+    return symbol_type (token::TOK_CLASS, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_RETURN (const location_type& l)
+  {
+    return symbol_type (token::TOK_RETURN, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_WHILE (const location_type& l)
+  {
+    return symbol_type (token::TOK_WHILE, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_DO (const location_type& l)
+  {
+    return symbol_type (token::TOK_DO, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_IF (const location_type& l)
+  {
+    return symbol_type (token::TOK_IF, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_ELSE (const location_type& l)
+  {
+    return symbol_type (token::TOK_ELSE, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_INSTANCEOF (const location_type& l)
+  {
+    return symbol_type (token::TOK_INSTANCEOF, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_JNULL (const location_type& l)
+  {
+    return symbol_type (token::TOK_JNULL, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_THIS (const location_type& l)
+  {
+    return symbol_type (token::TOK_THIS, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_SUPER (const location_type& l)
+  {
+    return symbol_type (token::TOK_SUPER, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_NEW (const location_type& l)
+  {
+    return symbol_type (token::TOK_NEW, l);
   }
 
   BisonParser::symbol_type
@@ -1174,45 +1551,21 @@ namespace yy {
   }
 
   BisonParser::symbol_type
-  BisonParser::make_CLASS (const location_type& l)
+  BisonParser::make_MOD (const location_type& l)
   {
-    return symbol_type (token::TOK_CLASS, l);
+    return symbol_type (token::TOK_MOD, l);
   }
 
   BisonParser::symbol_type
-  BisonParser::make_VOID (const location_type& l)
+  BisonParser::make_COLON (const location_type& l)
   {
-    return symbol_type (token::TOK_VOID, l);
+    return symbol_type (token::TOK_COLON, l);
   }
 
   BisonParser::symbol_type
-  BisonParser::make_RETURN (const location_type& l)
+  BisonParser::make_QUESTION (const location_type& l)
   {
-    return symbol_type (token::TOK_RETURN, l);
-  }
-
-  BisonParser::symbol_type
-  BisonParser::make_WHILE (const location_type& l)
-  {
-    return symbol_type (token::TOK_WHILE, l);
-  }
-
-  BisonParser::symbol_type
-  BisonParser::make_DO (const location_type& l)
-  {
-    return symbol_type (token::TOK_DO, l);
-  }
-
-  BisonParser::symbol_type
-  BisonParser::make_IF (const location_type& l)
-  {
-    return symbol_type (token::TOK_IF, l);
-  }
-
-  BisonParser::symbol_type
-  BisonParser::make_ELSE (const location_type& l)
-  {
-    return symbol_type (token::TOK_ELSE, l);
+    return symbol_type (token::TOK_QUESTION, l);
   }
 
   BisonParser::symbol_type
@@ -1258,6 +1611,120 @@ namespace yy {
   }
 
   BisonParser::symbol_type
+  BisonParser::make_LOGIC_OR (const location_type& l)
+  {
+    return symbol_type (token::TOK_LOGIC_OR, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_LOGIC_AND (const location_type& l)
+  {
+    return symbol_type (token::TOK_LOGIC_AND, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_LOGIC_NOT (const location_type& l)
+  {
+    return symbol_type (token::TOK_LOGIC_NOT, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_BIT_OR (const location_type& l)
+  {
+    return symbol_type (token::TOK_BIT_OR, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_BIT_AND (const location_type& l)
+  {
+    return symbol_type (token::TOK_BIT_AND, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_BIT_XOR (const location_type& l)
+  {
+    return symbol_type (token::TOK_BIT_XOR, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_BIT_NOT (const location_type& l)
+  {
+    return symbol_type (token::TOK_BIT_NOT, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_EQ (const location_type& l)
+  {
+    return symbol_type (token::TOK_EQ, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_NEQ (const location_type& l)
+  {
+    return symbol_type (token::TOK_NEQ, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_LT (const location_type& l)
+  {
+    return symbol_type (token::TOK_LT, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_GT (const location_type& l)
+  {
+    return symbol_type (token::TOK_GT, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_LEQ (const location_type& l)
+  {
+    return symbol_type (token::TOK_LEQ, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_GEQ (const location_type& l)
+  {
+    return symbol_type (token::TOK_GEQ, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_SHL (const location_type& l)
+  {
+    return symbol_type (token::TOK_SHL, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_SHR (const location_type& l)
+  {
+    return symbol_type (token::TOK_SHR, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_SHRA (const location_type& l)
+  {
+    return symbol_type (token::TOK_SHRA, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_INC (const location_type& l)
+  {
+    return symbol_type (token::TOK_INC, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_DEC (const location_type& l)
+  {
+    return symbol_type (token::TOK_DEC, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_DIM (const location_type& l)
+  {
+    return symbol_type (token::TOK_DIM, l);
+  }
+
+  BisonParser::symbol_type
   BisonParser::make_IDENTIFIER (const std::string& v, const location_type& l)
   {
     return symbol_type (token::TOK_IDENTIFIER, v, l);
@@ -1269,10 +1736,16 @@ namespace yy {
     return symbol_type (token::TOK_NUMBER, v, l);
   }
 
+  BisonParser::symbol_type
+  BisonParser::make_VOID (const std::string& v, const location_type& l)
+  {
+    return symbol_type (token::TOK_VOID, v, l);
+  }
+
 
 
 } // yy
-#line 1276 "bison.hh" // lalr1.cc:377
+#line 1749 "bison.hh" // lalr1.cc:377
 
 
 

@@ -72,8 +72,7 @@ bool ListAst::illOne() const
 {
     if (1 != size())
         return false;
-    Ast::Type t = getType();
-    return t == Type::DOT_LIST;
+    return false; // TODO might be useless
 }
 
 void ListAst::doInsert(size_t pos, Ast *child)

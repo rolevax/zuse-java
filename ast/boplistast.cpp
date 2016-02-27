@@ -74,6 +74,8 @@ int BopListAst::numOp() const
         return 2;
     case Type::MUL_BOP_LIST:
         return 3;
+    case Type::DOT_BOP_LIST:
+        return 3;
     default:
         throw "WTF";
     }
@@ -97,7 +99,7 @@ void BopListAst::mergeIn(BopListAst *t, int lead)
         // leading op of rhs is just placeholder, discard it
         int nextOp = i == 0 ? lead : t->opAt(0);
         append(t->remove(0));
-        setOpAt(t->size() - 1, nextOp);
+        setOpAt(this->size() - 1, nextOp);
     }
 
     delete t;
