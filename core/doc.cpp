@@ -369,6 +369,10 @@ Ast *Doc::newTree(Ast::Type type)
         a = new ScalarAst(Ast::Type::IDENT, "ident");
         break;
     }
+    case Ast::Type::STRING: {
+        a = new ScalarAst(Ast::Type::STRING, "");
+        break;
+    }
     default:
         throw "newTree: untreated type";
     }

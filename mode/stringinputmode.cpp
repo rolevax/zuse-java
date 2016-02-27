@@ -13,16 +13,21 @@ StringInputMode::StringInputMode(EditableDoc &doc, bool clear) :
 
 void StringInputMode::keyboard(char key)
 {
-    switch (key) {
-    case '\t':
-    case '\r':
-        doc.pop();
-        break;
-    default:
-        assert(doc.getInner().isScalar());
-        doc.scalarAppend(key);
-        break;
+    assert(doc.getInner().getType() == Ast::Type::STRING);
+
+    if ('"' == key) {
+        const std::string &text = doc.getInner().asScalar().getText();
+        // count postfix '\' run
+        int backSlashCount = 0;
+        for (auto it = text.rbegin(); it != text.rend() && '\\' == *it; ++it)
+            backSlashCount++;
+        if (0 == backSlashCount % 2) { // no '\' waiting for a character
+            doc.pop();
+            return;
+        }
     }
+
+    doc.scalarAppend(key);
 }
 
 void StringInputMode::onPushed()

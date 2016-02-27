@@ -25,7 +25,8 @@ void ScalarInputMode::keyboard(char key)
     } else if (isdigit(key)) {
         // TODO Ast::Type::NUMBER
     } else if ('\"' == key) {
-        // TODO Ast::Type::STRING
+        doc.change(Ast::Type::STRING);
+        doc.pop(new StringInputMode(doc, true));
     }
 }
 
