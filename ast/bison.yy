@@ -488,7 +488,7 @@ expr_prime_cx_nude: "number"
 
 expr_call: callee "(" comma_list ")"
 				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
-									  BopListAst::DOT); }
+									  BopListAst::CALL); }
 	;
 
 expr_field: expr_prime_noname "." ident

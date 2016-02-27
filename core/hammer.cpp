@@ -217,6 +217,7 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
 
 void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
 {
+    bool begin = pos == 0;
     bool end = pos == ast.size() - 1;
 
     switch (ast.getType()) {
@@ -256,10 +257,15 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         }
         break;
     case Ast::Type::DOT_BOP_LIST:
+        if (!begin) {
+            const BopListAst &bast = ast.asBopList();
+            if (bast.opAt(pos) == BopListAst::CALL)
+                buf.push_back(new BoneToken(&ast, BoneToken::Sym::RPAREN));
+        }
         if (!end) {
             const BopListAst &bast = ast.asBopList();
             BoneToken::Sym sym = bast.opAt(pos + 1) == 0 ? BoneToken::Sym::DOT
-                                                         : BoneToken::Sym::VOID;
+                                                         : BoneToken::Sym::LPAREN;
             buf.push_back(new BoneToken(&ast, sym));
         }
         break;
