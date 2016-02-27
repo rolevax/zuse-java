@@ -294,7 +294,7 @@ void Doc::setHotLight(HotLightLevel level)
         tokens.setHotLight(-1); // TODO: de-magic
         break;
     case HotLightLevel::POINT: {
-        ssize_t back = 0; // TODO: consider quote, etc.
+        ssize_t back = getInner().getType() == Ast::Type::STRING ? 1 : 0;
         tokens.setHotLight(back);
         break;
     }

@@ -108,6 +108,10 @@ void ViewMode::keyboard(char key)
         switch (doc.getInner().getType()) {
         case Ast::Type::IDENT:
             doc.push(new IdentInputMode(doc, clear));
+            break;
+        case Ast::Type::STRING:
+            doc.push(new StringInputMode(doc, clear));
+            break;
         default:
             break;
         }

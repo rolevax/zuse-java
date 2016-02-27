@@ -65,11 +65,14 @@ ListView {
                 rightOff: up || mid ? highUpRight : highDownRight
             }
 
-            Rectangle { // hot light
-                anchors.left: highLight.right
-                width: 10; height: 20
-                color: "#EE3333"
+            Text { // hot light
+                x: highLight.x + highLight.width - (hotLightBack == 1 ? width : 0)
+                height: parent.height
+                width: 10
+                font.pixelSize: parent.height
+                text: " "
                 visible: index == highUpIndex && hotLightBack >= 0
+                Rectangle { color: "#EE3333"; anchors.fill: parent }
             }
 
             Text { // source text line
