@@ -20,9 +20,10 @@
 
 %option noyywrap nounput batch debug noinput
 
-id    [a-zA-Z_\$][a-zA-Z0-9_\$]*
-int   [0-9]+
-blank [ \t]
+id    	[a-zA-Z_\$][a-zA-Z0-9_\$]*
+int   	[0-9]+
+string	\"([^\\\"]|\\.)*\"
+blank 	[ \t]
 
 %{
 	// Code run each time a pattern is matched.
@@ -97,6 +98,13 @@ blank [ \t]
 }
 
 {id}       return yy::BisonParser::make_IDENTIFIER(yytext, loc);
+
+{string}   {
+	yytext[strlen(yytext) - 1] = '\0';
+	yytext++;
+	return yy::BisonParser::make_STRING(yytext, loc);
+}
+
 .          throw ParseException(loc, "invalid character");
 <<EOF>>    return yy::BisonParser::make_END(loc);
 

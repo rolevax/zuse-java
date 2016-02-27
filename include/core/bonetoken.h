@@ -11,7 +11,7 @@ public:
         // MUST sync order with 'syms'
         CLASS, LBRACE, LBRACE_NS, RBRACE, VOID, LPAREN, RPAREN,
         RETURN, IF, ELSE, WHILE, DO, FOR,
-        SPACE, SEMICOLON, DOT, COMMA,
+        SPACE, SEMICOLON, DOT, COMMA, DQUOTE, SQUOTE,
         ASSIGN, ADD, SUB, MUL, DIV
     };
 

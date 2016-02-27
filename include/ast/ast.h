@@ -34,7 +34,7 @@ public:
         ASSIGN,
 
         /* isScalar() == !isList() && !isMap() */
-        IDENT, NUMBER,
+        IDENT, NUMBER, STRING
     };
 
     Ast(Type t);

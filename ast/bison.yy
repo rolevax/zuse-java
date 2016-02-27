@@ -97,6 +97,7 @@
 
 %token	<std::string>	IDENTIFIER	"identifier"
 %token	<std::string>	NUMBER		"number"
+%token	<std::string>	STRING		"string"
 %token	<std::string>	VOID		"void"
 
 %type	<ListAst*>		class_list
@@ -480,6 +481,8 @@ expr_prime_cx: "(" expr ")"
 
 expr_prime_cx_nude: "number"
 				{ $$ = new ScalarAst(Ast::Type::NUMBER, $1); }
+				  | "string"
+				{ $$ = new ScalarAst(Ast::Type::STRING, $1); }
 				  | expr_call
 				{ $$ = $1; }
 				  | expr_field
