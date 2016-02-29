@@ -173,13 +173,10 @@ void Doc::flyIn(std::function<bool(const Ast *)> &match)
 }
 
 /**
- * @brief Create an empty subnode
- * @param type the type of the new node
- * Create a new subnode inside 'outer' at 'inner',
- * with specified type 'type'.
- * The value of the new node is "as empty as possible".
+ * @brief Create and insert a new node at 'current' position
+ * @param type The type of the new node
  */
-void Doc::insert(Ast::Type type)
+void Doc::insert(Ast::Type type, int bop)
 {
     assert(inner <= outer->size());
 
@@ -187,21 +184,23 @@ void Doc::insert(Ast::Type type)
 
     // TODO list? var-size?
     outer->asList().insert(inner, a);
+    if (BopListAst::UNUSED != bop)
+        outer->asBopList().setOpAt(inner, bop);
 
     tokens.sync(root.get());
 }
 
-void Doc::append(Ast::Type type)
+void Doc::append(Ast::Type type, int bop)
 {
     ++inner;
-    insert(type);
+    insert(type, bop);
 }
 
-void Doc::assart(Ast::Type type)
+void Doc::assart(Ast::Type type, int bop)
 {
     outer = &outer->at(inner).asInternal();
     inner = 0;
-    insert(type);
+    insert(type, bop);
 }
 
 void Doc::remove()
@@ -243,7 +242,7 @@ void Doc::change(Ast::Type type)
     tokens.insert(&outer->asList(), inner);
 }
 
-void Doc::nestAsLeft(Ast::Type type)
+void Doc::nestAsLeft(Ast::Type type, int bop)
 {
     assert(inner < outer->size());
 
@@ -253,6 +252,8 @@ void Doc::nestAsLeft(Ast::Type type)
     // thus clone() is used here to enhance the integrity of
     // the interface design in a cost of effeciency.
     nester->change(0, outer->at(inner).clone());
+    if (BopListAst::UNUSED != bop)
+        nester->asBopList().setOpAt(1, bop);
     outer->change(inner, nester);
     tokens.sync(root.get());
 }
@@ -356,7 +357,7 @@ Ast *Doc::newTree(Ast::Type type)
     case Ast::Type::DOT_BOP_LIST: {
         Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
         Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
-        a = new BopListAst(Ast::Type::MUL_BOP_LIST, lhs, rhs, BopListAst::DOT);
+        a = new BopListAst(Ast::Type::DOT_BOP_LIST, lhs, rhs, BopListAst::DOT);
         break;
     }
     case Ast::Type::DECL_PARAM: {

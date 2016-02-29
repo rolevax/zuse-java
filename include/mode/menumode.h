@@ -21,7 +21,8 @@ public:
 
 private:
     Mode *modeFor(Ast::Type t);
-    static Ast::Type keyToType(char key);
+    static Ast::Type keyToNesterType(char key);
+    static int keyToBop(char key);
 
 private:
     Context context;

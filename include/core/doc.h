@@ -35,12 +35,12 @@ private:
     void jackKick(bool down) override;
     void hackLead(bool right) override;
     void flyIn(std::function<bool(const Ast*)> &match) override;
-    void insert(Ast::Type type) override;
-    void append(Ast::Type type) override;
-    void assart(Ast::Type type) override;
+    void insert(Ast::Type type, int bop) override;
+    void append(Ast::Type type, int bop) override;
+    void assart(Ast::Type type, int bop) override;
     void remove() override;
     void change(Ast::Type type) override;
-    void nestAsLeft(Ast::Type type) override;
+    void nestAsLeft(Ast::Type type, int bop) override;
     void expose() override;
 
     void scalarAppend(const char *str) override;

@@ -1,7 +1,7 @@
 #ifndef EDITABLEDOC_H
 #define EDITABLEDOC_H
 
-#include "ast/ast.h"
+#include "ast/boplistast.h"
 #include "mode/mode.h"
 
 #include <string>
@@ -26,12 +26,12 @@ public:
     virtual void jackKick(bool down) = 0;
     virtual void hackLead(bool right) = 0;
     virtual void flyIn(std::function<bool(const Ast*)> &match) = 0;
-    virtual void insert(Ast::Type type) = 0;
-    virtual void append(Ast::Type type) = 0;
-    virtual void assart(Ast::Type type) = 0;
+    virtual void insert(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
+    virtual void append(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
+    virtual void assart(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void remove() = 0;
     virtual void change(Ast::Type type) = 0;
-    virtual void nestAsLeft(Ast::Type type) = 0;
+    virtual void nestAsLeft(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void expose() = 0;
 
     virtual void scalarAppend(const char *str) = 0;

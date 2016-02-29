@@ -1,4 +1,5 @@
 #include "core/editabledoc.h"
+#include "ast/boplistast.h"
 #include "mode/menumode.h"
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
@@ -23,22 +24,23 @@ void MenuMode::keyboard(char key)
         return;
     }
 
-    Ast::Type keyType = keyToType(key);
+    Ast::Type keyType = keyToNesterType(key);
+    int bop = keyToBop(key);
     Mode *nextMode = nullptr;
 
     switch (context) {
     case Context::INSERT: {
-        doc.insert(keyType);
+        doc.insert(keyType, bop);
         nextMode = modeFor(keyType);
         break;
     }
     case Context::APPEND: {
-        doc.append(keyType);
+        doc.append(keyType, bop);
         nextMode = modeFor(keyType);
         break;
     }
     case Context::ASSART: {
-        doc.assart(keyType);
+        doc.assart(keyType, bop);
         nextMode = modeFor(keyType);
         break;
     }
@@ -62,26 +64,22 @@ void MenuMode::keyboard(char key)
             doc.nestAsLeft(Ast::Type::ASSIGN);
             break;
         case '+':
-            doc.nestAsLeft(Ast::Type::ADD_BOP_LIST);
+            doc.nestAsLeft(Ast::Type::ADD_BOP_LIST, BopListAst::ADD);
             break;
         case '-':
-            doc.nestAsLeft(Ast::Type::ADD_BOP_LIST);
-            //TODO set rasing
+            doc.nestAsLeft(Ast::Type::ADD_BOP_LIST, BopListAst::SUB);
             break;
         case '*':
-            doc.nestAsLeft(Ast::Type::MUL_BOP_LIST);
+            doc.nestAsLeft(Ast::Type::MUL_BOP_LIST, BopListAst::MUL);
             break;
         case '/':
-            doc.nestAsLeft(Ast::Type::MUL_BOP_LIST);
-            //TODO set rasing
+            doc.nestAsLeft(Ast::Type::MUL_BOP_LIST, BopListAst::DIV);
             break;
-            /*
         case '(':
-            doc.nestAsLeft(Ast::Type::CALL);
+            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::CALL);
             break;
-            */
         case '.':
-            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST);
+            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::DOT);
             break;
         }
 
@@ -118,11 +116,19 @@ Mode *MenuMode::modeFor(Ast::Type t)
     }
 }
 
-Ast::Type MenuMode::keyToType(char key)
+Ast::Type MenuMode::keyToNesterType(char key)
 {
     switch (key) {
     case '.':
+    case '(':
         return Ast::Type::DOT_BOP_LIST;
+    case '+':
+    case '-':
+        return Ast::Type::ADD_BOP_LIST;
+    case '*':
+    case '/':
+    case '%':
+        return Ast::Type::MUL_BOP_LIST;
     case 'C':
         return Ast::Type::CLASS;
     case 'i':
@@ -133,6 +139,20 @@ Ast::Type MenuMode::keyToType(char key)
         return Ast::Type::DECL_STMT;
     default: // TODO: a 'nothing' type?
         return Ast::Type::IDENT;
+    }
+}
+
+int MenuMode::keyToBop(char key)
+{
+    switch (key) {
+    case '.': return BopListAst::DOT;
+    case '(': return BopListAst::CALL;
+    case '+': return BopListAst::ADD;
+    case '-': return BopListAst::SUB;
+    case '*': return BopListAst::MUL;
+    case '/': return BopListAst::DIV;
+    case '%': return BopListAst::MOD;
+    default: return BopListAst::UNUSED;
     }
 }
 

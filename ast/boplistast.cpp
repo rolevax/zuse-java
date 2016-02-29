@@ -64,6 +64,7 @@ int BopListAst::opAt(size_t pos) const
 void BopListAst::setOpAt(size_t pos, int op)
 {
     assert(pos < size());
+    assert(0 <= op && op < numOp());
     ops[pos] = op;
 }
 
