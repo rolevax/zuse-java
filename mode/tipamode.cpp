@@ -1,4 +1,4 @@
-#include "mode/scalarinputmode.h"
+#include "mode/tipamode.h"
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
@@ -7,13 +7,13 @@
 #include <cstdlib>
 
 
-ScalarInputMode::ScalarInputMode(EditableDoc &doc)
+TipaMode::TipaMode(EditableDoc &doc)
     : Mode(doc)
 {
 
 }
 
-void ScalarInputMode::keyboard(char key)
+void TipaMode::keyboard(char key)
 {
     char str[2] = { key, '\0' };
 
@@ -30,12 +30,12 @@ void ScalarInputMode::keyboard(char key)
     }
 }
 
-void ScalarInputMode::onPushed()
+void TipaMode::onPushed()
 {
     doc.setHotLight(EditableDoc::HotLightLevel::AREA);
 }
 
-const char *ScalarInputMode::name()
+const char *TipaMode::name()
 {
-    return "Scalar Input";
+    return "TIPA";
 }

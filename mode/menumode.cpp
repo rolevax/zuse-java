@@ -29,18 +29,13 @@ void MenuMode::keyboard(char key)
     Mode *nextMode = nullptr;
 
     switch (context) {
-    case Context::INSERT: {
+    case Context::BOP_INSERT: {
         doc.insert(keyType, bop);
         nextMode = modeFor(keyType);
         break;
     }
-    case Context::APPEND: {
+    case Context::BOP_APPEND: {
         doc.append(keyType, bop);
-        nextMode = modeFor(keyType);
-        break;
-    }
-    case Context::ASSART: {
-        doc.assart(keyType, bop);
         nextMode = modeFor(keyType);
         break;
     }

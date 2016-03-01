@@ -1,6 +1,6 @@
 #include "mode/viewmode.h"
 #include "mode/menumode.h"
-#include "mode/scalarinputmode.h"
+#include "mode/tipamode.h"
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
@@ -28,7 +28,7 @@ void ViewMode::keyboard(char key)
     case 's': // senior previous node
         doc.sibling(-1);
         break;
-    case 'f': // fall-in or quick-assart
+    case 'f': // fall-in or assart
         if (!doc.getInner().isScalar()) {
             if (doc.getInner().asInternal().size() > 0)
                 doc.fallIn();
@@ -36,13 +36,10 @@ void ViewMode::keyboard(char key)
                 menulessListOp(ListOp::ASSART);
         }
         break;
-    case 'F': // fall-search or quick-assart
-        if (!doc.getInner().isScalar()) {
-            if (doc.getInner().asInternal().size() > 0)
-                doc.push(new MenuMode(doc, MenuMode::Context::FALL_SEARCH));
-            else
-                doc.push(new MenuMode(doc, MenuMode::Context::ASSART));
-        }
+    case 'F': // fall-search
+        if (!doc.getInner().isScalar()
+                && doc.getInner().asInternal().size() > 0)
+            doc.push(new MenuMode(doc, MenuMode::Context::FALL_SEARCH));
         break;
     case 'd': // dig-out
         doc.digOut();
@@ -66,21 +63,21 @@ void ViewMode::keyboard(char key)
         break;
 
     // outer modification
-    case 'o': // oh, quick-append
-        if (doc.getOuter().isList())
-            menulessListOp(ListOp::APPEND);
+    case 'i': // insert
+        if (doc.getOuter().isList()) {
+            if (doc.getOuter().isBopList())
+                doc.push(new MenuMode(doc, MenuMode::Context::BOP_INSERT));
+            else
+                menulessListOp(ListOp::INSERT);
+        }
         break;
-    case 'i': // quick-insert
-        if (doc.getOuter().isList())
-            menulessListOp(ListOp::INSERT);
-        break;
-    case 'O': // oh, append
-        if (doc.getOuter().isList())
-            doc.push(new MenuMode(doc, MenuMode::Context::APPEND));
-        break;
-    case 'I': // insert
-        if (doc.getOuter().isList())
-            doc.push(new MenuMode(doc, MenuMode::Context::INSERT));
+    case 'o': // oh, append
+        if (doc.getOuter().isList()) {
+            if (doc.getOuter().isBopList())
+                doc.push(new MenuMode(doc, MenuMode::Context::BOP_APPEND));
+            else
+                menulessListOp(ListOp::APPEND);
+        }
         break;
     case 'r': // remove
         if (doc.getOuter().isList())
@@ -95,9 +92,7 @@ void ViewMode::keyboard(char key)
 
     // inner modification
     case 'c': // change
-        if (doc.getOuter().isChangeable()) {
-            doc.push(new MenuMode(doc, MenuMode::Context::CHANGE));
-        }
+        // TODO
         break;
     case 'n': // nest
         doc.push(new MenuMode(doc, MenuMode::Context::NEST));
@@ -162,7 +157,7 @@ void ViewMode::menulessListOp(ListOp op)
     // after insertion jobs
     switch (doc.getOuter().getType()) {
     case Ast::Type::STMT_LIST:
-        doc.push(new ScalarInputMode(doc));
+        doc.push(new TipaMode(doc));
         break;
     default:
         break;

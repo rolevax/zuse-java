@@ -31,8 +31,8 @@ SOURCES += main.cpp \
     ast/internalast.cpp \
     ast/fixsizeast.cpp \
     mode/identinputmode.cpp \
-    mode/scalarinputmode.cpp \
-    ast/boplistast.cpp
+    ast/boplistast.cpp \
+    mode/tipamode.cpp
 
 RESOURCES += qml.qrc
 
@@ -68,6 +68,6 @@ HEADERS += \
     include/ast/internalast.h \
     include/ast/fixsizeast.h \
     include/mode/identinputmode.h \
-    include/mode/scalarinputmode.h \
-    include/ast/boplistast.h
+    include/ast/boplistast.h \
+    include/mode/tipamode.h
 

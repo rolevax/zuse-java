@@ -24,7 +24,7 @@ void PairInputMode::onResume()
     case Stage::KEY_DONE:
         doc.sibling(+1);
         stage = Stage::VALUE_DONE;
-        doc.push(new MenuMode(doc, MenuMode::Context::CHANGE));
+        //doc.push(new MenuMode(doc, MenuMode::Context::CHANGE));
         break;
     case Stage::VALUE_DONE:
         doc.digOut();
