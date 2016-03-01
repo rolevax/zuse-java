@@ -133,7 +133,7 @@ void ViewMode::menulessListOp(ListOp op)
         tar = Ast::Type::CLASS;
         break;
     case Ast::Type::STMT_LIST:
-        tar = Ast::Type::IDENT;
+        tar = Ast::Type::META;
         break;
     case Ast::Type::DECL_PARAM_LIST:
         tar = Ast::Type::DECL_PARAM;

@@ -34,7 +34,7 @@ public:
         ASSIGN,
 
         /* isScalar() == !isList() && !isMap() */
-        IDENT, NUMBER, STRING
+        IDENT, NUMBER, STRING, META
     };
 
     Ast(Type t);
@@ -48,7 +48,6 @@ public:
     bool isBopList() const;
     bool isMap() const;
     bool isScalar() const;
-    bool isChangeable() const;
 
     ScalarAst &asScalar();
     const ScalarAst &asScalar() const;

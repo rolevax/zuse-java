@@ -34,12 +34,6 @@ bool Ast::isScalar() const
     return !isList() && !isMap();
 }
 
-bool Ast::isChangeable() const
-{
-    //return type != Type::KEY && type != Type::PAIR && type != Type::ROOT;
-    return false; // TODO
-}
-
 ScalarAst &Ast::asScalar()
 {
     assert(isScalar());

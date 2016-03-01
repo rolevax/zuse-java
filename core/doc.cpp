@@ -234,12 +234,8 @@ void Doc::change(Ast::Type type)
 {
     assert(inner < outer->size());
 
-    if (!outer->at(inner).isChangeable())
-        return;
-
-    tokens.remove(outer, inner);
     outer->change(inner, newTree(type));
-    tokens.insert(&outer->asList(), inner);
+    tokens.sync(root.get());
 }
 
 void Doc::nestAsLeft(Ast::Type type, int bop)
@@ -372,6 +368,10 @@ Ast *Doc::newTree(Ast::Type type)
     }
     case Ast::Type::STRING: {
         a = new ScalarAst(Ast::Type::STRING, "");
+        break;
+    }
+    case Ast::Type::META: {
+        a = new ScalarAst(Ast::Type::META, "");
         break;
     }
     default:

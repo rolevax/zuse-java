@@ -12,7 +12,8 @@ public:
         CLASS, LBRACE, LBRACE_NS, RBRACE, VOID, LPAREN, RPAREN,
         RETURN, IF, ELSE, WHILE, DO, FOR,
         SPACE, SEMICOLON, DOT, COMMA, DQUOTE, SQUOTE,
-        ASSIGN, ADD, SUB, MUL, DIV
+        ASSIGN, ADD, SUB, MUL, DIV,
+        META
     };
 
     BoneToken(const Ast *ast, Sym sym);

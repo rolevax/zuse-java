@@ -31,12 +31,16 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
 
     if (ast.isScalar()) {
-        bool isString = ast.getType() == Ast::Type::STRING;
-        if (isString)
-            buf.push_back(new BoneToken(&ast, BoneToken::Sym::DQUOTE));
-        buf.push_back(new FleshToken(&ast.asScalar()));
-        if (isString)
-            buf.push_back(new BoneToken(&ast, BoneToken::Sym::DQUOTE));
+        if (ast.getType() == Ast::Type::META) {
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::META));
+        } else {
+            bool isString = ast.getType() == Ast::Type::STRING;
+            if (isString)
+                buf.push_back(new BoneToken(&ast, BoneToken::Sym::DQUOTE));
+            buf.push_back(new FleshToken(&ast.asScalar()));
+            if (isString)
+                buf.push_back(new BoneToken(&ast, BoneToken::Sym::DQUOTE));
+        }
     } else if (ast.isList()) {
         hitList(ast.asList(), buf);
     } else {
