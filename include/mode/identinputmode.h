@@ -14,6 +14,9 @@ public:
     const char *name() override;
 
 private:
+    static bool isUpperCamel(const std::string &id);
+
+private:
     bool clear;
 };
 

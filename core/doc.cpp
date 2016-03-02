@@ -209,7 +209,7 @@ void Doc::remove()
 
     if (outer->isList()) {
         ListAst *l = &outer->asList();
-        l->remove(inner);
+        delete l->remove(inner);
 
         bool toRemoveSelf = l->illZero();
         bool toExposeChild = l->illOne();
@@ -243,10 +243,9 @@ void Doc::nestAsLeft(Ast::Type type, int bop)
     assert(inner < outer->size());
 
     InternalAst *nester = &newTree(type)->asInternal();
-    // allowing removing inside a non-list ast breaks
-    // the principle of consistency through ast's interface.
-    // thus clone() is used here to enhance the integrity of
-    // the interface design in a cost of effeciency.
+    // using clone() to implement a movement.
+    // this is to enhance the simplicity of the interface
+    // with costing neglectable time.
     nester->change(0, outer->at(inner).clone());
     if (BopListAst::UNUSED != bop)
         nester->asBopList().setOpAt(1, bop);
@@ -320,9 +319,7 @@ Ast *Doc::newTree(Ast::Type type)
     case Ast::Type::DECL_STMT: {
         Ast *type = new ScalarAst(Ast::Type::IDENT, "Type");
         Ast *id = new ScalarAst(Ast::Type::IDENT, "ident");
-        ListAst *cl = new ListAst(Ast::Type::COMMA_LIST);
-        cl->append(id);
-        a = new FixSizeAst<2>(Ast::Type::DECL_STMT, type, cl);
+        a = new FixSizeAst<2>(Ast::Type::DECL_STMT, type, id);
         break;
     }
     case Ast::Type::METHOD: {

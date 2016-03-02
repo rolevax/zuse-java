@@ -11,18 +11,7 @@ public:
     ListAst(Type t);
     virtual ~ListAst() = default;
 
-    void dump() const override
-    {
-        std::cout << '[';
-        for (size_t i = 0; i < size(); i++) {
-            const auto &t = at(i);
-            t.dump();
-            if (i != size() - 1)
-                std::cout << ',';
-        }
-        std::cout << ']';
-    }
-
+    void dump() const override;
     ListAst *clone() const override;
     size_t size() const override;
     Ast &at(size_t pos) const override;

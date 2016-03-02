@@ -10,6 +10,18 @@ ListAst::ListAst(Type t)
 
 }
 
+void ListAst::dump() const
+{
+    std::cout << '[';
+    for (size_t i = 0; i < size(); i++) {
+        const auto &t = at(i);
+        t.dump();
+        if (i != size() - 1)
+            std::cout << ',';
+    }
+    std::cout << ']';
+}
+
 ListAst *ListAst::clone() const
 {
     ListAst *ret = new ListAst(getType());

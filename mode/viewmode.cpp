@@ -132,11 +132,12 @@ void ViewMode::menulessListOp(ListOp op)
     case Ast::Type::CLASS_LIST:
         tar = Ast::Type::CLASS;
         break;
-    case Ast::Type::STMT_LIST:
-        tar = Ast::Type::META;
-        break;
     case Ast::Type::DECL_PARAM_LIST:
         tar = Ast::Type::DECL_PARAM;
+        break;
+    case Ast::Type::STMT_LIST:
+    case Ast::Type::MEMBER_LIST:
+        tar = Ast::Type::META;
         break;
     default:
         return; // silently do nothing
@@ -157,6 +158,7 @@ void ViewMode::menulessListOp(ListOp op)
     // after insertion jobs
     switch (doc.getOuter().getType()) {
     case Ast::Type::STMT_LIST:
+    case Ast::Type::MEMBER_LIST:
         doc.push(new TipaMode(doc));
         break;
     default:
