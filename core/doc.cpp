@@ -267,10 +267,13 @@ void Doc::cast(Ast::Type type)
 {
     switch (type) {
     case Ast::Type::METHOD:
-        if (getInner().getType() == Ast::Type::DECL_STMT) {
+        if (getInner().getType() == Ast::Type::DECL_STMT
+                && getInner().asInternal().at(1).isScalar()) {
+            // from variable declaration to method declaration
             InternalAst *a = &newTree(Ast::Type::METHOD)->asInternal();
-            // TODO: return type of method
-            a->change(0, getInner().asInternal().at(1).clone());
+            // copy return type and name
+            a->change(0, getInner().asInternal().at(0).clone());
+            a->change(1, getInner().asInternal().at(1).clone());
             outer->change(inner, a);
         }
         break;
@@ -341,10 +344,11 @@ Ast *Doc::newTree(Ast::Type type)
         break;
     }
     case Ast::Type::METHOD: {
+        Ast *type = new ScalarAst(Ast::Type::IDENT, "T0");
         Ast *id = new ScalarAst(Ast::Type::IDENT, "m0");
         Ast *dpl = new ListAst(Ast::Type::DECL_PARAM_LIST);
         Ast *sl = new ListAst(Ast::Type::STMT_LIST);
-        a = new FixSizeAst<3>(Ast::Type::METHOD, id, dpl, sl);
+        a = new FixSizeAst<4>(Ast::Type::METHOD, type, id, dpl, sl);
         break;
     }
     case Ast::Type::ASSIGN: {

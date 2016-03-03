@@ -21,9 +21,10 @@ public:
 private:
     typedef std::vector<Token*> Buf;
     void hitGeneral(const Ast &ast, Buf &buf);
+    void hitScalar(const ScalarAst &ast, Buf &buf);
     void hitList(const ListAst &ast, Buf &buf);
     void hitClass(const FixSizeAst<2> &ast, Buf &buf);
-    void hitMethod(const FixSizeAst<3> &ast, Buf &buf);
+    void hitMethod(const FixSizeAst<4> &ast, Buf &buf);
     void hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf);
     void hitIfElseBody(const FixSizeAst<1> &ast, Buf &buf);
     void hitParen(const FixSizeAst<1> &ast, Buf &buf);

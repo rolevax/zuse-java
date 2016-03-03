@@ -5,7 +5,7 @@
 
 std::string BoneToken::syms[32]
 {
-    "class ", " {", "{", "}", "void ", "(", ")",
+    "class ", " {", "{", "}", "(", ")",
     "return ", "if ", " else ", "while ", "do", "for ",
     " ", ";", ".", ", ", "\"", "'",
     " = ", " + ", " - ", " * ", " / ",

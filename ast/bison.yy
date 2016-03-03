@@ -111,9 +111,9 @@
 %type	<ListAst*>		dector_list
 
 %type	<Ast*>			class
-%type	<Ast*>			method
+%type	<Ast*>			decl_method
 %type	<Ast*>			stmt
-%type	<Ast*>			decl_stmt
+%type	<Ast*>			decl_var
 %type	<Ast*>			decl_param
 %type	<Ast*>			dector
 %type	<Ast*>			dector_name
@@ -121,7 +121,8 @@
 %type	<Ast*>			while_stmt
 %type	<Ast*>			do_while_stmt
 %type	<Ast*>			ident
-%type	<Ast*>			type
+%type	<Ast*>			type_spec
+%type	<Ast*>			type_name
 %type	<Ast*>			ptype
 
 %type	<Ast*>			expr
@@ -165,9 +166,18 @@
 
 %start class_list;
 
-type: ptype
-	| name
-	;
+type_spec: type_name
+	 			{ $$ = $1; }
+		 | type_name dims
+//TODO: dims
+	 			{ $$ = $1; }
+		 ;
+
+type_name: ptype
+	 			{ $$ = $1; }
+		 | name
+	 			{ $$ = $1; }
+		 ;
 
 ptype: "void"
 	 			{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
@@ -183,15 +193,16 @@ class: "class" ident"{" member_list "}"
 
 member_list: %empty					
 		   		{ $$ = new ListAst(Ast::Type::MEMBER_LIST); }
-		   | member_list method		
+		   | member_list decl_method
 				{ $1->append($2); $$ = $1; }
-		   | member_list decl_stmt
+		   | member_list decl_var
 				{ $1->append($2); $$ = $1; }
 		   ;
 
-method: "void" ident "(" param_list ")" "{" stmt_list "}"
- 				{ $$ = new FixSizeAst<3>(Ast::Type::METHOD, $2, $4, $7); }
-	  ;
+decl_method: type_spec dector_name "(" param_list ")" "{" stmt_list "}"
+ 				{ $$ = new FixSizeAst<4>(Ast::Type::METHOD, $1, $2, $4, $7); }
+// TODO: [] in method decl (?)
+		   ;
 
 param_list: %empty
 		 		{ $$ = new ListAst(Ast::Type::DECL_PARAM_LIST); } 
@@ -217,7 +228,7 @@ stmt_list: %empty
 
 stmt: expr ";"
 				{ $$ = $1; }
-	| decl_stmt
+	| decl_var
 				{ $$ = $1; }
 	| return_stmt
 				{ $$ = $1; }
@@ -247,11 +258,11 @@ comma_list_noemp: expr
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
-decl_stmt: ident dector ";"
+decl_var: type_spec dector ";"
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_STMT, $1, $2); }
-		 | ident dector_list ";" 
+		| type_spec dector_list ";" 
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_STMT, $1, $2); }
-	;
+		;
 
 dector_list: dector "," dector
 		 		{ $$ = new ListAst(Ast::Type::COMMA_LIST); 
@@ -506,7 +517,7 @@ expr_new: expr_new_plain
 				{ $$=$1; }
 		;
 
-expr_new_plain: "new" type "(" comma_list ")"
+expr_new_plain: "new" type_name "(" comma_list ")"
 				{ $$=$2; }
 			  // TODO various new
 			  ;

@@ -36,7 +36,7 @@ void IdentInputMode::onPopped()
 {
     doc.setHotLight(EditableDoc::HotLightLevel::OFF);
 
-    if (isUpperCamel(doc.getInner().asScalar().getText())) {
+    if (isType(doc.getInner().asScalar().getText())) {
         Ast::Type otype = doc.getOuter().getType();
         if (otype == Ast::Type::STMT_LIST || otype == Ast::Type::MEMBER_LIST) {
             doc.nestAsLeft(Ast::Type::DECL_STMT);
@@ -47,6 +47,18 @@ void IdentInputMode::onPopped()
 const char *IdentInputMode::name()
 {
     return "Ident Input";
+}
+
+bool IdentInputMode::isType(const std::string &id)
+{
+    return isPrimitiveType(id) || isUpperCamel(id);
+}
+
+bool IdentInputMode::isPrimitiveType(const std::string &id)
+{
+    return id == "void" || id == "byte" || id == "short"
+            || id == "int" || id == "long" || id == "char"
+            || id == "float" || id == "double";
 }
 
 bool IdentInputMode::isUpperCamel(const std::string &id)

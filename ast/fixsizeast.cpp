@@ -63,3 +63,4 @@ FixSizeAst<N>::FixSizeAst(Ast::Type t)
 template class FixSizeAst<1>;
 template class FixSizeAst<2>;
 template class FixSizeAst<3>;
+template class FixSizeAst<4>;

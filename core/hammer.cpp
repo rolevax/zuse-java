@@ -31,16 +31,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         buf.push_back(new BoneToken(&ast, BoneToken::Sym::LPAREN));
 
     if (ast.isScalar()) {
-        if (ast.getType() == Ast::Type::META) {
-            buf.push_back(new BoneToken(&ast, BoneToken::Sym::META));
-        } else {
-            bool isString = ast.getType() == Ast::Type::STRING;
-            if (isString)
-                buf.push_back(new BoneToken(&ast, BoneToken::Sym::DQUOTE));
-            buf.push_back(new FleshToken(&ast.asScalar()));
-            if (isString)
-                buf.push_back(new BoneToken(&ast, BoneToken::Sym::DQUOTE));
-        }
+        hitScalar(ast.asScalar(), buf);
     } else if (ast.isList()) {
         hitList(ast.asList(), buf);
     } else {
@@ -49,7 +40,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             hitClass(ast.asFixSize<2>(), buf);
             break;
         case Ast::Type::METHOD:
-            hitMethod(ast.asFixSize<3>(), buf);
+            hitMethod(ast.asFixSize<4>(), buf);
             break;
         case Ast::Type::DECL_STMT:
             hitGeneral(ast.asFixSize<2>().at(0), buf); // type
@@ -114,6 +105,20 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
     buf.push_back(new SoulToken(&ast, Token::Role::END));
 }
 
+void Hammer::hitScalar(const ScalarAst &ast, Hammer::Buf &buf)
+{
+    if (ast.getType() == Ast::Type::META) {
+        buf.push_back(new BoneToken(&ast, BoneToken::Sym::META));
+    } else {
+        bool isString = ast.getType() == Ast::Type::STRING;
+        if (isString)
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::DQUOTE));
+        buf.push_back(new FleshToken(&ast.asScalar()));
+        if (isString)
+            buf.push_back(new BoneToken(&ast, BoneToken::Sym::DQUOTE));
+    }
+}
+
 void Hammer::hitList(const ListAst &ast, Buf &buf)
 {
     hitListBegin(ast, buf);
@@ -139,21 +144,17 @@ void Hammer::hitClass(const FixSizeAst<2> &ast, Buf &buf)
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
 }
 
-void Hammer::hitMethod(const FixSizeAst<3> &ast, Hammer::Buf &buf)
+void Hammer::hitMethod(const FixSizeAst<4> &ast, Hammer::Buf &buf)
 {
-    // return type TODO
-    buf.push_back(new BoneToken(&ast, BoneToken::Sym::VOID));
-
-    // id
-    hitGeneral(ast.at(0), buf);
-
-    // param list
-    hitGeneral(ast.at(1), buf);
+    hitGeneral(ast.at(0), buf); // return type
+    buf.push_back(new BoneToken(&ast, BoneToken::Sym::SPACE));
+    hitGeneral(ast.at(1), buf); // id
+    hitGeneral(ast.at(2), buf); // param list
 
     // stmt list
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::LBRACE));
     buf.push_back(nullptr);
-    hitGeneral(ast.at(2), buf);
+    hitGeneral(ast.at(3), buf);
     buf.push_back(new BoneToken(&ast, BoneToken::Sym::RBRACE));
 }
 
