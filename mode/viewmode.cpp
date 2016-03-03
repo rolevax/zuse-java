@@ -21,6 +21,11 @@ void ViewMode::keyboard(char key)
         return;
 
     switch (key) {
+    case '(':
+        if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST
+                && doc.getInner().getType() == Ast::Type::DECL_STMT)
+            doc.cast(Ast::Type::METHOD);
+        break;
     // tree-wise cursor moving
     case 'g': // get next node
         doc.sibling(+1);

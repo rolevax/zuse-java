@@ -263,6 +263,24 @@ void Doc::expose()
     tokens.sync(root.get());
 }
 
+void Doc::cast(Ast::Type type)
+{
+    switch (type) {
+    case Ast::Type::METHOD:
+        if (getInner().getType() == Ast::Type::DECL_STMT) {
+            InternalAst *a = &newTree(Ast::Type::METHOD)->asInternal();
+            // TODO: return type of method
+            a->change(0, getInner().asInternal().at(1).clone());
+            outer->change(inner, a);
+        }
+        break;
+    default:
+        break;
+    }
+
+    tokens.sync(root.get());
+}
+
 void Doc::scalarAppend(const char *str)
 {
     ScalarAst &scalar = outer->at(inner).asScalar();

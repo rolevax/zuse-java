@@ -42,6 +42,7 @@ private:
     void change(Ast::Type type) override;
     void nestAsLeft(Ast::Type type, int bop) override;
     void expose() override;
+    void cast(Ast::Type type) override;
 
     void scalarAppend(const char *str) override;
     void scalarAppend(char c) override;
