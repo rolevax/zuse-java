@@ -26,7 +26,7 @@ bool Ast::isBopList() const
 
 bool Ast::isMap() const
 {
-    return Type::CLASS <= type && type <= Type::ASSIGN;
+    return Type::DECL_CLASS <= type && type <= Type::ASSIGN;
 }
 
 bool Ast::isScalar() const

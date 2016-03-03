@@ -39,7 +39,7 @@ void IdentInputMode::onPopped()
     if (isType(doc.getInner().asScalar().getText())) {
         Ast::Type otype = doc.getOuter().getType();
         if (otype == Ast::Type::STMT_LIST || otype == Ast::Type::MEMBER_LIST) {
-            doc.nestAsLeft(Ast::Type::DECL_STMT);
+            doc.nestAsLeft(Ast::Type::DECL_VAR);
         }
     }
 }

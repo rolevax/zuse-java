@@ -28,7 +28,7 @@ public:
         DOT_BOP_LIST, MUL_BOP_LIST, ADD_BOP_LIST,
 
         /* MUST sync with isMap() definition */
-        CLASS, METHOD, DECL_STMT, DECL_PARAM, STMT,
+        DECL_CLASS, DECL_METHOD, DECL_VAR, DECL_PARAM,
         RETURN, WHILE, DO_WHILE, IF_CONDBODY, IF_ELSEBODY,
         PAREN,
         ASSIGN,

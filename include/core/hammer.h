@@ -1,6 +1,7 @@
 #ifndef HAMMER_H
 #define HAMMER_H
 
+#include "core/bonetoken.h"
 #include "ast/scalarast.h"
 #include "ast/fixsizeast.h"
 #include "ast/listast.h"
@@ -33,6 +34,8 @@ private:
     void hitListBegin(const ListAst &ast, Buf &buf);
     void hitListEnd(const ListAst &ast, Buf &buf);
     void hitListSep(const ListAst &ast, Buf &buf, size_t pos);
+
+    void bone(const Ast &ast, Buf &buf, BoneToken::Sym sym);
 
 private:
     Tokens &tokens;

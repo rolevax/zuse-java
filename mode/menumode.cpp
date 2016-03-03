@@ -125,13 +125,13 @@ Ast::Type MenuMode::keyToNesterType(char key)
     case '%':
         return Ast::Type::MUL_BOP_LIST;
     case 'C':
-        return Ast::Type::CLASS;
+        return Ast::Type::DECL_CLASS;
     case 'i':
         return Ast::Type::IF_LIST;
     case 'm':
-        return Ast::Type::METHOD;
+        return Ast::Type::DECL_METHOD;
     case 'v':
-        return Ast::Type::DECL_STMT;
+        return Ast::Type::DECL_VAR;
     default: // TODO: a 'nothing' type?
         return Ast::Type::IDENT;
     }

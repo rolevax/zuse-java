@@ -23,8 +23,8 @@ void ViewMode::keyboard(char key)
     switch (key) {
     case '(':
         if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST
-                && doc.getInner().getType() == Ast::Type::DECL_STMT)
-            doc.cast(Ast::Type::METHOD);
+                && doc.getInner().getType() == Ast::Type::DECL_VAR)
+            doc.cast(Ast::Type::DECL_METHOD);
         break;
     // tree-wise cursor moving
     case 'g': // get next node
@@ -135,7 +135,7 @@ void ViewMode::menulessListOp(ListOp op)
 
     switch (l.getType()) {
     case Ast::Type::CLASS_LIST:
-        tar = Ast::Type::CLASS;
+        tar = Ast::Type::DECL_CLASS;
         break;
     case Ast::Type::DECL_PARAM_LIST:
         tar = Ast::Type::DECL_PARAM;

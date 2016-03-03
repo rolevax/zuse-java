@@ -266,11 +266,11 @@ void Doc::expose()
 void Doc::cast(Ast::Type type)
 {
     switch (type) {
-    case Ast::Type::METHOD:
-        if (getInner().getType() == Ast::Type::DECL_STMT
+    case Ast::Type::DECL_METHOD:
+        if (getInner().getType() == Ast::Type::DECL_VAR
                 && getInner().asInternal().at(1).isScalar()) {
             // from variable declaration to method declaration
-            InternalAst *a = &newTree(Ast::Type::METHOD)->asInternal();
+            InternalAst *a = &newTree(Ast::Type::DECL_METHOD)->asInternal();
             // copy return type and name
             a->change(0, getInner().asInternal().at(0).clone());
             a->change(1, getInner().asInternal().at(1).clone());
@@ -331,24 +331,24 @@ Ast *Doc::newTree(Ast::Type type)
     Ast *a = nullptr;
 
     switch (type) {
-    case Ast::Type::CLASS: {
+    case Ast::Type::DECL_CLASS: {
         Ast *id = new ScalarAst(Ast::Type::IDENT, "C0");
         Ast *ml = new ListAst(Ast::Type::MEMBER_LIST);
-        a = new FixSizeAst<2>(Ast::Type::CLASS, id, ml);
+        a = new FixSizeAst<2>(Ast::Type::DECL_CLASS, id, ml);
         break;
     }
-    case Ast::Type::DECL_STMT: {
+    case Ast::Type::DECL_VAR: {
         Ast *type = new ScalarAst(Ast::Type::IDENT, "Type");
         Ast *id = new ScalarAst(Ast::Type::IDENT, "ident");
-        a = new FixSizeAst<2>(Ast::Type::DECL_STMT, type, id);
+        a = new FixSizeAst<2>(Ast::Type::DECL_VAR, type, id);
         break;
     }
-    case Ast::Type::METHOD: {
+    case Ast::Type::DECL_METHOD: {
         Ast *type = new ScalarAst(Ast::Type::IDENT, "T0");
         Ast *id = new ScalarAst(Ast::Type::IDENT, "m0");
         Ast *dpl = new ListAst(Ast::Type::DECL_PARAM_LIST);
         Ast *sl = new ListAst(Ast::Type::STMT_LIST);
-        a = new FixSizeAst<4>(Ast::Type::METHOD, type, id, dpl, sl);
+        a = new FixSizeAst<4>(Ast::Type::DECL_METHOD, type, id, dpl, sl);
         break;
     }
     case Ast::Type::ASSIGN: {
