@@ -100,7 +100,7 @@ void ViewMode::keyboard(char key)
         // TODO
         break;
     case 'n': // nest
-        doc.push(new MenuMode(doc, MenuMode::Context::NEST));
+        doc.push(new MenuMode(doc, MenuMode::Context::NEST_AS_LEFT));
         break;
     case 'm': // modify
     case 'M': {

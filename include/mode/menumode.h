@@ -8,7 +8,7 @@ class MenuMode : public Mode
 public:
     enum class Context
     {
-        BOP_INSERT, BOP_APPEND, NEST,
+        BOP_INSERT, BOP_APPEND, NEST_AS_LEFT,
         FALL_SEARCH, DIG_SEARCH
     };
 
@@ -21,7 +21,7 @@ public:
 
 private:
     Mode *modeFor(Ast::Type t);
-    static Ast::Type keyToNesterType(char key);
+    Ast::Type keyToType(char key);
     static int keyToBop(char key);
 
 private:

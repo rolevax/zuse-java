@@ -4,6 +4,7 @@
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
+#include "mode/tipamode.h"
 #include "mode/pairinputmode.h"
 
 #include <cctype>
@@ -24,19 +25,19 @@ void MenuMode::keyboard(char key)
         return;
     }
 
-    Ast::Type keyType = keyToNesterType(key);
+    Ast::Type ktype = keyToType(key);
     int bop = keyToBop(key);
     Mode *nextMode = nullptr;
 
     switch (context) {
     case Context::BOP_INSERT: {
-        doc.insert(keyType, bop);
-        nextMode = modeFor(keyType);
+        doc.insert(ktype, bop);
+        nextMode = modeFor(ktype);
         break;
     }
     case Context::BOP_APPEND: {
-        doc.append(keyType, bop);
-        nextMode = modeFor(keyType);
+        doc.append(ktype, bop);
+        nextMode = modeFor(ktype);
         break;
     }
     case Context::FALL_SEARCH:
@@ -44,40 +45,19 @@ void MenuMode::keyboard(char key)
         // TODO: pattern matching cases keyToPattern
         default:
             // TODO: do-nothing if no map
-            std::function<bool(const Ast *)> match = [keyType](const Ast *a)
+            std::function<bool(const Ast *)> match = [ktype](const Ast *a)
             {
-                return a->getType() == keyType;
+                return a->getType() == ktype;
             };
             doc.flyIn(match);
         }
 
         break;
-    case Context::NEST:
-        switch (key) {
+    case Context::NEST_AS_LEFT:
         // TODO: smart condition check (nester cannot be scalar)
-        case '=':
-            doc.nestAsLeft(Ast::Type::ASSIGN);
-            break;
-        case '+':
-            doc.nestAsLeft(Ast::Type::ADD_BOP_LIST, BopListAst::ADD);
-            break;
-        case '-':
-            doc.nestAsLeft(Ast::Type::ADD_BOP_LIST, BopListAst::SUB);
-            break;
-        case '*':
-            doc.nestAsLeft(Ast::Type::MUL_BOP_LIST, BopListAst::MUL);
-            break;
-        case '/':
-            doc.nestAsLeft(Ast::Type::MUL_BOP_LIST, BopListAst::DIV);
-            break;
-        case '(':
-            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::CALL);
-            break;
-        case '.':
-            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::DOT);
-            break;
+        if (ktype != Ast::Type::IDENT) {
+            doc.nestAsLeft(ktype, bop);
         }
-
         break;
     default:
         break;
@@ -98,7 +78,7 @@ void MenuMode::onPopped()
 
 const char *MenuMode::name()
 {
-    return "op pending";
+    return "oprand?";
 }
 
 Mode *MenuMode::modeFor(Ast::Type t)
@@ -106,33 +86,54 @@ Mode *MenuMode::modeFor(Ast::Type t)
     switch (t) {
     case Ast::Type::IDENT:
         return new IdentInputMode(doc, true);
+    case Ast::Type::META:
+        return new TipaMode(doc);
     default:
         return nullptr;
     }
 }
 
-Ast::Type MenuMode::keyToNesterType(char key)
+Ast::Type MenuMode::keyToType(char key)
 {
-    switch (key) {
-    case '.':
-    case '(':
-        return Ast::Type::DOT_BOP_LIST;
-    case '+':
-    case '-':
-        return Ast::Type::ADD_BOP_LIST;
-    case '*':
-    case '/':
-    case '%':
-        return Ast::Type::MUL_BOP_LIST;
-    case 'C':
-        return Ast::Type::DECL_CLASS;
-    case 'i':
-        return Ast::Type::IF_LIST;
-    case 'm':
-        return Ast::Type::DECL_METHOD;
-    case 'v':
-        return Ast::Type::DECL_VAR;
-    default: // TODO: a 'nothing' type?
+    switch (context) {
+    case Context::BOP_INSERT:
+    case Context::BOP_APPEND:
+        switch (key) {
+        case '(':
+            // TODO: outer should be dot list
+            return Ast::Type::COMMA_LIST;
+        default:
+            return Ast::Type::META;
+        }
+    case Context::NEST_AS_LEFT: // nester type
+    case Context::FALL_SEARCH:
+    case Context::DIG_SEARCH:
+        switch (key) {
+        case '.':
+        case '(':
+            // TODO: if nest as right, cast
+            return Ast::Type::DOT_BOP_LIST;
+        case '+':
+        case '-':
+            return Ast::Type::ADD_BOP_LIST;
+        case '*':
+        case '/':
+        case '%':
+            return Ast::Type::MUL_BOP_LIST;
+        case 'C':
+            return Ast::Type::DECL_CLASS;
+        case 'i':
+            return Ast::Type::IF_LIST;
+        case 'm':
+            return Ast::Type::DECL_METHOD;
+        case 'v':
+            return Ast::Type::DECL_VAR;
+        case '=':
+            return Ast::Type::ASSIGN;
+        default: // TODO: a 'nothing' type?
+            return Ast::Type::IDENT;
+        }
+    default: // useless, for supress 'return' warning
         return Ast::Type::IDENT;
     }
 }
