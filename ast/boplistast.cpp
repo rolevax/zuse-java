@@ -50,11 +50,6 @@ Ast *BopListAst::remove(size_t pos)
     return ret;
 }
 
-bool BopListAst::illOne() const
-{
-    return true; // binary op is binary
-}
-
 int BopListAst::opAt(size_t pos) const
 {
     assert(pos < size());

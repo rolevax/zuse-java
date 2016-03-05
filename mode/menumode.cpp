@@ -30,13 +30,12 @@ void MenuMode::keyboard(char key)
     Mode *nextMode = nullptr;
 
     switch (context) {
-    case Context::BOP_INSERT: {
-        doc.insert(ktype, bop);
-        nextMode = modeFor(ktype);
-        break;
-    }
+    case Context::BOP_INSERT:
     case Context::BOP_APPEND: {
-        doc.append(ktype, bop);
+        if (context == Context::BOP_INSERT)
+            doc.insert(ktype, bop);
+        else
+            doc.append(ktype, bop);
         nextMode = modeFor(ktype);
         break;
     }
@@ -55,8 +54,11 @@ void MenuMode::keyboard(char key)
         break;
     case Context::NEST_AS_LEFT:
         // TODO: smart condition check (nester cannot be scalar)
-        if (ktype != Ast::Type::IDENT) {
+        if (ktype != Ast::Type::META) {
             doc.nestAsLeft(ktype, bop);
+            doc.fallIn();
+            doc.sibling(+1);
+            nextMode = modeFor(doc.getInner().getType());
         }
         break;
     default:
@@ -111,7 +113,6 @@ Ast::Type MenuMode::keyToType(char key)
         switch (key) {
         case '.':
         case '(':
-            // TODO: if nest as right, cast
             return Ast::Type::DOT_BOP_LIST;
         case '+':
         case '-':
@@ -130,8 +131,8 @@ Ast::Type MenuMode::keyToType(char key)
             return Ast::Type::DECL_VAR;
         case '=':
             return Ast::Type::ASSIGN;
-        default: // TODO: a 'nothing' type?
-            return Ast::Type::IDENT;
+        default:
+            return Ast::Type::META;
         }
     default: // useless, for supress 'return' warning
         return Ast::Type::IDENT;

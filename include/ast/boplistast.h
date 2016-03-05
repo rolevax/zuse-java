@@ -16,7 +16,6 @@ public:
     void dump() const override;
     BopListAst *clone() const override;
     Ast *remove(size_t pos) override;
-    bool illOne() const override;
 
     int opAt(size_t pos) const;
     void setOpAt(size_t pos, int op);

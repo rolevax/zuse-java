@@ -195,13 +195,14 @@ void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
     case Ast::Type::DECL_PARAM_LIST:
         bone(ast, buf, BoneToken::Sym::LPAREN);
         break;
-    case Ast::Type::COMMA_LIST:
-        /*
-        if (ast.getParent().getType() == Ast::Type::CALL)
+    case Ast::Type::COMMA_LIST: {
+        InternalAst &par = ast.getParent();
+        if (par.getType() == Ast::Type::DOT_BOP_LIST
+                && par.asBopList().opAt(par.asList().indexOf(&ast)) == BopListAst::CALL)
             bone(ast, buf, BoneToken::Sym::LPAREN);
-            */
         // else if array 'initializer', etc.
         break;
+    }
     default:
         break;
     }
@@ -213,12 +214,13 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
     case Ast::Type::DECL_PARAM_LIST:
         bone(ast, buf, BoneToken::Sym::RPAREN);
         break;
-    case Ast::Type::COMMA_LIST:
-        /*
-        if (ast.getParent().getType() == Ast::Type::CALL)
+    case Ast::Type::COMMA_LIST: {
+        InternalAst &par = ast.getParent();
+        if (par.getType() == Ast::Type::DOT_BOP_LIST
+                && par.asBopList().opAt(par.asList().indexOf(&ast)) == BopListAst::CALL)
             bone(ast, buf, BoneToken::Sym::RPAREN);
-            */
         break;
+    }
     default:
         break;
     }
@@ -226,7 +228,6 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
 
 void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
 {
-    bool begin = pos == 0;
     bool end = pos == ast.size() - 1;
 
     switch (ast.getType()) {
@@ -266,16 +267,11 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         }
         break;
     case Ast::Type::DOT_BOP_LIST:
-        if (!begin) {
-            const BopListAst &bast = ast.asBopList();
-            if (bast.opAt(pos) == BopListAst::CALL)
-                bone(ast, buf, BoneToken::Sym::RPAREN);
-        }
         if (!end) {
             const BopListAst &bast = ast.asBopList();
-            BoneToken::Sym sym = bast.opAt(pos + 1) == 0 ? BoneToken::Sym::DOT
-                                                         : BoneToken::Sym::LPAREN;
-            bone(ast, buf, sym);
+            int bop = bast.opAt(pos + 1);
+            if (bop == BopListAst::DOT)
+                bone(ast, buf, BoneToken::Sym::DOT);
         }
         break;
     default:

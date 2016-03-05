@@ -178,14 +178,16 @@ void Doc::flyIn(std::function<bool(const Ast *)> &match)
  */
 void Doc::insert(Ast::Type type, int bop)
 {
-    assert(inner <= outer->size());
+    assert(inner < outer->size());
 
     Ast *a = newTree(type);
 
-    // TODO list? var-size?
     outer->asList().insert(inner, a);
-    if (BopListAst::UNUSED != bop)
-        outer->asBopList().setOpAt(inner, bop);
+    if (BopListAst::UNUSED != bop) {
+        BopListAst &bast = outer->asBopList();
+        bast.setOpAt(inner, bast.opAt(inner + 1));
+        bast.setOpAt(inner + 1, bop);
+    }
 
     tokens.sync(root.get());
 }
@@ -193,7 +195,17 @@ void Doc::insert(Ast::Type type, int bop)
 void Doc::append(Ast::Type type, int bop)
 {
     ++inner;
-    insert(type, bop);
+    assert(inner <= outer->size());
+
+    Ast *a = newTree(type);
+
+    outer->asList().insert(inner, a);
+    if (BopListAst::UNUSED != bop) {
+        BopListAst &bast = outer->asBopList();
+        bast.setOpAt(inner, bop);
+    }
+
+    tokens.sync(root.get());
 }
 
 void Doc::assart(Ast::Type type, int bop)
@@ -326,11 +338,36 @@ void Doc::toggleTension(bool b)
     ob.observeTension(b);
 }
 
+/**
+ * TODO XXX (????)
+ */
 Ast *Doc::newTree(Ast::Type type)
 {
     Ast *a = nullptr;
 
     switch (type) {
+    case Ast::Type::COMMA_LIST: {
+        a = new ListAst(Ast::Type::COMMA_LIST);
+        break;
+    }
+    case Ast::Type::ADD_BOP_LIST: {
+        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
+        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
+        a = new BopListAst(Ast::Type::ADD_BOP_LIST, lhs, rhs, BopListAst::ADD);
+        break;
+    }
+    case Ast::Type::MUL_BOP_LIST: {
+        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
+        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
+        a = new BopListAst(Ast::Type::MUL_BOP_LIST, lhs, rhs, BopListAst::MUL);
+        break;
+    }
+    case Ast::Type::DOT_BOP_LIST: {
+        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
+        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
+        a = new BopListAst(Ast::Type::DOT_BOP_LIST, lhs, rhs, BopListAst::DOT);
+        break;
+    }
     case Ast::Type::DECL_CLASS: {
         Ast *id = new ScalarAst(Ast::Type::IDENT, "C0");
         Ast *ml = new ListAst(Ast::Type::MEMBER_LIST);
@@ -355,24 +392,6 @@ Ast *Doc::newTree(Ast::Type type)
         Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
         Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
         a = new FixSizeAst<2>(Ast::Type::ASSIGN, lhs, rhs);
-        break;
-    }
-    case Ast::Type::ADD_BOP_LIST: {
-        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
-        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
-        a = new BopListAst(Ast::Type::ADD_BOP_LIST, lhs, rhs, BopListAst::ADD);
-        break;
-    }
-    case Ast::Type::MUL_BOP_LIST: {
-        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
-        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
-        a = new BopListAst(Ast::Type::MUL_BOP_LIST, lhs, rhs, BopListAst::MUL);
-        break;
-    }
-    case Ast::Type::DOT_BOP_LIST: {
-        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
-        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
-        a = new BopListAst(Ast::Type::DOT_BOP_LIST, lhs, rhs, BopListAst::DOT);
         break;
     }
     case Ast::Type::DECL_PARAM: {

@@ -76,15 +76,25 @@ bool ListAst::illZero() const
 {
     if (0 != size())
         return false;
+    if (isBopList())
+        return true;
+
     Ast::Type t = getType();
-    return t == Type::ADD_BOP_LIST || t == Type::MUL_BOP_LIST;
+    Ast::Type pt = getParent().getType();
+    return t == Type::COMMA_LIST && pt == Type::DECL_VAR;
 }
 
 bool ListAst::illOne() const
 {
     if (1 != size())
         return false;
-    return false; // TODO might be useless
+
+    if (isBopList())
+        return true;
+
+    Ast::Type t = getType();
+    Ast::Type pt = getParent().getType();
+    return t == Type::COMMA_LIST && pt == Type::DECL_VAR;
 }
 
 void ListAst::doInsert(size_t pos, Ast *child)
