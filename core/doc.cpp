@@ -346,8 +346,8 @@ Ast *Doc::newTree(Ast::Type type)
     Ast *a = nullptr;
 
     switch (type) {
-    case Ast::Type::COMMA_LIST: {
-        a = new ListAst(Ast::Type::COMMA_LIST);
+    case Ast::Type::ARG_LIST: {
+        a = new ListAst(Ast::Type::ARG_LIST);
         break;
     }
     case Ast::Type::ADD_BOP_LIST: {

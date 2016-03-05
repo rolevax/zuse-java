@@ -66,11 +66,6 @@ FixSizeAst<N> &Ast::asFixSize()
     return static_cast<FixSizeAst<N>&>(*this);
 }
 
-template FixSizeAst<1> &Ast::asFixSize();
-template FixSizeAst<2> &Ast::asFixSize();
-template FixSizeAst<3> &Ast::asFixSize();
-template FixSizeAst<4> &Ast::asFixSize();
-
 template<std::size_t N>
 const FixSizeAst<N> &Ast::asFixSize() const
 {
@@ -78,11 +73,6 @@ const FixSizeAst<N> &Ast::asFixSize() const
     // assert(isFixSize());
     return static_cast<const FixSizeAst<N>&>(*this);
 }
-
-template const FixSizeAst<1> &Ast::asFixSize() const;
-template const FixSizeAst<2> &Ast::asFixSize() const;
-template const FixSizeAst<3> &Ast::asFixSize() const;
-template const FixSizeAst<4> &Ast::asFixSize() const;
 
 ListAst &Ast::asList()
 {
@@ -161,6 +151,16 @@ int Ast::indentLevel() const
     return ret;
 }
 
+// instanciation
+template FixSizeAst<1> &Ast::asFixSize();
+template FixSizeAst<2> &Ast::asFixSize();
+template FixSizeAst<3> &Ast::asFixSize();
+template FixSizeAst<4> &Ast::asFixSize();
 
+// instanciation
+template const FixSizeAst<1> &Ast::asFixSize() const;
+template const FixSizeAst<2> &Ast::asFixSize() const;
+template const FixSizeAst<3> &Ast::asFixSize() const;
+template const FixSizeAst<4> &Ast::asFixSize() const;
 
 

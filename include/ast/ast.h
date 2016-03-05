@@ -22,7 +22,7 @@ public:
         /* MUST sync with isList() definition */
         CLASS_LIST, MEMBER_LIST, DECL_PARAM_LIST, STMT_LIST,
         IF_LIST,
-        COMMA_LIST,
+        DECTOR_LIST, ARG_LIST,
 
         /* MUST sync with isBopList() and isList() definition */
         DOT_BOP_LIST, MUL_BOP_LIST, ADD_BOP_LIST,

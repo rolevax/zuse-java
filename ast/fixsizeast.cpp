@@ -60,6 +60,7 @@ FixSizeAst<N>::FixSizeAst(Ast::Type t)
 
 }
 
+// instanciation
 template class FixSizeAst<1>;
 template class FixSizeAst<2>;
 template class FixSizeAst<3>;

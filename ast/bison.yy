@@ -106,8 +106,8 @@
 %type	<ListAst*>		param_list_noemp
 %type	<ListAst*>		stmt_list
 %type	<ListAst*>		if_list
-%type	<ListAst*>		comma_list
-%type	<ListAst*>		comma_list_noemp
+%type	<ListAst*>		arg_list
+%type	<ListAst*>		arg_list_noemp
 %type	<ListAst*>		dector_list
 
 %type	<Ast*>			class
@@ -247,15 +247,15 @@ ident: "identifier"
 				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
 		;
 
-comma_list: %empty
-		 		{ $$ = new ListAst(Ast::Type::COMMA_LIST); }
-		| comma_list_noemp
+arg_list: %empty
+		 		{ $$ = new ListAst(Ast::Type::ARG_LIST); }
+		| arg_list_noemp
 		 		{ $$ = $1; }
 		;
 
-comma_list_noemp: expr
-		 		{ $$ = new ListAst(Ast::Type::COMMA_LIST); $$->append($1); }
-			  | comma_list_noemp "," expr
+arg_list_noemp: expr
+		 		{ $$ = new ListAst(Ast::Type::ARG_LIST); $$->append($1); }
+			  | arg_list_noemp "," expr
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
@@ -266,7 +266,7 @@ decl_var: type_spec dector ";"
 		;
 
 dector_list: dector "," dector
-		 		{ $$ = new ListAst(Ast::Type::COMMA_LIST); 
+		 		{ $$ = new ListAst(Ast::Type::DECTOR_LIST); 
 				  $$->append($1); $$->append($3); }
 		   | dector_list "," dector
 		 		{ $1->append($3); $$ = $1; }
@@ -501,7 +501,7 @@ expr_prime_cx_nude: "number"
 				{ $$ = $1; }
 			;
 
-expr_call: callee "(" comma_list ")"
+expr_call: callee "(" arg_list ")"
 				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
 									  BopListAst::CALL); }
 	;
@@ -518,7 +518,7 @@ expr_new: expr_new_plain
 				{ $$=$1; }
 		;
 
-expr_new_plain: "new" type_name "(" comma_list ")"
+expr_new_plain: "new" type_name "(" arg_list ")"
 				{ $$=$2; }
 			  // TODO various new
 			  ;

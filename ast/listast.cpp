@@ -80,8 +80,7 @@ bool ListAst::illZero() const
         return true;
 
     Ast::Type t = getType();
-    Ast::Type pt = getParent().getType();
-    return t == Type::COMMA_LIST && pt == Type::DECL_VAR;
+    return t == Type::DECTOR_LIST;
 }
 
 bool ListAst::illOne() const
@@ -93,8 +92,7 @@ bool ListAst::illOne() const
         return true;
 
     Ast::Type t = getType();
-    Ast::Type pt = getParent().getType();
-    return t == Type::COMMA_LIST && pt == Type::DECL_VAR;
+    return t == Type::DECTOR_LIST;
 }
 
 void ListAst::doInsert(size_t pos, Ast *child)

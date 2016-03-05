@@ -346,8 +346,8 @@ namespace yy {
       // param_list
       // param_list_noemp
       // stmt_list
-      // comma_list
-      // comma_list_noemp
+      // arg_list
+      // arg_list_noemp
       // dector_list
       // if_list
       char dummy2[sizeof(ListAst*)];
@@ -1084,8 +1084,8 @@ namespace yy {
       case 61: // param_list
       case 62: // param_list_noemp
       case 64: // stmt_list
-      case 67: // comma_list
-      case 68: // comma_list_noemp
+      case 67: // arg_list
+      case 68: // arg_list_noemp
       case 70: // dector_list
       case 76: // if_list
         value.copy< ListAst* > (other.value);
@@ -1167,8 +1167,8 @@ namespace yy {
       case 61: // param_list
       case 62: // param_list_noemp
       case 64: // stmt_list
-      case 67: // comma_list
-      case 68: // comma_list_noemp
+      case 67: // arg_list
+      case 68: // arg_list_noemp
       case 70: // dector_list
       case 76: // if_list
         value.copy< ListAst* > (v);
@@ -1295,8 +1295,8 @@ namespace yy {
       case 61: // param_list
       case 62: // param_list_noemp
       case 64: // stmt_list
-      case 67: // comma_list
-      case 68: // comma_list_noemp
+      case 67: // arg_list
+      case 68: // arg_list_noemp
       case 70: // dector_list
       case 76: // if_list
         value.template destroy< ListAst* > ();
@@ -1384,8 +1384,8 @@ namespace yy {
       case 61: // param_list
       case 62: // param_list_noemp
       case 64: // stmt_list
-      case 67: // comma_list
-      case 68: // comma_list_noemp
+      case 67: // arg_list
+      case 68: // arg_list_noemp
       case 70: // dector_list
       case 76: // if_list
         value.move< ListAst* > (s.value);

@@ -17,12 +17,10 @@ void InternalAst::change(size_t pos, Ast *next)
 Ast::Type InternalAst::typeAt(size_t pos)
 {
     switch (getType()) {
-    case Type::COMMA_LIST:
-        if (getParent().getType() == Type::DECL_METHOD)
-            // TODO DECL_METHOD_TH and DECL_METHOD_NOTH
-            return Type::DECL_PARAM;
-        else
-            return Type::META;
+    case Type::DECL_PARAM_LIST:
+        return Type::DECL_PARAM;
+    case Type::DECTOR_LIST:
+        return Type::META;
     default:
         return Type::META;
     }

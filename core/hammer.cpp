@@ -195,12 +195,8 @@ void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
     case Ast::Type::DECL_PARAM_LIST:
         bone(ast, buf, BoneToken::Sym::LPAREN);
         break;
-    case Ast::Type::COMMA_LIST: {
-        InternalAst &par = ast.getParent();
-        if (par.getType() == Ast::Type::DOT_BOP_LIST
-                && par.asBopList().opAt(par.asList().indexOf(&ast)) == BopListAst::CALL)
-            bone(ast, buf, BoneToken::Sym::LPAREN);
-        // else if array 'initializer', etc.
+    case Ast::Type::ARG_LIST: {
+        bone(ast, buf, BoneToken::Sym::LPAREN);
         break;
     }
     default:
@@ -214,11 +210,8 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
     case Ast::Type::DECL_PARAM_LIST:
         bone(ast, buf, BoneToken::Sym::RPAREN);
         break;
-    case Ast::Type::COMMA_LIST: {
-        InternalAst &par = ast.getParent();
-        if (par.getType() == Ast::Type::DOT_BOP_LIST
-                && par.asBopList().opAt(par.asList().indexOf(&ast)) == BopListAst::CALL)
-            bone(ast, buf, BoneToken::Sym::RPAREN);
+    case Ast::Type::ARG_LIST: {
+        bone(ast, buf, BoneToken::Sym::RPAREN);
         break;
     }
     default:
@@ -241,7 +234,8 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         buf.push_back(nullptr);
         break;
     case Ast::Type::DECL_PARAM_LIST:
-    case Ast::Type::COMMA_LIST:
+    case Ast::Type::ARG_LIST:
+    case Ast::Type::DECTOR_LIST:
         if (!end)
             bone(ast, buf, BoneToken::Sym::COMMA);
         break;

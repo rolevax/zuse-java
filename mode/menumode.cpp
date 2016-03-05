@@ -103,7 +103,7 @@ Ast::Type MenuMode::keyToType(char key)
         switch (key) {
         case '(':
             // TODO: outer should be dot list
-            return Ast::Type::COMMA_LIST;
+            return Ast::Type::ARG_LIST;
         default:
             return Ast::Type::META;
         }
