@@ -26,9 +26,18 @@ bool Ast::isBopList() const
 
 bool Ast::isFixSize(size_t s) const
 {
-    if (s == 0)
+    switch (s) {
+    case 0:
+        return Type::RETURN <= type && type <= Type::DECL_METHOD;
+    case 1:
+        return Type::RETURN <= type && type <= Type::PAREN;
+    case 2:
         return Type::DECL_CLASS <= type && type <= Type::ASSIGN;
-    throw "TODO";
+    case 4:
+        return Type::DECL_METHOD <= type && type <= Type::DECL_METHOD;
+    default:
+        throw "WTF size";
+    }
 }
 
 bool Ast::isScalar() const
@@ -50,29 +59,27 @@ const ScalarAst &Ast::asScalar() const
 
 InternalAst &Ast::asInternal()
 {
-    // TODO assert
+    assert(!isScalar());
     return static_cast<InternalAst&>(*this);
 }
 
 const InternalAst &Ast::asInternal() const
 {
-    // TODO assert
+    assert(!isScalar());
     return static_cast<const InternalAst&>(*this);
 }
 
 template<std::size_t N>
 FixSizeAst<N> &Ast::asFixSize()
 {
-    // TODO
-    // assert(isFixSize());
+    assert(isFixSize(N));
     return static_cast<FixSizeAst<N>&>(*this);
 }
 
 template<std::size_t N>
 const FixSizeAst<N> &Ast::asFixSize() const
 {
-    // TODO
-    // assert(isFixSize());
+    assert(isFixSize(N));
     return static_cast<const FixSizeAst<N>&>(*this);
 }
 

@@ -19,21 +19,24 @@ public:
      * KEYTAL means "keyword literal".
      */
     enum class Type {
-        /* MUST sync with isList() definition */
+        // LIST, sync with isList() definition
         CLASS_LIST, MEMBER_LIST, DECL_PARAM_LIST, STMT_LIST,
         IF_LIST,
         DECTOR_LIST, ARG_LIST,
 
-        /* MUST sync with isBopList() and isList() definition */
+        // BOP-LIST, sync with isBopList() and isList() definition
         DOT_BOP_LIST, MUL_BOP_LIST, ADD_BOP_LIST,
 
-        /* MUST sync with isFixSize() definition */
-        DECL_CLASS, DECL_METHOD, DECL_VAR, DECL_PARAM,
-        RETURN, WHILE, DO_WHILE, IF_CONDBODY, IF_ELSEBODY,
-        PAREN,
+        // FIX-SIZE, sync with isFixSize() definition
+        // size 1
+        RETURN, IF_ELSEBODY, PAREN,
+        // size 2
+        DECL_CLASS, DECL_VAR, DECL_PARAM, WHILE, DO_WHILE, IF_CONDBODY,
         ASSIGN,
+        // size 4
+        DECL_METHOD,
 
-        /* isScalar() == !isList() && !isMap() */
+        // SCALAR, isScalar() := !isList() && !isFixSize()
         IDENT, NUMBER, STRING, META
     };
 

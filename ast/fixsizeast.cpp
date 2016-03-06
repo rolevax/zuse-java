@@ -1,7 +1,6 @@
 #include "ast/fixsizeast.h"
 
 #include <algorithm>
-#include <cassert>
 
 template<std::size_t N>
 void FixSizeAst<N>::dump() const

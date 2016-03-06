@@ -4,6 +4,7 @@
 #include "internalast.h"
 
 #include <array>
+#include <cassert>
 
 template<std::size_t N>
 class FixSizeAst : public InternalAst
@@ -39,8 +40,8 @@ template<typename... T>
 FixSizeAst<N>::FixSizeAst(Type t, T... ts)
     : InternalAst(t)
 {
-    // TODO assert type is fix size
     static_assert(sizeof...(ts) == N, "FixSizeAst bound check");
+    assert(isFixSize(N));
     std::array<Ast*, N> tmp{ ts... };
     for (size_t i = 0; i < N; i++)
         change(i, tmp[i]);
