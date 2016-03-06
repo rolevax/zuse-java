@@ -16,6 +16,24 @@ void IdentInputMode::keyboard(char key)
 {
     if (key == ' ') {
         doc.pop();
+        return;
+    }
+
+    if (clear) {
+        doc.setHotLight(EditableDoc::HotLightLevel::POINT);
+        doc.scalarClear();
+        clear = false;
+    }
+
+    if (key == '.') {
+        if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST) {
+            doc.append(Ast::Type::IDENT, BopListAst::DOT);
+        } else {
+            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::DOT);
+            doc.fallIn();
+            doc.sibling(+1);
+        }
+        clear = true;
     } else {
         // check legal char
         doc.scalarAppend(key);
@@ -24,12 +42,10 @@ void IdentInputMode::keyboard(char key)
 
 void IdentInputMode::onPushed()
 {
-    if (clear) {
-        assert(doc.getInner().getType() == Ast::Type::IDENT);
-        doc.scalarClear();
-    }
-
-    doc.setHotLight(EditableDoc::HotLightLevel::POINT);
+    if (clear)
+        doc.setHotLight(EditableDoc::HotLightLevel::AREA);
+    else
+        doc.setHotLight(EditableDoc::HotLightLevel::POINT);
 }
 
 void IdentInputMode::onPopped()

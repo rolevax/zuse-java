@@ -178,7 +178,7 @@ void Doc::flyIn(std::function<bool(const Ast *)> &match)
  */
 void Doc::insert(Ast::Type type, int bop)
 {
-    assert(inner < outer->size());
+    assert(inner <= outer->size());
 
     Ast *a = newTree(type);
 

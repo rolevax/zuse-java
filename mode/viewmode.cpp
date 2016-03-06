@@ -142,6 +142,7 @@ void ViewMode::menulessListOp(ListOp op)
         break;
     case Ast::Type::STMT_LIST:
     case Ast::Type::MEMBER_LIST:
+    case Ast::Type::ARG_LIST:
         tar = Ast::Type::META;
         break;
     default:
@@ -164,6 +165,7 @@ void ViewMode::menulessListOp(ListOp op)
     switch (doc.getOuter().getType()) {
     case Ast::Type::STMT_LIST:
     case Ast::Type::MEMBER_LIST:
+    case Ast::Type::ARG_LIST:
         doc.push(new TipaMode(doc));
         break;
     default:
