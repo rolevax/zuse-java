@@ -255,12 +255,14 @@ void Doc::nestAsLeft(Ast::Type type, int bop)
     assert(inner < outer->size());
 
     InternalAst *nester = &newTree(type)->asInternal();
-    // using clone() to implement a movement.
-    // this is to enhance the simplicity of the interface
-    // with costing neglectable time.
-    nester->change(0, outer->at(inner).clone());
-    if (BopListAst::UNUSED != bop)
-        nester->asBopList().setOpAt(1, bop);
+    if (nester->size() >= 1) {
+        nester->change(0, outer->at(inner).clone());
+        if (BopListAst::UNUSED != bop)
+            nester->asBopList().setOpAt(1, bop);
+    } else { // nester is an empty list
+        nester->asList().append(outer->at(inner).clone());
+    }
+
     outer->change(inner, nester);
     tokens.sync(root.get());
 }
@@ -278,6 +280,10 @@ void Doc::expose()
 void Doc::cast(Ast::Type type)
 {
     switch (type) {
+    case Ast::Type::ARG_LIST:
+        if (getInner().getType() != Ast::Type::ARG_LIST)
+            nestAsLeft(Ast::Type::ARG_LIST, BopListAst::UNUSED);
+        return; // nest or do nothing
     case Ast::Type::DECL_METHOD:
         if (getInner().getType() == Ast::Type::DECL_VAR
                 && getInner().asInternal().at(1).isScalar()) {
@@ -339,7 +345,7 @@ void Doc::toggleTension(bool b)
 }
 
 /**
- * TODO XXX (????)
+ * Make a minimal non-ill tree
  */
 Ast *Doc::newTree(Ast::Type type)
 {

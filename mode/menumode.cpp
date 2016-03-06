@@ -32,10 +32,14 @@ void MenuMode::keyboard(char key)
     switch (context) {
     case Context::BOP_INSERT:
     case Context::BOP_APPEND: {
-        if (context == Context::BOP_INSERT)
+        if (context == Context::BOP_INSERT) {
+            if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST
+                    && key == '(')
+                doc.cast(Ast::Type::ARG_LIST);
             doc.insert(ktype, bop);
-        else
+        } else {
             doc.append(ktype, bop);
+        }
         nextMode = modeFor(ktype);
         break;
     }
@@ -102,8 +106,11 @@ Ast::Type MenuMode::keyToType(char key)
     case Context::BOP_APPEND:
         switch (key) {
         case '(':
-            // TODO: outer should be dot list
-            return Ast::Type::ARG_LIST;
+            if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST
+                    && context == Context::BOP_APPEND)
+                return Ast::Type::ARG_LIST;
+            else
+                return Ast::Type::META;
         default:
             return Ast::Type::META;
         }
