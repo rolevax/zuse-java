@@ -8,17 +8,11 @@ BopListAst::BopListAst(Ast::Type t, Ast *lhs, Ast *rhs, int op)
     assert(isBopList());
     assert(0 <= op && op < numOp());
 
-    bool leftList = lhs->getType() == t;
-    bool rightList = rhs->getType() == t;
-
-    if (leftList && rightList) {
-        mergeIn(&lhs->asBopList());
-        mergeIn(&rhs->asBopList(), op);
-    } else if (leftList) {
+    if (lhs->getType() == t && isLeftAssoc()) {
         mergeIn(&lhs->asBopList());
         append(rhs);
         setOpAt(size() - 1, op);
-    } else if (rightList) {
+    } else if (rhs->getType() == t && isRightAssoc()) {
         append(lhs);
         mergeIn(&rhs->asBopList(), op);
     } else { // neither operand should be flatten
@@ -100,5 +94,15 @@ void BopListAst::mergeIn(BopListAst *t, int lead)
     }
 
     delete t;
+}
+
+bool BopListAst::isLeftAssoc() const
+{
+    return true; // TODO: dummy
+}
+
+bool BopListAst::isRightAssoc() const
+{
+    return !isLeftAssoc();
 }
 

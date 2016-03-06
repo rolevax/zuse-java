@@ -30,7 +30,7 @@ bool Ast::isFixSize(size_t s) const
     case 0:
         return Type::RETURN <= type && type <= Type::DECL_METHOD;
     case 1:
-        return Type::RETURN <= type && type <= Type::PAREN;
+        return Type::RETURN <= type && type <= Type::IF_ELSEBODY;
     case 2:
         return Type::DECL_CLASS <= type && type <= Type::ASSIGN;
     case 4:
@@ -120,12 +120,14 @@ ListAst *Ast::bodify()
 int Ast::precedence() const
 {
     switch (type) {
-    case Type::ASSIGN:
-        return 5;
-    case Type::ADD_BOP_LIST:
-        return 10;
+    case Type::DOT_BOP_LIST:
+        return 15;
     case Type::MUL_BOP_LIST:
+        return 12;
+    case Type::ADD_BOP_LIST:
         return 11;
+    case Type::ASSIGN:
+        return 1;
     default:
         return 0;
     }

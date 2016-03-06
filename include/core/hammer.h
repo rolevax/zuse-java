@@ -28,7 +28,6 @@ private:
     void hitMethod(const FixSizeAst<4> &ast, Buf &buf);
     void hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf);
     void hitIfElseBody(const FixSizeAst<1> &ast, Buf &buf);
-    void hitParen(const FixSizeAst<1> &ast, Buf &buf);
     void hitInfixBop(const FixSizeAst<2> &ast, Buf &buf);
 
     void hitListBegin(const ListAst &ast, Buf &buf);

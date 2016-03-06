@@ -486,7 +486,7 @@ expr_prime_noname: expr_prime_cx
 				 ;
 
 expr_prime_cx: "(" expr ")"
-				{ $$ = new FixSizeAst<1>(Ast::Type::PAREN, $2); } 
+				{ $$ = $2; } 
 			 | expr_prime_cx_nude
 				{ $$ = $1; }
 			 ;

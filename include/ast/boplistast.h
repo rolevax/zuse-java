@@ -27,6 +27,8 @@ protected:
 private:
     BopListAst(Ast::Type t);
     void mergeIn(BopListAst *t, int lead = 0);
+    bool isLeftAssoc() const;
+    bool isRightAssoc() const;
 
 private:
     std::vector<int> ops;

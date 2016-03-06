@@ -25,7 +25,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
     buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
 
     bool autoParen = ast.precedence() > 0
-            && ast.precedence() < ast.getParent().precedence();
+            && ast.precedence() <= ast.getParent().precedence();
     if (autoParen)
         bone(ast, buf, BoneToken::Sym::LPAREN);
 
@@ -85,9 +85,6 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             break;
         case Ast::Type::IF_ELSEBODY:
             hitIfElseBody(ast.asFixSize<1>(), buf);
-            break;
-        case Ast::Type::PAREN:
-            hitParen(ast.asFixSize<1>(), buf);
             break;
         case Ast::Type::ASSIGN:
             hitInfixBop(ast.asFixSize<2>(), buf);
@@ -173,13 +170,6 @@ void Hammer::hitIfElseBody(const FixSizeAst<1> &ast, Hammer::Buf &buf)
     bone(ast, buf, BoneToken::Sym::LBRACE_NS);
     buf.push_back(nullptr);
     hitGeneral(ast.at(0), buf);
-}
-
-void Hammer::hitParen(const FixSizeAst<1> &ast, Hammer::Buf &buf)
-{
-    bone(ast, buf, BoneToken::Sym::LPAREN);
-    hitGeneral(ast.at(0), buf);
-    bone(ast, buf, BoneToken::Sym::RPAREN);
 }
 
 void Hammer::hitInfixBop(const FixSizeAst<2> &ast, Hammer::Buf &buf)
