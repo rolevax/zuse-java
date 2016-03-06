@@ -72,23 +72,22 @@ Ast *ListAst::remove(size_t pos)
     return res;
 }
 
-bool ListAst::illZero() const
+bool ListAst::illZero(bool assumeSize) const
 {
-    if (0 != size())
+    if (!assumeSize && 0 != size())
         return false;
-    if (isBopList())
+    if (illOne(true)) // assume all ill-one is also ill-zero
         return true;
 
-    Ast::Type t = getType();
-    return t == Type::DECTOR_LIST;
+    return false;
 }
 
-bool ListAst::illOne() const
+bool ListAst::illOne(bool assumeSize) const
 {
-    if (1 != size())
+    if (!assumeSize && 1 != size())
         return false;
 
-    if (isBopList())
+    if (isBopList()) // binary operator is binary
         return true;
 
     Ast::Type t = getType();

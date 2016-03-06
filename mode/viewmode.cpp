@@ -85,8 +85,7 @@ void ViewMode::keyboard(char key)
         }
         break;
     case 'r': // remove
-        if (doc.getOuter().isList())
-            doc.remove();
+        doc.remove();
         // TODO get to clipboard
         break;
     case 'y': // yank

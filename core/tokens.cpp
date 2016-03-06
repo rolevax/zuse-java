@@ -99,7 +99,7 @@ void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
          down ? i < rows.size() : i > 0; down ? i++ : i--) {
         std::vector<size_t> fleshes;
         for (size_t j = 0; j < rows[i].size(); j++)
-            if (rows[i][j]->getRole() == Token::Role::FLESH)
+            if (rows[i][j]->getAst()->isScalar())
                 fleshes.push_back(j);
 
         if (!fleshes.empty()) {
@@ -147,7 +147,7 @@ void Tokens::hackLead(InternalAst *&outer, size_t &inner, bool right)
 
     for (size_t i = right ? r.ec + 1 : r.bc - 1;
          right ? i < rows[r.br].size() : i > 0; right ? i++ : i--) {
-        if (rows[r.br][i]->getRole() == Token::Role::FLESH) {
+        if (rows[r.br][i]->getAst()->isScalar()) {
             const Ast *a = rows[r.br][i]->getAst();
             outer = &a->getParent();
             inner = outer->indexOf(a);

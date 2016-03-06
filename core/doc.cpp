@@ -235,9 +235,9 @@ void Doc::remove()
             remove();
         else if (toExposeChild)
             expose();
+    } else {
+        change(outer->typeAt(inner));
     }
-    // TODO: else if outer->isFixSize, type <- outer->placeholderAt(inner)...
-    // TODO: else if outer->isLimitSize
 
     tokens.sync(root.get());
 }
