@@ -39,6 +39,7 @@ template<typename... T>
 FixSizeAst<N>::FixSizeAst(Type t, T... ts)
     : InternalAst(t)
 {
+    // TODO assert type is fix size
     static_assert(sizeof...(ts) == N, "FixSizeAst bound check");
     std::array<Ast*, N> tmp{ ts... };
     for (size_t i = 0; i < N; i++)

@@ -24,14 +24,16 @@ bool Ast::isBopList() const
     return Type::DOT_BOP_LIST <= type && type <= Type::ADD_BOP_LIST;
 }
 
-bool Ast::isMap() const
+bool Ast::isFixSize(size_t s) const
 {
-    return Type::DECL_CLASS <= type && type <= Type::ASSIGN;
+    if (s == 0)
+        return Type::DECL_CLASS <= type && type <= Type::ASSIGN;
+    throw "TODO";
 }
 
 bool Ast::isScalar() const
 {
-    return !isList() && !isMap();
+    return !isList() && !isFixSize();
 }
 
 ScalarAst &Ast::asScalar()

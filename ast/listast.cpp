@@ -7,7 +7,7 @@
 ListAst::ListAst(Type t)
     : InternalAst(t)
 {
-
+    assert(isList());
 }
 
 void ListAst::dump() const

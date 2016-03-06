@@ -6,7 +6,7 @@ ScalarAst::ScalarAst(Type t, const std::string &text)
     : Ast(t),
       text(text)
 {
-
+    assert(isScalar());
 }
 
 void ScalarAst::dump() const

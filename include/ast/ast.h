@@ -27,7 +27,7 @@ public:
         /* MUST sync with isBopList() and isList() definition */
         DOT_BOP_LIST, MUL_BOP_LIST, ADD_BOP_LIST,
 
-        /* MUST sync with isMap() definition */
+        /* MUST sync with isFixSize() definition */
         DECL_CLASS, DECL_METHOD, DECL_VAR, DECL_PARAM,
         RETURN, WHILE, DO_WHILE, IF_CONDBODY, IF_ELSEBODY,
         PAREN,
@@ -46,7 +46,7 @@ public:
 
     bool isList() const;
     bool isBopList() const;
-    bool isMap() const;
+    bool isFixSize(size_t s = 0) const;
     bool isScalar() const;
 
     ScalarAst &asScalar();

@@ -1,10 +1,11 @@
 #include "ast/internalast.h"
-#include "ast/boplistast.h"
+
+#include <cassert>
 
 InternalAst::InternalAst(Type t)
     : Ast(t)
 {
-
+    assert(!isScalar());
 }
 
 void InternalAst::change(size_t pos, Ast *next)

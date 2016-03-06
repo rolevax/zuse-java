@@ -16,8 +16,6 @@ public:
 
     void setHotLight(ssize_t back);
     void light(const Ast *inner);
-    void insert(const ListAst *outer, size_t inner);
-    void remove(const Ast *outer, size_t inner);
     void clear();
     void sync(const ListAst *root);
     void updateScalar(const InternalAst *outer, size_t inner);

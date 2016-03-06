@@ -117,7 +117,7 @@ void Doc::fallIn()
         outer = &focus;
         inner = 0;
     } else {
-        assert(focus.isMap());
+        assert(focus.isFixSize());
         outer = &focus;
         inner = 0;
     }

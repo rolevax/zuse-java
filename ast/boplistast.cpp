@@ -5,6 +5,7 @@
 BopListAst::BopListAst(Ast::Type t, Ast *lhs, Ast *rhs, int op)
     : ListAst(t)
 {
+    assert(isBopList());
     assert(0 <= op && op < numOp());
 
     bool leftList = lhs->getType() == t;
