@@ -35,7 +35,7 @@ void IdentInputMode::keyboard(char key)
         }
         clear = true;
     } else {
-        // check legal char
+        // TODO: check legal char
         doc.scalarAppend(key);
     }
 }
@@ -52,12 +52,7 @@ void IdentInputMode::onPopped()
 {
     doc.setHotLight(EditableDoc::HotLightLevel::OFF);
 
-    if (isType(doc.getInner().asScalar().getText())) {
-        Ast::Type otype = doc.getOuter().getType();
-        if (otype == Ast::Type::STMT_LIST || otype == Ast::Type::MEMBER_LIST) {
-            doc.nestAsLeft(Ast::Type::DECL_VAR);
-        }
-    }
+    promotion();
 }
 
 const char *IdentInputMode::name()
@@ -82,5 +77,42 @@ bool IdentInputMode::isUpperCamel(const std::string &id)
     // at least size 2, initial is upper, at least one lower
     return id.size() > 1 && isupper(id[0])
             && id.end() != std::find_if(id.begin() + 1, id.end(), islower);
+}
+
+void IdentInputMode::promotion()
+{
+    promoteToDeclVar();
+}
+
+bool IdentInputMode::promoteToDeclVar()
+{
+    if (isType(doc.getInner().asScalar().getText())) {
+        // case 1: check bare identifier
+        Ast::Type otype = doc.getOuter().getType();
+        if (otype == Ast::Type::STMT_LIST || otype == Ast::Type::MEMBER_LIST) {
+            doc.nestAsLeft(Ast::Type::DECL_VAR);
+            return true;
+        }
+
+        // case 2: check qualified name
+        if (otype == Ast::Type::DOT_BOP_LIST) {
+            const BopListAst &bast = doc.getOuter().asBopList();
+            assert(bast.size() >= 2);
+            size_t i = 1;
+            while (i != bast.size() && bast.opAt(i) == BopListAst::DOT)
+                i++;
+            if (i == bast.size()) { // all op is member access
+                Ast::Type ootype = doc.getOuter().getParent().getType();
+                if (ootype == Ast::Type::STMT_LIST
+                        || ootype == Ast::Type::MEMBER_LIST) {
+                    doc.digOut();
+                    doc.nestAsLeft(Ast::Type::DECL_VAR);
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
