@@ -47,6 +47,10 @@ public:
 
     virtual void dump() const {} // for debug use
 
+    static bool isList(Type type);
+    static bool isBopList(Type type);
+    static bool isFixSize(Type type, size_t s = 0);
+    static bool isScalar(Type type);
     bool isList() const;
     bool isBopList() const;
     bool isFixSize(size_t s = 0) const;

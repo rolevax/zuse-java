@@ -14,17 +14,17 @@ Ast::Ast(Type t) :
 
 }
 
-bool Ast::isList() const
+bool Ast::isList(Ast::Type type)
 {
     return Type::CLASS_LIST <= type && type <= Type::ADD_BOP_LIST;
 }
 
-bool Ast::isBopList() const
+bool Ast::isBopList(Ast::Type type)
 {
     return Type::DOT_BOP_LIST <= type && type <= Type::ADD_BOP_LIST;
 }
 
-bool Ast::isFixSize(size_t s) const
+bool Ast::isFixSize(Ast::Type type, size_t s)
 {
     switch (s) {
     case 0:
@@ -36,13 +36,33 @@ bool Ast::isFixSize(size_t s) const
     case 4:
         return Type::DECL_METHOD <= type && type <= Type::DECL_METHOD;
     default:
-        throw "WTF size";
+        return false;
     }
+}
+
+bool Ast::isScalar(Ast::Type type)
+{
+    return !isList(type) && !isFixSize(type);
+}
+
+bool Ast::isList() const
+{
+    return isList(type);
+}
+
+bool Ast::isBopList() const
+{
+    return isBopList(type);
+}
+
+bool Ast::isFixSize(size_t s) const
+{
+    return isFixSize(type, s);
 }
 
 bool Ast::isScalar() const
 {
-    return !isList() && !isFixSize();
+    return isScalar(type);
 }
 
 ScalarAst &Ast::asScalar()

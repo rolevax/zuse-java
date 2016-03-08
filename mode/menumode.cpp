@@ -33,9 +33,6 @@ void MenuMode::keyboard(char key)
     case Context::BOP_INSERT:
     case Context::BOP_APPEND: {
         if (context == Context::BOP_INSERT) {
-            if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST
-                    && key == '(')
-                doc.cast(Ast::Type::ARG_LIST);
             doc.insert(ktype, bop);
         } else {
             doc.append(ktype, bop);
@@ -43,6 +40,15 @@ void MenuMode::keyboard(char key)
         nextMode = modeFor(ktype);
         break;
     }
+    case Context::NEST_AS_LEFT:
+        // TODO: smart condition check (nester cannot be scalar)
+        if (ktype != Ast::Type::META) {
+            doc.nestAsLeft(ktype, bop);
+            doc.fallIn();
+            doc.sibling(+1);
+            nextMode = modeFor(doc.getInner().getType());
+        }
+        break;
     case Context::FALL_SEARCH:
         switch (key) {
         // TODO: pattern matching cases keyToPattern
@@ -55,15 +61,6 @@ void MenuMode::keyboard(char key)
             doc.flyIn(match);
         }
 
-        break;
-    case Context::NEST_AS_LEFT:
-        // TODO: smart condition check (nester cannot be scalar)
-        if (ktype != Ast::Type::META) {
-            doc.nestAsLeft(ktype, bop);
-            doc.fallIn();
-            doc.sibling(+1);
-            nextMode = modeFor(doc.getInner().getType());
-        }
         break;
     default:
         break;

@@ -185,8 +185,8 @@ void Doc::insert(Ast::Type type, int bop)
     outer->asList().insert(inner, a);
     if (BopListAst::UNUSED != bop) {
         BopListAst &bast = outer->asBopList();
-        bast.setOpAt(inner, bast.opAt(inner + 1));
-        bast.setOpAt(inner + 1, bop);
+        setBop(outer->asBopList(), inner, bast.opAt(inner + 1));
+        setBop(outer->asBopList(), inner + 1, bop);
     }
 
     tokens.sync(root.get());
@@ -200,10 +200,8 @@ void Doc::append(Ast::Type type, int bop)
     Ast *a = newTree(type);
 
     outer->asList().insert(inner, a);
-    if (BopListAst::UNUSED != bop) {
-        BopListAst &bast = outer->asBopList();
-        bast.setOpAt(inner, bop);
-    }
+    if (BopListAst::UNUSED != bop)
+        setBop(outer->asBopList(), inner, bop);
 
     tokens.sync(root.get());
 }
@@ -255,15 +253,11 @@ void Doc::nestAsLeft(Ast::Type type, int bop)
     assert(inner < outer->size());
 
     InternalAst *nester = &newTree(type)->asInternal();
-    if (nester->size() >= 1) {
-        nester->change(0, outer->at(inner).clone());
-        if (BopListAst::UNUSED != bop)
-            nester->asBopList().setOpAt(1, bop);
-    } else { // nester is an empty list
-        nester->asList().append(outer->at(inner).clone());
-    }
+    outer->nestAsLeft(inner, nester);
 
-    outer->change(inner, nester);
+    if (BopListAst::UNUSED != bop)
+        setBop(outer->at(inner).asBopList(), 1, bop); // set inner, not outer!
+
     tokens.sync(root.get());
 }
 
@@ -271,9 +265,10 @@ void Doc::expose()
 {
     assert(inner < outer->size());
 
-    Ast *exposee = outer->at(inner).clone();
+    size_t exposee = inner;
     digOut();
-    outer->change(inner, exposee);
+    outer->expose(inner, exposee);
+
     tokens.sync(root.get());
 }
 
@@ -344,6 +339,16 @@ void Doc::toggleTension(bool b)
     ob.observeTension(b);
 }
 
+void Doc::setBop(BopListAst &blist, size_t pos, int bop)
+{
+    blist.setOpAt(pos, bop);
+    if (blist.getType() == Ast::Type::DOT_BOP_LIST
+            || bop == BopListAst::CALL) {
+        if (blist.at(pos).getType() != Ast::Type::ARG_LIST)
+            blist.nestAsLeft(pos, &newTree(Ast::Type::ARG_LIST)->asList());
+    }
+}
+
 /**
  * Make a minimal non-ill tree
  */
@@ -351,75 +356,46 @@ Ast *Doc::newTree(Ast::Type type)
 {
     Ast *a = nullptr;
 
-    switch (type) {
-    case Ast::Type::ARG_LIST: {
-        a = new ListAst(Ast::Type::ARG_LIST);
-        break;
-    }
-    case Ast::Type::ADD_BOP_LIST: {
-        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
-        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
-        a = new BopListAst(Ast::Type::ADD_BOP_LIST, lhs, rhs, BopListAst::ADD);
-        break;
-    }
-    case Ast::Type::MUL_BOP_LIST: {
-        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
-        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
-        a = new BopListAst(Ast::Type::MUL_BOP_LIST, lhs, rhs, BopListAst::MUL);
-        break;
-    }
-    case Ast::Type::DOT_BOP_LIST: {
-        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
-        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
-        a = new BopListAst(Ast::Type::DOT_BOP_LIST, lhs, rhs, BopListAst::DOT);
-        break;
-    }
-    case Ast::Type::DECL_CLASS: {
-        Ast *id = new ScalarAst(Ast::Type::IDENT, "C0");
-        Ast *ml = new ListAst(Ast::Type::MEMBER_LIST);
-        a = new FixSizeAst<2>(Ast::Type::DECL_CLASS, id, ml);
-        break;
-    }
-    case Ast::Type::DECL_VAR: {
-        Ast *type = new ScalarAst(Ast::Type::IDENT, "Type");
-        Ast *id = new ScalarAst(Ast::Type::IDENT, "ident");
-        a = new FixSizeAst<2>(Ast::Type::DECL_VAR, type, id);
-        break;
-    }
-    case Ast::Type::DECL_METHOD: {
-        Ast *type = new ScalarAst(Ast::Type::IDENT, "T0");
-        Ast *id = new ScalarAst(Ast::Type::IDENT, "m0");
-        Ast *dpl = new ListAst(Ast::Type::DECL_PARAM_LIST);
-        Ast *sl = new ListAst(Ast::Type::STMT_LIST);
-        a = new FixSizeAst<4>(Ast::Type::DECL_METHOD, type, id, dpl, sl);
-        break;
-    }
-    case Ast::Type::ASSIGN: {
-        Ast *lhs = new ScalarAst(Ast::Type::IDENT, "lhs");
-        Ast *rhs = new ScalarAst(Ast::Type::IDENT, "rhs");
-        a = new FixSizeAst<2>(Ast::Type::ASSIGN, lhs, rhs);
-        break;
-    }
-    case Ast::Type::DECL_PARAM: {
-        Ast *type = new ScalarAst(Ast::Type::IDENT, "Type");
-        Ast *id = new ScalarAst(Ast::Type::IDENT, "ident");
-        a = new FixSizeAst<2>(Ast::Type::DECL_PARAM, type, id);
-        break;
-    }
-    case Ast::Type::IDENT: {
-        a = new ScalarAst(Ast::Type::IDENT, "ident");
-        break;
-    }
-    case Ast::Type::STRING: {
-        a = new ScalarAst(Ast::Type::STRING, "");
-        break;
-    }
-    case Ast::Type::META: {
-        a = new ScalarAst(Ast::Type::META, "");
-        break;
-    }
-    default:
-        throw "newTree: untreated type";
+    if (Ast::isBopList(type)) {
+        Ast *lhs = newTree(InternalAst::typeAt(type, 0));
+        Ast *rhs = newTree(InternalAst::typeAt(type, 1));
+        a = new BopListAst(type, lhs, rhs, BopListAst::DEFAULT);
+    } else if (Ast::isList(type)) {
+        a = new ListAst(type);
+        // TODO: ill-0 or ill-1
+    } else if (Ast::isFixSize(type)) {
+        if (Ast::isFixSize(type, 1)) {
+            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
+            a = new FixSizeAst<1>(type, t0);
+        } else if (Ast::isFixSize(type, 2)) {
+            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
+            Ast *t1 = newTree(InternalAst::typeAt(type, 1));
+            a = new FixSizeAst<2>(type, t0, t1);
+        } else if (Ast::isFixSize(type, 4)) {
+            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
+            Ast *t1 = newTree(InternalAst::typeAt(type, 1));
+            Ast *t2 = newTree(InternalAst::typeAt(type, 2));
+            Ast *t3 = newTree(InternalAst::typeAt(type, 3));
+            a = new FixSizeAst<4>(type, t0, t1, t2, t3);
+        } else {
+            throw "TODO";
+        }
+    } else {
+        assert(Ast::isScalar(type));
+
+        switch (type) {
+        case Ast::Type::IDENT:
+            a = new ScalarAst(Ast::Type::IDENT, "id");
+            break;
+        case Ast::Type::STRING:
+            a = new ScalarAst(Ast::Type::STRING, "");
+            break;
+        case Ast::Type::META:
+            a = new ScalarAst(Ast::Type::META, "");
+            break;
+        default:
+            throw "WTF";
+        }
     }
 
     return a;

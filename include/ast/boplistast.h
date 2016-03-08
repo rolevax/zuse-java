@@ -6,7 +6,7 @@
 class BopListAst : public ListAst
 {
 public:
-    static const int UNUSED = -1;
+    static const int UNUSED = -1, DEFAULT = 0;
     static const int ADD = 0, SUB = 1;
     static const int MUL = 0, DIV = 1, MOD = 2;
     static const int DOT = 0, CALL = 1, ARR = 2;

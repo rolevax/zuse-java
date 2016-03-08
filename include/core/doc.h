@@ -6,6 +6,7 @@
 #include "ast/rootast.h"
 #include <stack>
 
+class BopListAst;
 class PDoc;
 
 class Doc : public EditableDoc
@@ -54,6 +55,7 @@ private:
 
     /// @name "really" private functions
     ///@{
+    void setBop(BopListAst &blist, size_t pos, int bop);
     Ast *newTree(Ast::Type type);
     ///@}
 

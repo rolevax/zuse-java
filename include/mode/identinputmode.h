@@ -19,6 +19,7 @@ private:
     static bool isUpperCamel(const std::string &id);
     void promotion();
     bool promoteToDeclVar();
+    bool promoteToStmt();
 
 private:
     bool clear;

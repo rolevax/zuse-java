@@ -14,6 +14,8 @@ IdentInputMode::IdentInputMode(EditableDoc &doc, bool clear)
 
 void IdentInputMode::keyboard(char key)
 {
+    assert(doc.getInner().getType() == Ast::Type::IDENT);
+
     if (key == ' ') {
         doc.pop();
         return;
@@ -53,6 +55,7 @@ void IdentInputMode::onPopped()
     doc.setHotLight(EditableDoc::HotLightLevel::OFF);
 
     promotion();
+    // TODO: deal promotion before pop.
 }
 
 const char *IdentInputMode::name()
@@ -81,7 +84,9 @@ bool IdentInputMode::isUpperCamel(const std::string &id)
 
 void IdentInputMode::promotion()
 {
-    promoteToDeclVar();
+    bool promoted = promoteToDeclVar() || promoteToStmt();
+    (void) promoted;
+    // TODO: return a 'next mode' pointer. make 'modeFor()' available here.
 }
 
 bool IdentInputMode::promoteToDeclVar()
@@ -111,6 +116,17 @@ bool IdentInputMode::promoteToDeclVar()
                 }
             }
         }
+    }
+
+    return false;
+}
+
+bool IdentInputMode::promoteToStmt()
+{
+    const std::string &text = doc.getInner().asScalar().getText();
+    if (text == "while") {
+        doc.change(Ast::Type::WHILE);
+        return true;
     }
 
     return false;
