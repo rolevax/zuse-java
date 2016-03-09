@@ -3,6 +3,10 @@
 #include "ast/parser.h"
 #include "mode/viewmode.h"
 #include "mode/menumode.h"
+#include "mode/tipamode.h"
+#include "mode/identinputmode.h"
+#include "mode/numberinputmode.h"
+#include "mode/stringinputmode.h"
 #include "gui/pdoc.h"
 
 // headers for file I/O
@@ -297,6 +301,22 @@ void Doc::cast(Ast::Type type)
     tokens.sync(root.get());
 }
 
+Mode *Doc::createModifyMode(bool clear)
+{
+    switch (getInner().getType()) {
+    case Ast::Type::META:
+        return new TipaMode(*this);
+    case Ast::Type::IDENT:
+        return new IdentInputMode(*this, clear);
+    case Ast::Type::STRING:
+        return new StringInputMode(*this, clear);
+    case Ast::Type::NUMBER:
+        return new NumberInputMode(*this, clear);
+    default:
+        return nullptr;
+    }
+}
+
 void Doc::scalarAppend(const char *str)
 {
     ScalarAst &scalar = outer->at(inner).asScalar();
@@ -343,7 +363,7 @@ void Doc::setBop(BopListAst &blist, size_t pos, int bop)
 {
     blist.setOpAt(pos, bop);
     if (blist.getType() == Ast::Type::DOT_BOP_LIST
-            || bop == BopListAst::CALL) {
+            && bop == BopListAst::CALL) {
         if (blist.at(pos).getType() != Ast::Type::ARG_LIST)
             blist.nestAsLeft(pos, &newTree(Ast::Type::ARG_LIST)->asList());
     }
@@ -362,7 +382,7 @@ Ast *Doc::newTree(Ast::Type type)
         a = new BopListAst(type, lhs, rhs, BopListAst::DEFAULT);
     } else if (Ast::isList(type)) {
         a = new ListAst(type);
-        // TODO: ill-0 or ill-1
+        // TODO: ill-0 or ill-1about:blank
     } else if (Ast::isFixSize(type)) {
         if (Ast::isFixSize(type, 1)) {
             Ast *t0 = newTree(InternalAst::typeAt(type, 0));

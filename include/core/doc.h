@@ -45,6 +45,7 @@ private:
     void expose() override;
     void cast(Ast::Type type) override;
 
+    Mode *createModifyMode(bool clear) override;
     void scalarAppend(const char *str) override;
     void scalarAppend(char c) override;
     void scalarClear() override;

@@ -27,7 +27,6 @@ void MenuMode::keyboard(char key)
 
     Ast::Type ktype = keyToType(key);
     int bop = keyToBop(key);
-    Mode *nextMode = nullptr;
 
     switch (context) {
     case Context::BOP_INSERT:
@@ -37,7 +36,6 @@ void MenuMode::keyboard(char key)
         } else {
             doc.append(ktype, bop);
         }
-        nextMode = modeFor(ktype);
         break;
     }
     case Context::NEST_AS_LEFT:
@@ -46,7 +44,6 @@ void MenuMode::keyboard(char key)
             doc.nestAsLeft(ktype, bop);
             doc.fallIn();
             doc.sibling(+1);
-            nextMode = modeFor(doc.getInner().getType());
         }
         break;
     case Context::FALL_SEARCH:
@@ -66,7 +63,10 @@ void MenuMode::keyboard(char key)
         break;
     }
 
-    doc.pop(nextMode);
+    if (context == Context::BOP_INSERT
+            || context == Context::BOP_APPEND
+            || context == Context::NEST_AS_LEFT)
+        doc.pop(doc.createModifyMode(true));
 }
 
 void MenuMode::onPushed()
@@ -82,18 +82,6 @@ void MenuMode::onPopped()
 const char *MenuMode::name()
 {
     return "oprand?";
-}
-
-Mode *MenuMode::modeFor(Ast::Type t)
-{
-    switch (t) {
-    case Ast::Type::IDENT:
-        return new IdentInputMode(doc, true);
-    case Ast::Type::META:
-        return new TipaMode(doc);
-    default:
-        return nullptr;
-    }
 }
 
 Ast::Type MenuMode::keyToType(char key)

@@ -20,7 +20,6 @@ public:
     const char *name() override;
 
 private:
-    Mode *modeFor(Ast::Type t);
     Ast::Type keyToType(char key);
     static int keyToBop(char key);
 

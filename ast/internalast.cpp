@@ -35,9 +35,12 @@ void InternalAst::expose(size_t vanisher, size_t exposee)
 Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
 {
     // mainly for fix-size trees, don't reuse too much
+    // for bop list, return LHS and RHS type when op is default
     switch (type) {
     case Type::DECL_PARAM_LIST:
         return Type::DECL_PARAM;
+    case Type::DOT_BOP_LIST:
+        return Type::IDENT;
     case Type::DECL_CLASS:
         return pos == 0 ? Type::IDENT : Type::MEMBER_LIST;
     case Type::DECL_VAR:
