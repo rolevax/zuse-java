@@ -49,6 +49,7 @@ private:
     void scalarAppend(const char *str) override;
     void scalarAppend(char c) override;
     void scalarClear() override;
+    void listClear() override;
 
     void setHotLight(HotLightLevel level) override;
     void toggleTension(bool b) override;

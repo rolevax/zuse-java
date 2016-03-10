@@ -58,7 +58,7 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
     }
 }
 
-Ast::Type InternalAst::typeAt(size_t pos)
+Ast::Type InternalAst::typeAt(size_t pos) const
 {
     return typeAt(getType(), pos);
 }

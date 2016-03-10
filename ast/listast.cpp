@@ -72,6 +72,11 @@ Ast *ListAst::remove(size_t pos)
     return res;
 }
 
+void ListAst::clear()
+{
+    subtrees.clear();
+}
+
 bool ListAst::illZero(bool assumeSize) const
 {
     if (!assumeSize && 0 != size())

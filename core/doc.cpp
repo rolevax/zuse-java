@@ -7,6 +7,7 @@
 #include "mode/identinputmode.h"
 #include "mode/numberinputmode.h"
 #include "mode/stringinputmode.h"
+#include "mode/listinputmode.h"
 #include "gui/pdoc.h"
 
 // headers for file I/O
@@ -214,6 +215,9 @@ void Doc::assart(Ast::Type type, int bop)
 {
     outer = &outer->at(inner).asInternal();
     inner = 0;
+
+    assert(outer->size() == 0);
+
     insert(type, bop);
 }
 
@@ -303,6 +307,9 @@ void Doc::cast(Ast::Type type)
 
 Mode *Doc::createModifyMode(bool clear)
 {
+    if (getInner().isList() && !getInner().isBopList())
+        return new ListInputMode(*this);
+
     switch (getInner().getType()) {
     case Ast::Type::META:
         return new TipaMode(*this);
@@ -335,6 +342,11 @@ void Doc::scalarClear()
 {
     outer->at(inner).asScalar().clear();
     tokens.updateScalar(outer, inner);
+}
+
+void Doc::listClear()
+{
+    outer->at(inner).asList().clear();
 }
 
 void Doc::setHotLight(HotLightLevel level)

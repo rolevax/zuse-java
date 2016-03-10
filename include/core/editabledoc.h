@@ -39,6 +39,7 @@ public:
     virtual void scalarAppend(const char *str) = 0;
     virtual void scalarAppend(char c) = 0;
     virtual void scalarClear() = 0;
+    virtual void listClear() = 0;
 
     virtual void setHotLight(HotLightLevel level) = 0;
     virtual void toggleTension(bool b) = 0;

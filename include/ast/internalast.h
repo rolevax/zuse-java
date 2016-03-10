@@ -17,7 +17,7 @@ public:
     virtual size_t indexOf(const Ast *child) const = 0;
 
     static Ast::Type typeAt(Type type, size_t pos);
-    Ast::Type typeAt(size_t pos);
+    Ast::Type typeAt(size_t pos) const;
 
 protected:
     virtual void doChange(size_t pos, Ast *next) = 0;

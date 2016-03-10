@@ -45,6 +45,13 @@ Ast *BopListAst::remove(size_t pos)
     return ret;
 }
 
+void BopListAst::clear()
+{
+    // TODO: this causes ill-zero. is this ok?
+    ListAst::clear();
+    ops.clear();
+}
+
 int BopListAst::opAt(size_t pos) const
 {
     assert(pos < size());
