@@ -15,7 +15,8 @@ void PairInputMode::onPushed()
 {
     doc.fallIn();
     stage = Stage::KEY_DONE;
-    doc.push(new StringInputMode(doc, true));
+    //doc.push(new StringInputMode(doc, true));
+    // TODO also return something
 }
 
 void PairInputMode::onResume()
@@ -28,7 +29,8 @@ void PairInputMode::onResume()
         break;
     case Stage::VALUE_DONE:
         doc.digOut();
-        doc.pop();
+        //doc.pop();
+        // TODO: result
         break;
     }
 }

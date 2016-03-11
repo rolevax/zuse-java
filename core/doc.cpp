@@ -27,7 +27,7 @@ Doc::Doc(PDoc &dob, TokensObserver &tob)
     : tokens(tob),
       ob(dob)
 {
-    modes.emplace(new ViewMode(*this));
+    modes.emplace_back(new ViewMode(*this));
 }
 
 void Doc::load(const std::string &filename)
@@ -60,7 +60,29 @@ void Doc::save(const std::string &filename)
 void Doc::keyboard(char key)
 {
     assert(modes.size() > 0);
-    modes.top()->keyboard(key);
+
+    bool done = false;
+    for (auto rit = modes.rbegin(); !done && rit != modes.rend(); ++rit) {
+        Mode::Result res = (*rit)->keyboard(key);
+        switch (res.type) {
+        case Mode::ResultType::THROW:
+            continue;
+        case Mode::ResultType::STAY:
+            done = true;
+            if (res.nextPush != nullptr)
+                push(res.nextPush);
+            break;
+        case Mode::ResultType::POP:
+            // pop modes above the handling mode
+            for (int i = 0; i < rit - modes.rbegin(); i++)
+                pop(nullptr);
+            // pop the handling mode
+            pop(res.nextPush);
+            done = true;
+            break;
+        }
+    }
+
     if (root->size() > 0)
         tokens.light(&outer->at(inner));
 }
@@ -72,9 +94,11 @@ void Doc::keyboard(char key)
  */
 void Doc::push(Mode *mode)
 {
-    modes.emplace(mode);
-    ob.observePush(modes.top()->name());
-    modes.top()->onPushed();
+    assert(mode != nullptr);
+
+    modes.emplace_back(mode);
+    ob.observePush(modes.back()->name());
+    modes.back()->onPushed();
 }
 
 /**
@@ -91,14 +115,14 @@ void Doc::pop(Mode *nextPush)
 
     ob.observePop();
 
-    std::unique_ptr<Mode> popped = std::move(modes.top());
-    modes.pop();
+    std::unique_ptr<Mode> popped = std::move(modes.back());
+    modes.pop_back();
     popped->onPopped();
 
     if (nextPush != nullptr)
         push(nextPush);
     else
-        modes.top()->onResume();
+        modes.back()->onResume();
 }
 
 const InternalAst &Doc::getOuter() const

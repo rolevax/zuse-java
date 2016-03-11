@@ -8,7 +8,7 @@ class StringInputMode : public Mode
 public:
     StringInputMode(EditableDoc &doc, bool clear);
 
-    void keyboard(char key) override;
+    Result keyboard(char key) override;
     void onPushed() override;
     void onPopped() override;
     const char *name() override;

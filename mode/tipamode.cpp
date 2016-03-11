@@ -13,7 +13,7 @@ TipaMode::TipaMode(EditableDoc &doc)
 
 }
 
-void TipaMode::keyboard(char key)
+Mode::Result TipaMode::keyboard(char key)
 {
     char str[2] = { key, '\0' };
 
@@ -21,13 +21,15 @@ void TipaMode::keyboard(char key)
         doc.change(Ast::Type::IDENT);
         doc.scalarClear();
         doc.scalarAppend(str);
-        doc.pop(new IdentInputMode(doc, false));
+        return { ResultType::POP, new IdentInputMode(doc, false) };
     } else if (isdigit(key)) {
-        // TODO Ast::Type::NUMBER
+        return { ResultType::POP, new NumberInputMode(doc, true) };
     } else if ('\"' == key) {
         doc.change(Ast::Type::STRING);
-        doc.pop(new StringInputMode(doc, true));
+        return { ResultType::POP, new StringInputMode(doc, true) };
     }
+
+    return { ResultType::STAY, nullptr };
 }
 
 void TipaMode::onPushed()

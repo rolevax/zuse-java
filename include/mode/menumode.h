@@ -14,7 +14,7 @@ public:
 
     MenuMode(EditableDoc &doc, Context context);
 
-    void keyboard(char key) override;
+    Result keyboard(char key) override;
     void onPushed() override;
     void onPopped() override;
     const char *name() override;

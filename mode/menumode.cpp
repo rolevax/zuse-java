@@ -18,11 +18,10 @@ MenuMode::MenuMode(EditableDoc &doc, Context context) :
 
 }
 
-void MenuMode::keyboard(char key)
+Mode::Result MenuMode::keyboard(char key)
 {
     if (key == ' ') {
-        doc.pop();
-        return;
+        return { ResultType::POP, nullptr };
     }
 
     Ast::Type ktype = keyToType(key);
@@ -65,8 +64,11 @@ void MenuMode::keyboard(char key)
 
     if (context == Context::BOP_INSERT
             || context == Context::BOP_APPEND
-            || context == Context::NEST_AS_LEFT)
-        doc.pop(doc.createModifyMode(true));
+            || context == Context::NEST_AS_LEFT) {
+        return { ResultType::POP, doc.createModifyMode(true) };
+    } else {
+        return { ResultType::STAY, nullptr };
+    }
 }
 
 void MenuMode::onPushed()

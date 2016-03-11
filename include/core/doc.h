@@ -4,7 +4,6 @@
 #include "core/editabledoc.h"
 #include "core/tokens.h"
 #include "ast/rootast.h"
-#include <stack>
 
 class BopListAst;
 class PDoc;
@@ -22,11 +21,12 @@ public:
     void keyboard(char key);
 
 private:
+    // TODO: re-sort
+    void push(Mode *mode);
+    void pop(Mode *nextPush);
+
     /// @name EditableDoc interface
     ///@{
-    void push(Mode *mode) override;
-    void pop(Mode *nextPush) override;
-
     const InternalAst &getOuter() const override;
     const Ast &getInner() const override;
 
@@ -62,7 +62,7 @@ private:
     ///@}
 
 private:
-    std::stack<std::unique_ptr<Mode>> modes;
+    std::vector<std::unique_ptr<Mode>> modes;
     std::unique_ptr<RootAst> root = nullptr;
     InternalAst *outer = nullptr;
     size_t inner = 0;

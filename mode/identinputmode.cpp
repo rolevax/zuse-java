@@ -12,13 +12,12 @@ IdentInputMode::IdentInputMode(EditableDoc &doc, bool clear)
 
 }
 
-void IdentInputMode::keyboard(char key)
+Mode::Result IdentInputMode::keyboard(char key)
 {
     assert(doc.getInner().getType() == Ast::Type::IDENT);
 
     if (key == ' ') {
-        doc.pop();
-        return;
+        return { ResultType::POP, nullptr };
     }
 
     if (clear) {
@@ -40,6 +39,7 @@ void IdentInputMode::keyboard(char key)
         // TODO: check legal char
         doc.scalarAppend(key);
     }
+    return { ResultType::STAY, nullptr };
 }
 
 void IdentInputMode::onPushed()

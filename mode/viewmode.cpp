@@ -13,12 +13,14 @@ ViewMode::ViewMode(EditableDoc &doc) :
 
 }
 
-void ViewMode::keyboard(char key)
+Mode::Result ViewMode::keyboard(char key)
 {
     if (doc.getOuter().getType() == Ast::Type::CLASS_LIST
             && doc.getOuter().size() == 0
             && key != 'i' && key != 'I')
-        return;
+        return { ResultType::STAY, nullptr };
+
+    Mode *nextPush = nullptr;
 
     switch (key) {
     case '(':
@@ -38,19 +40,19 @@ void ViewMode::keyboard(char key)
             if (doc.getInner().asInternal().size() > 0)
                 doc.fallIn();
             else
-                menulessListOp(ListOp::ASSART);
+                nextPush = menulessListOp(ListOp::ASSART);
         }
         break;
     case 'F': // fall-search
         if (!doc.getInner().isScalar()
                 && doc.getInner().asInternal().size() > 0)
-            doc.push(new MenuMode(doc, MenuMode::Context::FALL_SEARCH));
+            nextPush = new MenuMode(doc, MenuMode::Context::FALL_SEARCH);
         break;
     case 'd': // dig-out
         doc.digOut();
         break;
     case 'D': // dig-search
-        doc.push(new MenuMode(doc, MenuMode::Context::DIG_SEARCH));
+        nextPush = new MenuMode(doc, MenuMode::Context::DIG_SEARCH);
         break;
 
     // token-wise cursor moving
@@ -71,17 +73,17 @@ void ViewMode::keyboard(char key)
     case 'i': // insert
         if (doc.getOuter().isList()) {
             if (doc.getOuter().isBopList())
-                doc.push(new MenuMode(doc, MenuMode::Context::BOP_INSERT));
+                nextPush = new MenuMode(doc, MenuMode::Context::BOP_INSERT);
             else
-                menulessListOp(ListOp::INSERT);
+                nextPush = menulessListOp(ListOp::INSERT);
         }
         break;
     case 'o': // oh, append
         if (doc.getOuter().isList()) {
             if (doc.getOuter().isBopList())
-                doc.push(new MenuMode(doc, MenuMode::Context::BOP_APPEND));
+                nextPush = new MenuMode(doc, MenuMode::Context::BOP_APPEND);
             else
-                menulessListOp(ListOp::APPEND);
+                nextPush = menulessListOp(ListOp::APPEND);
         }
         break;
     case 'r': // remove
@@ -99,17 +101,19 @@ void ViewMode::keyboard(char key)
         // TODO
         break;
     case 'n': // nest
-        doc.push(new MenuMode(doc, MenuMode::Context::NEST_AS_LEFT));
+        nextPush = new MenuMode(doc, MenuMode::Context::NEST_AS_LEFT);
         break;
     case 'm': // modify
     case 'M': {
         bool clear = key == 'M';
-        doc.push(doc.createModifyMode(clear));
+        nextPush = doc.createModifyMode(clear);
         break;
     }
     default:
         break;
     }
+
+    return { ResultType::STAY, nextPush };
 }
 
 const char *ViewMode::name()
@@ -117,7 +121,7 @@ const char *ViewMode::name()
     return "View";
 }
 
-void ViewMode::menulessListOp(ListOp op)
+Mode *ViewMode::menulessListOp(ListOp op)
 {
     const ListAst &l = (op == ListOp::ASSART ? doc.getInner()
                                              : doc.getOuter()).asList();
@@ -136,7 +140,7 @@ void ViewMode::menulessListOp(ListOp op)
         tar = Ast::Type::META;
         break;
     default:
-        return; // silently do nothing
+        return nullptr; // silently do nothing
     }
 
     switch (op) {
@@ -156,10 +160,9 @@ void ViewMode::menulessListOp(ListOp op)
     case Ast::Type::STMT_LIST:
     case Ast::Type::MEMBER_LIST:
     case Ast::Type::ARG_LIST:
-        doc.push(new TipaMode(doc));
-        break;
+        return new TipaMode(doc);
     default:
-        break;
+        return nullptr;
     }
 }
 

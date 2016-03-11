@@ -11,7 +11,7 @@ StringInputMode::StringInputMode(EditableDoc &doc, bool clear) :
 
 }
 
-void StringInputMode::keyboard(char key)
+Mode::Result StringInputMode::keyboard(char key)
 {
     assert(doc.getInner().getType() == Ast::Type::STRING);
 
@@ -22,12 +22,12 @@ void StringInputMode::keyboard(char key)
         for (auto it = text.rbegin(); it != text.rend() && '\\' == *it; ++it)
             backSlashCount++;
         if (0 == backSlashCount % 2) { // no '\' waiting for a character
-            doc.pop();
-            return;
+            return { ResultType::POP, nullptr };
         }
     }
 
     doc.scalarAppend(key);
+    return { ResultType::STAY, nullptr };
 }
 
 void StringInputMode::onPushed()

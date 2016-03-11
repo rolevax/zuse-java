@@ -11,13 +11,12 @@ NumberInputMode::NumberInputMode(EditableDoc &doc, bool clear) :
 
 }
 
-void NumberInputMode::keyboard(char key)
+Mode::Result NumberInputMode::keyboard(char key)
 {
     assert(doc.getInner().getType() == Ast::Type::NUMBER);
 
     if (' ' == key) {
-        doc.pop();
-        return;
+        return { ResultType::POP, nullptr };
     }
 
     char input;
@@ -38,9 +37,10 @@ void NumberInputMode::keyboard(char key)
     else if ('m' == key)
         input = '0';
     else
-        return;
+        return { ResultType::STAY, nullptr };
 
     doc.scalarAppend(input);
+    return { ResultType::STAY, nullptr };
 }
 
 void NumberInputMode::onPushed()
