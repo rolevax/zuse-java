@@ -32,9 +32,10 @@ Mode::Result TipaMode::keyboard(char key)
     return { ResultType::STAY, nullptr };
 }
 
-void TipaMode::onPushed()
+Mode::Result TipaMode::onPushed()
 {
     doc.setHotLight(EditableDoc::HotLightLevel::AREA);
+    return { ResultType::STAY, nullptr };
 }
 
 const char *TipaMode::name()

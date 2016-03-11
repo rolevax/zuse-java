@@ -43,7 +43,7 @@ Mode::Result NumberInputMode::keyboard(char key)
     return { ResultType::STAY, nullptr };
 }
 
-void NumberInputMode::onPushed()
+Mode::Result NumberInputMode::onPushed()
 {
     if (clear) {
         assert(doc.getInner().getType() == Ast::Type::NUMBER);
@@ -51,6 +51,7 @@ void NumberInputMode::onPushed()
     }
 
     doc.setHotLight(EditableDoc::HotLightLevel::POINT);
+    return { ResultType::STAY, nullptr };
 }
 
 void NumberInputMode::onPopped()

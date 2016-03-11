@@ -71,9 +71,10 @@ Mode::Result MenuMode::keyboard(char key)
     }
 }
 
-void MenuMode::onPushed()
+Mode::Result MenuMode::onPushed()
 {
     doc.toggleTension(true);
+    return { ResultType::STAY, nullptr };
 }
 
 void MenuMode::onPopped()

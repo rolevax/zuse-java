@@ -7,7 +7,7 @@ class ListInputMode : public Mode
 {
 public:
     ListInputMode(EditableDoc &doc);
-    void onPushed() override;
+    Result onPushed() override;
     const char *name() override;
 };
 

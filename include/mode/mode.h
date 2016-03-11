@@ -23,12 +23,9 @@ public:
     Mode &operator=(const Mode& assign) = delete;
     virtual ~Mode() = default;
 
-    virtual Result keyboard(char key)
-    {
-        (void) key;
-        return { ResultType::THROW, nullptr };
-    }
-    virtual void onPushed() {}
+    virtual Result keyboard(char) { return { ResultType::THROW, nullptr }; }
+
+    virtual Result onPushed()  { return { ResultType::STAY, nullptr }; }
     virtual void onPopped() {}
     virtual void onResume() {}
     virtual const char *name() = 0;

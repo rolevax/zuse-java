@@ -11,12 +11,11 @@ PairInputMode::PairInputMode(EditableDoc &doc)
 
 }
 
-void PairInputMode::onPushed()
+Mode::Result PairInputMode::onPushed()
 {
     doc.fallIn();
     stage = Stage::KEY_DONE;
-    //doc.push(new StringInputMode(doc, true));
-    // TODO also return something
+    return { ResultType::STAY, new StringInputMode(doc, true) };
 }
 
 void PairInputMode::onResume()

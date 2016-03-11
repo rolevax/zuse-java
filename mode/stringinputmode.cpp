@@ -30,7 +30,7 @@ Mode::Result StringInputMode::keyboard(char key)
     return { ResultType::STAY, nullptr };
 }
 
-void StringInputMode::onPushed()
+Mode::Result StringInputMode::onPushed()
 {
     if (clear) {
         assert(doc.getInner().isScalar());
@@ -38,6 +38,7 @@ void StringInputMode::onPushed()
     }
 
     doc.setHotLight(EditableDoc::HotLightLevel::POINT);
+    return { ResultType::STAY, nullptr };
 }
 
 void StringInputMode::onPopped()

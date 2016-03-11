@@ -9,7 +9,7 @@ public:
     TipaMode(EditableDoc &doc);
 
     Result keyboard(char key) override;
-    void onPushed() override;
+    Result onPushed() override;
     const char *name() override;
 };
 

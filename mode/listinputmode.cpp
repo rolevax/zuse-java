@@ -9,14 +9,14 @@ ListInputMode::ListInputMode(EditableDoc &doc)
 
 }
 
-void ListInputMode::onPushed()
+Mode::Result ListInputMode::onPushed()
 {
     assert(doc.getInner().isList());
     assert(!doc.getInner().isBopList());
 
     doc.listClear();
     doc.assart(doc.getInner().asList().typeAt(0));
-    doc.pop(doc.createModifyMode(true));
+    return { ResultType::POP, doc.createModifyMode(true) };
 }
 
 const char *ListInputMode::name()

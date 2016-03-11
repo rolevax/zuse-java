@@ -42,12 +42,13 @@ Mode::Result IdentInputMode::keyboard(char key)
     return { ResultType::STAY, nullptr };
 }
 
-void IdentInputMode::onPushed()
+Mode::Result IdentInputMode::onPushed()
 {
     if (clear)
         doc.setHotLight(EditableDoc::HotLightLevel::AREA);
     else
         doc.setHotLight(EditableDoc::HotLightLevel::POINT);
+    return { ResultType::STAY, nullptr };
 }
 
 void IdentInputMode::onPopped()

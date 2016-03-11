@@ -8,7 +8,7 @@ class PairInputMode : public Mode
 public:
     PairInputMode(EditableDoc &doc);
 
-    void onPushed() override;
+    Result onPushed() override;
     void onResume() override;
     const char *name() override;
 
