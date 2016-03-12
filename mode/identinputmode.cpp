@@ -18,7 +18,7 @@ Mode::Result IdentInputMode::keyboard(char key, bool top)
     assert(doc.getInner().getType() == Ast::Type::IDENT);
 
     if (key == ' ') {
-        return { ResultType::POP, nullptr };
+        return { true, true, nullptr };
     }
 
     if (clear) {
@@ -29,9 +29,9 @@ Mode::Result IdentInputMode::keyboard(char key, bool top)
 
     if (isalnum(key) || key == '\b' || key == '_' || key == '$') {
         doc.scalarAppend(key);
-        return { ResultType::STAY, nullptr };
+        return { false, true, nullptr };
     } else {
-        return { ResultType::THROW, nullptr };
+        return { false, false, nullptr };
     }
 }
 
@@ -41,7 +41,7 @@ Mode::Result IdentInputMode::onPushed()
         doc.setHotLight(EditableDoc::HotLightLevel::AREA);
     else
         doc.setHotLight(EditableDoc::HotLightLevel::POINT);
-    return { ResultType::STAY, nullptr };
+    return { false, true, nullptr };
 }
 
 void IdentInputMode::onPopped()

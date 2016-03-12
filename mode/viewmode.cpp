@@ -18,7 +18,7 @@ Mode::Result ViewMode::keyboard(char key, bool top)
     if (doc.getOuter().getType() == Ast::Type::CLASS_LIST
             && doc.getOuter().size() == 0
             && key != 'i' && key != 'I')
-        return { ResultType::STAY, nullptr };
+        return { false, true, nullptr };
 
     Mode *nextPush = nullptr;
 
@@ -124,7 +124,7 @@ Mode::Result ViewMode::keyboard(char key, bool top)
         break;
     }
 
-    return { ResultType::STAY, nextPush };
+    return { false, true, nextPush };
 }
 
 const char *ViewMode::name()

@@ -24,7 +24,7 @@ private:
     // TODO: re-sort
     void push(Mode *mode);
     void pop(Mode *nextPush);
-    bool handleModeResult(const Mode::Result &res, int above);
+    void handleModeResult(const Mode::Result &res, int above);
 
     /// @name EditableDoc interface
     ///@{

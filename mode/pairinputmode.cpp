@@ -15,7 +15,7 @@ Mode::Result PairInputMode::onPushed()
 {
     doc.fallIn();
     stage = Stage::KEY_DONE;
-    return { ResultType::STAY, new StringInputMode(doc, true) };
+    return { false, true, new StringInputMode(doc, true) };
 }
 
 void PairInputMode::onResume()

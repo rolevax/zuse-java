@@ -64,7 +64,8 @@ void Doc::keyboard(char key)
     bool done = false;
     for (auto rit = modes.rbegin(); !done && rit != modes.rend(); ++rit) {
         Mode::Result res = (*rit)->keyboard(key, rit == modes.rbegin());
-        done = handleModeResult(res, rit - modes.rbegin());
+        handleModeResult(res, rit - modes.rbegin());
+        done = res.handled;
     }
 
     if (root->size() > 0)
@@ -83,11 +84,11 @@ void Doc::push(Mode *mode)
     modes.emplace_back(mode);
     ob.observePush(modes.back()->name());
     Mode::Result res = modes.back()->onPushed();
-    bool notThrow = handleModeResult(res, 0);
+    handleModeResult(res, 0);
 #ifdef NDEBUG
-    (void) notThrow;
+    (void) res.handled;
 #else
-    assert(notThrow);
+    assert(res.handled);
 #endif
 }
 
@@ -115,24 +116,17 @@ void Doc::pop(Mode *nextPush)
         modes.back()->onResume();
 }
 
-bool Doc::handleModeResult(const Mode::Result &res, int above)
+void Doc::handleModeResult(const Mode::Result &res, int above)
 {
-    switch (res.type) {
-    case Mode::ResultType::THROW:
-        return false;
-    case Mode::ResultType::STAY:
-        if (res.nextPush != nullptr)
-            push(res.nextPush);
-        return true;
-    case Mode::ResultType::POP:
+    if (res.pop) {
         // pop modes above the handling mode
         for (int i = 0; i < above; i++)
             pop(nullptr);
         // pop the handling mode
         pop(res.nextPush);
-        return true;
-    default:
-        return false; // useless, supress warning
+    } else { // stay on the stack
+        if (res.nextPush != nullptr)
+            push(res.nextPush);
     }
 }
 

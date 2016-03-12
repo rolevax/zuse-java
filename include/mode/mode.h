@@ -8,14 +8,10 @@ class EditableDoc;
 class Mode
 {
 public:
-    enum class ResultType
-    {
-        THROW, STAY, POP
-    };
-
     struct Result
     {
-        ResultType type;
+        bool pop;
+        bool handled;
         Mode *nextPush;
     };
 
@@ -27,10 +23,10 @@ public:
     {
         (void) key;
         (void) top;
-        return { ResultType::THROW, nullptr };
+        return { false, false, nullptr };
     }
 
-    virtual Result onPushed()  { return { ResultType::STAY, nullptr }; }
+    virtual Result onPushed()  { return { false, true, nullptr }; }
     virtual void onPopped() {}
     virtual void onResume() {}
     virtual const char *name() = 0;

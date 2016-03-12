@@ -21,21 +21,21 @@ Mode::Result TipaMode::keyboard(char key, bool top)
         doc.change(Ast::Type::IDENT);
         doc.scalarClear();
         doc.scalarAppend(str);
-        return { ResultType::POP, new IdentInputMode(doc, false) };
+        return { true, true, new IdentInputMode(doc, false) };
     } else if (isdigit(key)) {
-        return { ResultType::POP, new NumberInputMode(doc, true) };
+        return { true, true, new NumberInputMode(doc, true) };
     } else if ('\"' == key) {
         doc.change(Ast::Type::STRING);
-        return { ResultType::POP, new StringInputMode(doc, true) };
+        return { true, true, new StringInputMode(doc, true) };
     }
 
-    return { ResultType::STAY, nullptr };
+    return { false, true, nullptr };
 }
 
 Mode::Result TipaMode::onPushed()
 {
     doc.setHotLight(EditableDoc::HotLightLevel::AREA);
-    return { ResultType::STAY, nullptr };
+    return { false, true, nullptr };
 }
 
 const char *TipaMode::name()

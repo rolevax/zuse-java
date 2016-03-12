@@ -22,12 +22,12 @@ Mode::Result StringInputMode::keyboard(char key, bool top)
         for (auto it = text.rbegin(); it != text.rend() && '\\' == *it; ++it)
             backSlashCount++;
         if (0 == backSlashCount % 2) { // no '\' waiting for a character
-            return { ResultType::POP, nullptr };
+            return { true, true, nullptr };
         }
     }
 
     doc.scalarAppend(key);
-    return { ResultType::STAY, nullptr };
+    return { false, true, nullptr };
 }
 
 Mode::Result StringInputMode::onPushed()
@@ -38,7 +38,7 @@ Mode::Result StringInputMode::onPushed()
     }
 
     doc.setHotLight(EditableDoc::HotLightLevel::POINT);
-    return { ResultType::STAY, nullptr };
+    return { false, true, nullptr };
 }
 
 void StringInputMode::onPopped()
