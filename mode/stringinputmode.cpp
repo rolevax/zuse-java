@@ -11,7 +11,7 @@ StringInputMode::StringInputMode(EditableDoc &doc, bool clear) :
 
 }
 
-Mode::Result StringInputMode::keyboard(char key)
+Mode::Result StringInputMode::keyboard(char key, bool top)
 {
     assert(doc.getInner().getType() == Ast::Type::STRING);
 

@@ -63,7 +63,7 @@ void Doc::keyboard(char key)
 
     bool done = false;
     for (auto rit = modes.rbegin(); !done && rit != modes.rend(); ++rit) {
-        Mode::Result res = (*rit)->keyboard(key);
+        Mode::Result res = (*rit)->keyboard(key, rit == modes.rbegin());
         done = handleModeResult(res, rit - modes.rbegin());
     }
 

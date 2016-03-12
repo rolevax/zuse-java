@@ -8,7 +8,7 @@ class NumberInputMode : public Mode
 public:
     NumberInputMode(EditableDoc &doc, bool clear);
 
-    Result keyboard(char key) override;
+    Result keyboard(char key, bool top) override;
     Result onPushed() override;
     void onPopped() override;
     const char *name() override;

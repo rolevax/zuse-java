@@ -18,7 +18,7 @@ MenuMode::MenuMode(EditableDoc &doc, Context context) :
 
 }
 
-Mode::Result MenuMode::keyboard(char key)
+Mode::Result MenuMode::keyboard(char key, bool top)
 {
     if (key == ' ') {
         return { ResultType::POP, nullptr };

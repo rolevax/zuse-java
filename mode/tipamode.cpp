@@ -13,7 +13,7 @@ TipaMode::TipaMode(EditableDoc &doc)
 
 }
 
-Mode::Result TipaMode::keyboard(char key)
+Mode::Result TipaMode::keyboard(char key, bool top)
 {
     char str[2] = { key, '\0' };
 

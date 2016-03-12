@@ -13,7 +13,7 @@ ViewMode::ViewMode(EditableDoc &doc) :
 
 }
 
-Mode::Result ViewMode::keyboard(char key)
+Mode::Result ViewMode::keyboard(char key, bool top)
 {
     if (doc.getOuter().getType() == Ast::Type::CLASS_LIST
             && doc.getOuter().size() == 0
@@ -27,6 +27,17 @@ Mode::Result ViewMode::keyboard(char key)
         if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST
                 && doc.getInner().getType() == Ast::Type::DECL_VAR)
             doc.cast(Ast::Type::DECL_METHOD);
+        break;
+    case '.':
+        if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST) {
+            doc.append(Ast::Type::IDENT, BopListAst::DOT);
+        } else {
+            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::DOT);
+            doc.fallIn();
+            doc.sibling(+1);
+        }
+        if (top)
+            nextPush = doc.createModifyMode(true);
         break;
     // tree-wise cursor moving
     case 'g': // get next node

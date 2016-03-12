@@ -8,7 +8,7 @@ class ViewMode : public Mode
 public:
     ViewMode(EditableDoc &doc);
 
-    Result keyboard(char key) override;
+    Result keyboard(char key, bool top) override;
     const char *name() override;
 
 private:

@@ -3,6 +3,7 @@
 #include "ast/scalarast.h"
 
 #include <algorithm>
+#include <cstdlib>
 #include <cassert>
 
 IdentInputMode::IdentInputMode(EditableDoc &doc, bool clear)
@@ -12,7 +13,7 @@ IdentInputMode::IdentInputMode(EditableDoc &doc, bool clear)
 
 }
 
-Mode::Result IdentInputMode::keyboard(char key)
+Mode::Result IdentInputMode::keyboard(char key, bool top)
 {
     assert(doc.getInner().getType() == Ast::Type::IDENT);
 
@@ -26,20 +27,12 @@ Mode::Result IdentInputMode::keyboard(char key)
         clear = false;
     }
 
-    if (key == '.') {
-        if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST) {
-            doc.append(Ast::Type::IDENT, BopListAst::DOT);
-        } else {
-            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::DOT);
-            doc.fallIn();
-            doc.sibling(+1);
-        }
-        clear = true;
-    } else {
-        // TODO: check legal char
+    if (isalnum(key) || key == '\b' || key == '_' || key == '$') {
         doc.scalarAppend(key);
+        return { ResultType::STAY, nullptr };
+    } else {
+        return { ResultType::THROW, nullptr };
     }
-    return { ResultType::STAY, nullptr };
 }
 
 Mode::Result IdentInputMode::onPushed()
