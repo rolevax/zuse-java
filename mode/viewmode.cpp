@@ -25,8 +25,24 @@ Mode::Result ViewMode::keyboard(char key, bool top)
     switch (key) {
     case '(':
         if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST
-                && doc.getInner().getType() == Ast::Type::DECL_VAR)
+             && doc.getInner().getType() == Ast::Type::DECL_VAR) {
             doc.cast(Ast::Type::DECL_METHOD);
+            // TODO push a fix-size mode with offset
+        } else if (doc.getOuter().getType() == Ast::Type::DECL_VAR) {
+            doc.digOut();
+            doc.cast(Ast::Type::DECL_METHOD);
+            // TODO push a fix-size mode with offset
+        } else if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST) {
+            doc.append(Ast::Type::IDENT, BopListAst::CALL);
+        } else if (doc.getOuter().getType() == Ast::Type::IF_LIST) {
+            // TODO
+        } else {
+            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::CALL);
+            doc.fallIn();
+            doc.sibling(+1);
+        }
+        if (top)
+            nextPush = doc.createModifyMode(true);
         break;
     case '.':
         if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST) {
