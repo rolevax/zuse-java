@@ -83,8 +83,6 @@ std::string Tokens::pluck(size_t r)
 void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
 {
     Region r = locate(&outer->at(inner));
-    if (r.br == 0 && !down)
-        return; // prevent overflow of 'i' in the loop
 
     // preferred target column index
     size_t sugg;
@@ -95,8 +93,9 @@ void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
         sugg = 0;
     }
 
-    for (size_t i = down ? r.er + 1 : r.br - 1;
-         down ? i < rows.size() : i > 0; down ? i++ : i--) {
+    for (ssize_t i = down ? r.er + 1 : r.br - 1;
+         down ? i < ssize_t(rows.size()) : i >= 0;
+         down ? i++ : i--) {
         std::vector<size_t> fleshes;
         for (size_t j = 0; j < rows[i].size(); j++)
             if (rows[i][j]->getAst()->isScalar())
