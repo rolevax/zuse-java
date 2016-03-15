@@ -220,7 +220,18 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         if (!end)
             buf.push_back(nullptr);
         break;
-    case Ast::Type::STMT_LIST:
+    case Ast::Type::STMT_LIST: {
+            // add semicolons for expression statements
+            Ast::Type bt = ast.at(pos).getType();
+            // TODO: more conditions
+            if (bt != Ast::Type::IF_LIST
+                    && bt != Ast::Type::WHILE
+                    && bt != Ast::Type::DO_WHILE
+                    && bt != Ast::Type::RETURN
+                    && bt != Ast::Type::DECL_VAR) {
+                bone(ast, buf, BoneToken::Sym::SEMICOLON);
+            }
+        }
         buf.push_back(nullptr);
         break;
     case Ast::Type::DECL_PARAM_LIST:
