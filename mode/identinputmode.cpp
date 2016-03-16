@@ -13,7 +13,7 @@ IdentInputMode::IdentInputMode(EditableDoc &doc, bool clear)
 
 }
 
-Mode::Result IdentInputMode::keyboard(char key, bool top)
+Mode::Result IdentInputMode::keyboard(char key)
 {
     assert(doc.getInner().getType() == Ast::Type::IDENT);
 

@@ -29,13 +29,7 @@ public:
     Mode &operator=(const Mode& assign) = delete;
     virtual ~Mode() = default;
 
-    virtual Result keyboard(char key, bool top)
-    {
-        (void) key;
-        (void) top;
-        return DONE_STAY_NOPUSH;
-    }
-
+    virtual Result keyboard(char key) { (void) key; return DONE_STAY_NOPUSH; }
     virtual Result onPushed()  { return DONE_STAY_NOPUSH; }
     virtual void onPopped() {}
     virtual void onResume() {}

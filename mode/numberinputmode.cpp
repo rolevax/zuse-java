@@ -11,7 +11,7 @@ NumberInputMode::NumberInputMode(EditableDoc &doc, bool clear) :
 
 }
 
-Mode::Result NumberInputMode::keyboard(char key, bool top)
+Mode::Result NumberInputMode::keyboard(char key)
 {
     assert(doc.getInner().getType() == Ast::Type::NUMBER);
 

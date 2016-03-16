@@ -8,7 +8,7 @@ class TipaMode : public Mode
 public:
     TipaMode(EditableDoc &doc);
 
-    Result keyboard(char key, bool top) override;
+    Result keyboard(char key) override;
     Result onPushed() override;
     const char *name() override;
 };
