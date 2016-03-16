@@ -3,11 +3,10 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 
-Window {
+ApplicationWindow {
     visible: true
-    title: "SELL-JSON"
-    width: 800; height: 530
-    color: "#444444"
+    title: "Yaloe-Java"
+    width: 800; height: editor.height + openButton.height
 
     Button {
         id: openButton
@@ -37,8 +36,8 @@ Window {
 
     FileDialog {
         id: fileDialog
-        title: "Please choose a file"
-        nameFilters: [ "JSON files (*.java)", "All files (*)" ]
+        title: "Please choose a source file"
+        nameFilters: [ "Java source files (*.java)", "All files (*)" ]
         onAccepted: {
             // slice() to get rid of "file://" prefix
             var filename = fileUrl.toString().slice(7);
