@@ -16,7 +16,7 @@ Mode::Result ListInputMode::onPushed()
 
     doc.listClear();
     doc.assart(doc.getInner().asList().typeAt(0));
-    return { true, true, doc.createModifyMode(true) };
+    return { ResultType::DONE_POP, doc.createModifyMode(true) };
 }
 
 const char *ListInputMode::name()

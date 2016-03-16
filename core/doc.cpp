@@ -61,11 +61,11 @@ void Doc::keyboard(char key)
 {
     assert(modes.size() > 0);
 
-    bool done = false;
-    for (auto rit = modes.rbegin(); !done && rit != modes.rend(); ++rit) {
+    for (auto rit = modes.rbegin(); rit != modes.rend(); ++rit) {
         Mode::Result res = (*rit)->keyboard(key, rit == modes.rbegin());
-        handleModeResult(res, rit - modes.rbegin());
-        done = res.handled;
+        handleModeResult(res);
+        if (res.handled())
+            break;
     }
 
     if (root->size() > 0)
@@ -84,12 +84,8 @@ void Doc::push(Mode *mode)
     modes.emplace_back(mode);
     ob.observePush(modes.back()->name());
     Mode::Result res = modes.back()->onPushed();
-    handleModeResult(res, 0);
-#ifdef NDEBUG
-    (void) res.handled;
-#else
-    assert(res.handled);
-#endif
+    handleModeResult(res);
+    assert(res.handled());
 }
 
 /**
@@ -116,13 +112,9 @@ void Doc::pop(Mode *nextPush)
         modes.back()->onResume();
 }
 
-void Doc::handleModeResult(const Mode::Result &res, int above)
+void Doc::handleModeResult(const Mode::Result &res)
 {
-    if (res.pop) {
-        // pop modes above the handling mode
-        for (int i = 0; i < above; i++)
-            pop(nullptr);
-        // pop the handling mode
+    if (res.toPop()) {
         pop(res.nextPush);
     } else { // stay on the stack
         if (res.nextPush != nullptr)

@@ -19,7 +19,7 @@ Mode::Result IdentInputMode::keyboard(char key, bool top)
 
     if (key == ' ') {
         Mode * nextPush = promotion();
-        return { true, true, nextPush };
+        return { ResultType::DONE_POP, nextPush };
     }
 
     if (clear) {
@@ -30,9 +30,9 @@ Mode::Result IdentInputMode::keyboard(char key, bool top)
 
     if (isalnum(key) || key == '\b' || key == '_' || key == '$') {
         doc.scalarAppend(key);
-        return { false, true, nullptr };
+        return DONE_STAY_NOPUSH;
     } else {
-        return { true, false, nullptr };
+        return RAISE_POP_NOPUSH;
     }
 }
 
@@ -42,7 +42,7 @@ Mode::Result IdentInputMode::onPushed()
         doc.setHotLight(EditableDoc::HotLightLevel::AREA);
     else
         doc.setHotLight(EditableDoc::HotLightLevel::POINT);
-    return { false, true, nullptr };
+    return DONE_STAY_NOPUSH;
 }
 
 void IdentInputMode::onPopped()

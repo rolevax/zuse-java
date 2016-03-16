@@ -20,9 +20,8 @@ MenuMode::MenuMode(EditableDoc &doc, Context context) :
 
 Mode::Result MenuMode::keyboard(char key, bool top)
 {
-    if (key == ' ') {
-        return { true, true, nullptr };
-    }
+    if (key == ' ')
+        return DONE_POP_NOPUSH;
 
     Ast::Type ktype = keyToType(key);
     int bop = keyToBop(key);
@@ -65,16 +64,16 @@ Mode::Result MenuMode::keyboard(char key, bool top)
     if (context == Context::BOP_INSERT
             || context == Context::BOP_APPEND
             || context == Context::NEST_AS_LEFT) {
-        return { true, true, doc.createModifyMode(true) };
+        return { ResultType::DONE_POP, doc.createModifyMode(true) };
     } else {
-        return { false, true, nullptr };
+        return DONE_STAY_NOPUSH;
     }
 }
 
 Mode::Result MenuMode::onPushed()
 {
     doc.toggleTension(true);
-    return { false, true, nullptr };
+    return DONE_STAY_NOPUSH;
 }
 
 void MenuMode::onPopped()

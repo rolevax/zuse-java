@@ -15,9 +15,8 @@ Mode::Result NumberInputMode::keyboard(char key, bool top)
 {
     assert(doc.getInner().getType() == Ast::Type::NUMBER);
 
-    if (' ' == key) {
-        return { true, true, nullptr };
-    }
+    if (' ' == key)
+        return DONE_POP_NOPUSH;
 
     char input;
     if (('0' <= key && key <= '9') || key == '\b')
@@ -37,10 +36,10 @@ Mode::Result NumberInputMode::keyboard(char key, bool top)
     else if ('m' == key)
         input = '0';
     else
-        return { false, true, nullptr };
+        return DONE_STAY_NOPUSH;
 
     doc.scalarAppend(input);
-    return { false, true, nullptr };
+    return DONE_STAY_NOPUSH;
 }
 
 Mode::Result NumberInputMode::onPushed()
@@ -51,7 +50,7 @@ Mode::Result NumberInputMode::onPushed()
     }
 
     doc.setHotLight(EditableDoc::HotLightLevel::POINT);
-    return { false, true, nullptr };
+    return DONE_STAY_NOPUSH;
 }
 
 void NumberInputMode::onPopped()
