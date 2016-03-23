@@ -22,37 +22,10 @@ Mode::Result ViewMode::keyboard(char key)
 
     Mode *nextPush = nullptr;
 
+    if (macro(key, nextPush))
+        return { ResultType::DONE_STAY, nextPush };
+
     switch (key) {
-    case '(':
-        if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST
-             && doc.getInner().getType() == Ast::Type::DECL_VAR) {
-            doc.cast(Ast::Type::DECL_METHOD);
-            // TODO push a fix-size mode with offset
-        } else if (doc.getOuter().getType() == Ast::Type::DECL_VAR) {
-            doc.digOut();
-            doc.cast(Ast::Type::DECL_METHOD);
-            // TODO push a fix-size mode with offset
-        } else if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST) {
-            doc.append(Ast::Type::IDENT, BopListAst::CALL);
-        } else if (doc.getOuter().getType() == Ast::Type::IF_LIST) {
-            // TODO
-        } else {
-            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::CALL);
-            doc.fallIn();
-            doc.sibling(+1);
-        }
-        nextPush = doc.createModifyMode(true);
-        break;
-    case '.':
-        if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST) {
-            doc.append(Ast::Type::IDENT, BopListAst::DOT);
-        } else {
-            doc.nestAsLeft(Ast::Type::DOT_BOP_LIST, BopListAst::DOT);
-            doc.fallIn();
-            doc.sibling(+1);
-        }
-        nextPush = doc.createModifyMode(true);
-        break;
     // tree-wise cursor moving
     case 'g': // get next node
         doc.sibling(+1);
@@ -189,6 +162,63 @@ Mode *ViewMode::menulessListOp(ListOp op)
     default:
         return nullptr;
     }
+}
+
+bool ViewMode::macro(char key, Mode *&nextPush)
+{
+    switch (key) {
+    case '(':
+        if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST
+             && doc.getInner().getType() == Ast::Type::DECL_VAR) {
+            // decl_var ==> decl_method
+            doc.cast(Ast::Type::DECL_METHOD);
+            // TODO push a fix-size mode with offset
+        } else if (doc.getOuter().getType() == Ast::Type::DECL_VAR) {
+            // dector --> decl_var ==> decl_method
+            doc.digOut();
+            doc.cast(Ast::Type::DECL_METHOD);
+            // TODO push a fix-size mode with offset
+        } else if (doc.getOuter().getType() == Ast::Type::IF_LIST) {
+            // TODO
+        } else {
+            return macroBop(key, nextPush);
+        }
+        nextPush = doc.createModifyMode(true);
+        return true;
+    default:
+        return macroBop(key, nextPush);
+    }
+}
+
+bool ViewMode::macroBop(char key, Mode *&nextPush)
+{
+    Ast::Type type;
+    int op;
+
+    switch (key) {
+    case '(':
+        type = Ast::Type::DOT_BOP_LIST;
+        op = BopListAst::CALL;
+        break;
+    case '.':
+        type = Ast::Type::DOT_BOP_LIST;
+        op = BopListAst::DOT;
+        break;
+    default:
+        return false;
+    }
+
+    // precondition from this line: inner is an expression
+
+    if (doc.getOuter().getType() == type) {
+        doc.append(Ast::Type::IDENT, op);
+    } else {
+        doc.nestAsLeft(type, op);
+        doc.fallIn();
+        doc.sibling(+1);
+    }
+    nextPush = doc.createModifyMode(true);
+    return true;
 }
 
 
