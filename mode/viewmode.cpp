@@ -166,25 +166,62 @@ Mode *ViewMode::menulessListOp(ListOp op)
 
 bool ViewMode::macro(char key, Mode *&nextPush)
 {
+    Ast::Type ot = doc.getOuter().getType();
+    Ast::Type it = doc.getInner().getType();
     switch (key) {
     case '(':
-        if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST
-             && doc.getInner().getType() == Ast::Type::DECL_VAR) {
+        if (ot == Ast::Type::MEMBER_LIST && it == Ast::Type::DECL_VAR) {
             // decl_var ==> decl_method
             doc.cast(Ast::Type::DECL_METHOD);
             // TODO push a fix-size mode with offset
-        } else if (doc.getOuter().getType() == Ast::Type::DECL_VAR) {
+        } else if (ot == Ast::Type::DECL_VAR) {
             // dector --> decl_var ==> decl_method
             doc.digOut();
             doc.cast(Ast::Type::DECL_METHOD);
             // TODO push a fix-size mode with offset
-        } else if (doc.getOuter().getType() == Ast::Type::IF_LIST) {
+        } else if (ot == Ast::Type::IF_LIST) {
             // TODO
         } else {
             return macroBop(key, nextPush);
         }
         nextPush = doc.createModifyMode(true);
         return true;
+    case ',': {
+        const Ast *a = &doc.getOuter();
+        Ast::Type at;
+        int digCount = 0;
+
+        while (at = a->getType(), at != Ast::Type::CLASS_LIST
+               && at != Ast::Type::ARG_LIST
+               && at != Ast::Type::DECL_PARAM_LIST
+               && at != Ast::Type::DECTOR_LIST
+               && at != Ast::Type::DECL_VAR) {
+            a = &a->getParent();
+            digCount++;
+        }
+
+        if (at == Ast::Type::CLASS_LIST) {
+            return false; // comma-able node not found
+        } else {
+            while (digCount --> 0)
+                doc.digOut();
+
+            if (at == Ast::Type::DECL_VAR) {
+                // if there is a declarator list, variable declaration
+                // node won't be reached in the loop.
+                // so here we must nest.
+                doc.nestAsLeft(Ast::Type::DECTOR_LIST);
+                // TODO check nest with dector_list
+                doc.fallIn();
+                doc.sibling(+1);
+            } else {
+                // already had list
+                doc.append(doc.getOuter().typeAt(0));
+            }
+            nextPush = doc.createModifyMode(true);
+            return true;
+        }
+    }
     default:
         return macroBop(key, nextPush);
     }
@@ -193,7 +230,7 @@ bool ViewMode::macro(char key, Mode *&nextPush)
 bool ViewMode::macroBop(char key, Mode *&nextPush)
 {
     Ast::Type type;
-    int op;
+    int op = BopListAst::UNUSED;
 
     switch (key) {
     case '(':
@@ -204,14 +241,37 @@ bool ViewMode::macroBop(char key, Mode *&nextPush)
         type = Ast::Type::DOT_BOP_LIST;
         op = BopListAst::DOT;
         break;
+    case '*':
+        type = Ast::Type::MUL_BOP_LIST;
+        op = BopListAst::MUL;
+        break;
+    case '/':
+        type = Ast::Type::MUL_BOP_LIST;
+        op = BopListAst::DIV;
+        break;
+    case '%':
+        type = Ast::Type::MUL_BOP_LIST;
+        op = BopListAst::MOD;
+        break;
+    case '+':
+        type = Ast::Type::ADD_BOP_LIST;
+        op = BopListAst::ADD;
+        break;
+    case '-':
+        type = Ast::Type::ADD_BOP_LIST;
+        op = BopListAst::SUB;
+        break;
+    case '=':
+        type = Ast::Type::ASSIGN;
+        break;
     default:
         return false;
     }
 
     // precondition from this line: inner is an expression
 
-    if (doc.getOuter().getType() == type) {
-        doc.append(Ast::Type::IDENT, op);
+    if (doc.getOuter().getType() == type && doc.getOuter().isList()) {
+        doc.append(Ast::Type::META, op);
     } else {
         doc.nestAsLeft(type, op);
         doc.fallIn();

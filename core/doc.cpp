@@ -414,8 +414,12 @@ Ast *Doc::newTree(Ast::Type type)
         Ast *rhs = newTree(InternalAst::typeAt(type, 1));
         a = new BopListAst(type, lhs, rhs, BopListAst::DEFAULT);
     } else if (Ast::isList(type)) {
-        a = new ListAst(type);
-        // TODO: ill-0 or ill-1about:blank
+        ListAst *la = new ListAst(type);
+        a = la;
+        if (la->illZero())
+            la->append(newTree(la->typeAt(0)));
+        if (la->illOne())
+            la->append(newTree(la->typeAt(1)));
     } else if (Ast::isFixSize(type)) {
         if (Ast::isFixSize(type, 1)) {
             Ast *t0 = newTree(InternalAst::typeAt(type, 0));
