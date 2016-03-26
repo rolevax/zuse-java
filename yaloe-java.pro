@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     mode/identinputmode.cpp \
     ast/boplistast.cpp \
     mode/tipamode.cpp \
-    mode/listinputmode.cpp
+    mode/listinputmode.cpp \
+    core/keycode.cpp
 
 RESOURCES += qml.qrc
 
@@ -72,5 +73,6 @@ HEADERS += \
     include/mode/identinputmode.h \
     include/ast/boplistast.h \
     include/mode/tipamode.h \
-    include/mode/listinputmode.h
+    include/mode/listinputmode.h \
+    include/core/keycode.h
 

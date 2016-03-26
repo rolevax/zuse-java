@@ -18,9 +18,9 @@ MenuMode::MenuMode(EditableDoc &doc, Context context) :
 
 }
 
-Mode::Result MenuMode::keyboard(char key)
+Mode::Result MenuMode::keyboard(Key key)
 {
-    if (key == ' ')
+    if (key == Key::SPACE)
         return DONE_POP_NOPUSH;
 
     Ast::Type ktype = keyToType(key);
@@ -86,13 +86,13 @@ const char *MenuMode::name()
     return "oprand?";
 }
 
-Ast::Type MenuMode::keyToType(char key)
+Ast::Type MenuMode::keyToType(Key key)
 {
     switch (context) {
     case Context::BOP_INSERT:
     case Context::BOP_APPEND:
         switch (key) {
-        case '(':
+        case Key::LEFT_PAREN:
             if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST
                     && context == Context::BOP_APPEND)
                 return Ast::Type::ARG_LIST;
@@ -105,25 +105,25 @@ Ast::Type MenuMode::keyToType(char key)
     case Context::FALL_SEARCH:
     case Context::DIG_SEARCH:
         switch (key) {
-        case '.':
-        case '(':
+        case Key::DOT:
+        case Key::LEFT_PAREN:
             return Ast::Type::DOT_BOP_LIST;
-        case '+':
-        case '-':
+        case Key::PLUS:
+        case Key::MINUS:
             return Ast::Type::ADD_BOP_LIST;
-        case '*':
-        case '/':
-        case '%':
+        case Key::ASTERISK:
+        case Key::SLASH:
+        case Key::PERCENT:
             return Ast::Type::MUL_BOP_LIST;
-        case 'C':
+        case Key::S_C:
             return Ast::Type::DECL_CLASS;
-        case 'i':
+        case Key::I:
             return Ast::Type::IF_LIST;
-        case 'm':
+        case Key::S_M:
             return Ast::Type::DECL_METHOD;
-        case 'v':
+        case Key::V:
             return Ast::Type::DECL_VAR;
-        case '=':
+        case Key::EQUAL:
             return Ast::Type::ASSIGN;
         default:
             return Ast::Type::META;
@@ -133,17 +133,25 @@ Ast::Type MenuMode::keyToType(char key)
     }
 }
 
-int MenuMode::keyToBop(char key)
+int MenuMode::keyToBop(Key key)
 {
     switch (key) {
-    case '.': return BopListAst::DOT;
-    case '(': return BopListAst::CALL;
-    case '+': return BopListAst::ADD;
-    case '-': return BopListAst::SUB;
-    case '*': return BopListAst::MUL;
-    case '/': return BopListAst::DIV;
-    case '%': return BopListAst::MOD;
-    default: return BopListAst::UNUSED;
+    case Key::DOT:
+        return BopListAst::DOT;
+    case Key::LEFT_PAREN:
+        return BopListAst::CALL;
+    case Key::PLUS:
+        return BopListAst::ADD;
+    case Key::MINUS:
+        return BopListAst::SUB;
+    case Key::ASTERISK:
+        return BopListAst::MUL;
+    case Key::SLASH:
+        return BopListAst::DIV;
+    case Key::PERCENT:
+        return BopListAst::MOD;
+    default:
+        return BopListAst::UNUSED;
     }
 }
 

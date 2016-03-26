@@ -1,6 +1,7 @@
 #ifndef MODE_H
 #define MODE_H
 
+#include "core/keycode.h"
 #include "ast/ast.h"
 
 class EditableDoc;
@@ -29,7 +30,7 @@ public:
     Mode &operator=(const Mode& assign) = delete;
     virtual ~Mode() = default;
 
-    virtual Result keyboard(char key) { (void) key; return DONE_STAY_NOPUSH; }
+    virtual Result keyboard(Key key) { (void) key; return DONE_STAY_NOPUSH; }
     virtual Result onPushed()  { return DONE_STAY_NOPUSH; }
     virtual void onPopped() {}
     virtual void onResume() {}

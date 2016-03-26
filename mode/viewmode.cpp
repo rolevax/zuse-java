@@ -13,11 +13,11 @@ ViewMode::ViewMode(EditableDoc &doc) :
 
 }
 
-Mode::Result ViewMode::keyboard(char key)
+Mode::Result ViewMode::keyboard(Key key)
 {
     if (doc.getOuter().getType() == Ast::Type::CLASS_LIST
             && doc.getOuter().size() == 0
-            && key != 'i' && key != 'I')
+            && key != Key::I && key != Key::S_I)
         return DONE_STAY_NOPUSH;
 
     Mode *nextPush = nullptr;
@@ -27,13 +27,13 @@ Mode::Result ViewMode::keyboard(char key)
 
     switch (key) {
     // tree-wise cursor moving
-    case 'g': // get next node
+    case Key::G: // get next node
         doc.sibling(+1);
         break;
-    case 's': // senior previous node
+    case Key::S: // senior previous node
         doc.sibling(-1);
         break;
-    case 'f': // fall-in or assart
+    case Key::F: // fall-in or assart
         if (!doc.getInner().isScalar()) {
             if (doc.getInner().asInternal().size() > 0)
                 doc.fallIn();
@@ -41,34 +41,34 @@ Mode::Result ViewMode::keyboard(char key)
                 nextPush = menulessListOp(ListOp::ASSART);
         }
         break;
-    case 'F': // fall-search
+    case Key::S_F: // fall-search
         if (!doc.getInner().isScalar()
                 && doc.getInner().asInternal().size() > 0)
             nextPush = new MenuMode(doc, MenuMode::Context::FALL_SEARCH);
         break;
-    case 'd': // dig-out
+    case Key::D: // dig-out
         doc.digOut();
         break;
-    case 'D': // dig-search
+    case Key::S_D: // dig-search
         nextPush = new MenuMode(doc, MenuMode::Context::DIG_SEARCH);
         break;
 
     // token-wise cursor moving
-    case 'h': // hack left
+    case Key::H: // hack left
         doc.hackLead(false);
         break;
-    case 'l': // lead right
+    case Key::L: // lead right
         doc.hackLead(true);
         break;
-    case 'k': // kick up
+    case Key::K: // kick up
         doc.jackKick(false);
         break;
-    case 'j': // jack down
+    case Key::J: // jack down
         doc.jackKick(true);
         break;
 
     // outer modification
-    case 'i': // insert
+    case Key::I: // insert
         if (doc.getOuter().isList()) {
             if (doc.getOuter().isBopList())
                 nextPush = new MenuMode(doc, MenuMode::Context::BOP_INSERT);
@@ -76,7 +76,7 @@ Mode::Result ViewMode::keyboard(char key)
                 nextPush = menulessListOp(ListOp::INSERT);
         }
         break;
-    case 'o': // oh, append
+    case Key::O: // oh, append
         if (doc.getOuter().isList()) {
             if (doc.getOuter().isBopList())
                 nextPush = new MenuMode(doc, MenuMode::Context::BOP_APPEND);
@@ -84,26 +84,26 @@ Mode::Result ViewMode::keyboard(char key)
                 nextPush = menulessListOp(ListOp::APPEND);
         }
         break;
-    case 'r': // remove
+    case Key::R: // remove
         doc.remove();
         // TODO get to clipboard
         break;
-    case 'y': // yank
+    case Key::Y: // yank
         // TODO
         break;
-    case 'p': // paste
+    case Key::P: // paste
         break;
 
     // inner modification
-    case 'c': // change
+    case Key::C: // change
         // TODO
         break;
-    case 'n': // nest
+    case Key::N: // nest
         nextPush = new MenuMode(doc, MenuMode::Context::NEST_AS_LEFT);
         break;
-    case 'm': // modify
-    case 'M': {
-        bool clear = key == 'M';
+    case Key::M: // modify
+    case Key::S_M: {
+        bool clear = key == Key::S_M;
         nextPush = doc.createModifyMode(clear);
         break;
     }
@@ -164,12 +164,12 @@ Mode *ViewMode::menulessListOp(ListOp op)
     }
 }
 
-bool ViewMode::macro(char key, Mode *&nextPush)
+bool ViewMode::macro(Key key, Mode *&nextPush)
 {
     Ast::Type ot = doc.getOuter().getType();
     Ast::Type it = doc.getInner().getType();
     switch (key) {
-    case '(':
+    case Key::LEFT_PAREN:
         if (ot == Ast::Type::MEMBER_LIST && it == Ast::Type::DECL_VAR) {
             // decl_var ==> decl_method
             doc.cast(Ast::Type::DECL_METHOD);
@@ -186,7 +186,7 @@ bool ViewMode::macro(char key, Mode *&nextPush)
         }
         nextPush = doc.createModifyMode(true);
         return true;
-    case ',': {
+    case Key::COMMA: {
         const Ast *a = &doc.getOuter();
         Ast::Type at;
         int digCount = 0;
@@ -227,41 +227,41 @@ bool ViewMode::macro(char key, Mode *&nextPush)
     }
 }
 
-bool ViewMode::macroBop(char key, Mode *&nextPush)
+bool ViewMode::macroBop(Key key, Mode *&nextPush)
 {
     Ast::Type type;
     int op = BopListAst::UNUSED;
 
     switch (key) {
-    case '(':
+    case Key::LEFT_PAREN:
         type = Ast::Type::DOT_BOP_LIST;
         op = BopListAst::CALL;
         break;
-    case '.':
+    case Key::DOT:
         type = Ast::Type::DOT_BOP_LIST;
         op = BopListAst::DOT;
         break;
-    case '*':
+    case Key::ASTERISK:
         type = Ast::Type::MUL_BOP_LIST;
         op = BopListAst::MUL;
         break;
-    case '/':
+    case Key::SLASH:
         type = Ast::Type::MUL_BOP_LIST;
         op = BopListAst::DIV;
         break;
-    case '%':
+    case Key::PERCENT:
         type = Ast::Type::MUL_BOP_LIST;
         op = BopListAst::MOD;
         break;
-    case '+':
+    case Key::PLUS:
         type = Ast::Type::ADD_BOP_LIST;
         op = BopListAst::ADD;
         break;
-    case '-':
+    case Key::MINUS:
         type = Ast::Type::ADD_BOP_LIST;
         op = BopListAst::SUB;
         break;
-    case '=':
+    case Key::EQUAL:
         type = Ast::Type::ASSIGN;
         break;
     default:

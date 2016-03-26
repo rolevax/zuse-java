@@ -13,11 +13,11 @@ IdentInputMode::IdentInputMode(EditableDoc &doc, bool clear)
 
 }
 
-Mode::Result IdentInputMode::keyboard(char key)
+Mode::Result IdentInputMode::keyboard(Key key)
 {
     assert(doc.getInner().getType() == Ast::Type::IDENT);
 
-    if (key == ' ') {
+    if (key == Key::SPACE) {
         Mode * nextPush = promotion();
         return { ResultType::DONE_POP, nextPush };
     }
@@ -28,8 +28,10 @@ Mode::Result IdentInputMode::keyboard(char key)
         clear = false;
     }
 
-    if (isalnum(key) || key == '\b' || key == '_' || key == '$') {
-        doc.scalarAppend(key);
+    if (KeyCode::isAlpha(key) || KeyCode::isDigit(key)
+            || key == Key::BACKSPACE || key == Key::UNDERSCORE
+            || key == Key::DOLLAR) {
+        doc.scalarAppend(KeyCode::toChar(key));
         return DONE_STAY_NOPUSH;
     } else {
         return RAISE_POP_NOPUSH;

@@ -57,7 +57,7 @@ void Doc::save(const std::string &filename)
  * @brief Accept a key stroke
  * Handle it with the mode on the top of the mode stack.
  */
-void Doc::keyboard(char key)
+void Doc::keyboard(Key key)
 {
     assert(modes.size() > 0);
 

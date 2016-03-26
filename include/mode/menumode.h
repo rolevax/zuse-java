@@ -14,14 +14,14 @@ public:
 
     MenuMode(EditableDoc &doc, Context context);
 
-    Result keyboard(char key) override;
+    Result keyboard(Key key) override;
     Result onPushed() override;
     void onPopped() override;
     const char *name() override;
 
 private:
-    Ast::Type keyToType(char key);
-    static int keyToBop(char key);
+    Ast::Type keyToType(Key key);
+    static int keyToBop(Key key);
 
 private:
     Context context;

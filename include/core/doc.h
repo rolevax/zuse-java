@@ -2,6 +2,7 @@
 #define DOC_H
 
 #include "core/editabledoc.h"
+#include "core/keycode.h"
 #include "core/tokens.h"
 #include "ast/rootast.h"
 
@@ -18,7 +19,7 @@ public:
 
     void load(const std::string &filename);
     void save(const std::string &filename);
-    void keyboard(char key);
+    void keyboard(Key key); // TODO XXX: change here, and be a M
 
 private:
     // TODO: re-sort

@@ -11,11 +11,11 @@ StringInputMode::StringInputMode(EditableDoc &doc, bool clear) :
 
 }
 
-Mode::Result StringInputMode::keyboard(char key)
+Mode::Result StringInputMode::keyboard(Key key)
 {
     assert(doc.getInner().getType() == Ast::Type::STRING);
 
-    if ('"' == key) {
+    if (Key::DOUBLE_QUOTE == key) {
         const std::string &text = doc.getInner().asScalar().getText();
         // count postfix '\' run
         int backSlashCount = 0;
@@ -26,7 +26,7 @@ Mode::Result StringInputMode::keyboard(char key)
         }
     }
 
-    doc.scalarAppend(key);
+    doc.scalarAppend(KeyCode::toChar(key));
     return DONE_STAY_NOPUSH;
 }
 

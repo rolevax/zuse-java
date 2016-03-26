@@ -4,27 +4,24 @@
 #include "mode/numberinputmode.h"
 #include "core/editabledoc.h"
 
-#include <cstdlib>
-
-
 TipaMode::TipaMode(EditableDoc &doc)
     : Mode(doc)
 {
 
 }
 
-Mode::Result TipaMode::keyboard(char key)
+Mode::Result TipaMode::keyboard(Key key)
 {
-    char str[2] = { key, '\0' };
+    char str[2] = { KeyCode::toChar(key), '\0' };
 
-    if (isalpha(key)) {
+    if (KeyCode::isAlpha(key)) {
         doc.change(Ast::Type::IDENT);
         doc.scalarClear();
         doc.scalarAppend(str);
         return { ResultType::DONE_POP, new IdentInputMode(doc, false) };
-    } else if (isdigit(key)) {
+    } else if (KeyCode::isDigit(key)) {
         return { ResultType::DONE_POP, new NumberInputMode(doc, true) };
-    } else if ('\"' == key) {
+    } else if (Key::DOUBLE_QUOTE == key) {
         doc.change(Ast::Type::STRING);
         return { ResultType::DONE_POP, new StringInputMode(doc, true) };
     }

@@ -11,29 +11,29 @@ NumberInputMode::NumberInputMode(EditableDoc &doc, bool clear) :
 
 }
 
-Mode::Result NumberInputMode::keyboard(char key)
+Mode::Result NumberInputMode::keyboard(Key key)
 {
     assert(doc.getInner().getType() == Ast::Type::NUMBER);
 
-    if (' ' == key)
+    if (Key::SPACE == key)
         return DONE_POP_NOPUSH;
 
     char input;
-    if (('0' <= key && key <= '9') || key == '\b')
-        input = key;
-    else if ('u' == key)
+    if (KeyCode::isDigit(key) || key == Key::BACKSPACE)
+        input = KeyCode::toChar(key);
+    else if (Key::U == key)
         input = '4';
-    else if ('i' == key)
+    else if (Key::I == key)
         input = '5';
-    else if ('o' == key)
+    else if (Key::O == key)
         input = '6';
-    else if ('j' == key)
+    else if (Key::J == key)
         input = '1';
-    else if ('k' == key)
+    else if (Key::K == key)
         input = '2';
-    else if ('l' == key)
+    else if (Key::L == key)
         input = '3';
-    else if ('m' == key)
+    else if (Key::M == key)
         input = '0';
     else
         return DONE_STAY_NOPUSH;
