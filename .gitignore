@@ -1,4 +1,4 @@
-yaloe-java.pro.user
+*.pro.user
 ast/a.out
 ast/*.cc
 ast/*.hh

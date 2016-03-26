@@ -1,2 +1,2 @@
-Yaloe-Java repository
+Zuse-Java repository
 

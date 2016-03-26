@@ -5,7 +5,7 @@ import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
     visible: true
-    title: "Yaloe-Java"
+    title: "Zuse-Java"
     width: 800; height: editor.height + openButton.height
 
     Button {
