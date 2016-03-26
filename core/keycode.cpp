@@ -199,6 +199,9 @@ Key fromChar(char c)
         return Key::GREATER;
     case '?':
         return Key::QUESTION;
+    case '\n':
+    case '\r':
+        return Key::ENTER;
 
     default:
         return Key::OTHER;

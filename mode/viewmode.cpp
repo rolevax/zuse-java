@@ -226,6 +226,33 @@ bool ViewMode::macro(Key key, Mode *&nextPush)
             return true;
         }
     }
+    case Key::ENTER:
+    case Key::S_ENTER: {
+        const Ast *a = &doc.getOuter();
+        Ast::Type at;
+        int digCount = 0;
+
+        while (at = a->getType(), at != Ast::Type::CLASS_LIST
+               && at != Ast::Type::STMT_LIST) {
+            a = &a->getParent();
+            digCount++;
+        }
+
+        if (at == Ast::Type::CLASS_LIST) {
+            return false; // statement list not found
+        } else {
+            while (digCount --> 0)
+                doc.digOut();
+
+            if (key == Key::ENTER)
+                doc.append(doc.getOuter().typeAt(0));
+            else
+                doc.insert(doc.getOuter().typeAt(0));
+
+            nextPush = doc.createModifyMode(true);
+            return true;
+        }
+    }
     default:
         return macroBop(key, nextPush);
     }
