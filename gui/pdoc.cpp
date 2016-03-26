@@ -31,7 +31,6 @@ void PDoc::save(QString filename)
 
 void PDoc::keyboard(QString key, int modifier)
 {
-    (void) modifier;
     if (key.size() > 0) {
         char c = key.at(0).toLatin1();
         Key k = KeyCode::fromChar(c);
