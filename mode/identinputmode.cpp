@@ -18,7 +18,7 @@ Mode::Result IdentInputMode::keyboard(Key key)
     assert(doc.getInner().getType() == Ast::Type::IDENT);
 
     if (key == Key::SPACE) {
-        Mode * nextPush = promotion();
+        Mode *nextPush = promotion();
         return { ResultType::DONE_POP, nextPush };
     }
 
@@ -119,6 +119,15 @@ bool IdentInputMode::promoteToStmt()
     const std::string &text = doc.getInner().asScalar().getText();
     if (text == "while") {
         doc.change(Ast::Type::WHILE);
+        return true;
+    } else if (text == "if") {
+        doc.change(Ast::Type::IF_LIST);
+        return true;
+    } else if (text == "do") {
+        doc.change(Ast::Type::DO_WHILE);
+        return true;
+    } else if (text == "return") {
+        doc.change(Ast::Type::RETURN);
         return true;
     }
 

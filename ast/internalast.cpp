@@ -51,6 +51,8 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
                                                : Type::STMT_LIST;
     case Type::DECL_PARAM:
         return Type::IDENT;
+    case Type::WHILE:
+        return pos == 0 ? Type::META : Type::STMT_LIST;
     case Type::ASSIGN:
         return pos == 0 ? Type::IDENT : Type::META;
     default:

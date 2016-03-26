@@ -25,7 +25,7 @@ const std::string &BoneToken::getText() const
     if (sym == Sym::RBRACE) {
         size_t level = getAst()->indentLevel();
         if (level >= tab.size())
-            for (size_t i = 0; i <= level; i++)
+            for (size_t i = tab.size(); i <= level; i++)
                 tab.push_back(std::string(i * 4, ' ') + '}');
         return tab[level];
     } else {
