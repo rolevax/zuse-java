@@ -3,7 +3,7 @@
 #include "ast/parser.h"
 #include "mode/viewmode.h"
 #include "mode/menumode.h"
-#include "mode/tipamode.h"
+#include "mode/tilexmode.h"
 #include "mode/identinputmode.h"
 #include "mode/numberinputmode.h"
 #include "mode/stringinputmode.h"
@@ -333,7 +333,7 @@ Mode *Doc::createModifyMode(bool clear)
 
     switch (getInner().getType()) {
     case Ast::Type::META:
-        return new TipaMode(*this);
+        return new TilexMode(*this);
     case Ast::Type::IDENT:
         return new IdentInputMode(*this, clear);
     case Ast::Type::STRING:
@@ -446,6 +446,9 @@ Ast *Doc::newTree(Ast::Type type)
             break;
         case Ast::Type::STRING:
             a = new ScalarAst(Ast::Type::STRING, "");
+            break;
+        case Ast::Type::NUMBER:
+            a = new ScalarAst(Ast::Type::NUMBER, "0");
             break;
         case Ast::Type::META:
             a = new ScalarAst(Ast::Type::META, "");

@@ -33,9 +33,9 @@ SOURCES += main.cpp \
     ast/fixsizeast.cpp \
     mode/identinputmode.cpp \
     ast/boplistast.cpp \
-    mode/tipamode.cpp \
     mode/listinputmode.cpp \
-    core/keycode.cpp
+    core/keycode.cpp \
+    mode/tilexmode.cpp
 
 RESOURCES += qml.qrc
 
@@ -72,7 +72,7 @@ HEADERS += \
     include/ast/fixsizeast.h \
     include/mode/identinputmode.h \
     include/ast/boplistast.h \
-    include/mode/tipamode.h \
     include/mode/listinputmode.h \
-    include/core/keycode.h
+    include/core/keycode.h \
+    include/mode/tilexmode.h
 

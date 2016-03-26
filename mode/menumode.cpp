@@ -4,7 +4,7 @@
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
-#include "mode/tipamode.h"
+#include "mode/tilexmode.h"
 #include "mode/pairinputmode.h"
 
 #include <cctype>

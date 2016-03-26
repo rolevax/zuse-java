@@ -1,6 +1,6 @@
 #include "mode/viewmode.h"
 #include "mode/menumode.h"
-#include "mode/tipamode.h"
+#include "mode/tilexmode.h"
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
@@ -158,7 +158,7 @@ Mode *ViewMode::menulessListOp(ListOp op)
     case Ast::Type::STMT_LIST:
     case Ast::Type::MEMBER_LIST:
     case Ast::Type::ARG_LIST:
-        return new TipaMode(doc);
+        return new TilexMode(doc);
     default:
         return nullptr;
     }
@@ -167,7 +167,11 @@ Mode *ViewMode::menulessListOp(ListOp op)
 bool ViewMode::macro(Key key, Mode *&nextPush)
 {
     Ast::Type ot = doc.getOuter().getType();
+    if (ot == Ast::Type::CLASS_LIST && doc.getOuter().size() == 0)
+        return false;
+
     Ast::Type it = doc.getInner().getType();
+
     switch (key) {
     case Key::LEFT_PAREN:
         if (ot == Ast::Type::MEMBER_LIST && it == Ast::Type::DECL_VAR) {

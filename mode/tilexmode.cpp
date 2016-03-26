@@ -1,16 +1,16 @@
-#include "mode/tipamode.h"
+#include "mode/tilexmode.h"
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
 #include "core/editabledoc.h"
 
-TipaMode::TipaMode(EditableDoc &doc)
+TilexMode::TilexMode(EditableDoc &doc)
     : Mode(doc)
 {
 
 }
 
-Mode::Result TipaMode::keyboard(Key key)
+Mode::Result TilexMode::keyboard(Key key)
 {
     char str[2] = { KeyCode::toChar(key), '\0' };
 
@@ -20,7 +20,10 @@ Mode::Result TipaMode::keyboard(Key key)
         doc.scalarAppend(str);
         return { ResultType::DONE_POP, new IdentInputMode(doc, false) };
     } else if (KeyCode::isDigit(key)) {
-        return { ResultType::DONE_POP, new NumberInputMode(doc, true) };
+        doc.change(Ast::Type::NUMBER);
+        doc.scalarClear();
+        doc.scalarAppend(str);
+        return { ResultType::DONE_POP, new NumberInputMode(doc, false) };
     } else if (Key::DOUBLE_QUOTE == key) {
         doc.change(Ast::Type::STRING);
         return { ResultType::DONE_POP, new StringInputMode(doc, true) };
@@ -29,13 +32,13 @@ Mode::Result TipaMode::keyboard(Key key)
     return DONE_STAY_NOPUSH;
 }
 
-Mode::Result TipaMode::onPushed()
+Mode::Result TilexMode::onPushed()
 {
     doc.setHotLight(EditableDoc::HotLightLevel::AREA);
     return DONE_STAY_NOPUSH;
 }
 
-const char *TipaMode::name()
+const char *TilexMode::name()
 {
-    return "TIPA";
+    return "Tilex";
 }
