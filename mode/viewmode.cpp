@@ -154,14 +154,7 @@ Mode *ViewMode::menulessListOp(ListOp op)
     }
 
     // after insertion jobs
-    switch (doc.getOuter().getType()) {
-    case Ast::Type::STMT_LIST:
-    case Ast::Type::MEMBER_LIST:
-    case Ast::Type::ARG_LIST:
-        return new TilexMode(doc);
-    default:
-        return nullptr;
-    }
+    return doc.createModifyMode(true);
 }
 
 bool ViewMode::macro(Key key, Mode *&nextPush)

@@ -28,14 +28,14 @@ SOURCES += main.cpp \
     mode/menumode.cpp \
     mode/stringinputmode.cpp \
     mode/numberinputmode.cpp \
-    mode/pairinputmode.cpp \
     ast/internalast.cpp \
     ast/fixsizeast.cpp \
     mode/identinputmode.cpp \
     ast/boplistast.cpp \
     mode/listinputmode.cpp \
     core/keycode.cpp \
-    mode/tilexmode.cpp
+    mode/tilexmode.cpp \
+    mode/fixsizeinputmode.cpp
 
 RESOURCES += qml.qrc
 
@@ -66,7 +66,6 @@ HEADERS += \
     include/mode/menumode.h \
     include/mode/stringinputmode.h \
     include/mode/numberinputmode.h \
-    include/mode/pairinputmode.h \
     include/core/editabledoc.h \
     include/ast/internalast.h \
     include/ast/fixsizeast.h \
@@ -74,5 +73,6 @@ HEADERS += \
     include/ast/boplistast.h \
     include/mode/listinputmode.h \
     include/core/keycode.h \
-    include/mode/tilexmode.h
+    include/mode/tilexmode.h \
+    include/mode/fixsizeinputmode.h
 

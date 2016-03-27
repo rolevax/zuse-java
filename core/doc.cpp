@@ -1,4 +1,4 @@
-// Yaloe headers
+// Zuse headers
 #include "core/doc.h"
 #include "ast/parser.h"
 #include "mode/viewmode.h"
@@ -8,6 +8,7 @@
 #include "mode/numberinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/listinputmode.h"
+#include "mode/fixsizeinputmode.h"
 #include "gui/pdoc.h"
 
 // headers for file I/O
@@ -106,10 +107,12 @@ void Doc::pop(Mode *nextPush)
     modes.pop_back();
     popped->onPopped();
 
-    if (nextPush != nullptr)
+    if (nextPush != nullptr) {
         push(nextPush);
-    else
-        modes.back()->onResume();
+    } else {
+        Mode::Result res = modes.back()->onResume();
+        handleModeResult(res);
+    }
 }
 
 void Doc::handleModeResult(const Mode::Result &res)
@@ -330,6 +333,8 @@ Mode *Doc::createModifyMode(bool clear)
 {
     if (getInner().isList() && !getInner().isBopList())
         return new ListInputMode(*this);
+    else if (getInner().isFixSize())
+        return new FixSizeInputMode(*this);
 
     switch (getInner().getType()) {
     case Ast::Type::META:

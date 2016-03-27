@@ -33,7 +33,7 @@ public:
     virtual Result keyboard(Key key) { (void) key; return DONE_STAY_NOPUSH; }
     virtual Result onPushed()  { return DONE_STAY_NOPUSH; }
     virtual void onPopped() {}
-    virtual void onResume() {}
+    virtual Result onResume() { return DONE_STAY_NOPUSH; }
     virtual const char *name() = 0;
 
 protected:

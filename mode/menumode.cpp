@@ -5,7 +5,7 @@
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
 #include "mode/tilexmode.h"
-#include "mode/pairinputmode.h"
+#include "mode/fixsizeinputmode.h"
 
 #include <cctype>
 #include <cassert>
