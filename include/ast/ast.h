@@ -80,6 +80,7 @@ public:
     InternalAst &getParent() const;
     void setParent(InternalAst *next);
 
+    bool hasIndent() const;
     int indentLevel() const;
 
 private:

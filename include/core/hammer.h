@@ -28,6 +28,8 @@ private:
     void hitMethod(const FixSizeAst<4> &ast, Buf &buf);
     void hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf);
     void hitIfElseBody(const FixSizeAst<1> &ast, Buf &buf);
+    void hitWhile(const FixSizeAst<2> &ast, Buf &buf);
+    void hitDoWhile(const FixSizeAst<2> &ast, Buf &buf);
     void hitInfixBop(const FixSizeAst<2> &ast, Buf &buf);
 
     void hitListBegin(const ListAst &ast, Buf &buf);

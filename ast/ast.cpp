@@ -168,17 +168,21 @@ void Ast::setParent(InternalAst *next)
     parent = next;
 }
 
+bool Ast::hasIndent() const
+{
+    Type ptype = parent->type;
+    return ptype == Type::MEMBER_LIST || ptype == Type::STMT_LIST;
+}
+
 int Ast::indentLevel() const
 {
     int ret = 0;
-    Type ptype = parent->type;
-    bool hasIndent = ptype == Type::MEMBER_LIST
-            || ptype == Type::STMT_LIST;
-    if (hasIndent)
-        for (const Ast *a = parent; a->parent != a; a = &a->getParent())
-            if (a->getType() == Type::STMT_LIST
-                    || a->getType() == Type::MEMBER_LIST)
-                ++ret;
+    for (const Ast *a = parent;
+         a->parent != a && a->parent != nullptr;
+         a = &a->getParent())
+        if (a->getType() == Type::STMT_LIST
+                || a->getType() == Type::MEMBER_LIST)
+            ++ret;
     return ret;
 }
 
