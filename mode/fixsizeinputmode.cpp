@@ -8,8 +8,16 @@
 FixSizeInputMode::FixSizeInputMode(EditableDoc &doc, size_t offset)
     : Mode(doc)
     , stage(offset)
+    , macro(doc)
 {
 
+}
+
+Mode::Result FixSizeInputMode::keyboard(Key key)
+{
+    Mode *mode = nullptr;
+    macro.macro(key, mode);
+    return { ResultType::DONE_STAY, mode };
 }
 
 Mode::Result FixSizeInputMode::onPushed()

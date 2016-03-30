@@ -2,6 +2,7 @@
 #define VIEWMODE_H
 
 #include "mode/mode.h"
+#include "mode/macrohandler.h"
 
 class ViewMode : public Mode
 {
@@ -14,8 +15,8 @@ public:
 private:
     enum class ListOp { INSERT, APPEND, ASSART };
     Mode *menulessListOp(ListOp op);
-    bool macro(Key key, Mode *&nextPush);
-    bool macroBop(Key key, Mode *&nextPush);
+
+    MacroHandler macro;
 };
 
 #endif // VIEWMODE_H

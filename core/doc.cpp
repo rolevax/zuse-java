@@ -62,8 +62,9 @@ void Doc::keyboard(Key key)
 {
     assert(modes.size() > 0);
 
-    for (auto rit = modes.rbegin(); rit != modes.rend(); ++rit) {
-        Mode::Result res = (*rit)->keyboard(key);
+    for (int i = modes.size() - 1; i >= 0; i--) {
+        assert(i < int(modes.size()));
+        Mode::Result res = modes[i]->keyboard(key);
         handleModeResult(res);
         if (res.handled())
             break;
@@ -80,7 +81,8 @@ void Doc::keyboard(Key key)
  */
 void Doc::push(Mode *mode)
 {
-    assert(mode != nullptr);
+    if (mode == nullptr)
+        return;
 
     modes.emplace_back(mode);
     ob.observePush(modes.back()->name());
@@ -92,12 +94,8 @@ void Doc::push(Mode *mode)
 /**
  * @brief Pop the top of the mode stack,
  * @param nextPush the next mode to push
- * Call the 'onPopped' of that mode.
- * Then if nextPush is not null, push that.
- * Else call 'onResume' of the new top mode.
- * Afterwards that mode object will be destructed.
  */
-void Doc::pop(Mode *nextPush)
+void Doc::pop()
 {
     assert(modes.size() > 1); // bottom view mode reserved
 
@@ -106,22 +104,19 @@ void Doc::pop(Mode *nextPush)
     std::unique_ptr<Mode> popped = std::move(modes.back());
     modes.pop_back();
     popped->onPopped();
-
-    if (nextPush != nullptr) {
-        push(nextPush);
-    } else {
-        Mode::Result res = modes.back()->onResume();
-        handleModeResult(res);
-    }
 }
 
 void Doc::handleModeResult(const Mode::Result &res)
 {
     if (res.toPop()) {
-        pop(res.nextPush);
+        pop();
+        push(res.nextPush);
+        if (res.type == Mode::ResultType::DONE_POP) {
+            Mode::Result r = modes.back()->onResume();
+            handleModeResult(r);
+        }
     } else { // stay on the stack
-        if (res.nextPush != nullptr)
-            push(res.nextPush);
+        push(res.nextPush);
     }
 }
 

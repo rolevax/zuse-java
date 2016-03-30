@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     mode/listinputmode.cpp \
     core/keycode.cpp \
     mode/tilexmode.cpp \
-    mode/fixsizeinputmode.cpp
+    mode/fixsizeinputmode.cpp \
+    mode/macrohandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -74,5 +75,6 @@ HEADERS += \
     include/mode/listinputmode.h \
     include/core/keycode.h \
     include/mode/tilexmode.h \
-    include/mode/fixsizeinputmode.h
+    include/mode/fixsizeinputmode.h \
+    include/mode/macrohandler.h
 
