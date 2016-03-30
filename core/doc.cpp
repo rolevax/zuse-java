@@ -329,7 +329,7 @@ Mode *Doc::createModifyMode(bool clear)
     if (getInner().isList() && !getInner().isBopList())
         return new ListInputMode(*this);
     else if (getInner().isFixSize())
-        return new FixSizeInputMode(*this);
+        return new FixSizeInputMode(*this, getInner().asInternal());
 
     switch (getInner().getType()) {
     case Ast::Type::META:
