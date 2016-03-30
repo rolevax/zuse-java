@@ -31,10 +31,30 @@ Mode::Result FixSizeInputMode::onPushed()
 
 Mode::Result FixSizeInputMode::onResume()
 {
-    if (++stage == ast.size()) {
-        doc.digOut();
+    // search toward root for the target fix-size node
+    int digCount = 1;
+    const Ast *outer = &doc.getOuter();
+    while (outer != nullptr && outer->getType() != Ast::Type::CLASS_LIST
+           && outer != &ast) {
+        outer = &outer->getParent();
+        digCount++;
+    }
+
+    if (outer != &ast) // the target fix-size node has gone
         return { ResultType::DONE_POP, nullptr };
-    } else {
+
+    if (++stage == ast.size()) { // input last child
+        // cannot use single dig-out since some mode involves
+        // unsymetric fall-dig behaviors
+        while (digCount --> 0)
+            doc.digOut();
+
+        return { ResultType::DONE_POP, nullptr };
+    } else { // advance
+        digCount--; // dig-out 'upto', not 'onto'
+        while (digCount --> 0)
+            doc.digOut();
+
         doc.sibling(+1);
         return { ResultType::DONE_STAY, doc.createModifyMode(true) };
     }
