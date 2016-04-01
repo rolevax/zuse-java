@@ -17,6 +17,9 @@ public:
     const char *name() override;
 
 private:
+    Result nextStage();
+
+private:
     const InternalAst &ast;
     size_t stage;
     MacroHandler macro;

@@ -17,9 +17,23 @@ FixSizeInputMode::FixSizeInputMode(EditableDoc &doc, const InternalAst &f,
 
 Mode::Result FixSizeInputMode::keyboard(Key key)
 {
-    Mode *mode = nullptr;
-    macro.macro(key, mode);
-    return { ResultType::DONE_STAY, mode };
+    if (&doc.getOuter() == &ast
+            && doc.getInner().isList()
+            && doc.getInner().asList().size() == 0
+            && (key == Key::F || key == Key::SPACE)) {
+        // implements "fix-size forgetting" logic
+        if (key == Key::F) {
+            doc.assart(doc.getInner().asList().typeAt(0));
+            // the user will focus on the list and forget about the fix-size
+            return { ResultType::DONE_POP, doc.createModifyMode(true) };
+        } else { // key == Key::SPACE
+            return nextStage();
+        }
+    } else {
+        Mode *mode = nullptr;
+        macro.macro(key, mode);
+        return { ResultType::DONE_STAY, mode };
+    }
 }
 
 Mode::Result FixSizeInputMode::onPushed()
@@ -31,33 +45,7 @@ Mode::Result FixSizeInputMode::onPushed()
 
 Mode::Result FixSizeInputMode::onResume()
 {
-    // search toward root for the target fix-size node
-    int digCount = 1;
-    const Ast *outer = &doc.getOuter();
-    while (outer != nullptr && outer->getType() != Ast::Type::CLASS_LIST
-           && outer != &ast) {
-        outer = &outer->getParent();
-        digCount++;
-    }
-
-    if (outer != &ast) // the target fix-size node has gone
-        return { ResultType::DONE_POP, nullptr };
-
-    if (++stage == ast.size()) { // input last child
-        // cannot use single dig-out since some mode involves
-        // unsymetric fall-dig behaviors
-        while (digCount --> 0)
-            doc.digOut();
-
-        return { ResultType::DONE_POP, nullptr };
-    } else { // advance
-        digCount--; // dig-out 'upto', not 'onto'
-        while (digCount --> 0)
-            doc.digOut();
-
-        doc.sibling(+1);
-        return { ResultType::DONE_STAY, doc.createModifyMode(true) };
-    }
+    return nextStage();
 }
 
 const char *FixSizeInputMode::name()
@@ -73,5 +61,41 @@ const char *FixSizeInputMode::name()
         return "Var";
     default:
         return "Fix";
+    }
+}
+
+Mode::Result FixSizeInputMode::nextStage()
+{
+    // search toward root for the target fix-size node
+    int digCount = 1;
+    const Ast *outer = &doc.getOuter();
+    while (outer != nullptr && outer->getType() != Ast::Type::CLASS_LIST
+           && outer != &ast) {
+        outer = &outer->getParent();
+        digCount++;
+    }
+
+    if (outer != &ast) // the target fix-size node has gone
+        return { ResultType::DONE_POP, nullptr };
+
+    if (++stage == ast.size()) { // already input last child
+        // cannot use single dig-out since some mode involves
+        // unsymetric fall-dig behaviors
+        while (digCount --> 0)
+            doc.digOut();
+
+        return { ResultType::DONE_POP, nullptr };
+    } else { // advance
+        digCount--; // dig-out 'upto', not 'onto'
+        while (digCount --> 0)
+            doc.digOut();
+
+        doc.sibling(+1);
+
+        // wait for user's choice (f or space) if inner is an empty list
+        if (doc.getInner().isList() && doc.getInner().asList().size() == 0)
+            return { ResultType::DONE_STAY, nullptr };
+        else
+            return { ResultType::DONE_STAY, doc.createModifyMode(true) };
     }
 }
