@@ -36,7 +36,7 @@ Mode::Result NumberInputMode::keyboard(Key key)
     else if (Key::M == key)
         input = '0';
     else
-        return DONE_STAY_NOPUSH;
+        return RAISE_POP_NOPUSH;
 
     doc.scalarAppend(input);
     return DONE_STAY_NOPUSH;

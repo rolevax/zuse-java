@@ -4,6 +4,8 @@
 #include "mode/numberinputmode.h"
 #include "core/editabledoc.h"
 
+#include <cassert>
+
 TilexMode::TilexMode(EditableDoc &doc)
     : Mode(doc)
 {
@@ -27,6 +29,10 @@ Mode::Result TilexMode::keyboard(Key key)
     } else if (Key::DOUBLE_QUOTE == key) {
         doc.change(Ast::Type::STRING);
         return { ResultType::DONE_POP, new StringInputMode(doc, true) };
+    } else if (Key::SPACE == key) {
+        doc.remove(); // remove the meta node
+        doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+        return { ResultType::DONE_POP, nullptr };
     }
 
     return DONE_STAY_NOPUSH;
@@ -34,6 +40,7 @@ Mode::Result TilexMode::keyboard(Key key)
 
 Mode::Result TilexMode::onPushed()
 {
+    assert(doc.getInner().getType() == Ast::Type::META);
     doc.setHotLight(EditableDoc::HotLightLevel::AREA);
     return DONE_STAY_NOPUSH;
 }
