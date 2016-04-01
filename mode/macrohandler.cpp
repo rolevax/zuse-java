@@ -14,23 +14,27 @@ bool MacroHandler::macro(Key key, Mode *&nextPush)
 
     Ast::Type it = doc.getInner().getType();
 
+    // meta comment:
+    // "-->" means "go onto"
+    // "==>" means "transform into"
     switch (key) {
     case Key::LEFT_PAREN:
         if (ot == Ast::Type::MEMBER_LIST && it == Ast::Type::DECL_VAR) {
             // decl_var ==> decl_method
             doc.cast(Ast::Type::DECL_METHOD);
-            // TODO push a fix-size mode with offset
+            // use offset 2 to skip return type and identifier
+            nextPush = doc.createModifyMode(true, 2);
         } else if (ot == Ast::Type::DECL_VAR) {
             // dector --> decl_var ==> decl_method
             doc.digOut();
             doc.cast(Ast::Type::DECL_METHOD);
-            // TODO push a fix-size mode with offset
+            // use offset 2 to skip return type and identifier
+            nextPush = doc.createModifyMode(true, 2);
         } else if (ot == Ast::Type::IF_LIST) {
             // TODO
         } else {
             return macroBop(key, nextPush);
         }
-        nextPush = doc.createModifyMode(true);
         return true;
     case Key::COMMA: {
         const Ast *a = &doc.getOuter();

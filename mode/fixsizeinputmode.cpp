@@ -40,7 +40,8 @@ Mode::Result FixSizeInputMode::onPushed()
 {
     // assume all fix-size node has at least size one
     doc.fallIn();
-    return { ResultType::DONE_STAY, doc.createModifyMode(true) };
+    doc.sibling(int(stage));
+    return pushOrWait();
 }
 
 Mode::Result FixSizeInputMode::onResume()
@@ -92,10 +93,15 @@ Mode::Result FixSizeInputMode::nextStage()
 
         doc.sibling(+1);
 
-        // wait for user's choice (f or space) if inner is an empty list
-        if (doc.getInner().isList() && doc.getInner().asList().size() == 0)
-            return { ResultType::DONE_STAY, nullptr };
-        else
-            return { ResultType::DONE_STAY, doc.createModifyMode(true) };
+        return pushOrWait();
     }
+}
+
+Mode::Result FixSizeInputMode::pushOrWait()
+{
+    // wait for user's choice (f or space) if inner is an empty list
+    if (doc.getInner().isList() && doc.getInner().asList().size() == 0)
+        return { ResultType::DONE_STAY, nullptr };
+    else
+        return { ResultType::DONE_STAY, doc.createModifyMode(true) };
 }

@@ -18,6 +18,7 @@ public:
 
 private:
     Result nextStage();
+    Result pushOrWait();
 
 private:
     const InternalAst &ast;

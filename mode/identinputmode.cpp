@@ -79,6 +79,7 @@ bool IdentInputMode::isUpperCamel(const std::string &id)
 Mode *IdentInputMode::promotion()
 {
     bool promoted = promoteToDeclVar() || promoteToStmt();
+    // TODO: use fix-size offset
     return promoted ? doc.createModifyMode(true) : nullptr;
 }
 

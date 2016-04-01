@@ -324,12 +324,12 @@ void Doc::cast(Ast::Type type)
     tokens.sync(root.get());
 }
 
-Mode *Doc::createModifyMode(bool clear)
+Mode *Doc::createModifyMode(bool clear, size_t offset)
 {
     if (getInner().isList() && !getInner().isBopList())
         return new ListInputMode(*this);
     else if (getInner().isFixSize())
-        return new FixSizeInputMode(*this, getInner().asInternal());
+        return new FixSizeInputMode(*this, getInner().asInternal(), offset);
 
     switch (getInner().getType()) {
     case Ast::Type::META:
