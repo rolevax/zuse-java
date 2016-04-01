@@ -78,19 +78,23 @@ bool IdentInputMode::isUpperCamel(const std::string &id)
 
 Mode *IdentInputMode::promotion()
 {
-    bool promoted = promoteToDeclVar() || promoteToStmt();
-    // TODO: use fix-size offset
-    return promoted ? doc.createModifyMode(true) : nullptr;
+    if (Mode *ret = promoteToDeclVar())
+        return ret;
+
+    if (Mode *ret = promoteToStmt())
+        return ret;
+
+    return nullptr;
 }
 
-bool IdentInputMode::promoteToDeclVar()
+Mode *IdentInputMode::promoteToDeclVar()
 {
     if (isType(doc.getInner().asScalar().getText())) {
         // case 1: check bare identifier
         Ast::Type otype = doc.getOuter().getType();
         if (otype == Ast::Type::STMT_LIST || otype == Ast::Type::MEMBER_LIST) {
             doc.nestAsLeft(Ast::Type::DECL_VAR);
-            return true;
+            return doc.createModifyMode(true, 1);
         }
 
         // case 2: check qualified name
@@ -106,32 +110,32 @@ bool IdentInputMode::promoteToDeclVar()
                         || ootype == Ast::Type::MEMBER_LIST) {
                     doc.digOut();
                     doc.nestAsLeft(Ast::Type::DECL_VAR);
-                    return true;
+                    return doc.createModifyMode(true, 1);
                 }
             }
         }
     }
 
-    return false;
+    return nullptr;
 }
 
-bool IdentInputMode::promoteToStmt()
+Mode *IdentInputMode::promoteToStmt()
 {
     const std::string &text = doc.getInner().asScalar().getText();
     if (text == "while") {
         doc.change(Ast::Type::WHILE);
-        return true;
+        return doc.createModifyMode(true, 0);
     } else if (text == "if") {
         doc.change(Ast::Type::IF_LIST);
-        return true;
+        return doc.createModifyMode(true, 0);
     } else if (text == "do") {
         doc.change(Ast::Type::DO_WHILE);
-        return true;
+        return doc.createModifyMode(true, 0);
     } else if (text == "return") {
         doc.change(Ast::Type::RETURN);
-        return true;
+        return doc.createModifyMode(true, 0);
     }
 
-    return false;
+    return nullptr;
 }
 

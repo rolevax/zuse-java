@@ -18,8 +18,8 @@ private:
     static bool isPrimitiveType(const std::string &id);
     static bool isUpperCamel(const std::string &id);
     Mode *promotion();
-    bool promoteToDeclVar();
-    bool promoteToStmt();
+    Mode *promoteToDeclVar();
+    Mode *promoteToStmt();
 
 private:
     bool clear;
