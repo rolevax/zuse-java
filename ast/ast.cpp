@@ -30,7 +30,7 @@ bool Ast::isFixSize(Ast::Type type, size_t s)
     case 0:
         return Type::RETURN <= type && type <= Type::DECL_METHOD;
     case 1:
-        return Type::RETURN <= type && type <= Type::IF_ELSEBODY;
+        return Type::RETURN <= type && type <= Type::RETURN;
     case 2:
         return Type::DECL_CLASS <= type && type <= Type::ASSIGN;
     case 4:

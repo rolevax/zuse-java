@@ -29,7 +29,7 @@ public:
 
         // FIX-SIZE, sync with isFixSize() definition
         // size 1
-        RETURN, IF_ELSEBODY,
+        RETURN,
         // size 2
         DECL_CLASS, DECL_VAR, DECL_PARAM, WHILE, DO_WHILE, IF_CONDBODY,
         ASSIGN,

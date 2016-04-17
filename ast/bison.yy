@@ -314,9 +314,7 @@ if_list: "if" "(" expr ")" stmt %prec "then"
 					  for (size_t i = 0; i < size; i++)
 						  $$->append(tail.remove(0));
 				  } else {
-					  Ast *elze = new FixSizeAst<1>(Ast::Type::IF_ELSEBODY,
-													$7->bodify()); 
-					  $$->append(elze);
+					  $$->append($7->bodify());
 				  } }
 	   ;
 

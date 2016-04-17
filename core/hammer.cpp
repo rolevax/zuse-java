@@ -66,9 +66,6 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Ast::Type::IF_CONDBODY:
             hitIfCondBody(ast.asFixSize<2>(), buf);
             break;
-        case Ast::Type::IF_ELSEBODY:
-            hitIfElseBody(ast.asFixSize<1>(), buf);
-            break;
         case Ast::Type::ASSIGN:
             hitInfixBop(ast.asFixSize<2>(), buf);
             break;
@@ -133,12 +130,6 @@ void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Hammer::Buf &buf)
     hitGeneral(ast.at(0), buf); // condition
     bone(ast, buf, BoneToken::Sym::RPAREN);
     hitGeneral(ast.at(1), buf); // statement list
-}
-
-void Hammer::hitIfElseBody(const FixSizeAst<1> &ast, Hammer::Buf &buf)
-{
-    //bone(ast, buf, BoneToken::Sym::LBRACE_NS);
-    hitGeneral(ast.at(0), buf);
 }
 
 void Hammer::hitWhile(const FixSizeAst<2> &ast, Hammer::Buf &buf)
@@ -251,7 +242,6 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
             bone(ast, buf, BoneToken::Sym::COMMA);
         break;
     case Ast::Type::IF_LIST:
-        bone(ast, buf, BoneToken::Sym::RBRACE);
         if (!end)
             bone(ast, buf, BoneToken::Sym::ELSE);
         break;
