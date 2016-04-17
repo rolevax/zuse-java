@@ -37,6 +37,7 @@ private:
     void hitListBegin(const ListAst &ast, Buf &buf);
     void hitListEnd(const ListAst &ast, Buf &buf);
     void hitListSep(const ListAst &ast, Buf &buf, size_t pos);
+    static bool needBrace(const ListAst &ast, bool norec = false);
 
     void bone(const Ast &ast, Buf &buf, BoneToken::Sym sym);
 

@@ -168,8 +168,7 @@ void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
         buf.push_back(nullptr);
         break;
     case Type::STMT_LIST:
-        if (ast.getParent().getType() == Type::DECL_METHOD
-                || ast.size() != 1) {
+        if (needBrace(ast)) {
             // use space-less left brace for else-body
             Sym sym = ast.getParent().getType() == Type::IF_LIST ? Sym::LBRACE_NS
                                                                  : Sym::LBRACE;
@@ -196,10 +195,7 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
         bone(ast, buf, Sym::RBRACE);
         break;
     case Type::STMT_LIST:
-        if (ast.getParent().getType() == Type::DECL_METHOD
-                || ast.size() != 1) {
-            bone(ast, buf, Sym::RBRACE);
-        }
+        bone(ast, buf, needBrace(ast) ? Sym::RBRACE : Sym::RBRACE_VT);
         break;
     case Type::DECL_PARAM_LIST:
         bone(ast, buf, Sym::RPAREN);
@@ -245,8 +241,11 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
             bone(ast, buf, Sym::COMMA);
         break;
     case Type::IF_LIST:
-        if (!end)
+        if (!end) {
+            if (needBrace(ast.at(0).asFixSize<2>().at(1).asList()))
+                bone(ast, buf, Sym::SPACE);
             bone(ast, buf, Sym::ELSE);
+        }
         break;
     case Type::ADD_BOP_LIST:
         if (!end) {
@@ -273,6 +272,44 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
     default:
         break;
     }
+}
+
+bool Hammer::needBrace(const ListAst &ast, bool norec)
+{
+    assert(ast.getType() == Type::STMT_LIST);
+
+    Type pt = ast.getParent().getType();
+    if (pt == Type::DECL_METHOD || ast.size() != 1)
+        return true;
+
+    if (norec)
+        return false;
+
+    // a body inside 'if' needs braces whenever one of its siblings does
+    // the following lines are all for that
+
+    const ListAst *ifList = nullptr;
+    if (pt == Type::IF_CONDBODY) {
+        const InternalAst &par = ast.getParent().getParent();
+        if (par.getType() == Type::IF_LIST)
+            ifList = &par.asList();
+    } else if (pt == Type::IF_LIST) {
+        ifList = &ast.getParent().asList();
+    }
+
+    if (ifList != nullptr) {
+        for (size_t i = 0; i < ifList->size(); i++) {
+            const Ast &chd = ifList->at(i);
+            Type ct = chd.getType();
+            if (ct == Type::STMT_LIST && needBrace(chd.asList(), true)) // else body
+                return true;
+            if (ct == Type::IF_CONDBODY
+                    && needBrace(chd.asFixSize<2>().at(1).asList(), true))
+                return true;
+        }
+    }
+
+    return false;
 }
 
 void Hammer::bone(const Ast &ast, Buf &buf, Sym sym)
