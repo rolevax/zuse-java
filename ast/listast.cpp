@@ -92,11 +92,12 @@ bool ListAst::illOne(bool assumeSize) const
     if (!assumeSize && 1 != size())
         return false;
 
-    if (isBopList()) // binary operator is binary
+    if (isBopList()) // binary operator must be binary
         return true;
 
     Ast::Type t = getType();
-    return t == Type::DECTOR_LIST;
+    return t == Type::DECTOR_LIST
+            || t == Type::IF_LIST;
 }
 
 void ListAst::doInsert(size_t pos, Ast *child)

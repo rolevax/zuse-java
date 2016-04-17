@@ -20,7 +20,10 @@ public:
     void hit(const Ast &ast, size_t r, size_t c);
 
 private:
-    typedef std::vector<Token*> Buf;
+    using Buf = std::vector<Token*>;
+    using Type = Ast::Type;
+    using Sym = BoneToken::Sym;
+
     void hitGeneral(const Ast &ast, Buf &buf);
     void hitScalar(const ScalarAst &ast, Buf &buf);
     void hitList(const ListAst &ast, Buf &buf);
