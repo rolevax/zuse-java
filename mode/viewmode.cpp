@@ -138,6 +138,9 @@ Mode *ViewMode::menulessListOp(ListOp op)
     case Ast::Type::ARG_LIST:
         tar = Ast::Type::META;
         break;
+    case Ast::Type::IF_LIST:
+        tar = Ast::Type::IF_CONDBODY;
+        break;
     default:
         return nullptr; // silently do nothing
     }

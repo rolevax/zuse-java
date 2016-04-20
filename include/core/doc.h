@@ -44,6 +44,7 @@ private:
     void remove() override;
     void change(Ast::Type type) override;
     void nestAsLeft(Ast::Type type, int bop) override;
+    void nestAsRight(Ast::Type type, int bop) override;
     void expose() override;
     void cast(Ast::Type type) override;
 

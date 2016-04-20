@@ -225,6 +225,7 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
             Type bt = ast.at(pos).getType();
             // TODO: more conditions
             if (bt != Type::IF_LIST
+                    && bt != Type::IF_CONDBODY
                     && bt != Type::WHILE
                     && bt != Type::DO_WHILE
                     && bt != Type::RETURN

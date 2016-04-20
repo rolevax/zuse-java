@@ -11,6 +11,7 @@ public:
 
     void change(size_t pos, Ast *next);
     void nestAsLeft(size_t pos, InternalAst *nester);
+    void nestAsRight(size_t pos, InternalAst *nester);
     void expose(size_t vanisher, size_t exposee);
     virtual size_t size() const = 0;
     virtual Ast &at(size_t pos) const = 0;

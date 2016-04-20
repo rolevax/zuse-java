@@ -14,6 +14,7 @@ public:
     bool macro(Key key, Mode *&nextPush);
 
 private:
+    bool macroLeftParen(Mode *&nextPush);
     bool macroBop(Key key, Mode *&nextPush);
 
 private:

@@ -288,6 +288,19 @@ void Doc::nestAsLeft(Ast::Type type, int bop)
     tokens.sync(root.get());
 }
 
+void Doc::nestAsRight(Ast::Type type, int bop)
+{
+    assert(inner < outer->size());
+
+    InternalAst *nester = &newTree(type)->asInternal();
+    outer->nestAsRight(inner, nester);
+
+    if (BopListAst::UNUSED != bop)
+        setBop(outer->at(inner).asBopList(), 1, bop); // set inner, not outer!
+
+    tokens.sync(root.get());
+}
+
 void Doc::expose()
 {
     assert(inner < outer->size());
@@ -301,13 +314,15 @@ void Doc::expose()
 
 void Doc::cast(Ast::Type type)
 {
+    Ast::Type it = getInner().getType();
+
     switch (type) {
     case Ast::Type::ARG_LIST:
-        if (getInner().getType() != Ast::Type::ARG_LIST)
+        if (it != Ast::Type::ARG_LIST)
             nestAsLeft(Ast::Type::ARG_LIST, BopListAst::UNUSED);
-        return; // nest or do nothing
+        return; // either nest or do nothing
     case Ast::Type::DECL_METHOD:
-        if (getInner().getType() == Ast::Type::DECL_VAR
+        if (it == Ast::Type::DECL_VAR
                 && getInner().asInternal().at(1).isScalar()) {
             // from variable declaration to method declaration
             InternalAst *a = &newTree(Ast::Type::DECL_METHOD)->asInternal();

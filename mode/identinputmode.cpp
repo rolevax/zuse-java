@@ -126,7 +126,7 @@ Mode *IdentInputMode::promoteToStmt()
         doc.change(Ast::Type::WHILE);
         return doc.createModifyMode(true, 0);
     } else if (text == "if") {
-        doc.change(Ast::Type::IF_LIST);
+        doc.change(Ast::Type::IF_CONDBODY);
         return doc.createModifyMode(true, 0);
     } else if (text == "do") {
         doc.change(Ast::Type::DO_WHILE);
