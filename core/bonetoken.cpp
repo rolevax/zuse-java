@@ -3,12 +3,13 @@
 #include <vector>
 #include <cassert>
 
-std::string BoneToken::syms[32]
+std::string BoneToken::syms[64]
 {
     "class ", " {", "{", "}", "", "(", ")",
     "return ", "if ", "else ", "while ", "do", "for ",
     " ", ";", ".", ", ", "\"", "'",
     " = ", " + ", " - ", " * ", " / ", " || ", " && ", " | ", " ^ ", " & ",
+    " < ", " <= ", " > ", " >= ", " instanceof ", " == ", " != ",
     "??"
 };
 
@@ -23,6 +24,27 @@ BoneToken::BoneToken(const Ast *ast) :
 {
     assert(ast->isFixSize(2));
     switch (ast->getType()) {
+    case Ast::Type::LT:
+        sym = Sym::LT;
+        break;
+    case Ast::Type::LEQ:
+        sym = Sym::LEQ;
+        break;
+    case Ast::Type::GT:
+        sym = Sym::GT;
+        break;
+    case Ast::Type::GEQ:
+        sym = Sym::GEQ;
+        break;
+    case Ast::Type::INSTANCEOF:
+        sym = Sym::INSTANCEOF;
+        break;
+    case Ast::Type::EQ:
+        sym = Sym::EQ;
+        break;
+    case Ast::Type::NEQ:
+        sym = Sym::NEQ;
+        break;
     case Ast::Type::LOGIC_OR:
         sym = Sym::LOGIC_OR;
         break;

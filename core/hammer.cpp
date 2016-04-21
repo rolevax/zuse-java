@@ -66,6 +66,13 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::IF_CONDBODY:
             hitIfCondBody(ast.asFixSize<2>(), buf);
             break;
+        case Type::LT:
+        case Type::LEQ:
+        case Type::GT:
+        case Type::GEQ:
+        case Type::INSTANCEOF:
+        case Type::EQ:
+        case Type::NEQ:
         case Type::LOGIC_OR:
         case Type::LOGIC_AND:
         case Type::BIT_OR:

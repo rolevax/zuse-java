@@ -13,6 +13,7 @@ public:
         RETURN, IF, ELSE, WHILE, DO, FOR,
         SPACE, SEMICOLON, DOT, COMMA, DQUOTE, SQUOTE,
         ASSIGN, ADD, SUB, MUL, DIV, LOGIC_OR, LOGIC_AND, BIT_OR, BIT_XOR, BIT_AND,
+        LT, LEQ, GT, GEQ, INSTANCEOF, EQ, NEQ,
         META
     };
 
@@ -23,7 +24,7 @@ public:
 
 private:
     Sym sym;
-    static std::string syms[32]; // MUST SYNC WITH # OF ENUM
+    static std::string syms[64]; // MUST SYNC WITH # OF ENUM
 };
 
 #endif // BONETOKEN_H

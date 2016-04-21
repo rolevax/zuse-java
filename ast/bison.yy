@@ -369,23 +369,23 @@ expr_lv6: expr_lv7
 expr_lv7: expr_lv8
 				{ $$ = $1; }
 		| expr_lv7 "==" expr_lv8
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::EQ, $1, $3); } 
 		| expr_lv7 "!=" expr_lv8
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::NEQ, $1, $3); } 
 		;
 
 expr_lv8: expr_lv9
 				{ $$ = $1; }
 		| expr_lv8 "<" expr_lv9
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::LT, $1, $3); } 
 		| expr_lv8 ">" expr_lv9
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::GT, $1, $3); } 
 		| expr_lv8 "<=" expr_lv9
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::LEQ, $1, $3); } 
 		| expr_lv8 ">=" expr_lv9
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::GEQ, $1, $3); } 
 		| expr_lv8 "instanceof" expr_lv9
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::INSTANCEOF, $1, $3); } 
 		;
 
 expr_lv9: expr_lv10

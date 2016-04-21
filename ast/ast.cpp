@@ -146,6 +146,15 @@ int Ast::precedence() const
         return 12;
     case Type::ADD_BOP_LIST:
         return 11;
+    case Type::LT:
+    case Type::LEQ:
+    case Type::GT:
+    case Type::GEQ:
+    case Type::INSTANCEOF:
+        return 9;
+    case Type::EQ:
+    case Type::NEQ:
+        return 8;
     case Type::BIT_AND:
         return 7;
     case Type::BIT_XOR:
