@@ -12,11 +12,12 @@ public:
         CLASS, LBRACE, LBRACE_NS, RBRACE, RBRACE_VT, LPAREN, RPAREN,
         RETURN, IF, ELSE, WHILE, DO, FOR,
         SPACE, SEMICOLON, DOT, COMMA, DQUOTE, SQUOTE,
-        ASSIGN, ADD, SUB, MUL, DIV,
+        ASSIGN, ADD, SUB, MUL, DIV, LOGIC_OR, LOGIC_AND, BIT_OR, BIT_XOR, BIT_AND,
         META
     };
 
     BoneToken(const Ast *ast, Sym sym);
+    BoneToken(const Ast *ast);
 
     const std::string &getText() const override;
 

@@ -66,6 +66,11 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::IF_CONDBODY:
             hitIfCondBody(ast.asFixSize<2>(), buf);
             break;
+        case Type::LOGIC_OR:
+        case Type::LOGIC_AND:
+        case Type::BIT_OR:
+        case Type::BIT_XOR:
+        case Type::BIT_AND:
         case Type::ASSIGN:
             hitInfixBop(ast.asFixSize<2>(), buf);
             break;
@@ -156,7 +161,7 @@ void Hammer::hitDoWhile(const FixSizeAst<2> &ast, Hammer::Buf &buf)
 void Hammer::hitInfixBop(const FixSizeAst<2> &ast, Hammer::Buf &buf)
 {
     hitGeneral(ast.at(0), buf); // lhs
-    bone(ast, buf, Sym::ASSIGN);
+    buf.push_back(new BoneToken(&ast));
     hitGeneral(ast.at(1), buf); // rhs
 }
 

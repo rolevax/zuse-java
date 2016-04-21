@@ -8,7 +8,7 @@ std::string BoneToken::syms[32]
     "class ", " {", "{", "}", "", "(", ")",
     "return ", "if ", "else ", "while ", "do", "for ",
     " ", ";", ".", ", ", "\"", "'",
-    " = ", " + ", " - ", " * ", " / ",
+    " = ", " + ", " - ", " * ", " / ", " || ", " && ", " | ", " ^ ", " & ",
     "??"
 };
 
@@ -16,6 +16,34 @@ BoneToken::BoneToken(const Ast *ast, Sym sym) :
     Token(ast, Role::BONE),
     sym(sym)
 {
+}
+
+BoneToken::BoneToken(const Ast *ast) :
+    Token(ast, Role::BONE)
+{
+    assert(ast->isFixSize(2));
+    switch (ast->getType()) {
+    case Ast::Type::LOGIC_OR:
+        sym = Sym::LOGIC_OR;
+        break;
+    case Ast::Type::LOGIC_AND:
+        sym = Sym::LOGIC_AND;
+        break;
+    case Ast::Type::BIT_OR:
+        sym = Sym::BIT_OR;
+        break;
+    case Ast::Type::BIT_XOR:
+        sym = Sym::BIT_XOR;
+        break;
+    case Ast::Type::BIT_AND:
+        sym = Sym::BIT_AND;
+        break;
+    case Ast::Type::ASSIGN:
+        sym = Sym::ASSIGN;
+        break;
+    default:
+        throw "unhandled";
+    }
 }
 
 const std::string &BoneToken::getText() const

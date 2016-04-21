@@ -146,6 +146,16 @@ int Ast::precedence() const
         return 12;
     case Type::ADD_BOP_LIST:
         return 11;
+    case Type::BIT_AND:
+        return 7;
+    case Type::BIT_XOR:
+        return 6;
+    case Type::BIT_OR:
+        return 5;
+    case Type::LOGIC_AND:
+        return 4;
+    case Type::LOGIC_OR:
+        return 3;
     case Type::ASSIGN:
         return 1;
     default:

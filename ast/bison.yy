@@ -326,7 +326,7 @@ expr: expr_lv0
 expr_lv0: expr_lv1
 				{ $$ = $1; }
 		| expr_unary "=" expr_lv0
-				// TODO: change to ASS_BOP_LIST
+				// TODO: change to ASS_BOP_LIST ?
 				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
 		;
 
@@ -339,31 +339,31 @@ expr_lv1: expr_lv2
 expr_lv2: expr_lv3
 				{ $$ = $1; }
 		| expr_lv2 "||" expr_lv3
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::LOGIC_OR, $1, $3); } 
 		;
 
 expr_lv3: expr_lv4
 				{ $$ = $1; }
 		| expr_lv3 "&&" expr_lv4
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::LOGIC_AND, $1, $3); } 
 		;
 
 expr_lv4: expr_lv5
 				{ $$ = $1; }
 		| expr_lv4 "|" expr_lv5
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::BIT_OR, $1, $3); } 
 		;
 
 expr_lv5: expr_lv6
 				{ $$ = $1; }
 		| expr_lv5 "^" expr_lv6
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::BIT_XOR, $1, $3); } 
 		;
 
 expr_lv6: expr_lv7
 				{ $$ = $1; }
 		| expr_lv6 "&" expr_lv7
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::BIT_AND, $1, $3); } 
 		;
 
 expr_lv7: expr_lv8
