@@ -54,6 +54,18 @@ blank 	[ \t]
 
 "void"		return yy::BisonParser::make_VOID(yytext, loc);
 
+"="		return yy::BisonParser::make_ASSIGN(loc);
+"+="	return yy::BisonParser::make_ASS_ADD(loc);
+"-="	return yy::BisonParser::make_ASS_SUB(loc);
+"*="	return yy::BisonParser::make_ASS_MUL(loc);
+"/="	return yy::BisonParser::make_ASS_DIV(loc);
+"%="	return yy::BisonParser::make_ASS_MOD(loc);
+"&="	return yy::BisonParser::make_ASS_AND(loc);
+"^="	return yy::BisonParser::make_ASS_XOR(loc);
+"|="	return yy::BisonParser::make_ASS_OR(loc);
+"<<="	return yy::BisonParser::make_ASS_SHL(loc);
+">>="	return yy::BisonParser::make_ASS_SHR(loc);
+">>>="	return yy::BisonParser::make_ASS_SHRA(loc);
 ":"		return yy::BisonParser::make_COLON(loc);
 "?"		return yy::BisonParser::make_QUESTION(loc);
 ";"		return yy::BisonParser::make_SEMICOLON(loc);
@@ -63,7 +75,6 @@ blank 	[ \t]
 "-"		return yy::BisonParser::make_SUB(loc);
 "*"		return yy::BisonParser::make_MUL(loc);
 "/"		return yy::BisonParser::make_DIV(loc);
-"="		return yy::BisonParser::make_ASSIGN(loc);
 "|"		return yy::BisonParser::make_BIT_OR(loc);
 "&"		return yy::BisonParser::make_BIT_AND(loc);
 "^"		return yy::BisonParser::make_BIT_XOR(loc);

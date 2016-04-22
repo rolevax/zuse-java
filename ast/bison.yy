@@ -60,6 +60,17 @@
 	NEW			"new"
 
 	ASSIGN		"="
+	ASS_SUB		"-="
+	ASS_ADD		"+="
+	ASS_MUL		"*="
+	ASS_DIV		"/=" 
+	ASS_MOD		"%="
+	ASS_AND		"&="
+	ASS_XOR		"^="
+	ASS_OR		"|="
+	ASS_SHL		"<<="
+	ASS_SHR		">>="
+	ASS_SHRA	">>>="
 	SUB			"-"
 	ADD			"+"
 	MUL			"*"
@@ -326,8 +337,29 @@ expr: expr_lv0
 expr_lv0: expr_lv1
 				{ $$ = $1; }
 		| expr_unary "=" expr_lv0
-				// TODO: change to ASS_BOP_LIST ?
 				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
+		| expr_unary "+=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_ADD, $1, $3); } 
+		| expr_unary "-=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_SUB, $1, $3); } 
+		| expr_unary "*=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_MUL, $1, $3); } 
+		| expr_unary "/=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_DIV, $1, $3); } 
+		| expr_unary "%=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_MOD, $1, $3); } 
+		| expr_unary "&=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_AND, $1, $3); } 
+		| expr_unary "^=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_XOR, $1, $3); } 
+		| expr_unary "|=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_OR, $1, $3); } 
+		| expr_unary "<<=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_SHL, $1, $3); } 
+		| expr_unary ">>=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_SHR, $1, $3); } 
+		| expr_unary ">>>=" expr_lv0
+				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_SHRA, $1, $3); } 
 		;
 
 expr_lv1: expr_lv2

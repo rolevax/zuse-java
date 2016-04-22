@@ -35,7 +35,8 @@ public:
         CAST,
         LT, LEQ, GT, GEQ, INSTANCEOF, EQ, NEQ, SHL, SHR, SHRA,
         LOGIC_OR, LOGIC_AND, BIT_OR, BIT_XOR, BIT_AND,
-        ASSIGN,
+        ASSIGN, ASS_ADD, ASS_SUB, ASS_MUL, ASS_DIV, ASS_MOD,
+        ASS_AND, ASS_XOR, ASS_OR, ASS_SHL, ASS_SHR, ASS_SHRA,
         // size 4
         DECL_METHOD,
 

@@ -85,6 +85,17 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::BIT_XOR:
         case Type::BIT_AND:
         case Type::ASSIGN:
+        case Type::ASS_ADD:
+        case Type::ASS_SUB:
+        case Type::ASS_MUL:
+        case Type::ASS_DIV:
+        case Type::ASS_MOD:
+        case Type::ASS_AND:
+        case Type::ASS_XOR:
+        case Type::ASS_OR:
+        case Type::ASS_SHL:
+        case Type::ASS_SHR:
+        case Type::ASS_SHRA:
             hitInfixBop(ast.asFixSize<2>(), buf);
             break;
         default:

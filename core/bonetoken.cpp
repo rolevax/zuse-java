@@ -8,7 +8,9 @@ std::string BoneToken::syms[64]
     "class ", " {", "{", "}", "", "(", ")",
     "return ", "if ", "else ", "while ", "do", "for ",
     " ", ";", ".", ", ", "\"", "'",
-    " = ", " + ", " - ", " * ", " / ", " || ", " && ", " | ", " ^ ", " & ",
+    " = ", " += ", " -= ", " *= ", " /= ", " %= ",
+    " &= ", " ^= ", " |= ", " <<= ", " >>= ", " >>>= ",
+    " + ", " - ", " * ", " / ", " || ", " && ", " | ", " ^ ", " & ",
     " < ", " <= ", " > ", " >= ", " instanceof ", " == ", " != ",
     " << ", " >> ", " >>> ",
     "??"
@@ -72,6 +74,39 @@ BoneToken::BoneToken(const Ast *ast) :
         break;
     case Ast::Type::ASSIGN:
         sym = Sym::ASSIGN;
+        break;
+    case Ast::Type::ASS_ADD:
+        sym = Sym::ASS_ADD;
+        break;
+    case Ast::Type::ASS_SUB:
+        sym = Sym::ASS_SUB;
+        break;
+    case Ast::Type::ASS_MUL:
+        sym = Sym::ASS_MUL;
+        break;
+    case Ast::Type::ASS_DIV:
+        sym = Sym::ASS_DIV;
+        break;
+    case Ast::Type::ASS_MOD:
+        sym = Sym::ASS_MOD;
+        break;
+    case Ast::Type::ASS_AND:
+        sym = Sym::ASS_AND;
+        break;
+    case Ast::Type::ASS_XOR:
+        sym = Sym::ASS_XOR;
+        break;
+    case Ast::Type::ASS_OR:
+        sym = Sym::ASS_OR;
+        break;
+    case Ast::Type::ASS_SHL:
+        sym = Sym::ASS_SHL;
+        break;
+    case Ast::Type::ASS_SHR:
+        sym = Sym::ASS_SHR;
+        break;
+    case Ast::Type::ASS_SHRA:
+        sym = Sym::ASS_SHRA;
         break;
     default:
         throw "unhandled";
