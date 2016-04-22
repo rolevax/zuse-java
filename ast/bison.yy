@@ -391,11 +391,11 @@ expr_lv8: expr_lv9
 expr_lv9: expr_lv10
 				{ $$ = $1; }
 		| expr_lv9 "<<" expr_lv10
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::SHL, $1, $3); } 
 		| expr_lv9 ">>" expr_lv10
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::SHR, $1, $3); } 
 		| expr_lv9 ">>>" expr_lv10
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<2>(Ast::Type::SHRA, $1, $3); } 
 		;
 
 
@@ -424,11 +424,12 @@ expr_lv11: expr_lv12
 expr_lv12: expr_unary
 				{ $$ = $1; } 
 		 | "(" expr_ptype ")" expr_lv12
-				{ $$=$2; } 
+				{ $$ = new FixSizeAst<2>(Ast::Type::CAST, $2, $4); } 
 		 | "(" name dims ")" expr_lv12
-				{ $$=$2; } 
+//TODO: dims
+				{ $$ = new FixSizeAst<2>(Ast::Type::CAST, $2, $5); } 
 		 | "(" expr ")" expr_unary_logic
-				{ $$=$2; } 
+				{ $$ = new FixSizeAst<2>(Ast::Type::CAST, $2, $4); } 
 		 ;
 
 expr_ptype: ptype

@@ -14,6 +14,7 @@ public:
         SPACE, SEMICOLON, DOT, COMMA, DQUOTE, SQUOTE,
         ASSIGN, ADD, SUB, MUL, DIV, LOGIC_OR, LOGIC_AND, BIT_OR, BIT_XOR, BIT_AND,
         LT, LEQ, GT, GEQ, INSTANCEOF, EQ, NEQ,
+        SHL, SHR, SHRA,
         META
     };
 

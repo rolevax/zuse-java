@@ -66,6 +66,12 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::IF_CONDBODY:
             hitIfCondBody(ast.asFixSize<2>(), buf);
             break;
+        case Type::CAST:
+            hitCast(ast.asFixSize<2>(), buf);
+            break;
+        case Type::SHL:
+        case Type::SHR:
+        case Type::SHRA:
         case Type::LT:
         case Type::LEQ:
         case Type::GT:
@@ -93,7 +99,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
     buf.push_back(new SoulToken(&ast, Token::Role::END));
 }
 
-void Hammer::hitScalar(const ScalarAst &ast, Hammer::Buf &buf)
+void Hammer::hitScalar(const ScalarAst &ast, Buf &buf)
 {
     if (ast.getType() == Type::META) {
         bone(ast, buf, Sym::META);
@@ -126,7 +132,7 @@ void Hammer::hitClass(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(1), buf); // member list
 }
 
-void Hammer::hitMethod(const FixSizeAst<4> &ast, Hammer::Buf &buf)
+void Hammer::hitMethod(const FixSizeAst<4> &ast, Buf &buf)
 {
     hitGeneral(ast.at(0), buf); // return type
     bone(ast, buf, Sym::SPACE);
@@ -135,7 +141,7 @@ void Hammer::hitMethod(const FixSizeAst<4> &ast, Hammer::Buf &buf)
     hitGeneral(ast.at(3), buf); // stmt list
 }
 
-void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Hammer::Buf &buf)
+void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::IF);
     bone(ast, buf, Sym::LPAREN);
@@ -144,7 +150,7 @@ void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Hammer::Buf &buf)
     hitGeneral(ast.at(1), buf); // statement list
 }
 
-void Hammer::hitWhile(const FixSizeAst<2> &ast, Hammer::Buf &buf)
+void Hammer::hitWhile(const FixSizeAst<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::WHILE);
     bone(ast, buf, Sym::LPAREN);
@@ -153,7 +159,7 @@ void Hammer::hitWhile(const FixSizeAst<2> &ast, Hammer::Buf &buf)
     hitGeneral(ast.asFixSize<2>().at(1), buf); // stmt
 }
 
-void Hammer::hitDoWhile(const FixSizeAst<2> &ast, Hammer::Buf &buf)
+void Hammer::hitDoWhile(const FixSizeAst<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::DO);
     hitGeneral(ast.asFixSize<2>().at(0), buf); // stmt
@@ -165,14 +171,22 @@ void Hammer::hitDoWhile(const FixSizeAst<2> &ast, Hammer::Buf &buf)
     bone(ast, buf, Sym::SEMICOLON);
 }
 
-void Hammer::hitInfixBop(const FixSizeAst<2> &ast, Hammer::Buf &buf)
+void Hammer::hitInfixBop(const FixSizeAst<2> &ast, Buf &buf)
 {
     hitGeneral(ast.at(0), buf); // lhs
     buf.push_back(new BoneToken(&ast));
     hitGeneral(ast.at(1), buf); // rhs
 }
 
-void Hammer::hitListBegin(const ListAst &ast, Hammer::Buf &buf)
+void Hammer::hitCast(const FixSizeAst<2> &ast, Buf &buf)
+{
+    bone(ast, buf, Sym::LPAREN);
+    hitGeneral(ast.at(0), buf); // type
+    bone(ast, buf, Sym::RPAREN);
+    hitGeneral(ast.at(1), buf); // val
+}
+
+void Hammer::hitListBegin(const ListAst &ast, Buf &buf)
 {
     switch (ast.getType()) {
     case Type::MEMBER_LIST:

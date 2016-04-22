@@ -142,10 +142,16 @@ int Ast::precedence() const
     switch (type) {
     case Type::DOT_BOP_LIST:
         return 15;
+    case Type::CAST:
+        return 13;
     case Type::MUL_BOP_LIST:
         return 12;
     case Type::ADD_BOP_LIST:
         return 11;
+    case Type::SHL:
+    case Type::SHR:
+    case Type::SHRA:
+        return 10;
     case Type::LT:
     case Type::LEQ:
     case Type::GT:

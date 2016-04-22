@@ -10,6 +10,7 @@ std::string BoneToken::syms[64]
     " ", ";", ".", ", ", "\"", "'",
     " = ", " + ", " - ", " * ", " / ", " || ", " && ", " | ", " ^ ", " & ",
     " < ", " <= ", " > ", " >= ", " instanceof ", " == ", " != ",
+    " << ", " >> ", " >>> ",
     "??"
 };
 
@@ -24,6 +25,15 @@ BoneToken::BoneToken(const Ast *ast) :
 {
     assert(ast->isFixSize(2));
     switch (ast->getType()) {
+    case Ast::Type::SHL:
+        sym = Sym::SHL;
+        break;
+    case Ast::Type::SHR:
+        sym = Sym::SHR;
+        break;
+    case Ast::Type::SHRA:
+        sym = Sym::SHRA;
+        break;
     case Ast::Type::LT:
         sym = Sym::LT;
         break;

@@ -32,7 +32,8 @@ public:
         RETURN,
         // size 2
         DECL_CLASS, DECL_VAR, DECL_PARAM, WHILE, DO_WHILE, IF_CONDBODY,
-        LT, LEQ, GT, GEQ, INSTANCEOF, EQ, NEQ,
+        CAST,
+        LT, LEQ, GT, GEQ, INSTANCEOF, EQ, NEQ, SHL, SHR, SHRA,
         LOGIC_OR, LOGIC_AND, BIT_OR, BIT_XOR, BIT_AND,
         ASSIGN,
         // size 4
