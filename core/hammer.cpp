@@ -110,6 +110,9 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::BIT_NOT:
             hitPrefixUop(ast.asFixSize<1>(), buf);
             break;
+        case Type::QUESTION:
+            hitQuestion(ast.asFixSize<3>(), buf);
+            break;
         default:
             assert("unhandled map type in hammer" && false);
             break;
@@ -219,6 +222,15 @@ void Hammer::hitCast(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(0), buf); // type
     bone(ast, buf, Sym::RPAREN);
     hitGeneral(ast.at(1), buf); // val
+}
+
+void Hammer::hitQuestion(const FixSizeAst<3> &ast, Buf &buf)
+{
+    hitGeneral(ast.at(0), buf); // condition
+    bone(ast, buf, Sym::QUESTION);
+    hitGeneral(ast.at(1), buf); // val1
+    bone(ast, buf, Sym::COLON);
+    hitGeneral(ast.at(2), buf); // val2
 }
 
 void Hammer::hitListBegin(const ListAst &ast, Buf &buf)

@@ -365,7 +365,7 @@ expr_lv0: expr_lv1
 expr_lv1: expr_lv2
 				{ $$ = $1; }
 		| expr_lv2 "?" expr ":" expr_lv1
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<3>(Ast::Type::QUESTION, $1, $3, $5); }
 		;
 
 expr_lv2: expr_lv3

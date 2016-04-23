@@ -36,6 +36,7 @@ private:
     void hitPrefixUop(const FixSizeAst<1> &ast, Buf &buf);
     void hitPostfixUop(const FixSizeAst<1> &ast, Buf &buf);
     void hitCast(const FixSizeAst<2> &ast, Buf &buf);
+    void hitQuestion(const FixSizeAst<3> &ast, Buf &buf);
 
     void hitListBegin(const ListAst &ast, Buf &buf);
     void hitListEnd(const ListAst &ast, Buf &buf);

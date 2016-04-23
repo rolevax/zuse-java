@@ -33,6 +33,8 @@ bool Ast::isFixSize(Ast::Type type, size_t s)
         return Type::RETURN <= type && type <= Type::BIT_NOT;
     case 2:
         return Type::DECL_CLASS <= type && type <= Type::ASS_SHRA;
+    case 3:
+        return Type::QUESTION <= type && type <= Type::QUESTION;
     case 4:
         return Type::DECL_METHOD <= type && type <= Type::DECL_METHOD;
     default:
@@ -180,6 +182,8 @@ int Ast::precedence() const
         return 4;
     case Type::LOGIC_OR:
         return 3;
+    case Type::QUESTION:
+        return 2;
     case Type::ASSIGN:
     case Type::ASS_ADD:
     case Type::ASS_SUB:
