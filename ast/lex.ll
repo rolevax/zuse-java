@@ -85,6 +85,8 @@ blank 	[ \t]
 "("		return yy::BisonParser::make_LPAREN(loc);
 ")"		return yy::BisonParser::make_RPAREN(loc);
 
+"++"	return yy::BisonParser::make_INC(loc);
+"--"	return yy::BisonParser::make_DEC(loc);
 "||"	return yy::BisonParser::make_LOGIC_OR(loc);
 "&&"	return yy::BisonParser::make_LOGIC_AND(loc);
 "!"		return yy::BisonParser::make_LOGIC_NOT(loc);

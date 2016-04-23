@@ -30,7 +30,7 @@ bool Ast::isFixSize(Ast::Type type, size_t s)
     case 0:
         return Type::RETURN <= type && type <= Type::DECL_METHOD;
     case 1:
-        return Type::RETURN <= type && type <= Type::RETURN;
+        return Type::RETURN <= type && type <= Type::BIT_NOT;
     case 2:
         return Type::DECL_CLASS <= type && type <= Type::ASS_SHRA;
     case 4:
@@ -141,7 +141,16 @@ int Ast::precedence() const
 {
     switch (type) {
     case Type::DOT_BOP_LIST:
+    case Type::POST_INC:
+    case Type::POST_DEC:
         return 15;
+    case Type::PRE_INC:
+    case Type::PRE_DEC:
+    case Type::UNARY_PLUS:
+    case Type::UNARY_MINUS:
+    case Type::LOGIC_NOT:
+    case Type::BIT_NOT:
+        return 14;
     case Type::CAST:
         return 13;
     case Type::MUL_BOP_LIST:

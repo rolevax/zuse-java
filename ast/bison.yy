@@ -471,13 +471,13 @@ expr_ptype: ptype
 		  ;
 
 expr_unary: "++" expr_unary
-				{ $$=$2; }
+				{ $$ = new FixSizeAst<1>(Ast::Type::PRE_INC, $2); } 
 		  | "--" expr_unary
-				{ $$=$2; }
+				{ $$ = new FixSizeAst<1>(Ast::Type::PRE_DEC, $2); } 
 		  | "+" expr_lv12
-				{ $$=$2; }
+				{ $$ = new FixSizeAst<1>(Ast::Type::UNARY_PLUS, $2); } 
 		  | "-" expr_lv12
-				{ $$=$2; }
+				{ $$ = new FixSizeAst<1>(Ast::Type::UNARY_MINUS, $2); } 
 		  | expr_unary_logic
 				{ $$ = $1; }
 		  ;
@@ -485,9 +485,9 @@ expr_unary: "++" expr_unary
 expr_unary_logic: expr_pp
 				{ $$ = $1; }
 				| "~" expr_unary
-				{ $$=$2; }
+				{ $$ = new FixSizeAst<1>(Ast::Type::BIT_NOT, $2); } 
 				| "!" expr_unary
-				{ $$=$2; }
+				{ $$ = new FixSizeAst<1>(Ast::Type::LOGIC_NOT, $2); } 
 				;
 
 expr_pp: expr_post
@@ -497,9 +497,9 @@ expr_pp: expr_post
 	   ;
 
 expr_post: expr_pp "++"
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<1>(Ast::Type::POST_INC, $1); } 
 		 | expr_pp "--"
-				{ $$=$1; }
+				{ $$ = new FixSizeAst<1>(Ast::Type::POST_DEC, $1); } 
 		 ;
 
 expr_prime: name

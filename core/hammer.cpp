@@ -98,6 +98,18 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::ASS_SHRA:
             hitInfixBop(ast.asFixSize<2>(), buf);
             break;
+        case Type::POST_INC:
+        case Type::POST_DEC:
+            hitPostfixUop(ast.asFixSize<1>(), buf);
+            break;
+        case Type::PRE_INC:
+        case Type::PRE_DEC:
+        case Type::UNARY_PLUS:
+        case Type::UNARY_MINUS:
+        case Type::LOGIC_NOT:
+        case Type::BIT_NOT:
+            hitPrefixUop(ast.asFixSize<1>(), buf);
+            break;
         default:
             assert("unhandled map type in hammer" && false);
             break;
@@ -187,6 +199,18 @@ void Hammer::hitInfixBop(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(0), buf); // lhs
     buf.push_back(new BoneToken(&ast));
     hitGeneral(ast.at(1), buf); // rhs
+}
+
+void Hammer::hitPrefixUop(const FixSizeAst<1> &ast, Buf &buf)
+{
+    buf.push_back(new BoneToken(&ast)); // operator
+    hitGeneral(ast.at(0), buf); // operand
+}
+
+void Hammer::hitPostfixUop(const FixSizeAst<1> &ast, Buf &buf)
+{
+    hitGeneral(ast.at(0), buf); // operand
+    buf.push_back(new BoneToken(&ast)); // operator
 }
 
 void Hammer::hitCast(const FixSizeAst<2> &ast, Buf &buf)

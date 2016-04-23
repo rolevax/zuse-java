@@ -29,7 +29,8 @@ public:
 
         // FIX-SIZE, sync with isFixSize() definition
         // size 1
-        RETURN,
+        RETURN, POST_INC, POST_DEC, PRE_INC, PRE_DEC,
+        UNARY_PLUS, UNARY_MINUS, LOGIC_NOT, BIT_NOT,
         // size 2
         DECL_CLASS, DECL_VAR, DECL_PARAM, WHILE, DO_WHILE, IF_CONDBODY,
         CAST,

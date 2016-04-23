@@ -12,7 +12,7 @@ std::string BoneToken::syms[64]
     " &= ", " ^= ", " |= ", " <<= ", " >>= ", " >>>= ",
     " + ", " - ", " * ", " / ", " || ", " && ", " | ", " ^ ", " & ",
     " < ", " <= ", " > ", " >= ", " instanceof ", " == ", " != ",
-    " << ", " >> ", " >>> ",
+    " << ", " >> ", " >>> ", "++", "--", "+", "-", "!", "~",
     "??"
 };
 
@@ -25,7 +25,6 @@ BoneToken::BoneToken(const Ast *ast, Sym sym) :
 BoneToken::BoneToken(const Ast *ast) :
     Token(ast, Role::BONE)
 {
-    assert(ast->isFixSize(2));
     switch (ast->getType()) {
     case Ast::Type::SHL:
         sym = Sym::SHL;
@@ -107,6 +106,26 @@ BoneToken::BoneToken(const Ast *ast) :
         break;
     case Ast::Type::ASS_SHRA:
         sym = Sym::ASS_SHRA;
+        break;
+    case Ast::Type::POST_INC:
+    case Ast::Type::PRE_INC:
+        sym = Sym::INC;
+        break;
+    case Ast::Type::POST_DEC:
+    case Ast::Type::PRE_DEC:
+        sym = Sym::DEC;
+        break;
+    case Ast::Type::UNARY_PLUS:
+        sym = Sym::UNARY_PLUS;
+        break;
+    case Ast::Type::UNARY_MINUS:
+        sym = Sym::UNARY_MINUS;
+        break;
+    case Ast::Type::LOGIC_NOT:
+        sym = Sym::LOGIC_NOT;
+        break;
+    case Ast::Type::BIT_NOT:
+        sym = Sym::BIT_NOT;
         break;
     default:
         throw "unhandled";
