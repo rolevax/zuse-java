@@ -331,7 +331,8 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
     case Type::MUL_BOP_LIST:
         if (!end) {
             const BopListAst &bast = ast.asBopList();
-            Sym sym = bast.opAt(pos + 1) == 0 ? Sym::MUL : Sym::DIV;
+            int op = bast.opAt(pos + 1);
+            Sym sym = op == 0 ? Sym::MUL : op == 1 ? Sym::DIV : Sym::MOD;
             bone(ast, buf, sym);
         }
         break;

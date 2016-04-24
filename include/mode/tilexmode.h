@@ -11,6 +11,10 @@ public:
     Result keyboard(Key key) override;
     Result onPushed() override;
     const char *name() override;
+
+private:
+    Result keyboardEqual();
+    void castOuter(Ast::Type to);
 };
 
 #endif // TILEXMODE_H

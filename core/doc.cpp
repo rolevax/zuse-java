@@ -312,28 +312,33 @@ void Doc::expose()
     tokens.sync(root.get());
 }
 
-void Doc::cast(Ast::Type type)
+void Doc::cast(Ast::Type to)
 {
-    Ast::Type it = getInner().getType();
+    using Type = Ast::Type;
+    Type from = getInner().getType();
 
-    switch (type) {
-    case Ast::Type::ARG_LIST:
-        if (it != Ast::Type::ARG_LIST)
-            nestAsLeft(Ast::Type::ARG_LIST, BopListAst::UNUSED);
-        return; // either nest or do nothing
-    case Ast::Type::DECL_METHOD:
-        if (it == Ast::Type::DECL_VAR
-                && getInner().asInternal().at(1).isScalar()) {
+    if (from == to)
+        return;
+
+    if (to == Type::ARG_LIST) {
+        nestAsLeft(Type::ARG_LIST, BopListAst::UNUSED);
+    } else if (from == Type::DECL_VAR && to == Type::DECL_METHOD) {
+        if (getInner().asInternal().at(1).isScalar()) {
             // from variable declaration to method declaration
-            InternalAst *a = &newTree(Ast::Type::DECL_METHOD)->asInternal();
+            InternalAst *a = &newTree(Type::DECL_METHOD)->asInternal();
             // copy return type and name
             a->change(0, getInner().asInternal().at(0).clone());
             a->change(1, getInner().asInternal().at(1).clone());
             outer->change(inner, a);
         }
-        break;
-    default:
-        break;
+    } else if ((Ast::isFixSize(from, 2)
+                || (Ast::isBopList(from) && getInner().asBopList().size() == 2))
+               && Ast::isFixSize(to, 2)) {
+        // simply copy children and change
+        FixSizeAst<2> *a = &newTree(to)->asFixSize<2>();
+        a->change(0, getInner().asInternal().at(0).clone());
+        a->change(1, getInner().asInternal().at(1).clone());
+        outer->change(inner, a);
     }
 
     tokens.sync(root.get());
