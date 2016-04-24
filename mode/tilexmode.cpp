@@ -15,6 +15,7 @@ TilexMode::TilexMode(EditableDoc &doc)
 Mode::Result TilexMode::keyboard(Key key)
 {
     char str[2] = { KeyCode::toChar(key), '\0' };
+    Ast::Type ot = doc.getOuter().getType();
 
     if (KeyCode::isAlpha(key)) {
         doc.change(Ast::Type::IDENT);
@@ -35,9 +36,19 @@ Mode::Result TilexMode::keyboard(Key key)
         return { ResultType::DONE_POP, nullptr };
     } else if (Key::EQUAL == key) {
         return keyboardEqual();
+    } else { // keystroke merging
+        if (key == Key::AND && ot == Ast::Type::BIT_AND) // & -> &&
+            castOuter(Ast::Type::LOGIC_AND);
+        else if (key == Key::PIPE && ot == Ast::Type::BIT_OR) // | -> ||
+            castOuter(Ast::Type::LOGIC_OR);
+        else if (key == Key::LESS && ot == Ast::Type::LT) // < -> <<
+            castOuter(Ast::Type::SHL);
+        else if (key == Key::GREATER && ot == Ast::Type::GT) // > -> >>
+            castOuter(Ast::Type::SHR);
+        else if (key == Key::GREATER && ot == Ast::Type::SHR) // >> -> >>>
+            castOuter(Ast::Type::SHRA);
+        return DONE_STAY_NOPUSH;
     }
-
-    return DONE_STAY_NOPUSH;
 }
 
 Mode::Result TilexMode::onPushed()
