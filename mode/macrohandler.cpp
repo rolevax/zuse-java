@@ -218,6 +218,15 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
     case Key::TIDE:
         type = Ast::Type::BIT_NOT;
         break;
+    case Key::AND:
+        type = Ast::Type::BIT_AND;
+        break;
+    case Key::PIPE:
+        type = Ast::Type::BIT_OR;
+        break;
+    case Key::CARET:
+        type = Ast::Type::BIT_XOR;
+        break;
     default:
         return false;
     }
