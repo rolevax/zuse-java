@@ -41,69 +41,11 @@ bool MacroHandler::macro(Key key, Mode *&nextPush)
         } else {
             return false;
         }
-    case Key::COMMA: {
-        const Ast *a = &doc.getOuter();
-        Ast::Type at;
-        int digCount = 0;
-
-        while (at = a->getType(), at != Ast::Type::CLASS_LIST
-               && at != Ast::Type::ARG_LIST
-               && at != Ast::Type::DECL_PARAM_LIST
-               && at != Ast::Type::DECTOR_LIST
-               && at != Ast::Type::DECL_VAR) {
-            a = &a->getParent();
-            digCount++;
-        }
-
-        if (at == Ast::Type::CLASS_LIST) {
-            return false; // comma-able node not found
-        } else {
-            while (digCount --> 0)
-                doc.digOut();
-
-            if (at == Ast::Type::DECL_VAR) {
-                // if there is a declarator list, variable declaration
-                // node won't be reached in the loop.
-                // so here we must nest.
-                doc.nestAsLeft(Ast::Type::DECTOR_LIST);
-                // TODO check nest with dector_list
-                doc.fallIn();
-                doc.sibling(+1);
-            } else {
-                // already had list
-                doc.append(doc.getOuter().typeAt(0));
-            }
-            nextPush = doc.createModifyMode(true);
-            return true;
-        }
-    }
+    case Key::COMMA:
+        return macroComma(nextPush);
     case Key::ENTER:
-    case Key::S_ENTER: {
-        const Ast *a = &doc.getOuter();
-        Ast::Type at;
-        int digCount = 0;
-
-        while (at = a->getType(), at != Ast::Type::CLASS_LIST
-               && at != Ast::Type::STMT_LIST) {
-            a = &a->getParent();
-            digCount++;
-        }
-
-        if (at == Ast::Type::CLASS_LIST) {
-            return false; // statement list not found
-        } else {
-            while (digCount --> 0)
-                doc.digOut();
-
-            if (key == Key::ENTER)
-                doc.append(doc.getOuter().typeAt(0));
-            else
-                doc.insert(doc.getOuter().typeAt(0));
-
-            nextPush = doc.createModifyMode(true);
-            return true;
-        }
-    }
+    case Key::S_ENTER:
+        return macroEnter(nextPush, key == Key::S_ENTER);
     default:
         return macroBop(key, nextPush);
     }
@@ -158,6 +100,72 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
     }
 }
 
+bool MacroHandler::macroComma(Mode *&nextPush)
+{
+    const Ast *a = &doc.getOuter();
+    Ast::Type at;
+    int digCount = 0;
+
+    while (at = a->getType(), at != Ast::Type::CLASS_LIST
+           && at != Ast::Type::ARG_LIST
+           && at != Ast::Type::DECL_PARAM_LIST
+           && at != Ast::Type::DECTOR_LIST
+           && at != Ast::Type::DECL_VAR) {
+        a = &a->getParent();
+        digCount++;
+    }
+
+    if (at == Ast::Type::CLASS_LIST) {
+        return false; // comma-able node not found
+    } else {
+        while (digCount --> 0)
+            doc.digOut();
+
+        if (at == Ast::Type::DECL_VAR) {
+            // if there is a declarator list, variable declaration
+            // node won't be reached in the loop.
+            // so here we must nest.
+            doc.nestAsLeft(Ast::Type::DECTOR_LIST);
+            // TODO check nest with dector_list
+            doc.fallIn();
+            doc.sibling(+1);
+        } else {
+            // already had list
+            doc.append(doc.getOuter().typeAt(0));
+        }
+        nextPush = doc.createModifyMode(true);
+        return true;
+    }
+}
+
+bool MacroHandler::macroEnter(Mode *&nextPush, bool shift)
+{
+    const Ast *a = &doc.getOuter();
+    Ast::Type at;
+    int digCount = 0;
+
+    while (at = a->getType(), at != Ast::Type::CLASS_LIST
+           && at != Ast::Type::STMT_LIST) {
+        a = &a->getParent();
+        digCount++;
+    }
+
+    if (at == Ast::Type::CLASS_LIST) {
+        return false; // statement list not found
+    } else {
+        while (digCount --> 0)
+            doc.digOut();
+
+        if (shift)
+            doc.insert(doc.getOuter().typeAt(0));
+        else
+            doc.append(doc.getOuter().typeAt(0));
+
+        nextPush = doc.createModifyMode(true);
+        return true;
+    }
+}
+
 bool MacroHandler::macroBop(Key key, Mode *&nextPush)
 {
     Ast::Type type;
@@ -167,6 +175,9 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
     case Key::LEFT_PAREN:
         type = Ast::Type::DOT_BOP_LIST;
         op = BopListAst::CALL;
+        break;
+    case Key::RIGHT_PAREN:
+        type = Ast::Type::CAST;
         break;
     case Key::DOT:
         type = Ast::Type::DOT_BOP_LIST;
@@ -195,20 +206,40 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
     case Key::EQUAL:
         type = Ast::Type::ASSIGN;
         break;
+    case Key::LESS:
+        type = Ast::Type::LT;
+        break;
+    case Key::GREATER:
+        type = Ast::Type::GT;
+        break;
+    case Key::EXCLAM:
+        type = Ast::Type::LOGIC_NOT;
+        break;
+    case Key::TIDE:
+        type = Ast::Type::BIT_NOT;
+        break;
     default:
         return false;
     }
 
     // precondition from this line: inner is an expression
 
-    if (doc.getOuter().getType() == type && doc.getOuter().isList()) {
+    if (type == Ast::Type::CAST) {
+        doc.nestAsRight(type);
+        doc.fallIn();
+    } else if (doc.getOuter().getType() == type && doc.getOuter().isList()) {
         doc.append(Ast::Type::META, op);
     } else {
         doc.nestAsLeft(type, op);
-        doc.fallIn();
-        doc.sibling(+1);
+        if (!Ast::isFixSize(type, 1)) {
+            doc.fallIn();
+            doc.sibling(+1);
+        }
     }
-    nextPush = doc.createModifyMode(true);
+
+    if (!Ast::isFixSize(type, 1))
+        nextPush = doc.createModifyMode(true);
+
     return true;
 }
 

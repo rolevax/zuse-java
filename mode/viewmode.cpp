@@ -27,7 +27,7 @@ Mode::Result ViewMode::keyboard(Key key)
         return { ResultType::DONE_STAY, nextPush };
 
     switch (key) {
-    // tree-wise cursor moving
+    // logical cursor moving
     case Key::G: // get next node
         doc.sibling(+1);
         break;
@@ -54,21 +54,21 @@ Mode::Result ViewMode::keyboard(Key key)
         nextPush = new MenuMode(doc, MenuMode::Context::DIG_SEARCH);
         break;
 
-    // token-wise cursor moving
-    case Key::H: // hack left
+    // HIJK cursor moving
+    case Key::H:
         doc.hackLead(false);
         break;
-    case Key::L: // lead right
+    case Key::L:
         doc.hackLead(true);
         break;
-    case Key::K: // kick up
+    case Key::K:
         doc.jackKick(false);
         break;
-    case Key::J: // jack down
+    case Key::J:
         doc.jackKick(true);
         break;
 
-    // outer modification
+    // modification
     case Key::I: // insert
         if (doc.getOuter().isList()) {
             if (doc.getOuter().isBopList())
@@ -94,13 +94,17 @@ Mode::Result ViewMode::keyboard(Key key)
         break;
     case Key::P: // paste
         break;
-
-    // inner modification
     case Key::C: // change
         // TODO
         break;
-    case Key::N: // nest
+    case Key::N: // nest as left
         nextPush = new MenuMode(doc, MenuMode::Context::NEST_AS_LEFT);
+        break;
+    case Key::S_N: // nest as right
+        nextPush = new MenuMode(doc, MenuMode::Context::NEST_AS_RIGHT);
+        break;
+    case Key::X: // expose
+        doc.expose();
         break;
     case Key::M: // modify
     case Key::S_M: {

@@ -44,6 +44,13 @@ Mode::Result MenuMode::keyboard(Key key)
             doc.sibling(+1);
         }
         break;
+    case Context::NEST_AS_RIGHT:
+        // TODO: smart condition check (nester cannot be scalar)
+        if (ktype != Ast::Type::META) {
+            doc.nestAsRight(ktype, bop);
+            doc.fallIn();
+        }
+        break;
     case Context::FALL_SEARCH:
         switch (key) {
         // TODO: pattern matching cases keyToPattern
@@ -63,7 +70,8 @@ Mode::Result MenuMode::keyboard(Key key)
 
     if (context == Context::BOP_INSERT
             || context == Context::BOP_APPEND
-            || context == Context::NEST_AS_LEFT) {
+            || context == Context::NEST_AS_LEFT
+            || context == Context::NEST_AS_RIGHT) {
         return { ResultType::DONE_POP, doc.createModifyMode(true) };
     } else {
         return DONE_STAY_NOPUSH;
@@ -102,12 +110,15 @@ Ast::Type MenuMode::keyToType(Key key)
             return Ast::Type::META;
         }
     case Context::NEST_AS_LEFT: // nester type
+    case Context::NEST_AS_RIGHT:
     case Context::FALL_SEARCH:
     case Context::DIG_SEARCH:
         switch (key) {
         case Key::DOT:
         case Key::LEFT_PAREN:
             return Ast::Type::DOT_BOP_LIST;
+        case Key::RIGHT_PAREN:
+            return Ast::Type::CAST;
         case Key::PLUS:
         case Key::MINUS:
             return Ast::Type::ADD_BOP_LIST;

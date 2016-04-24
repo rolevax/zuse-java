@@ -8,7 +8,7 @@ class MenuMode : public Mode
 public:
     enum class Context
     {
-        BOP_INSERT, BOP_APPEND, NEST_AS_LEFT,
+        BOP_INSERT, BOP_APPEND, NEST_AS_LEFT, NEST_AS_RIGHT,
         FALL_SEARCH, DIG_SEARCH
     };
 
