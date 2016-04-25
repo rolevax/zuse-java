@@ -31,9 +31,7 @@ Mode::Result TilexMode::keyboard(Key key)
         doc.change(Ast::Type::STRING);
         return { ResultType::DONE_POP, new StringInputMode(doc, true) };
     } else if (Key::SPACE == key) {
-        doc.remove(); // remove the meta node
-        doc.setHotLight(EditableDoc::HotLightLevel::OFF);
-        return { ResultType::DONE_POP, nullptr };
+        return keyboardSpace();
     } else if (Key::EQUAL == key) {
         return keyboardEqual();
     } else { // keystroke merging
@@ -61,6 +59,25 @@ Mode::Result TilexMode::onPushed()
 const char *TilexMode::name()
 {
     return "Tilex";
+}
+
+Mode::Result TilexMode::keyboardSpace()
+{
+    const InternalAst &outer = doc.getOuter();
+    if (outer.getType() == Ast::Type::ADD_BOP_LIST
+            && outer.size() == 2
+            && outer.indexOf(&doc.getInner()) == 0) {
+        Ast::Type t = outer.asBopList().opAt(1) == BopListAst::ADD ?
+                    Ast::Type::UNARY_PLUS : Ast::Type::UNARY_MINUS;
+        doc.sibling(1);
+        doc.nestAsRight(t);
+        doc.expose();
+    } else {
+        doc.remove(); // remove the meta node
+    }
+
+    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+    return DONE_POP_NOPUSH;
 }
 
 Mode::Result TilexMode::keyboardEqual()

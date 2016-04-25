@@ -13,6 +13,7 @@ public:
     const char *name() override;
 
 private:
+    Result keyboardSpace();
     Result keyboardEqual();
     void castOuter(Ast::Type to);
 };
