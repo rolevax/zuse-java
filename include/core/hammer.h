@@ -27,6 +27,7 @@ private:
     void hitGeneral(const Ast &ast, Buf &buf);
     void hitScalar(const ScalarAst &ast, Buf &buf);
     void hitList(const ListAst &ast, Buf &buf);
+    void hitModifiers(Modifiers m, const Ast &ast, Buf &buf);
     void hitClass(const FixSizeAst<2> &ast, Buf &buf);
     void hitMethod(const FixSizeAst<4> &ast, Buf &buf);
     void hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf);

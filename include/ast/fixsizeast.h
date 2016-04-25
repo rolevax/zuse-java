@@ -2,6 +2,7 @@
 #define FIXSIZEAST_H
 
 #include "internalast.h"
+#include "modifiers.h"
 
 #include <array>
 #include <cassert>
@@ -17,6 +18,9 @@ public:
     virtual size_t size() const override;
     virtual Ast &at(size_t pos) const override;
     virtual size_t indexOf(const Ast *child) const override;
+    Modifiers &getModifiers();
+    const Modifiers &getModifiers() const;
+    void setModifiers(const Modifiers &m);
 
 protected:
     virtual void doChange(size_t pos, Ast *next) override;
@@ -26,6 +30,7 @@ private:
 
 private:
     std::array<std::unique_ptr<Ast>, N> subtrees;
+    Modifiers modifiers;
 };
 
 /**

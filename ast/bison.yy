@@ -58,6 +58,16 @@
 	THIS		"this"
 	SUPER		"super"
 	NEW			"new"
+	ABSTRACT	"abstract"
+	FINAL		"final"
+	PUBLIC		"public"
+	PROTECTED	"protected"
+	PRIVATE		"private"
+	STATIC		"static"
+	TRANSIENT	"transient"
+	VOLATILE	"volatile"
+	NATIVE		"native"
+	SYNCHRONIZED"synchronized" 
 
 	ASSIGN		"="
 	ASS_SUB		"-="
@@ -109,7 +119,7 @@
 %token	<std::string>	IDENTIFIER	"identifier"
 %token	<std::string>	NUMBER		"number"
 %token	<std::string>	STRING		"string"
-%token	<std::string>	VOID		"void"
+%token	<std::string>	VOID		"void" 
 
 %type	<ListAst*>		class_list
 %type	<ListAst*>		member_list
@@ -167,6 +177,9 @@
 %type	<Ast*>			name
 %type	<Ast*>			special_name
 
+%type	<Modifiers>		modifiers
+%type	<Modifiers>		modifier
+
 %printer { yyoutput << $$; } <*>;
 
 %% /* ============ rules ============ */
@@ -194,12 +207,43 @@ ptype: "void"
 	 			{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
 	 ;
 
+modifiers: modifier
+		 		{ $$ = $1; }
+		 | modifiers modifier
+				{ $1 |= $2; $$ = $1; }
+		 ;
+
+modifier: "abstract"
+				{ $$ = Modifiers(); $$.abstract = true; }
+		| "final"
+				{ $$ = Modifiers(); $$.final = true; }
+		| "public"
+				{ $$ = Modifiers(); $$.access = Modifiers::PUBLIC; }
+		| "protected"
+				{ $$ = Modifiers(); $$.access = Modifiers::PROTECTED; }
+		| "private"
+				{ $$ = Modifiers(); $$.access = Modifiers::PRIVATE; }
+		| "static"
+				{ $$ = Modifiers(); $$.statik = true; }
+		| "transient"
+				{ $$ = Modifiers(); $$.transient = true; }
+		| "volatile"
+				{ $$ = Modifiers(); $$.voladile = true; }
+		| "native"
+				{ $$ = Modifiers(); $$.native = true; }
+		| "synchronized"
+				{ $$ = Modifiers(); $$.synchronized = true; }
+		;
+
 class_list: %empty					{ /* already newwed as 'result' */ }
 		  | class_list class		{ result->append($2); }
 		  ;
 
-class: "class" ident"{" member_list "}"	
+class: "class" ident "{" member_list "}"	
 	 			{ $$ = new FixSizeAst<2>(Ast::Type::DECL_CLASS, $2, $4); }
+	 | modifiers "class" ident "{" member_list "}"	
+	 			{ auto a = new FixSizeAst<2>(Ast::Type::DECL_CLASS, $3, $5);
+				  a->setModifiers($1); $$ = a; }
 	 ;
 
 member_list: %empty					

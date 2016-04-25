@@ -51,6 +51,16 @@ blank 	[ \t]
 "super"		return yy::BisonParser::make_SUPER(loc);
 "null"		return yy::BisonParser::make_JNULL(loc);
 "new"		return yy::BisonParser::make_NEW(loc);
+"abstract"	return yy::BisonParser::make_ABSTRACT(loc);
+"final"		return yy::BisonParser::make_FINAL(loc);
+"public"	return yy::BisonParser::make_PUBLIC(loc);
+"protected"	return yy::BisonParser::make_PROTECTED(loc);
+"private"	return yy::BisonParser::make_PRIVATE(loc);
+"static"	return yy::BisonParser::make_STATIC(loc);
+"transient"	return yy::BisonParser::make_TRANSIENT(loc);
+"volatile"	return yy::BisonParser::make_VOLATILE(loc);
+"native"	return yy::BisonParser::make_NATIVE(loc);
+"synchronized"	return yy::BisonParser::make_SYNCHRONIZED(loc);
 
 "void"		return yy::BisonParser::make_VOID(yytext, loc);
 

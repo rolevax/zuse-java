@@ -151,8 +151,33 @@ void Hammer::hitList(const ListAst &ast, Buf &buf)
     hitListEnd(ast, buf);
 }
 
+void Hammer::hitModifiers(Modifiers m, const Ast &ast, Buf &buf)
+{
+    if (m.access == Modifiers::PUBLIC)
+        bone(ast, buf, Sym::PUBLIC);
+    if (m.access == Modifiers::PROTECTED)
+        bone(ast, buf, Sym::PROTECTED);
+    if (m.access == Modifiers::PRIVATE)
+        bone(ast, buf, Sym::PRIVATE);
+    if (m.abstract)
+        bone(ast, buf, Sym::ABSTRACT);
+    if (m.final)
+        bone(ast, buf, Sym::FINAL);
+    if (m.statik)
+        bone(ast, buf, Sym::STATIC);
+    if (m.transient)
+        bone(ast, buf, Sym::TRANSIENT);
+    if (m.voladile)
+        bone(ast, buf, Sym::VOLATILE);
+    if (m.native)
+        bone(ast, buf, Sym::NATIVE);
+    if (m.synchronized)
+        bone(ast, buf, Sym::SYNCHRONIZED);
+}
+
 void Hammer::hitClass(const FixSizeAst<2> &ast, Buf &buf)
 {
+    hitModifiers(ast.getModifiers(), ast, buf);
     bone(ast, buf, Sym::CLASS);
     hitGeneral(ast.at(0), buf); // identifier
     hitGeneral(ast.at(1), buf); // member list

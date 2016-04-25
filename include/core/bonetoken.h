@@ -11,6 +11,8 @@ public:
         // MUST sync order with 'syms'
         CLASS, LBRACE, LBRACE_NS, RBRACE, RBRACE_VT, LPAREN, RPAREN,
         RETURN, IF, ELSE, WHILE, DO, FOR,
+        ABSTRACT, FINAL, PUBLIC, PROTECTED, PRIVATE, STATIC,
+        TRANSIENT, VOLATILE, NATIVE, SYNCHRONIZED,
         SPACE, SEMICOLON, DOT, COMMA, DQUOTE, SQUOTE,
         ASSIGN, ASS_ADD, ASS_SUB, ASS_MUL, ASS_DIV, ASS_MOD,
         ASS_AND, ASS_XOR, ASS_OR, ASS_SHL, ASS_SHR, ASS_SHRA,
@@ -28,7 +30,7 @@ public:
 
 private:
     Sym sym;
-    static std::string syms[64]; // MUST SYNC WITH # OF ENUM
+    static std::string syms[128]; // MUST SYNC WITH # OF ENUM
 };
 
 #endif // BONETOKEN_H

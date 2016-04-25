@@ -76,5 +76,6 @@ HEADERS += \
     include/core/keycode.h \
     include/mode/tilexmode.h \
     include/mode/fixsizeinputmode.h \
-    include/mode/macrohandler.h
+    include/mode/macrohandler.h \
+    include/ast/modifiers.h
 

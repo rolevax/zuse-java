@@ -46,6 +46,24 @@ size_t FixSizeAst<N>::indexOf(const Ast *child) const
 }
 
 template<std::size_t N>
+Modifiers &FixSizeAst<N>::getModifiers()
+{
+    return modifiers;
+}
+
+template<std::size_t N>
+const Modifiers &FixSizeAst<N>::getModifiers() const
+{
+    return modifiers;
+}
+
+template<std::size_t N>
+void FixSizeAst<N>::setModifiers(const Modifiers &m)
+{
+    modifiers = m;
+}
+
+template<std::size_t N>
 void FixSizeAst<N>::doChange(size_t pos, Ast *next)
 {
     assert(pos < N);

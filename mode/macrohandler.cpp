@@ -239,6 +239,14 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
     } else if (doc.getOuter().getType() == type && doc.getOuter().isList()) {
         doc.append(Ast::Type::META, op);
     } else {
+        if (type == Ast::Type::ASSIGN
+                && doc.getInner().getType() == Ast::Type::LOGIC_NOT) {
+            // !x ==> x != ??
+            doc.fallIn();
+            doc.expose();
+            type = Ast::Type::NEQ;
+        }
+
         doc.nestAsLeft(type, op);
         if (!Ast::isFixSize(type, 1)) {
             doc.fallIn();
