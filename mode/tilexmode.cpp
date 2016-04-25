@@ -27,13 +27,15 @@ Mode::Result TilexMode::keyboard(Key key)
         doc.scalarClear();
         doc.scalarAppend(str);
         return { ResultType::DONE_POP, new NumberInputMode(doc, false) };
-    } else if (Key::DOUBLE_QUOTE == key) {
+    } else if (key == Key::DOUBLE_QUOTE) {
         doc.change(Ast::Type::STRING);
         return { ResultType::DONE_POP, new StringInputMode(doc, true) };
-    } else if (Key::SPACE == key) {
+    } else if (key == Key::SPACE) {
         return keyboardSpace();
-    } else if (Key::EQUAL == key) {
+    } else if (key == Key::EQUAL) {
         return keyboardEqual();
+    } else if (key == Key::PLUS || key == Key::MINUS) {
+        return ppmm(key == Key::PLUS);
     } else { // keystroke merging
         if (key == Key::AND && ot == Ast::Type::BIT_AND) // & -> &&
             castOuter(Ast::Type::LOGIC_AND);
@@ -145,6 +147,27 @@ Mode::Result TilexMode::keyboardEqual()
     }
 
     return DONE_STAY_NOPUSH;
+}
+
+Mode::Result TilexMode::ppmm(bool inc)
+{
+    const InternalAst &outer = doc.getOuter();
+    if (outer.getType() != Ast::Type::ADD_BOP_LIST || outer.size() != 2)
+        return DONE_STAY_NOPUSH;
+
+    bool prefix = outer.indexOf(&doc.getInner()) == 0;
+    bool plus = outer.asBopList().opAt(1) == BopListAst::ADD;
+    if (plus != inc) // "+-" or "-+"
+        return DONE_STAY_NOPUSH;
+
+    Ast::Type t = prefix ? (inc ? Ast::Type::PRE_INC : Ast::Type::PRE_DEC)
+                         : (inc ? Ast::Type::POST_INC : Ast::Type::POST_DEC);
+    doc.sibling(prefix ? +1 : -1);
+    doc.nestAsLeft(t); // unary nest, both left and right is ok
+    doc.expose();
+
+    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+    return DONE_POP_NOPUSH;
 }
 
 void TilexMode::castOuter(Ast::Type to)

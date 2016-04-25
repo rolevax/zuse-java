@@ -15,6 +15,7 @@ public:
 private:
     Result keyboardSpace();
     Result keyboardEqual();
+    Result ppmm(bool inc);
     void castOuter(Ast::Type to);
 };
 
