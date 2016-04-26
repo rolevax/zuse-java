@@ -42,10 +42,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             hitMethod(ast.asFixSize<4>(), buf);
             break;
         case Type::DECL_VAR:
-            hitGeneral(ast.asFixSize<2>().at(0), buf); // type
-            bone(ast, buf, Sym::SPACE);
-            hitGeneral(ast.asFixSize<2>().at(1), buf); // decl bean list
-            bone(ast, buf, Sym::SEMICOLON);
+            hitVarDecl(ast.asFixSize<2>(), buf);
             break;
         case Type::DECL_PARAM:
             hitGeneral(ast.asFixSize<2>().at(0), buf); // type
@@ -185,11 +182,21 @@ void Hammer::hitClass(const FixSizeAst<2> &ast, Buf &buf)
 
 void Hammer::hitMethod(const FixSizeAst<4> &ast, Buf &buf)
 {
+    hitModifiers(ast.getModifiers(), ast, buf);
     hitGeneral(ast.at(0), buf); // return type
     bone(ast, buf, Sym::SPACE);
     hitGeneral(ast.at(1), buf); // id
     hitGeneral(ast.at(2), buf); // param list
     hitGeneral(ast.at(3), buf); // stmt list
+}
+
+void Hammer::hitVarDecl(const FixSizeAst<2> &ast, Hammer::Buf &buf)
+{
+    hitModifiers(ast.getModifiers(), ast, buf);
+    hitGeneral(ast.asFixSize<2>().at(0), buf); // type
+    bone(ast, buf, Sym::SPACE);
+    hitGeneral(ast.asFixSize<2>().at(1), buf); // decl bean list
+    bone(ast, buf, Sym::SEMICOLON);
 }
 
 void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf)

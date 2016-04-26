@@ -257,7 +257,12 @@ member_list: %empty
 decl_method: type_spec dector_name "(" param_list ")" "{" stmt_list "}"
  				{ $$ = new FixSizeAst<4>(Ast::Type::DECL_METHOD, 
 										 $1, $2, $4, $7); }
-// TODO: [] in method decl (?)
+           | modifiers type_spec dector_name "(" param_list ")" 
+				"{" stmt_list "}"
+ 				{ $$ = new FixSizeAst<4>(Ast::Type::DECL_METHOD, 
+										 $2, $3, $5, $8); 
+				  $$->asFixSize<4>().setModifiers($1); }
+// TODO: dim in method decl (?)
 		   ;
 
 param_list: %empty
@@ -318,6 +323,12 @@ decl_var: type_spec dector ";"
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_VAR, $1, $2); }
 		| type_spec dector_list ";" 
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_VAR, $1, $2); }
+		| modifiers type_spec dector ";" 
+		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_VAR, $2, $3); 
+				  $$->asFixSize<2>().setModifiers($1); }
+		| modifiers type_spec dector_list ";" 
+		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_VAR, $2, $3); 
+				  $$->asFixSize<2>().setModifiers($1); }
 		;
 
 dector_list: dector "," dector
