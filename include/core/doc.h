@@ -56,7 +56,7 @@ private:
 
     void toggleAbstract() override;
     void toggleFinal() override;
-    void toggleAccess() override;
+    void toggleAccess(bool up) override;
     void toggleStatic() override;
     void toggleTransient() override;
     void toggleVolatile() override;

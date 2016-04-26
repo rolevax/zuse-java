@@ -41,7 +41,7 @@ public:
 
     virtual void toggleAbstract() = 0;
     virtual void toggleFinal() = 0;
-    virtual void toggleAccess() = 0;
+    virtual void toggleAccess(bool up) = 0;
     virtual void toggleStatic() = 0;
     virtual void toggleTransient() = 0;
     virtual void toggleVolatile() = 0;

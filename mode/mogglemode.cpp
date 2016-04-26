@@ -23,7 +23,10 @@ Mode::Result MoggleMode::keyboard(Key key)
         doc.toggleFinal();
         break;
     case Key::P:
-        doc.toggleAccess();
+        doc.toggleAccess(true);
+        break;
+    case Key::S_P:
+        doc.toggleAccess(false);
         break;
     case Key::S:
         doc.toggleStatic();

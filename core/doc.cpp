@@ -402,9 +402,13 @@ void Doc::toggleFinal()
     tokens.sync(root.get());
 }
 
-void Doc::toggleAccess()
+void Doc::toggleAccess(bool up)
 {
-    FixSizes::getModifiers(outer->at(inner)).access++; // circular
+    // circulate by guarenteed 2-bit overflow
+    if (up)
+        FixSizes::getModifiers(outer->at(inner)).access++;
+    else
+        FixSizes::getModifiers(outer->at(inner)).access--;
     tokens.sync(root.get());
 }
 
