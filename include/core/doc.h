@@ -54,6 +54,15 @@ private:
     void scalarClear() override;
     void listClear() override;
 
+    void toggleAbstract() override;
+    void toggleFinal() override;
+    void toggleAccess() override;
+    void toggleStatic() override;
+    void toggleTransient() override;
+    void toggleVolatile() override;
+    void toggleNative() override;
+    void toggleSynchronized() override;
+
     void setHotLight(HotLightLevel level) override;
     void toggleTension(bool b) override;
     ///@}

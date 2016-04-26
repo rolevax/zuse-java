@@ -4,6 +4,7 @@
 #include "mode/identinputmode.h"
 #include "mode/stringinputmode.h"
 #include "mode/numberinputmode.h"
+#include "mode/mogglemode.h"
 #include "core/editabledoc.h"
 #include "ast/listast.h"
 
@@ -109,7 +110,10 @@ Mode::Result ViewMode::keyboard(Key key)
     case Key::M: // modify
     case Key::S_M: {
         bool clear = key == Key::S_M;
-        nextPush = doc.createModifyMode(clear);
+        if (doc.getInner().isScalar())
+            nextPush = doc.createModifyMode(clear);
+        else
+            nextPush = new MoggleMode(doc);
         break;
     }
     default:

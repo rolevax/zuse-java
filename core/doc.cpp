@@ -390,6 +390,54 @@ void Doc::listClear()
     outer->at(inner).asList().clear();
 }
 
+void Doc::toggleAbstract()
+{
+    FixSizes::getModifiers(outer->at(inner)).abstract ^= 1;
+    tokens.sync(root.get());
+}
+
+void Doc::toggleFinal()
+{
+    FixSizes::getModifiers(outer->at(inner)).final ^= 1;
+    tokens.sync(root.get());
+}
+
+void Doc::toggleAccess()
+{
+    FixSizes::getModifiers(outer->at(inner)).access++; // circular
+    tokens.sync(root.get());
+}
+
+void Doc::toggleStatic()
+{
+    FixSizes::getModifiers(outer->at(inner)).statik ^= 1;
+    tokens.sync(root.get());
+}
+
+void Doc::toggleTransient()
+{
+    FixSizes::getModifiers(outer->at(inner)).transient ^= 1;
+    tokens.sync(root.get());
+}
+
+void Doc::toggleVolatile()
+{
+    FixSizes::getModifiers(outer->at(inner)).voladile ^= 1;
+    tokens.sync(root.get());
+}
+
+void Doc::toggleNative()
+{
+    FixSizes::getModifiers(outer->at(inner)).native ^= 1;
+    tokens.sync(root.get());
+}
+
+void Doc::toggleSynchronized()
+{
+    FixSizes::getModifiers(outer->at(inner)).synchronized ^= 1;
+    tokens.sync(root.get());
+}
+
 void Doc::setHotLight(HotLightLevel level)
 {
     switch (level) {

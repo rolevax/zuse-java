@@ -28,6 +28,8 @@ struct Modifiers
     {
     }
 
+    Modifiers &operator=(const Modifiers &rhs) = default;
+
     Modifiers &operator|=(Modifiers rhs)
     {
         access |= rhs.access;

@@ -52,5 +52,11 @@ FixSizeAst<N>::FixSizeAst(Type t, T... ts)
         change(i, tmp[i]);
 }
 
+namespace FixSizes
+{
+
+Modifiers &getModifiers(Ast &ast);
+
+}
 
 #endif // FIXSIZEAST_H

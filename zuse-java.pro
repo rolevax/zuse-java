@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     core/keycode.cpp \
     mode/tilexmode.cpp \
     mode/fixsizeinputmode.cpp \
-    mode/macrohandler.cpp
+    mode/macrohandler.cpp \
+    mode/mogglemode.cpp
 
 RESOURCES += qml.qrc
 
@@ -77,5 +78,6 @@ HEADERS += \
     include/mode/tilexmode.h \
     include/mode/fixsizeinputmode.h \
     include/mode/macrohandler.h \
-    include/ast/modifiers.h
+    include/ast/modifiers.h \
+    include/mode/mogglemode.h
 

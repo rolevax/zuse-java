@@ -18,6 +18,7 @@ template<std::size_t N>
 FixSizeAst<N> *FixSizeAst<N>::clone() const
 {
     FixSizeAst<N> *ret = new FixSizeAst<N>(getType());
+    ret->modifiers = modifiers;
     for (size_t i = 0; i < N; i++)
         ret->change(i, at(i).clone());
     return ret;
@@ -77,8 +78,24 @@ FixSizeAst<N>::FixSizeAst(Ast::Type t)
 
 }
 
-// instanciation
+// instantiation for the class
+// there are also some related instantiation in ast.cpp
 template class FixSizeAst<1>;
 template class FixSizeAst<2>;
 template class FixSizeAst<3>;
 template class FixSizeAst<4>;
+
+Modifiers &FixSizes::getModifiers(Ast &ast)
+{
+    assert(ast.isFixSize());
+
+    if (ast.isFixSize(1))
+        return ast.asFixSize<1>().getModifiers();
+    if (ast.isFixSize(2))
+        return ast.asFixSize<2>().getModifiers();
+    if (ast.isFixSize(3))
+        return ast.asFixSize<3>().getModifiers();
+    if (ast.isFixSize(4))
+        return ast.asFixSize<4>().getModifiers();
+    throw "WTF";
+}

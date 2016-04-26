@@ -39,6 +39,15 @@ public:
     virtual void scalarClear() = 0;
     virtual void listClear() = 0;
 
+    virtual void toggleAbstract() = 0;
+    virtual void toggleFinal() = 0;
+    virtual void toggleAccess() = 0;
+    virtual void toggleStatic() = 0;
+    virtual void toggleTransient() = 0;
+    virtual void toggleVolatile() = 0;
+    virtual void toggleNative() = 0;
+    virtual void toggleSynchronized() = 0;
+
     virtual void setHotLight(HotLightLevel level) = 0;
     virtual void toggleTension(bool b) = 0;
 };
