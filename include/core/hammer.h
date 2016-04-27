@@ -31,6 +31,7 @@ private:
     void hitClass(const FixSizeAst<2> &ast, Buf &buf);
     void hitMethod(const FixSizeAst<4> &ast, Buf &buf);
     void hitVarDecl(const FixSizeAst<2> &ast, Buf &buf);
+    void hitParamDecl(const FixSizeAst<2> &ast, Buf &buf);
     void hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf);
     void hitWhile(const FixSizeAst<2> &ast, Buf &buf);
     void hitDoWhile(const FixSizeAst<2> &ast, Buf &buf);

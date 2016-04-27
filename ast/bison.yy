@@ -279,6 +279,9 @@ param_list_noemp: decl_param
 
 decl_param: ident ident
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_PARAM, $1, $2); } 
+		  | "final" ident ident
+		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_PARAM, $2, $3); 
+				  $$->asFixSize<2>().getModifiers().final = true; } 
 		  ;
 
 stmt_list: %empty
