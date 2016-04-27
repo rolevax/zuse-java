@@ -62,6 +62,21 @@ bool IdentInputMode::isType(const std::string &id)
     return isPrimitiveType(id) || isUpperCamel(id);
 }
 
+int IdentInputMode::isModifier(const std::string &id)
+{
+    if (id == "abstract") return 1;
+    if (id == "final") return 2;
+    if (id == "public") return 3;
+    if (id == "protected") return 4;
+    if (id == "private") return 5;
+    if (id == "static") return 6;
+    if (id == "transient") return 7;
+    if (id == "volatile") return 8;
+    if (id == "native") return 9;
+    if (id == "synchronized") return 10;
+    return 0;
+}
+
 bool IdentInputMode::isPrimitiveType(const std::string &id)
 {
     return id == "void" || id == "byte" || id == "short"
@@ -89,7 +104,8 @@ Mode *IdentInputMode::promotion()
 
 Mode *IdentInputMode::promoteToDeclVar()
 {
-    if (isType(doc.getInner().asScalar().getText())) {
+    const std::string &text = doc.getInner().asScalar().getText();
+    if (isType(text)) {
         // case 1: check bare identifier
         Ast::Type otype = doc.getOuter().getType();
         if (otype == Ast::Type::STMT_LIST || otype == Ast::Type::MEMBER_LIST) {
@@ -114,6 +130,19 @@ Mode *IdentInputMode::promoteToDeclVar()
                 }
             }
         }
+    } else if (int modId = isModifier(text)) {
+        Ast::Type otype = doc.getOuter().getType();
+        if (otype == Ast::Type::STMT_LIST || otype == Ast::Type::MEMBER_LIST) {
+            doc.change(Ast::Type::DECL_VAR);
+            setModifier(modId);
+            return doc.createModifyMode(true, 0);
+        } else if (otype == Ast::Type::DECL_PARAM) {
+            doc.digOut();
+            doc.toggleFinal();
+            doc.fallIn();
+            // silent onResume() if fix-size-mode and re-input the identifier
+            return doc.createModifyMode(true, 0);
+        }
     }
 
     return nullptr;
@@ -137,5 +166,29 @@ Mode *IdentInputMode::promoteToStmt()
     }
 
     return nullptr;
+}
+
+void IdentInputMode::setModifier(int modId)
+{
+    if (modId == 1)
+        doc.toggleAbstract();
+    else if(modId == 2)
+        doc.toggleFinal();
+    else if (modId == 3)
+        doc.toggleAccess(true);
+    else if (modId == 4)
+        doc.toggleAccess(true), doc.toggleAccess(true);
+    else if (modId == 5)
+        doc.toggleAccess(false);
+    else if (modId == 6)
+        doc.toggleStatic();
+    else if (modId == 7)
+        doc.toggleTransient();
+    else if (modId == 8)
+        doc.toggleVolatile();
+    else if (modId == 9)
+        doc.toggleNative();
+    else if (modId == 10)
+        doc.toggleSynchronized();
 }
 

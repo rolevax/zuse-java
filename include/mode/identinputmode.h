@@ -15,11 +15,13 @@ public:
 
 private:
     static bool isType(const std::string &id);
+    static int isModifier(const std::string &id);
     static bool isPrimitiveType(const std::string &id);
     static bool isUpperCamel(const std::string &id);
     Mode *promotion();
     Mode *promoteToDeclVar();
     Mode *promoteToStmt();
+    void setModifier(int modId);
 
 private:
     bool clear;
