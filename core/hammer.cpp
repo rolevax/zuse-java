@@ -49,7 +49,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             break;
         case Type::RETURN:
             bone(ast, buf, Sym::RETURN);
-            hitGeneral(ast.asFixSize<2>().at(0), buf); // expr
+            hitGeneral(ast.asFixSize<1>().at(0), buf); // expr
             bone(ast, buf, Sym::SEMICOLON);
             break;
         case Type::WHILE:

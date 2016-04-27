@@ -75,6 +75,7 @@ public:
     const BopListAst &asBopList() const;
 
     ListAst *bodify();
+    static int precedence(Type type);
     int precedence() const;
 
     /**

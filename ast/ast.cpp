@@ -139,7 +139,7 @@ ListAst *Ast::bodify()
     return ret;
 }
 
-int Ast::precedence() const
+int Ast::precedence(Ast::Type type)
 {
     switch (type) {
     case Type::DOT_BOP_LIST:
@@ -200,6 +200,11 @@ int Ast::precedence() const
     default:
         return 0;
     }
+}
+
+int Ast::precedence() const
+{
+    return precedence(type);
 }
 
 Ast::Type Ast::getType() const

@@ -233,6 +233,10 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
 
     // precondition from this line: inner is an expression
 
+    // simulate plain-text input by comparing precedence
+    while (Ast::precedence(type) < doc.getOuter().precedence())
+        doc.digOut();
+
     if (type == Ast::Type::CAST) {
         doc.nestAsRight(type);
         doc.fallIn();
