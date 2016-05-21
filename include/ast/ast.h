@@ -16,7 +16,6 @@ class Ast
 public:
     /**
      * @brief type of a node in the language tree
-     * KEYTAL means "keyword literal".
      */
     enum class Type {
         // LIST, sync with isList() definition
@@ -26,6 +25,7 @@ public:
 
         // BOP-LIST, sync with isBopList() and isList() definition
         DOT_BOP_LIST, MUL_BOP_LIST, ADD_BOP_LIST,
+        LOGIC_AND_BOP_LIST, LOGIC_OR_BOP_LIST,
 
         // FIX-SIZE, sync with isFixSize() definition
         // size 1
@@ -35,7 +35,7 @@ public:
         DECL_CLASS, DECL_VAR, DECL_PARAM, WHILE, DO_WHILE, IF_CONDBODY,
         CAST,
         LT, LEQ, GT, GEQ, INSTANCEOF, EQ, NEQ, SHL, SHR, SHRA,
-        LOGIC_OR, LOGIC_AND, BIT_OR, BIT_XOR, BIT_AND,
+        BIT_OR, BIT_XOR, BIT_AND,
         ASSIGN, ASS_ADD, ASS_SUB, ASS_MUL, ASS_DIV, ASS_MOD,
         ASS_AND, ASS_XOR, ASS_OR, ASS_SHL, ASS_SHR, ASS_SHRA,
         // size 3

@@ -74,6 +74,9 @@ int BopListAst::numOp() const
         return 3;
     case Type::DOT_BOP_LIST:
         return 3;
+    case Type::LOGIC_AND_BOP_LIST:
+    case Type::LOGIC_OR_BOP_LIST:
+        return 1;
     default:
         throw "WTF";
     }

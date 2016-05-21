@@ -16,12 +16,12 @@ Ast::Ast(Type t) :
 
 bool Ast::isList(Ast::Type type)
 {
-    return Type::CLASS_LIST <= type && type <= Type::ADD_BOP_LIST;
+    return Type::CLASS_LIST <= type && type <= Type::LOGIC_OR_BOP_LIST;
 }
 
 bool Ast::isBopList(Ast::Type type)
 {
-    return Type::DOT_BOP_LIST <= type && type <= Type::ADD_BOP_LIST;
+    return Type::DOT_BOP_LIST <= type && type <= Type::LOGIC_OR_BOP_LIST;
 }
 
 bool Ast::isFixSize(Ast::Type type, size_t s)
@@ -178,9 +178,9 @@ int Ast::precedence(Ast::Type type)
         return 6;
     case Type::BIT_OR:
         return 5;
-    case Type::LOGIC_AND:
+    case Type::LOGIC_AND_BOP_LIST:
         return 4;
-    case Type::LOGIC_OR:
+    case Type::LOGIC_OR_BOP_LIST:
         return 3;
     case Type::QUESTION:
         return 2;

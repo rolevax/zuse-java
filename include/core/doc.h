@@ -42,6 +42,7 @@ private:
     void append(Ast::Type type, int bop) override;
     void assart(Ast::Type type, int bop) override;
     void remove() override;
+    void change(Ast *a) override;
     void change(Ast::Type type) override;
     void nestAsLeft(Ast::Type type, int bop) override;
     void nestAsRight(Ast::Type type, int bop) override;

@@ -36,11 +36,11 @@ Mode::Result TilexMode::keyboard(Key key)
         return keyboardEqual();
     } else if (key == Key::PLUS || key == Key::MINUS) {
         return ppmm(key == Key::PLUS);
-    } else { // keystroke merging
+    } else { // character coupling
         if (key == Key::AND && ot == Ast::Type::BIT_AND) // & -> &&
-            castOuter(Ast::Type::LOGIC_AND);
+            castOuter(Ast::Type::LOGIC_AND_BOP_LIST);
         else if (key == Key::PIPE && ot == Ast::Type::BIT_OR) // | -> ||
-            castOuter(Ast::Type::LOGIC_OR);
+            castOuter(Ast::Type::LOGIC_OR_BOP_LIST);
         else if (key == Key::LESS && ot == Ast::Type::LT) // < -> <<
             castOuter(Ast::Type::SHL);
         else if (key == Key::GREATER && ot == Ast::Type::GT) // > -> >>
@@ -170,13 +170,35 @@ Mode::Result TilexMode::ppmm(bool inc)
     return DONE_POP_NOPUSH;
 }
 
-void TilexMode::castOuter(Ast::Type to)
+void TilexMode::castOuter(Ast::Type ot)
 {
-    assert(!Ast::isScalar(to));
+    assert(!Ast::isScalar(ot));
 
+    // remember cursor position of the meta and dolly-out
     size_t inner = doc.getOuter().indexOf(&doc.getInner());
     doc.digOut();
-    doc.cast(to);
+
+    doc.cast(ot);
+
+    // set cursor back
     doc.fallIn();
     doc.sibling(inner);
+
+    Ast::Type oot = doc.getOuter().getParent().getType();
+    if (Ast::isBopList(oot) && oot == ot) {
+        // TODO: add a condition: in macro contex, not explicit
+        doc.digOut();
+        const BopListAst &flattenee = doc.getInner().asBopList();
+        int flatteneeSize = flattenee.size();
+        for (int i = 0; i < flatteneeSize; i++) {
+            int infix = i == 0 ? BopListAst::UNUSED : flattenee.opAt(i);
+            doc.append(Ast::Type::META, infix);
+            doc.change(flattenee.at(i).clone());
+        }
+
+        doc.sibling(-flatteneeSize); // back to the meta-containing tree
+        doc.remove();
+        doc.sibling(inner); // back to the copied meta
+        assert(doc.getInner().getType() == Ast::Type::META);
+    }
 }

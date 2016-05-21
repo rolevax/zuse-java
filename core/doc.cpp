@@ -267,12 +267,17 @@ void Doc::remove()
     tokens.sync(root.get());
 }
 
-void Doc::change(Ast::Type type)
+void Doc::change(Ast *a)
 {
     assert(inner < outer->size());
 
-    outer->change(inner, newTree(type));
+    outer->change(inner, a);
     tokens.sync(root.get());
+}
+
+void Doc::change(Ast::Type type)
+{
+    change(newTree(type));
 }
 
 void Doc::nestAsLeft(Ast::Type type, int bop)
@@ -331,14 +336,16 @@ void Doc::cast(Ast::Type to)
             a->change(1, getInner().asInternal().at(1).clone());
             outer->change(inner, a);
         }
-    } else if ((Ast::isFixSize(from, 2)
-                || (Ast::isBopList(from) && getInner().asBopList().size() == 2))
-               && Ast::isFixSize(to, 2)) {
-        // simply copy children and change
-        FixSizeAst<2> *a = &newTree(to)->asFixSize<2>();
-        a->change(0, getInner().asInternal().at(0).clone());
-        a->change(1, getInner().asInternal().at(1).clone());
-        outer->change(inner, a);
+    } else if (Ast::isFixSize(from, 2)
+                || (Ast::isBopList(from) && getInner().asBopList().size() == 2)) {
+        // size 2 ==> size 2
+        if (Ast::isFixSize(to, 2) || Ast::isBopList(to)) {
+            // simply copy children and change
+            InternalAst *a = &newTree(to)->asInternal();
+            a->change(0, getInner().asInternal().at(0).clone());
+            a->change(1, getInner().asInternal().at(1).clone());
+            outer->change(inner, a);
+        }
     }
 
     tokens.sync(root.get());

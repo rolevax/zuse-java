@@ -429,13 +429,15 @@ expr_lv1: expr_lv2
 expr_lv2: expr_lv3
 				{ $$ = $1; }
 		| expr_lv2 "||" expr_lv3
-				{ $$ = new FixSizeAst<2>(Ast::Type::LOGIC_OR, $1, $3); } 
+				{ $$ = new BopListAst(Ast::Type::LOGIC_OR_BOP_LIST, 
+									  $1, $3, BopListAst::DEFAULT); } 
 		;
 
 expr_lv3: expr_lv4
 				{ $$ = $1; }
 		| expr_lv3 "&&" expr_lv4
-				{ $$ = new FixSizeAst<2>(Ast::Type::LOGIC_AND, $1, $3); } 
+				{ $$ = new BopListAst(Ast::Type::LOGIC_AND_BOP_LIST, 
+									  $1, $3, BopListAst::DEFAULT); } 
 		;
 
 expr_lv4: expr_lv5

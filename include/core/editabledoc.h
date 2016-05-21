@@ -27,6 +27,7 @@ public:
     virtual void append(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void assart(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void remove() = 0;
+    virtual void change(Ast *a) = 0;
     virtual void change(Ast::Type type) = 0;
     virtual void nestAsLeft(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void nestAsRight(Ast::Type type, int bop = BopListAst::UNUSED) = 0;

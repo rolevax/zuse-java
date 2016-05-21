@@ -59,12 +59,6 @@ BoneToken::BoneToken(const Ast *ast) :
     case Ast::Type::NEQ:
         sym = Sym::NEQ;
         break;
-    case Ast::Type::LOGIC_OR:
-        sym = Sym::LOGIC_OR;
-        break;
-    case Ast::Type::LOGIC_AND:
-        sym = Sym::LOGIC_AND;
-        break;
     case Ast::Type::BIT_OR:
         sym = Sym::BIT_OR;
         break;

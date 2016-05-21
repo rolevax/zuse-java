@@ -74,8 +74,6 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::INSTANCEOF:
         case Type::EQ:
         case Type::NEQ:
-        case Type::LOGIC_OR:
-        case Type::LOGIC_AND:
         case Type::BIT_OR:
         case Type::BIT_XOR:
         case Type::BIT_AND:
@@ -381,6 +379,14 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
             if (bop == BopListAst::DOT)
                 bone(ast, buf, Sym::DOT);
         }
+        break;
+    case Type::LOGIC_AND_BOP_LIST:
+        if (!end)
+            bone(ast, buf, Sym::LOGIC_AND);
+        break;
+    case Type::LOGIC_OR_BOP_LIST:
+        if (!end)
+            bone(ast, buf, Sym::LOGIC_OR);
         break;
     default:
         break;
