@@ -72,7 +72,7 @@ Mode::Result ViewMode::keyboard(Key key)
     // modification
     case Key::I: // insert
         if (doc.getOuter().isList()) {
-            if (doc.getOuter().isBopList())
+            if (doc.getOuter().isBopList() && doc.getOuter().asBopList().numOp() > 1)
                 nextPush = new MenuMode(doc, MenuMode::Context::BOP_INSERT);
             else
                 nextPush = menulessListOp(ListOp::INSERT);
@@ -80,7 +80,7 @@ Mode::Result ViewMode::keyboard(Key key)
         break;
     case Key::O: // oh, append
         if (doc.getOuter().isList()) {
-            if (doc.getOuter().isBopList())
+            if (doc.getOuter().isBopList() && doc.getOuter().asBopList().numOp() > 1)
                 nextPush = new MenuMode(doc, MenuMode::Context::BOP_APPEND);
             else
                 nextPush = menulessListOp(ListOp::APPEND);
@@ -144,13 +144,15 @@ Mode *ViewMode::menulessListOp(ListOp op)
     case Ast::Type::DECL_PARAM_LIST:
         tar = Ast::Type::DECL_PARAM;
         break;
+    case Ast::Type::IF_LIST:
+        tar = Ast::Type::IF_CONDBODY;
+        break;
     case Ast::Type::STMT_LIST:
     case Ast::Type::MEMBER_LIST:
     case Ast::Type::ARG_LIST:
+    case Ast::Type::LOGIC_AND_BOP_LIST:
+    case Ast::Type::LOGIC_OR_BOP_LIST:
         tar = Ast::Type::META;
-        break;
-    case Ast::Type::IF_LIST:
-        tar = Ast::Type::IF_CONDBODY;
         break;
     default:
         return nullptr; // silently do nothing
