@@ -254,6 +254,8 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
         }
 
         doc.nestAsLeft(type, op);
+
+        // no need for modifying '!' and '~'
         if (!Ast::isFixSize(type, 1)) {
             doc.fallIn();
             doc.sibling(+1);

@@ -208,5 +208,28 @@ void TilexMode::relayMacro(int savedInner)
         doc.remove();
         doc.sibling(savedInner); // back to the copied meta
         assert(doc.getInner().getType() == Ast::Type::META);
+    } else if (doc.getOuter().size() == 2
+               && Ast::precedence(ot) < Ast::precedence(oot)) {
+        // a macro either nest-as-left or append.
+        // (the only exception is type-cast, but that's not double-char op)
+        // if the outer's size is two, it must be a nest.
+        assert(doc.getInnerIndex() == 1);
+        // revert the node created by the single-char macro
+        doc.sibling(-1);
+        doc.expose();
+
+        // auto dolly-out as macros did
+        while (Ast::precedence(ot) < doc.getOuter().precedence()
+               && doc.getInnerIndex() == doc.getOuter().size() - 1)
+            doc.digOut();
+
+        // nest-or-append as macros did
+        if (doc.getOuter().getType() == ot && doc.getOuter().isList()) {
+            doc.append(Ast::Type::META);
+        } else {
+            doc.nestAsLeft(ot);
+            doc.fallIn();
+            doc.sibling(+1);
+        }
     }
 }
