@@ -351,7 +351,7 @@ void Doc::cast(Ast::Type to)
     tokens.sync(root.get());
 }
 
-Mode *Doc::createModifyMode(bool clear, size_t offset)
+Mode *Doc::createModifyMode(bool clear, size_t offset, bool macroContext)
 {
     if (getInner().isList() && !getInner().isBopList())
         return new ListInputMode(*this);
@@ -360,7 +360,7 @@ Mode *Doc::createModifyMode(bool clear, size_t offset)
 
     switch (getInner().getType()) {
     case Ast::Type::META:
-        return new TilexMode(*this);
+        return new TilexMode(*this, macroContext);
     case Ast::Type::IDENT:
         return new IdentInputMode(*this, clear);
     case Ast::Type::STRING:

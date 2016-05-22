@@ -49,7 +49,7 @@ private:
     void expose() override;
     void cast(Ast::Type type) override;
 
-    Mode *createModifyMode(bool clear, size_t offset) override;
+    Mode *createModifyMode(bool clear, size_t offset, bool macroContext) override;
     void scalarAppend(const char *str) override;
     void scalarAppend(char c) override;
     void scalarClear() override;

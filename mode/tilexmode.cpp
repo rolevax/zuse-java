@@ -6,8 +6,9 @@
 
 #include <cassert>
 
-TilexMode::TilexMode(EditableDoc &doc)
+TilexMode::TilexMode(EditableDoc &doc, bool macroContext)
     : Mode(doc)
+    , macroContext(macroContext)
 {
 
 }
@@ -184,9 +185,16 @@ void TilexMode::castOuter(Ast::Type ot)
     doc.fallIn();
     doc.sibling(inner);
 
+    if (macroContext)
+        relayMacro(inner);
+}
+
+void TilexMode::relayMacro(int savedInner)
+{
+    Ast::Type ot = doc.getOuter().getType();
     Ast::Type oot = doc.getOuter().getParent().getType();
+
     if (Ast::isBopList(oot) && oot == ot) {
-        // TODO: add a condition: in macro contex, not explicit
         doc.digOut();
         const BopListAst &flattenee = doc.getInner().asBopList();
         int flatteneeSize = flattenee.size();
@@ -198,7 +206,7 @@ void TilexMode::castOuter(Ast::Type ot)
 
         doc.sibling(-flatteneeSize); // back to the meta-containing tree
         doc.remove();
-        doc.sibling(inner); // back to the copied meta
+        doc.sibling(savedInner); // back to the copied meta
         assert(doc.getInner().getType() == Ast::Type::META);
     }
 }

@@ -126,6 +126,20 @@ Ast::Type MenuMode::keyToType(Key key)
         case Key::SLASH:
         case Key::PERCENT:
             return Ast::Type::MUL_BOP_LIST;
+        case Key::AND:
+            return Ast::Type::BIT_AND;
+        case Key::PIPE:
+            return Ast::Type::BIT_OR;
+        case Key::CARET:
+            return Ast::Type::BIT_XOR;
+        case Key::EXCLAM:
+            return Ast::Type::LOGIC_NOT;
+        case Key::TIDE:
+            return Ast::Type::BIT_NOT;
+        case Key::LESS:
+            return Ast::Type::LT;
+        case Key::GREATER:
+            return Ast::Type::GT;
         case Key::S_C:
             return Ast::Type::DECL_CLASS;
         case Key::I:

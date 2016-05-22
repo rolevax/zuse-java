@@ -18,6 +18,7 @@ private:
     bool macroComma(Mode *&nextPush);
     bool macroEnter(Mode *&nextPush, bool shift);
     bool macroBop(Key key, Mode *&nextPush);
+    Mode *createMode(int offset = 0);
 
 private:
     EditableDoc &doc;

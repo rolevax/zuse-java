@@ -23,7 +23,7 @@ bool MacroHandler::macro(Key key, Mode *&nextPush)
     case Key::LEFT_BRACE:
         if (ot == Ast::Type::IF_LIST) {
             doc.append(Ast::Type::STMT_LIST);
-            nextPush = doc.createModifyMode(true);
+            nextPush = createMode();
             return true;
         } else if (ot == Ast::Type::IF_CONDBODY && it == Ast::Type::STMT_LIST) {
             doc.digOut();
@@ -36,7 +36,7 @@ bool MacroHandler::macro(Key key, Mode *&nextPush)
                 doc.sibling(+1); // now inner is if_condbody (else if)
                 doc.change(Ast::Type::STMT_LIST);
             }
-            nextPush = doc.createModifyMode(true);
+            nextPush = createMode();
             return true;
         } else {
             return false;
@@ -60,14 +60,14 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
         // decl_var ==> decl_method
         doc.cast(Ast::Type::DECL_METHOD);
         // use offset 2 to skip return type and identifier
-        nextPush = doc.createModifyMode(true, 2);
+        nextPush = createMode(2);
         return true;
     } else if (ot == Ast::Type::DECL_VAR) {
         // dector --> decl_var ==> decl_method
         doc.digOut();
         doc.cast(Ast::Type::DECL_METHOD);
         // use offset 2 to skip return type and identifier
-        nextPush = doc.createModifyMode(true, 2);
+        nextPush = createMode(2);
         return true;
     } else if (ot == Ast::Type::IF_LIST) {
         if (it == Ast::Type::STMT_LIST) {
@@ -77,7 +77,7 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
         } else  {
             doc.append(Ast::Type::IF_CONDBODY);
         }
-        nextPush = doc.createModifyMode(true);
+        nextPush = createMode();
         return true;
     } else if (it == Ast::Type::IF_CONDBODY) { // outer is not if-list
         // if_condbody (bare) ==> if_list
@@ -86,7 +86,7 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
         doc.nestAsLeft(Ast::Type::IF_LIST);
         doc.fallIn();
         doc.sibling(+1);
-        nextPush = doc.createModifyMode(true);
+        nextPush = createMode();
         return true;
     } else if (ot == Ast::Type::IF_CONDBODY && it == Ast::Type::STMT_LIST) {
         // stmt_list --> if_condbody, and recursive call macro()
@@ -133,7 +133,7 @@ bool MacroHandler::macroComma(Mode *&nextPush)
             // already had list
             doc.append(doc.getOuter().typeAt(0));
         }
-        nextPush = doc.createModifyMode(true);
+        nextPush = createMode();
         return true;
     }
 }
@@ -161,7 +161,7 @@ bool MacroHandler::macroEnter(Mode *&nextPush, bool shift)
         else
             doc.append(doc.getOuter().typeAt(0));
 
-        nextPush = doc.createModifyMode(true);
+        nextPush = createMode();
         return true;
     }
 }
@@ -259,8 +259,13 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
     }
 
     if (!Ast::isFixSize(type, 1))
-        nextPush = doc.createModifyMode(true);
+        nextPush = createMode();
 
     return true;
+}
+
+Mode *MacroHandler::createMode(int offset)
+{
+    return doc.createModifyMode(true, offset, true);
 }
 

@@ -34,7 +34,8 @@ public:
     virtual void expose() = 0;
     virtual void cast(Ast::Type type) = 0;
 
-    virtual Mode *createModifyMode(bool clear, size_t offset = 0) = 0;
+    virtual Mode *createModifyMode(bool clear, size_t offset = 0,
+                                   bool macroContext = false) = 0;
     virtual void scalarAppend(const char *str) = 0;
     virtual void scalarAppend(char c) = 0;
     virtual void scalarClear() = 0;
