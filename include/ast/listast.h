@@ -17,9 +17,9 @@ public:
     Ast &at(size_t pos) const override;
     size_t indexOf(const Ast *child) const override;
 
-    // TODO move to VarSizeAst (?)
     void insert(size_t pos, Ast *child);
     void append(Ast *subtree);
+    void erase(size_t pos);
     virtual Ast *remove(size_t pos);
     virtual void clear();
 

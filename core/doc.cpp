@@ -251,7 +251,7 @@ void Doc::remove()
 
     if (outer->isList()) {
         ListAst *l = &outer->asList();
-        delete l->remove(inner);
+        l->erase(inner);
 
         bool toRemoveSelf = l->illZero();
         bool toExposeChild = l->illOne();

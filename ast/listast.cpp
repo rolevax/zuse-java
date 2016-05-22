@@ -64,6 +64,11 @@ void ListAst::append(Ast *subtree)
     insert(size(), subtree);
 }
 
+void ListAst::erase(size_t pos)
+{
+    delete remove(pos);
+}
+
 Ast *ListAst::remove(size_t pos)
 {
     assert(pos < subtrees.size());
