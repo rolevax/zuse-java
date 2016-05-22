@@ -69,7 +69,7 @@ Mode::Result TilexMode::keyboardSpace()
     const InternalAst &outer = doc.getOuter();
     if (outer.getType() == Ast::Type::ADD_BOP_LIST
             && outer.size() == 2
-            && outer.indexOf(&doc.getInner()) == 0) {
+            && doc.getInnerIndex() == 0) {
         Ast::Type t = outer.asBopList().opAt(1) == BopListAst::ADD ?
                     Ast::Type::UNARY_PLUS : Ast::Type::UNARY_MINUS;
         doc.sibling(1);
@@ -156,7 +156,7 @@ Mode::Result TilexMode::ppmm(bool inc)
     if (outer.getType() != Ast::Type::ADD_BOP_LIST || outer.size() != 2)
         return DONE_STAY_NOPUSH;
 
-    bool prefix = outer.indexOf(&doc.getInner()) == 0;
+    bool prefix = doc.getInnerIndex() == 0;
     bool plus = outer.asBopList().opAt(1) == BopListAst::ADD;
     if (plus != inc) // "+-" or "-+"
         return DONE_STAY_NOPUSH;
@@ -176,7 +176,7 @@ void TilexMode::castOuter(Ast::Type ot)
     assert(!Ast::isScalar(ot));
 
     // remember cursor position of the meta and dolly-out
-    size_t inner = doc.getOuter().indexOf(&doc.getInner());
+    size_t inner = doc.getInnerIndex();
     doc.digOut();
 
     doc.cast(ot);

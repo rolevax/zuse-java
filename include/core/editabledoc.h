@@ -16,6 +16,7 @@ public:
 
     virtual const InternalAst &getOuter() const = 0;
     virtual const Ast &getInner() const = 0;
+    virtual size_t getInnerIndex() const = 0;
 
     virtual void fallIn() = 0;
     virtual void digOut() = 0;

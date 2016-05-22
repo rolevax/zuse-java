@@ -234,7 +234,9 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
     // precondition from this line: inner is an expression
 
     // simulate plain-text input by comparing precedence
-    while (Ast::precedence(type) < doc.getOuter().precedence())
+    // and the inner should be the last child
+    while (Ast::precedence(type) < doc.getOuter().precedence()
+           && doc.getInnerIndex() == doc.getOuter().size() - 1)
         doc.digOut();
 
     if (type == Ast::Type::CAST) {

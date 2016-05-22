@@ -31,6 +31,7 @@ private:
     ///@{
     const InternalAst &getOuter() const override;
     const Ast &getInner() const override;
+    size_t getInnerIndex() const override;
 
     void fallIn() override;
     void digOut() override;

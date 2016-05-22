@@ -130,6 +130,11 @@ const Ast &Doc::getInner() const
     return outer->at(inner);
 }
 
+size_t Doc::getInnerIndex() const
+{
+    return inner;
+}
+
 void Doc::fallIn()
 {
     assert(inner < outer->size());
