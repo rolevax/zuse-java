@@ -28,7 +28,7 @@ bool Ast::isFixSize(Ast::Type type, size_t s)
 {
     switch (s) {
     case 0:
-        return Type::RETURN <= type && type <= Type::DECL_METHOD;
+        return Type::RETURN <= type && type <= Type::FOR;
     case 1:
         return Type::RETURN <= type && type <= Type::BIT_NOT;
     case 2:
@@ -36,7 +36,7 @@ bool Ast::isFixSize(Ast::Type type, size_t s)
     case 3:
         return Type::QUESTION <= type && type <= Type::QUESTION;
     case 4:
-        return Type::DECL_METHOD <= type && type <= Type::DECL_METHOD;
+        return Type::DECL_METHOD <= type && type <= Type::FOR;
     default:
         return false;
     }

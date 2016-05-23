@@ -58,6 +58,9 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::DO_WHILE:
             hitDoWhile(ast.asFixSize<2>(), buf);
             break;
+        case Type::FOR:
+            hitFor(ast.asFixSize<4>(), buf);
+            break;
         case Type::IF_CONDBODY:
             hitIfCondBody(ast.asFixSize<2>(), buf);
             break;
@@ -189,18 +192,21 @@ void Hammer::hitMethod(const FixSizeAst<4> &ast, Buf &buf)
 void Hammer::hitVarDecl(const FixSizeAst<2> &ast, Buf &buf)
 {
     hitModifiers(ast.getModifiers(), ast, buf);
-    hitGeneral(ast.asFixSize<2>().at(0), buf); // type
+    hitGeneral(ast.at(0), buf); // type
     bone(ast, buf, Sym::SPACE);
-    hitGeneral(ast.asFixSize<2>().at(1), buf); // decl bean list
-    bone(ast, buf, Sym::SEMICOLON);
+    hitGeneral(ast.at(1), buf); // decl bean list
+
+    // semicolon of 'for' is for's
+    if (ast.getParent().getType() != Type::FOR)
+        bone(ast, buf, Sym::SEMICOLON);
 }
 
 void Hammer::hitParamDecl(const FixSizeAst<2> &ast, Buf &buf)
 {
     hitModifiers(ast.getModifiers(), ast, buf);
-    hitGeneral(ast.asFixSize<2>().at(0), buf); // type
+    hitGeneral(ast.at(0), buf); // type
     bone(ast, buf, Sym::SPACE);
-    hitGeneral(ast.asFixSize<2>().at(1), buf); // identifier
+    hitGeneral(ast.at(1), buf); // identifier
 }
 
 void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf)
@@ -216,21 +222,36 @@ void Hammer::hitWhile(const FixSizeAst<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::WHILE);
     bone(ast, buf, Sym::LPAREN);
-    hitGeneral(ast.asFixSize<2>().at(0), buf); // expr
+    hitGeneral(ast.at(0), buf); // expr
     bone(ast, buf, Sym::RPAREN);
-    hitGeneral(ast.asFixSize<2>().at(1), buf); // stmt
+    hitGeneral(ast.at(1), buf); // stmt
 }
 
 void Hammer::hitDoWhile(const FixSizeAst<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::DO);
-    hitGeneral(ast.asFixSize<2>().at(0), buf); // stmt
+    hitGeneral(ast.at(0), buf); // stmt
     bone(ast, buf, Sym::SPACE);
     bone(ast, buf, Sym::WHILE);
     bone(ast, buf, Sym::LPAREN);
-    hitGeneral(ast.asFixSize<2>().at(1), buf); // expr
+    hitGeneral(ast.at(1), buf); // expr
     bone(ast, buf, Sym::RPAREN);
     bone(ast, buf, Sym::SEMICOLON);
+}
+
+void Hammer::hitFor(const FixSizeAst<4> &ast, Buf &buf)
+{
+    bone(ast, buf, Sym::FOR);
+    bone(ast, buf, Sym::LPAREN);
+    hitGeneral(ast.at(0), buf);
+    bone(ast, buf, Sym::SEMICOLON);
+    bone(ast, buf, Sym::SPACE);
+    hitGeneral(ast.at(1), buf);
+    bone(ast, buf, Sym::SEMICOLON);
+    bone(ast, buf, Sym::SPACE);
+    hitGeneral(ast.at(2), buf);
+    bone(ast, buf, Sym::RPAREN);
+    hitGeneral(ast.at(3), buf);
 }
 
 void Hammer::hitInfixBop(const FixSizeAst<2> &ast, Buf &buf)
@@ -338,7 +359,8 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
                     && bt != Type::WHILE
                     && bt != Type::DO_WHILE
                     && bt != Type::RETURN
-                    && bt != Type::DECL_VAR) {
+                    && bt != Type::DECL_VAR
+                    && bt != Type::FOR) {
                 bone(ast, buf, Sym::SEMICOLON);
             }
         }

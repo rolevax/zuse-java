@@ -73,6 +73,8 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
         return pos == 0 ? Type::IDENT : Type::META;
     case Type::IF_CONDBODY:
         return pos == 0 ? Type::META : Type::STMT_LIST;
+    case Type::FOR:
+        return pos == 3 ? Type::STMT_LIST : Type::META;
     default:
         return Type::META;
     }

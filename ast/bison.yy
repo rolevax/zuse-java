@@ -51,6 +51,7 @@
 	RETURN		"return"
 	WHILE		"while"
 	DO			"do"
+	FOR			"for"
 	IF			"if"
 	ELSE		"else"
 	INSTANCEOF	"instanceof"
@@ -58,6 +59,7 @@
 	THIS		"this"
 	SUPER		"super"
 	NEW			"new"
+
 	ABSTRACT	"abstract"
 	FINAL		"final"
 	PUBLIC		"public"
@@ -141,6 +143,8 @@
 %type	<Ast*>			return_stmt
 %type	<Ast*>			while_stmt
 %type	<Ast*>			do_while_stmt
+%type	<Ast*>			for_stmt
+%type	<Ast*>			for_init
 %type	<Ast*>			ident
 %type	<Ast*>			type_spec
 %type	<Ast*>			type_name
@@ -300,6 +304,8 @@ stmt: expr ";"
 				{ $$ = $1; }
 	| do_while_stmt
 				{ $$ = $1; }
+	| for_stmt
+				{ $$ = $1; }
 	| if_list
 				{ $$ = $1; }
 	| "{" stmt_list "}"
@@ -364,6 +370,18 @@ while_stmt: "while" "(" expr ")" stmt
 do_while_stmt: "do" stmt "while" "(" expr ")" ";"
 		 		{ ListAst *body = $2->bodify();
 				  $$ = new FixSizeAst<2>(Ast::Type::DO_WHILE, body, $5); }
+
+for_stmt: "for" "(" for_init expr ";" expr ")" stmt
+		 		{ ListAst *body = $8->bodify();
+				  $$ = new FixSizeAst<4>(Ast::Type::FOR, 
+										 $3, $4, $6, body); }
+		;
+
+for_init: decl_var
+				{ $$ = $1; }
+		| expr ";"
+				{ $$ = $1; }
+		;
 
 %right	"then" "else";
 

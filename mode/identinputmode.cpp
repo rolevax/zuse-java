@@ -104,11 +104,18 @@ Mode *IdentInputMode::promotion()
 
 Mode *IdentInputMode::promoteToDeclVar()
 {
+    auto canHaveDeclVar = [](Ast::Type ot, size_t inner)
+    {
+        return ot == Ast::Type::STMT_LIST
+                || ot == Ast::Type::MEMBER_LIST
+                || (ot == Ast::Type::FOR && inner == 0);
+    };
+
     const std::string &text = doc.getInner().asScalar().getText();
     if (isType(text)) {
         // case 1: check bare identifier
         Ast::Type otype = doc.getOuter().getType();
-        if (otype == Ast::Type::STMT_LIST || otype == Ast::Type::MEMBER_LIST) {
+        if (canHaveDeclVar(otype, doc.getInnerIndex())) {
             doc.nestAsLeft(Ast::Type::DECL_VAR);
             return doc.createModifyMode(true, 1);
         }
@@ -122,8 +129,8 @@ Mode *IdentInputMode::promoteToDeclVar()
                 i++;
             if (i == bast.size()) { // all op is member access
                 Ast::Type ootype = doc.getOuter().getParent().getType();
-                if (ootype == Ast::Type::STMT_LIST
-                        || ootype == Ast::Type::MEMBER_LIST) {
+                size_t oInOo = doc.getOuter().getParent().indexOf(&doc.getOuter());
+                if (canHaveDeclVar(ootype, oInOo)) {
                     doc.digOut();
                     doc.nestAsLeft(Ast::Type::DECL_VAR);
                     return doc.createModifyMode(true, 1);
@@ -132,7 +139,7 @@ Mode *IdentInputMode::promoteToDeclVar()
         }
     } else if (int modId = isModifier(text)) {
         Ast::Type otype = doc.getOuter().getType();
-        if (otype == Ast::Type::STMT_LIST || otype == Ast::Type::MEMBER_LIST) {
+        if (canHaveDeclVar(otype, doc.getInnerIndex())) {
             doc.change(Ast::Type::DECL_VAR);
             setModifier(modId);
             return doc.createModifyMode(true, 0);
@@ -159,6 +166,9 @@ Mode *IdentInputMode::promoteToStmt()
         return doc.createModifyMode(true, 0);
     } else if (text == "do") {
         doc.change(Ast::Type::DO_WHILE);
+        return doc.createModifyMode(true, 0);
+    } else if (text == "for") {
+        doc.change(Ast::Type::FOR);
         return doc.createModifyMode(true, 0);
     } else if (text == "return") {
         doc.change(Ast::Type::RETURN);

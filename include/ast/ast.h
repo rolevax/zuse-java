@@ -41,7 +41,7 @@ public:
         // size 3
         QUESTION,
         // size 4
-        DECL_METHOD,
+        DECL_METHOD, FOR,
 
         // SCALAR, isScalar() := !isList() && !isFixSize()
         IDENT, NUMBER, STRING, META

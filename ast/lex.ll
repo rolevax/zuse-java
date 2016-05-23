@@ -44,6 +44,7 @@ blank 	[ \t]
 "return"	return yy::BisonParser::make_RETURN(loc);
 "while"		return yy::BisonParser::make_WHILE(loc);
 "do"		return yy::BisonParser::make_DO(loc);
+"for"		return yy::BisonParser::make_FOR(loc);
 "if"		return yy::BisonParser::make_IF(loc);
 "else"		return yy::BisonParser::make_ELSE(loc);
 "instanceof"return yy::BisonParser::make_INSTANCEOF(loc);
