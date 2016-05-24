@@ -64,6 +64,9 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::IF_CONDBODY:
             hitIfCondBody(ast.asFixSize<2>(), buf);
             break;
+        case Type::CATCH:
+            hitCatch(ast.asFixSize<2>(), buf);
+            break;
         case Type::CAST:
             hitCast(ast.asFixSize<2>(), buf);
             break;
@@ -197,7 +200,9 @@ void Hammer::hitVarDecl(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(1), buf); // decl bean list
 
     // semicolon of 'for' is for's
-    if (ast.getParent().getType() != Type::FOR)
+    // catch does not have semicolon
+    if (ast.getParent().getType() != Type::FOR
+            && ast.getParent().getType() != Type::CATCH)
         bone(ast, buf, Sym::SEMICOLON);
 }
 
@@ -214,6 +219,15 @@ void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf)
     bone(ast, buf, Sym::IF);
     bone(ast, buf, Sym::LPAREN);
     hitGeneral(ast.at(0), buf); // condition
+    bone(ast, buf, Sym::RPAREN);
+    hitGeneral(ast.at(1), buf); // statement list
+}
+
+void Hammer::hitCatch(const FixSizeAst<2> &ast, Buf &buf)
+{
+    bone(ast, buf, Sym::CATCH);
+    bone(ast, buf, Sym::LPAREN);
+    hitGeneral(ast.at(0), buf); // exception decl
     bone(ast, buf, Sym::RPAREN);
     hitGeneral(ast.at(1), buf); // statement list
 }
@@ -306,6 +320,9 @@ void Hammer::hitListBegin(const ListAst &ast, Buf &buf)
         }
         buf.push_back(nullptr);
         break;
+    case Type::TRY_LIST:
+        bone(ast, buf, Sym::TRY);
+        break;
     case Type::DECL_PARAM_LIST:
         bone(ast, buf, Sym::LPAREN);
         break;
@@ -339,6 +356,7 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
     }
 }
 
+// pos: position of just already hit child
 void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
 {
     bool end = pos == ast.size() - 1;
@@ -360,7 +378,8 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
                     && bt != Type::DO_WHILE
                     && bt != Type::RETURN
                     && bt != Type::DECL_VAR
-                    && bt != Type::FOR) {
+                    && bt != Type::FOR
+                    && bt != Type::TRY_LIST) {
                 bone(ast, buf, Sym::SEMICOLON);
             }
         }
@@ -378,6 +397,10 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
                 bone(ast, buf, Sym::SPACE);
             bone(ast, buf, Sym::ELSE);
         }
+        break;
+    case Type::TRY_LIST:
+        if (!end && pos != 0 && ast.at(pos + 1).getType() == Type::STMT_LIST)
+            bone(ast, buf, Sym::FINALLY);
         break;
     case Type::ADD_BOP_LIST:
         if (!end) {
@@ -420,7 +443,10 @@ bool Hammer::needBrace(const ListAst &ast, bool norec)
     assert(ast.getType() == Type::STMT_LIST);
 
     Type pt = ast.getParent().getType();
-    if (pt == Type::DECL_METHOD || ast.size() != 1)
+    if (pt == Type::DECL_METHOD
+            || pt == Type::TRY_LIST
+            || pt == Type::CATCH
+            || ast.size() != 1)
         return true;
 
     if (norec)

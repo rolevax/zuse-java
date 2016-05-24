@@ -59,6 +59,9 @@
 	THIS		"this"
 	SUPER		"super"
 	NEW			"new"
+	TRY			"try"
+	CATCH		"catch"
+	FINALLY		"finally"
 
 	ABSTRACT	"abstract"
 	FINAL		"final"
@@ -132,6 +135,8 @@
 %type	<ListAst*>		arg_list
 %type	<ListAst*>		arg_list_noemp
 %type	<ListAst*>		dector_list
+%type	<ListAst*>			try_list
+%type	<ListAst*>		catch_list
 
 %type	<Ast*>			class
 %type	<Ast*>			decl_method
@@ -145,6 +150,7 @@
 %type	<Ast*>			do_while_stmt
 %type	<Ast*>			for_stmt
 %type	<Ast*>			for_init
+%type	<Ast*>			catch
 %type	<Ast*>			ident
 %type	<Ast*>			type_spec
 %type	<Ast*>			type_name
@@ -308,6 +314,8 @@ stmt: expr ";"
 				{ $$ = $1; }
 	| if_list
 				{ $$ = $1; }
+	| try_list
+				{ $$ = $1; }
 	| "{" stmt_list "}"
 				{ $$ = $2; }
 	;
@@ -382,6 +390,48 @@ for_init: decl_var
 		| expr ";"
 				{ $$ = $1; }
 		;
+
+/*
+guard_stmt: "synchronized" "(" expression ")" stmt
+		  		{ $$ = nullptr; } //TODO
+		  ;
+*/
+
+try_list: "try" "{" stmt_list "}" catch_list
+				{ $$ = new ListAst(Ast::Type::TRY_LIST); 
+				  $$->append($3);
+				  size_t ct = $5->size();
+				  for (size_t i = 0; i < ct; i++)
+				  	  $$->append($5->remove(0));
+				  delete $5; }
+		| "try" "{" stmt_list "}" catch_list "finally" "{" stmt_list "}"
+				{ $$ = new ListAst(Ast::Type::TRY_LIST); 
+				  $$->append($3);
+				  size_t ct = $5->size();
+				  for (size_t i = 0; i < ct; i++)
+				  	  $$->append($5->remove(0));
+				  delete $5; 
+				  $$->append($8); }
+		;
+
+catch_list: %empty
+		  		// type is dummy, list is temp
+				{ $$ = new ListAst(Ast::Type::IF_LIST); }
+		  | catch_list catch
+				{ $1->append($2); 
+				  $$ = $1; }
+		  ;
+
+catch: "catch" "(" type_spec ident ")" "{" stmt_list "}"
+				{ Ast *decl = new FixSizeAst<2>(Ast::Type::DECL_VAR, 
+												$3, $4);
+				  $$ = new FixSizeAst<2>(Ast::Type::CATCH, decl, $7); }
+	 | "catch" "(" type_spec ")" "{" stmt_list "}"
+				{ Ast *e = new ScalarAst(Ast::Type::IDENT, "e");
+				  Ast *decl = new FixSizeAst<2>(Ast::Type::DECL_VAR,
+												$3, e);
+				  $$ = new FixSizeAst<2>(Ast::Type::CATCH, decl, $6); }
+	 ;
 
 %right	"then" "else";
 

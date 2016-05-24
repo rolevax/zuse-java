@@ -52,6 +52,10 @@ blank 	[ \t]
 "super"		return yy::BisonParser::make_SUPER(loc);
 "null"		return yy::BisonParser::make_JNULL(loc);
 "new"		return yy::BisonParser::make_NEW(loc);
+"try"		return yy::BisonParser::make_TRY(loc);
+"catch"		return yy::BisonParser::make_CATCH(loc);
+"finally"	return yy::BisonParser::make_FINALLY(loc);
+
 "abstract"	return yy::BisonParser::make_ABSTRACT(loc);
 "final"		return yy::BisonParser::make_FINAL(loc);
 "public"	return yy::BisonParser::make_PUBLIC(loc);

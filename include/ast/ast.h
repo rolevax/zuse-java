@@ -20,7 +20,7 @@ public:
     enum class Type {
         // LIST, sync with isList() definition
         CLASS_LIST, MEMBER_LIST, DECL_PARAM_LIST, STMT_LIST,
-        IF_LIST,
+        IF_LIST, TRY_LIST,
         DECTOR_LIST, ARG_LIST,
 
         // BOP-LIST, sync with isBopList() and isList() definition
@@ -33,6 +33,7 @@ public:
         UNARY_PLUS, UNARY_MINUS, LOGIC_NOT, BIT_NOT,
         // size 2
         DECL_CLASS, DECL_VAR, DECL_PARAM, WHILE, DO_WHILE, IF_CONDBODY,
+        CATCH,
         CAST,
         LT, LEQ, GT, GEQ, INSTANCEOF, EQ, NEQ, SHL, SHR, SHRA,
         BIT_OR, BIT_XOR, BIT_AND,

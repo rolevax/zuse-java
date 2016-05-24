@@ -134,6 +134,7 @@ ListAst *Ast::bodify()
     if (getType() == Type::STMT_LIST)
         return &this->asList();
 
+    // nest with a stmt list, who takes over ownership of 'this'
     ListAst *ret = new ListAst(Type::STMT_LIST);
     ret->append(this);
     return ret;
