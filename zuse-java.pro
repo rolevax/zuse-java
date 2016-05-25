@@ -24,7 +24,6 @@ SOURCES += main.cpp \
     core/soultoken.cpp \
     core/tokens.cpp \
     core/hammer.cpp \
-    mode/viewmode.cpp \
     mode/menumode.cpp \
     mode/stringinputmode.cpp \
     mode/numberinputmode.cpp \
@@ -37,7 +36,8 @@ SOURCES += main.cpp \
     mode/tilexmode.cpp \
     mode/fixsizeinputmode.cpp \
     mode/macrohandler.cpp \
-    mode/mogglemode.cpp
+    mode/mogglemode.cpp \
+    mode/normalmode.cpp
 
 RESOURCES += qml.qrc
 
@@ -64,7 +64,6 @@ HEADERS += \
     include/core/hammer.h \
     include/core/tokensobserver.h \
     include/mode/mode.h \
-    include/mode/viewmode.h \
     include/mode/menumode.h \
     include/mode/stringinputmode.h \
     include/mode/numberinputmode.h \
@@ -79,5 +78,6 @@ HEADERS += \
     include/mode/fixsizeinputmode.h \
     include/mode/macrohandler.h \
     include/ast/modifiers.h \
-    include/mode/mogglemode.h
+    include/mode/mogglemode.h \
+    include/mode/normalmode.h
 

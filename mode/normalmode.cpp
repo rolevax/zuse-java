@@ -1,4 +1,4 @@
-#include "mode/viewmode.h"
+#include "mode/normalmode.h"
 #include "mode/menumode.h"
 #include "mode/tilexmode.h"
 #include "mode/identinputmode.h"
@@ -8,14 +8,14 @@
 #include "core/editabledoc.h"
 #include "ast/listast.h"
 
-ViewMode::ViewMode(EditableDoc &doc)
+NormalMode::NormalMode(EditableDoc &doc)
     : Mode(doc)
     , macro(doc)
 {
 
 }
 
-Mode::Result ViewMode::keyboard(Key key)
+Mode::Result NormalMode::keyboard(Key key)
 {
     if (doc.getOuter().getType() == Ast::Type::CLASS_LIST
             && doc.getOuter().size() == 0
@@ -126,12 +126,12 @@ Mode::Result ViewMode::keyboard(Key key)
     return { ResultType::DONE_STAY, nextPush };
 }
 
-const char *ViewMode::name()
+const char *NormalMode::name()
 {
     return "View";
 }
 
-Mode *ViewMode::menulessListOp(ListOp op)
+Mode *NormalMode::menulessListOp(ListOp op)
 {
     const ListAst &l = (op == ListOp::ASSART ? doc.getInner()
                                              : doc.getOuter()).asList();

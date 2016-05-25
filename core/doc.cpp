@@ -1,7 +1,7 @@
 // Zuse headers
 #include "core/doc.h"
 #include "ast/parser.h"
-#include "mode/viewmode.h"
+#include "mode/normalmode.h"
 #include "mode/menumode.h"
 #include "mode/tilexmode.h"
 #include "mode/identinputmode.h"
@@ -28,7 +28,7 @@ Doc::Doc(PDoc &dob, TokensObserver &tob)
     : tokens(tob),
       ob(dob)
 {
-    modes.emplace_back(new ViewMode(*this));
+    modes.emplace_back(new NormalMode(*this));
 }
 
 void Doc::load(const std::string &filename)
@@ -97,7 +97,7 @@ void Doc::push(Mode *mode)
  */
 void Doc::pop()
 {
-    assert(modes.size() > 1); // bottom view mode reserved
+    assert(modes.size() > 1); // bottom normal mode reserved
 
     ob.observePop();
 

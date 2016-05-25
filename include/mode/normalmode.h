@@ -1,13 +1,13 @@
-#ifndef VIEWMODE_H
-#define VIEWMODE_H
+#ifndef NORMALMODE_H
+#define NORMALMODE_H
 
 #include "mode/mode.h"
 #include "mode/macrohandler.h"
 
-class ViewMode : public Mode
+class NormalMode : public Mode
 {
 public:
-    ViewMode(EditableDoc &doc);
+    NormalMode(EditableDoc &doc);
 
     Result keyboard(Key key) override;
     const char *name() override;
@@ -19,4 +19,4 @@ private:
     MacroHandler macro;
 };
 
-#endif // VIEWMODE_H
+#endif // NORMALMODE_H
