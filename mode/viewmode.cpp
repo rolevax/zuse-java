@@ -147,6 +147,9 @@ Mode *ViewMode::menulessListOp(ListOp op)
     case Ast::Type::IF_LIST:
         tar = Ast::Type::IF_CONDBODY;
         break;
+    case Ast::Type::TRY_LIST:
+        tar = Ast::Type::CATCH;
+        break;
     case Ast::Type::STMT_LIST:
     case Ast::Type::MEMBER_LIST:
     case Ast::Type::ARG_LIST:

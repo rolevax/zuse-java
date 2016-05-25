@@ -12,8 +12,6 @@ bool MacroHandler::macro(Key key, Mode *&nextPush)
     if (ot == Ast::Type::CLASS_LIST && doc.getOuter().size() == 0)
         return false;
 
-    Ast::Type it = doc.getInner().getType();
-
     // meta comment:
     // "-->" means "go onto"
     // "==>" means "transform into"
@@ -21,26 +19,7 @@ bool MacroHandler::macro(Key key, Mode *&nextPush)
     case Key::LEFT_PAREN:
         return macroLeftParen(nextPush);
     case Key::LEFT_BRACE:
-        if (ot == Ast::Type::IF_LIST) {
-            doc.append(Ast::Type::STMT_LIST);
-            nextPush = createMode();
-            return true;
-        } else if (ot == Ast::Type::IF_CONDBODY && it == Ast::Type::STMT_LIST) {
-            doc.digOut();
-            ot = doc.getOuter().getType();
-            if (ot == Ast::Type::IF_LIST) {
-                doc.append(Ast::Type::STMT_LIST);
-            } else {
-                doc.nestAsLeft(Ast::Type::IF_LIST);
-                doc.fallIn();
-                doc.sibling(+1); // now inner is if_condbody (else if)
-                doc.change(Ast::Type::STMT_LIST);
-            }
-            nextPush = createMode();
-            return true;
-        } else {
-            return false;
-        }
+        return macroLeftBrace(nextPush);
     case Key::COMMA:
         return macroComma(nextPush);
     case Key::ENTER:
@@ -71,7 +50,8 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
         return true;
     } else if (ot == Ast::Type::IF_LIST) {
         if (it == Ast::Type::STMT_LIST) {
-            // stmt_list (else) ==> if_condbody (else if)
+            // stmt_list ==> if_condbody
+            // convert an 'else' into an 'else if'
             doc.nestAsRight(Ast::Type::IF_CONDBODY);
             doc.fallIn(); // inner becomes if-condition
         } else  {
@@ -90,13 +70,55 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
         return true;
     } else if (ot == Ast::Type::IF_CONDBODY && it == Ast::Type::STMT_LIST) {
         // stmt_list --> if_condbody, and recursive call macro()
-        // when outer is a if_condbody,
-        // for enabling method call marco (left-paren) inside if-condition,
-        // only apply this macro when inner is if-body
+        // the additional 'it == stmt_list' is added
+        // to guarentee method call can be inputted inside if-condition.
+        // this is because the macroBop() call is after this
+        // and I'm too lazy to change the order.
+        // it's may actullay be a bug and I'll think about it if I had time.
+        // ...a solution may be "if the condition is a name, then make it a
+        // method call; else append another if_condbody".
+        doc.digOut();
+        return macroLeftParen(nextPush);
+    } else if (ot == Ast::Type::TRY_LIST) {
+        doc.append(Ast::Type::CATCH);
+        nextPush = createMode();
+        return true;
+    } else if (ot == Ast::Type::CATCH) {
         doc.digOut();
         return macroLeftParen(nextPush);
     } else {
         return macroBop(Key::LEFT_PAREN, nextPush);
+    }
+}
+
+bool MacroHandler::macroLeftBrace(Mode *&nextPush)
+{
+    Ast::Type ot = doc.getOuter().getType();
+    Ast::Type it = doc.getInner().getType();
+
+    if (ot == Ast::Type::IF_LIST) {
+        doc.append(Ast::Type::STMT_LIST);
+        nextPush = createMode();
+        return true;
+    } else if (it == Ast::Type::IF_CONDBODY) {
+        doc.nestAsLeft(Ast::Type::IF_LIST);
+        doc.fallIn(); // now outer is if_condbody (else if)
+        doc.sibling(+1);
+        doc.change(Ast::Type::STMT_LIST);
+        nextPush = createMode();
+        return true;
+    } else if (ot == Ast::Type::IF_CONDBODY && it == Ast::Type::STMT_LIST) {
+        doc.digOut();
+        return macroLeftBrace(nextPush);
+    } else if (ot == Ast::Type::TRY_LIST) {
+        doc.append(Ast::Type::STMT_LIST);
+        nextPush = createMode();
+        return true;
+    } else if (ot == Ast::Type::CATCH) {
+        doc.digOut();
+        return macroLeftBrace(nextPush);
+    } else {
+        return false;
     }
 }
 

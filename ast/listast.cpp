@@ -89,7 +89,8 @@ bool ListAst::illZero(bool assumeSize) const
     if (illOne(true)) // assume all ill-one is also ill-zero
         return true;
 
-    return false;
+    Type t = getType();
+    return t == Type::TRY_LIST;
 }
 
 bool ListAst::illOne(bool assumeSize) const

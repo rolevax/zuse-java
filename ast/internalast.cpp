@@ -55,6 +55,8 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
         return Type::IDENT;
     case Type::IF_LIST:
         return Type::IF_CONDBODY;
+    case Type::TRY_LIST:
+        return pos == 0 ? Type::STMT_LIST : Type::CATCH;
 
     // fix-size's
     case Type::DECL_CLASS:
@@ -73,6 +75,8 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
         return pos == 0 ? Type::IDENT : Type::META;
     case Type::IF_CONDBODY:
         return pos == 0 ? Type::META : Type::STMT_LIST;
+    case Type::CATCH:
+        return pos == 0 ? Type::DECL_VAR : Type::STMT_LIST;
     case Type::FOR:
         return pos == 3 ? Type::STMT_LIST : Type::META;
     default:

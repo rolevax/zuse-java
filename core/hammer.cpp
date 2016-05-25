@@ -399,7 +399,7 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         }
         break;
     case Type::TRY_LIST:
-        if (!end && pos != 0 && ast.at(pos + 1).getType() == Type::STMT_LIST)
+        if (!end && ast.at(pos + 1).getType() == Type::STMT_LIST)
             bone(ast, buf, Sym::FINALLY);
         break;
     case Type::ADD_BOP_LIST:

@@ -173,6 +173,10 @@ Mode *IdentInputMode::promoteToStmt()
     } else if (text == "return") {
         doc.change(Ast::Type::RETURN);
         return doc.createModifyMode(true, 0);
+    } else if (text == "try") {
+        doc.change(Ast::Type::TRY_LIST);
+        doc.fallIn(); // now inner is stmt_list
+        return doc.createModifyMode(true); // a list input mode
     }
 
     return nullptr;
