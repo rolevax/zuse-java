@@ -41,12 +41,15 @@ blank 	[ \t]
 [\n]+      loc.lines(yyleng); loc.step();
 
 "class"		return yy::BisonParser::make_CLASS(loc);
-"return"	return yy::BisonParser::make_RETURN(loc);
 "while"		return yy::BisonParser::make_WHILE(loc);
 "do"		return yy::BisonParser::make_DO(loc);
 "for"		return yy::BisonParser::make_FOR(loc);
 "if"		return yy::BisonParser::make_IF(loc);
 "else"		return yy::BisonParser::make_ELSE(loc);
+"return"	return yy::BisonParser::make_RETURN(loc);
+"break"		return yy::BisonParser::make_BREAK(loc);
+"continue"	return yy::BisonParser::make_CONTINUE(loc);
+"throw"		return yy::BisonParser::make_THROW(loc);
 "instanceof"return yy::BisonParser::make_INSTANCEOF(loc);
 "this"		return yy::BisonParser::make_THIS(loc);
 "super"		return yy::BisonParser::make_SUPER(loc);

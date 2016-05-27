@@ -48,7 +48,10 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             hitParamDecl(ast.asFixSize<2>(), buf);
             break;
         case Type::RETURN:
-            hitReturn(ast.asFixSize<1>(), buf);
+        case Type::BREAK:
+        case Type::CONTINUE:
+        case Type::THROW:
+            hitJump(ast.asFixSize<1>(), buf);
             break;
         case Type::WHILE:
             hitWhile(ast.asFixSize<2>(), buf);
@@ -268,10 +271,27 @@ void Hammer::hitFor(const FixSizeAst<4> &ast, Buf &buf)
     hitGeneral(ast.at(3), buf);
 }
 
-void Hammer::hitReturn(const FixSizeAst<1> &ast, Buf &buf)
+void Hammer::hitJump(const FixSizeAst<1> &ast, Buf &buf)
 {
-    bone(ast, buf, Sym::RETURN);
-    if (ast.at(0).getType() != Type::HIDDEN)
+    switch (ast.getType()) {
+    case Type::RETURN:
+        bone(ast, buf, Sym::RETURN);
+        break;
+    case Type::BREAK:
+        bone(ast, buf, Sym::BREAK);
+        break;
+    case Type::CONTINUE:
+        bone(ast, buf, Sym::CONTINUE);
+        break;
+    case Type::THROW:
+        bone(ast, buf, Sym::THROW);
+        break;
+    default:
+        throw "WTF: unexcected jump type";
+    }
+
+    if (ast.getType() != Type::THROW
+            && ast.at(0).getType() != Type::HIDDEN)
         bone(ast, buf, Sym::SPACE);
     hitGeneral(ast.at(0), buf); // expr
     bone(ast, buf, Sym::SEMICOLON);
@@ -388,7 +408,10 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
                     && bt != Type::RETURN
                     && bt != Type::DECL_VAR
                     && bt != Type::FOR
-                    && bt != Type::TRY_LIST) {
+                    && bt != Type::TRY_LIST
+                    && bt != Type::BREAK
+                    && bt != Type::CONTINUE
+                    && bt != Type::THROW) {
                 bone(ast, buf, Sym::SEMICOLON);
             }
         }

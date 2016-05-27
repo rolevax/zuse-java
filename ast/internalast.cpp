@@ -80,6 +80,8 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
     case Type::FOR:
         return pos == 3 ? Type::STMT_LIST : Type::META;
     case Type::RETURN:
+    case Type::BREAK:
+    case Type::CONTINUE:
         return Type::HIDDEN;
     default:
         return Type::META;

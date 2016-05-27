@@ -48,12 +48,15 @@
 	END	0		"EOF"
 
 	CLASS		"class"
-	RETURN		"return"
 	WHILE		"while"
 	DO			"do"
 	FOR			"for"
 	IF			"if"
 	ELSE		"else"
+	RETURN		"return"
+	BREAK		"break"
+	CONTINUE	"continue"
+	THROW		"throw"
 	INSTANCEOF	"instanceof"
 	JNULL		"null"
 	THIS		"this"
@@ -145,7 +148,7 @@
 %type	<Ast*>			decl_param
 %type	<Ast*>			dector
 %type	<Ast*>			dector_name
-%type	<Ast*>			return_stmt
+%type	<Ast*>			jump_stmt
 %type	<Ast*>			while_stmt
 %type	<Ast*>			do_while_stmt
 %type	<Ast*>			for_stmt
@@ -304,7 +307,7 @@ stmt: expr ";"
 				{ $$ = $1; }
 	| decl_var
 				{ $$ = $1; }
-	| return_stmt
+	| jump_stmt
 				{ $$ = $1; }
 	| while_stmt
 				{ $$ = $1; }
@@ -368,12 +371,24 @@ dector_name: ident
 				{ $$ = $1; } // TODO: scalar.dim++ (?)
 		   ;
 
-return_stmt: "return" expr ";"
+jump_stmt: "return" expr ";"
 		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }
-		   | "return" ";"
+		 | "return" ";"
 		 		{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
 				  $$ = new FixSizeAst<1>(Ast::Type::RETURN, hidden); }
-		   ;
+		 | "break" ident ";"
+		 		{ $$ = new FixSizeAst<1>(Ast::Type::BREAK, $2); }
+		 | "break" ";"
+		 		{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $$ = new FixSizeAst<1>(Ast::Type::BREAK, hidden); }
+		 | "continue" ident ";"
+		 		{ $$ = new FixSizeAst<1>(Ast::Type::CONTINUE, $2); }
+		 | "continue" ";"
+		 		{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $$ = new FixSizeAst<1>(Ast::Type::CONTINUE, hidden); }
+		 | "throw" ident ";"
+		 		{ $$ = new FixSizeAst<1>(Ast::Type::THROW, $2); }
+		 ;
 
 while_stmt: "while" "(" expr ")" stmt
 		 		{ ListAst *body = $5->bodify();

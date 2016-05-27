@@ -7,7 +7,7 @@ std::string BoneToken::syms[128]
 {
     "class ", " {", "{", "}", "", "(", ")",
     "if ", "else ", "while ", "do", "for ",
-    "return",  "continue", "break", "throw",
+    "return",  "continue", "break", "throw ",
     "try", " catch ", " finally",
     "abstract ", "final ", "public ", "protected ", "private ", "static ",
     "transient ", "volatile ", "native ", "synchronized ",
