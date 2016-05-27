@@ -512,12 +512,24 @@ Ast *Doc::newTree(Ast::Type type)
             Ast *t0 = newTree(InternalAst::typeAt(type, 0));
             Ast *t1 = newTree(InternalAst::typeAt(type, 1));
             a = new FixSizeAst<2>(type, t0, t1);
+        } else if (Ast::isFixSize(type, 3)) {
+            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
+            Ast *t1 = newTree(InternalAst::typeAt(type, 1));
+            Ast *t2 = newTree(InternalAst::typeAt(type, 2));
+            a = new FixSizeAst<3>(type, t0, t1, t2);
         } else if (Ast::isFixSize(type, 4)) {
             Ast *t0 = newTree(InternalAst::typeAt(type, 0));
             Ast *t1 = newTree(InternalAst::typeAt(type, 1));
             Ast *t2 = newTree(InternalAst::typeAt(type, 2));
             Ast *t3 = newTree(InternalAst::typeAt(type, 3));
             a = new FixSizeAst<4>(type, t0, t1, t2, t3);
+        } else if (Ast::isFixSize(type, 5)) {
+            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
+            Ast *t1 = newTree(InternalAst::typeAt(type, 1));
+            Ast *t2 = newTree(InternalAst::typeAt(type, 2));
+            Ast *t3 = newTree(InternalAst::typeAt(type, 3));
+            Ast *t4 = newTree(InternalAst::typeAt(type, 4));
+            a = new FixSizeAst<5>(type, t0, t1, t2, t3, t4);
         } else {
             throw "TODO";
         }

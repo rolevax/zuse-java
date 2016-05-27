@@ -28,7 +28,7 @@ bool Ast::isFixSize(Ast::Type type, size_t s)
 {
     switch (s) {
     case 0:
-        return Type::RETURN <= type && type <= Type::FOR;
+        return Type::RETURN <= type && type <= Type::DECL_METHOD;
     case 1:
         return Type::RETURN <= type && type <= Type::BIT_NOT;
     case 2:
@@ -36,7 +36,9 @@ bool Ast::isFixSize(Ast::Type type, size_t s)
     case 3:
         return Type::QUESTION <= type && type <= Type::QUESTION;
     case 4:
-        return Type::DECL_METHOD <= type && type <= Type::FOR;
+        return Type::FOR <= type && type <= Type::FOR;
+    case 5:
+        return Type::DECL_METHOD <= type && type <= Type::DECL_METHOD;
     default:
         return false;
     }
@@ -246,11 +248,13 @@ template FixSizeAst<1> &Ast::asFixSize();
 template FixSizeAst<2> &Ast::asFixSize();
 template FixSizeAst<3> &Ast::asFixSize();
 template FixSizeAst<4> &Ast::asFixSize();
+template FixSizeAst<5> &Ast::asFixSize();
 
 // instanciation
 template const FixSizeAst<1> &Ast::asFixSize() const;
 template const FixSizeAst<2> &Ast::asFixSize() const;
 template const FixSizeAst<3> &Ast::asFixSize() const;
 template const FixSizeAst<4> &Ast::asFixSize() const;
+template const FixSizeAst<5> &Ast::asFixSize() const;
 
 

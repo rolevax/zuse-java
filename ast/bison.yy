@@ -57,6 +57,7 @@
 	BREAK		"break"
 	CONTINUE	"continue"
 	THROW		"throw"
+	THROWS		"throws"
 	INSTANCEOF	"instanceof"
 	JNULL		"null"
 	THIS		"this"
@@ -138,8 +139,9 @@
 %type	<ListAst*>		arg_list
 %type	<ListAst*>		arg_list_noemp
 %type	<ListAst*>		dector_list
-%type	<ListAst*>			try_list
+%type	<ListAst*>		try_list
 %type	<ListAst*>		catch_list
+%type	<ListAst*>		name_list
 
 %type	<Ast*>			class
 %type	<Ast*>			decl_method
@@ -268,14 +270,24 @@ member_list: %empty
 		   ;
 
 decl_method: type_spec dector_name "(" param_list ")" "{" stmt_list "}"
- 				{ $$ = new FixSizeAst<4>(Ast::Type::DECL_METHOD, 
-										 $1, $2, $4, $7); }
+ 				{ Ast* hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $$ = new FixSizeAst<5>(Ast::Type::DECL_METHOD, 
+										 $1, $2, $4, hidden, $7); }
            | modifiers type_spec dector_name "(" param_list ")" 
 				"{" stmt_list "}"
- 				{ $$ = new FixSizeAst<4>(Ast::Type::DECL_METHOD, 
-										 $2, $3, $5, $8); 
-				  $$->asFixSize<4>().setModifiers($1); }
-// TODO: dim in method decl (?)
+ 				{ Ast* hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+ 				  $$ = new FixSizeAst<5>(Ast::Type::DECL_METHOD, 
+										 $2, $3, $5, hidden, $8); 
+				  $$->asFixSize<5>().setModifiers($1); }
+		   | type_spec dector_name "(" param_list ")" 
+				"throws" name_list "{" stmt_list "}"
+ 				{ $$ = new FixSizeAst<5>(Ast::Type::DECL_METHOD, 
+										 $1, $2, $4, $7, $9); }
+           | modifiers type_spec dector_name "(" param_list ")" 
+				"throws" name_list "{" stmt_list "}"
+ 				{ $$ = new FixSizeAst<5>(Ast::Type::DECL_METHOD, 
+										 $2, $3, $5, $8, $10); 
+				  $$->asFixSize<5>().setModifiers($1); }
 		   ;
 
 param_list: %empty
@@ -715,6 +727,13 @@ name: ident
 				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
 									  BopListAst::DOT); }
 	;
+
+name_list: name
+		 		{ $$ = new ListAst(Ast::Type::NAME_LIST);
+				  $$->append($1); }
+		 | name_list "," name
+				{ $1->append($3); $$ = $1; }
+		 ;
 
 special_name: "this"
 				{ $$= new ScalarAst(Ast::Type::IDENT,"xxx"); }

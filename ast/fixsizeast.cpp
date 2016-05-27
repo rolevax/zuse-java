@@ -80,10 +80,12 @@ FixSizeAst<N>::FixSizeAst(Ast::Type t)
 
 // instantiation for the class
 // there are also some related instantiation in ast.cpp
+// and also do something in Doc::newTree()
 template class FixSizeAst<1>;
 template class FixSizeAst<2>;
 template class FixSizeAst<3>;
 template class FixSizeAst<4>;
+template class FixSizeAst<5>;
 
 Modifiers &FixSizes::getModifiers(Ast &ast)
 {

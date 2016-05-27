@@ -50,6 +50,7 @@ blank 	[ \t]
 "break"		return yy::BisonParser::make_BREAK(loc);
 "continue"	return yy::BisonParser::make_CONTINUE(loc);
 "throw"		return yy::BisonParser::make_THROW(loc);
+"throws"	return yy::BisonParser::make_THROWS(loc);
 "instanceof"return yy::BisonParser::make_INSTANCEOF(loc);
 "this"		return yy::BisonParser::make_THIS(loc);
 "super"		return yy::BisonParser::make_SUPER(loc);

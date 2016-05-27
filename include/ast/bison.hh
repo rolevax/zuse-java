@@ -355,6 +355,7 @@ namespace yy {
       // try_list
       // catch_list
       // if_list
+      // name_list
       char dummy2[sizeof(ListAst*)];
 
       // modifiers
@@ -399,73 +400,74 @@ namespace yy {
         TOK_BREAK = 265,
         TOK_CONTINUE = 266,
         TOK_THROW = 267,
-        TOK_INSTANCEOF = 268,
-        TOK_JNULL = 269,
-        TOK_THIS = 270,
-        TOK_SUPER = 271,
-        TOK_NEW = 272,
-        TOK_TRY = 273,
-        TOK_CATCH = 274,
-        TOK_FINALLY = 275,
-        TOK_ABSTRACT = 276,
-        TOK_FINAL = 277,
-        TOK_PUBLIC = 278,
-        TOK_PROTECTED = 279,
-        TOK_PRIVATE = 280,
-        TOK_STATIC = 281,
-        TOK_TRANSIENT = 282,
-        TOK_VOLATILE = 283,
-        TOK_NATIVE = 284,
-        TOK_SYNCHRONIZED = 285,
-        TOK_ASSIGN = 286,
-        TOK_ASS_SUB = 287,
-        TOK_ASS_ADD = 288,
-        TOK_ASS_MUL = 289,
-        TOK_ASS_DIV = 290,
-        TOK_ASS_MOD = 291,
-        TOK_ASS_AND = 292,
-        TOK_ASS_XOR = 293,
-        TOK_ASS_OR = 294,
-        TOK_ASS_SHL = 295,
-        TOK_ASS_SHR = 296,
-        TOK_ASS_SHRA = 297,
-        TOK_SUB = 298,
-        TOK_ADD = 299,
-        TOK_MUL = 300,
-        TOK_DIV = 301,
-        TOK_MOD = 302,
-        TOK_COLON = 303,
-        TOK_QUESTION = 304,
-        TOK_SEMICOLON = 305,
-        TOK_DOT = 306,
-        TOK_COMMA = 307,
-        TOK_LBRACE = 308,
-        TOK_RBRACE = 309,
-        TOK_LPAREN = 310,
-        TOK_RPAREN = 311,
-        TOK_LOGIC_OR = 312,
-        TOK_LOGIC_AND = 313,
-        TOK_LOGIC_NOT = 314,
-        TOK_BIT_OR = 315,
-        TOK_BIT_AND = 316,
-        TOK_BIT_XOR = 317,
-        TOK_BIT_NOT = 318,
-        TOK_EQ = 319,
-        TOK_NEQ = 320,
-        TOK_LT = 321,
-        TOK_GT = 322,
-        TOK_LEQ = 323,
-        TOK_GEQ = 324,
-        TOK_SHL = 325,
-        TOK_SHR = 326,
-        TOK_SHRA = 327,
-        TOK_INC = 328,
-        TOK_DEC = 329,
-        TOK_DIM = 330,
-        TOK_IDENTIFIER = 331,
-        TOK_NUMBER = 332,
-        TOK_STRING = 333,
-        TOK_VOID = 334
+        TOK_THROWS = 268,
+        TOK_INSTANCEOF = 269,
+        TOK_JNULL = 270,
+        TOK_THIS = 271,
+        TOK_SUPER = 272,
+        TOK_NEW = 273,
+        TOK_TRY = 274,
+        TOK_CATCH = 275,
+        TOK_FINALLY = 276,
+        TOK_ABSTRACT = 277,
+        TOK_FINAL = 278,
+        TOK_PUBLIC = 279,
+        TOK_PROTECTED = 280,
+        TOK_PRIVATE = 281,
+        TOK_STATIC = 282,
+        TOK_TRANSIENT = 283,
+        TOK_VOLATILE = 284,
+        TOK_NATIVE = 285,
+        TOK_SYNCHRONIZED = 286,
+        TOK_ASSIGN = 287,
+        TOK_ASS_SUB = 288,
+        TOK_ASS_ADD = 289,
+        TOK_ASS_MUL = 290,
+        TOK_ASS_DIV = 291,
+        TOK_ASS_MOD = 292,
+        TOK_ASS_AND = 293,
+        TOK_ASS_XOR = 294,
+        TOK_ASS_OR = 295,
+        TOK_ASS_SHL = 296,
+        TOK_ASS_SHR = 297,
+        TOK_ASS_SHRA = 298,
+        TOK_SUB = 299,
+        TOK_ADD = 300,
+        TOK_MUL = 301,
+        TOK_DIV = 302,
+        TOK_MOD = 303,
+        TOK_COLON = 304,
+        TOK_QUESTION = 305,
+        TOK_SEMICOLON = 306,
+        TOK_DOT = 307,
+        TOK_COMMA = 308,
+        TOK_LBRACE = 309,
+        TOK_RBRACE = 310,
+        TOK_LPAREN = 311,
+        TOK_RPAREN = 312,
+        TOK_LOGIC_OR = 313,
+        TOK_LOGIC_AND = 314,
+        TOK_LOGIC_NOT = 315,
+        TOK_BIT_OR = 316,
+        TOK_BIT_AND = 317,
+        TOK_BIT_XOR = 318,
+        TOK_BIT_NOT = 319,
+        TOK_EQ = 320,
+        TOK_NEQ = 321,
+        TOK_LT = 322,
+        TOK_GT = 323,
+        TOK_LEQ = 324,
+        TOK_GEQ = 325,
+        TOK_SHL = 326,
+        TOK_SHR = 327,
+        TOK_SHRA = 328,
+        TOK_INC = 329,
+        TOK_DEC = 330,
+        TOK_DIM = 331,
+        TOK_IDENTIFIER = 332,
+        TOK_NUMBER = 333,
+        TOK_STRING = 334,
+        TOK_VOID = 335
       };
     };
 
@@ -621,6 +623,10 @@ namespace yy {
     static inline
     symbol_type
     make_THROW (const location_type& l);
+
+    static inline
+    symbol_type
+    make_THROWS (const location_type& l);
 
     static inline
     symbol_type
@@ -1095,12 +1101,12 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 1131,     ///< Last index in yytable_.
-      yynnts_ = 62,  ///< Number of nonterminal symbols.
+      yylast_ = 1321,     ///< Last index in yytable_.
+      yynnts_ = 63,  ///< Number of nonterminal symbols.
       yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 81  ///< Number of tokens.
+      yyntokens_ = 82  ///< Number of tokens.
     };
 
 
@@ -1151,9 +1157,9 @@ namespace yy {
       45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
       55,    56,    57,    58,    59,    60,    61,    62,    63,    64,
       65,    66,    67,    68,    69,    70,    71,    72,    73,    74,
-      75,    76,    77,    78,    79,    80
+      75,    76,    77,    78,    79,    80,    81
     };
-    const unsigned int user_token_number_max_ = 335;
+    const unsigned int user_token_number_max_ = 336;
     const token_number_type undef_token_ = 2;
 
     if (static_cast<int>(t) <= yyeof_)
@@ -1186,79 +1192,80 @@ namespace yy {
   {
       switch (other.type_get ())
     {
-      case 82: // type_spec
-      case 83: // type_name
-      case 84: // ptype
-      case 88: // class
-      case 90: // decl_method
-      case 93: // decl_param
-      case 95: // stmt
-      case 96: // ident
-      case 99: // decl_var
-      case 101: // dector
-      case 102: // dector_name
-      case 103: // jump_stmt
-      case 104: // while_stmt
-      case 105: // do_while_stmt
-      case 106: // for_stmt
-      case 107: // for_init
-      case 110: // catch
-      case 112: // expr
-      case 113: // expr_lv0
-      case 114: // expr_lv1
-      case 115: // expr_lv2
-      case 116: // expr_lv3
-      case 117: // expr_lv4
-      case 118: // expr_lv5
-      case 119: // expr_lv6
-      case 120: // expr_lv7
-      case 121: // expr_lv8
-      case 122: // expr_lv9
-      case 123: // expr_lv10
-      case 124: // expr_lv11
-      case 125: // expr_lv12
-      case 126: // expr_ptype
-      case 127: // expr_unary
-      case 128: // expr_unary_logic
-      case 129: // expr_pp
-      case 130: // expr_post
-      case 131: // expr_prime
-      case 132: // expr_prime_noname
-      case 133: // expr_prime_cx
-      case 134: // expr_prime_cx_nude
-      case 135: // expr_call
-      case 136: // expr_field
-      case 137: // expr_new
-      case 138: // expr_new_plain
-      case 139: // callee
-      case 140: // name
-      case 141: // special_name
+      case 83: // type_spec
+      case 84: // type_name
+      case 85: // ptype
+      case 89: // class
+      case 91: // decl_method
+      case 94: // decl_param
+      case 96: // stmt
+      case 97: // ident
+      case 100: // decl_var
+      case 102: // dector
+      case 103: // dector_name
+      case 104: // jump_stmt
+      case 105: // while_stmt
+      case 106: // do_while_stmt
+      case 107: // for_stmt
+      case 108: // for_init
+      case 111: // catch
+      case 113: // expr
+      case 114: // expr_lv0
+      case 115: // expr_lv1
+      case 116: // expr_lv2
+      case 117: // expr_lv3
+      case 118: // expr_lv4
+      case 119: // expr_lv5
+      case 120: // expr_lv6
+      case 121: // expr_lv7
+      case 122: // expr_lv8
+      case 123: // expr_lv9
+      case 124: // expr_lv10
+      case 125: // expr_lv11
+      case 126: // expr_lv12
+      case 127: // expr_ptype
+      case 128: // expr_unary
+      case 129: // expr_unary_logic
+      case 130: // expr_pp
+      case 131: // expr_post
+      case 132: // expr_prime
+      case 133: // expr_prime_noname
+      case 134: // expr_prime_cx
+      case 135: // expr_prime_cx_nude
+      case 136: // expr_call
+      case 137: // expr_field
+      case 138: // expr_new
+      case 139: // expr_new_plain
+      case 140: // callee
+      case 141: // name
+      case 143: // special_name
         value.copy< Ast* > (other.value);
         break;
 
-      case 87: // class_list
-      case 89: // member_list
-      case 91: // param_list
-      case 92: // param_list_noemp
-      case 94: // stmt_list
-      case 97: // arg_list
-      case 98: // arg_list_noemp
-      case 100: // dector_list
-      case 108: // try_list
-      case 109: // catch_list
-      case 111: // if_list
+      case 88: // class_list
+      case 90: // member_list
+      case 92: // param_list
+      case 93: // param_list_noemp
+      case 95: // stmt_list
+      case 98: // arg_list
+      case 99: // arg_list_noemp
+      case 101: // dector_list
+      case 109: // try_list
+      case 110: // catch_list
+      case 112: // if_list
+      case 142: // name_list
         value.copy< ListAst* > (other.value);
         break;
 
-      case 85: // modifiers
-      case 86: // modifier
+      case 86: // modifiers
+      case 87: // modifier
         value.copy< Modifiers > (other.value);
         break;
 
-      case 76: // "identifier"
-      case 77: // "number"
-      case 78: // "string"
-      case 79: // "void"
+      case 77: // "identifier"
+      case 78: // "number"
+      case 79: // "string"
+      case 80: // "void"
         value.copy< std::string > (other.value);
         break;
 
@@ -1279,79 +1286,80 @@ namespace yy {
     (void) v;
       switch (this->type_get ())
     {
-      case 82: // type_spec
-      case 83: // type_name
-      case 84: // ptype
-      case 88: // class
-      case 90: // decl_method
-      case 93: // decl_param
-      case 95: // stmt
-      case 96: // ident
-      case 99: // decl_var
-      case 101: // dector
-      case 102: // dector_name
-      case 103: // jump_stmt
-      case 104: // while_stmt
-      case 105: // do_while_stmt
-      case 106: // for_stmt
-      case 107: // for_init
-      case 110: // catch
-      case 112: // expr
-      case 113: // expr_lv0
-      case 114: // expr_lv1
-      case 115: // expr_lv2
-      case 116: // expr_lv3
-      case 117: // expr_lv4
-      case 118: // expr_lv5
-      case 119: // expr_lv6
-      case 120: // expr_lv7
-      case 121: // expr_lv8
-      case 122: // expr_lv9
-      case 123: // expr_lv10
-      case 124: // expr_lv11
-      case 125: // expr_lv12
-      case 126: // expr_ptype
-      case 127: // expr_unary
-      case 128: // expr_unary_logic
-      case 129: // expr_pp
-      case 130: // expr_post
-      case 131: // expr_prime
-      case 132: // expr_prime_noname
-      case 133: // expr_prime_cx
-      case 134: // expr_prime_cx_nude
-      case 135: // expr_call
-      case 136: // expr_field
-      case 137: // expr_new
-      case 138: // expr_new_plain
-      case 139: // callee
-      case 140: // name
-      case 141: // special_name
+      case 83: // type_spec
+      case 84: // type_name
+      case 85: // ptype
+      case 89: // class
+      case 91: // decl_method
+      case 94: // decl_param
+      case 96: // stmt
+      case 97: // ident
+      case 100: // decl_var
+      case 102: // dector
+      case 103: // dector_name
+      case 104: // jump_stmt
+      case 105: // while_stmt
+      case 106: // do_while_stmt
+      case 107: // for_stmt
+      case 108: // for_init
+      case 111: // catch
+      case 113: // expr
+      case 114: // expr_lv0
+      case 115: // expr_lv1
+      case 116: // expr_lv2
+      case 117: // expr_lv3
+      case 118: // expr_lv4
+      case 119: // expr_lv5
+      case 120: // expr_lv6
+      case 121: // expr_lv7
+      case 122: // expr_lv8
+      case 123: // expr_lv9
+      case 124: // expr_lv10
+      case 125: // expr_lv11
+      case 126: // expr_lv12
+      case 127: // expr_ptype
+      case 128: // expr_unary
+      case 129: // expr_unary_logic
+      case 130: // expr_pp
+      case 131: // expr_post
+      case 132: // expr_prime
+      case 133: // expr_prime_noname
+      case 134: // expr_prime_cx
+      case 135: // expr_prime_cx_nude
+      case 136: // expr_call
+      case 137: // expr_field
+      case 138: // expr_new
+      case 139: // expr_new_plain
+      case 140: // callee
+      case 141: // name
+      case 143: // special_name
         value.copy< Ast* > (v);
         break;
 
-      case 87: // class_list
-      case 89: // member_list
-      case 91: // param_list
-      case 92: // param_list_noemp
-      case 94: // stmt_list
-      case 97: // arg_list
-      case 98: // arg_list_noemp
-      case 100: // dector_list
-      case 108: // try_list
-      case 109: // catch_list
-      case 111: // if_list
+      case 88: // class_list
+      case 90: // member_list
+      case 92: // param_list
+      case 93: // param_list_noemp
+      case 95: // stmt_list
+      case 98: // arg_list
+      case 99: // arg_list_noemp
+      case 101: // dector_list
+      case 109: // try_list
+      case 110: // catch_list
+      case 112: // if_list
+      case 142: // name_list
         value.copy< ListAst* > (v);
         break;
 
-      case 85: // modifiers
-      case 86: // modifier
+      case 86: // modifiers
+      case 87: // modifier
         value.copy< Modifiers > (v);
         break;
 
-      case 76: // "identifier"
-      case 77: // "number"
-      case 78: // "string"
-      case 79: // "void"
+      case 77: // "identifier"
+      case 78: // "number"
+      case 79: // "string"
+      case 80: // "void"
         value.copy< std::string > (v);
         break;
 
@@ -1424,79 +1432,80 @@ namespace yy {
     // Type destructor.
     switch (yytype)
     {
-      case 82: // type_spec
-      case 83: // type_name
-      case 84: // ptype
-      case 88: // class
-      case 90: // decl_method
-      case 93: // decl_param
-      case 95: // stmt
-      case 96: // ident
-      case 99: // decl_var
-      case 101: // dector
-      case 102: // dector_name
-      case 103: // jump_stmt
-      case 104: // while_stmt
-      case 105: // do_while_stmt
-      case 106: // for_stmt
-      case 107: // for_init
-      case 110: // catch
-      case 112: // expr
-      case 113: // expr_lv0
-      case 114: // expr_lv1
-      case 115: // expr_lv2
-      case 116: // expr_lv3
-      case 117: // expr_lv4
-      case 118: // expr_lv5
-      case 119: // expr_lv6
-      case 120: // expr_lv7
-      case 121: // expr_lv8
-      case 122: // expr_lv9
-      case 123: // expr_lv10
-      case 124: // expr_lv11
-      case 125: // expr_lv12
-      case 126: // expr_ptype
-      case 127: // expr_unary
-      case 128: // expr_unary_logic
-      case 129: // expr_pp
-      case 130: // expr_post
-      case 131: // expr_prime
-      case 132: // expr_prime_noname
-      case 133: // expr_prime_cx
-      case 134: // expr_prime_cx_nude
-      case 135: // expr_call
-      case 136: // expr_field
-      case 137: // expr_new
-      case 138: // expr_new_plain
-      case 139: // callee
-      case 140: // name
-      case 141: // special_name
+      case 83: // type_spec
+      case 84: // type_name
+      case 85: // ptype
+      case 89: // class
+      case 91: // decl_method
+      case 94: // decl_param
+      case 96: // stmt
+      case 97: // ident
+      case 100: // decl_var
+      case 102: // dector
+      case 103: // dector_name
+      case 104: // jump_stmt
+      case 105: // while_stmt
+      case 106: // do_while_stmt
+      case 107: // for_stmt
+      case 108: // for_init
+      case 111: // catch
+      case 113: // expr
+      case 114: // expr_lv0
+      case 115: // expr_lv1
+      case 116: // expr_lv2
+      case 117: // expr_lv3
+      case 118: // expr_lv4
+      case 119: // expr_lv5
+      case 120: // expr_lv6
+      case 121: // expr_lv7
+      case 122: // expr_lv8
+      case 123: // expr_lv9
+      case 124: // expr_lv10
+      case 125: // expr_lv11
+      case 126: // expr_lv12
+      case 127: // expr_ptype
+      case 128: // expr_unary
+      case 129: // expr_unary_logic
+      case 130: // expr_pp
+      case 131: // expr_post
+      case 132: // expr_prime
+      case 133: // expr_prime_noname
+      case 134: // expr_prime_cx
+      case 135: // expr_prime_cx_nude
+      case 136: // expr_call
+      case 137: // expr_field
+      case 138: // expr_new
+      case 139: // expr_new_plain
+      case 140: // callee
+      case 141: // name
+      case 143: // special_name
         value.template destroy< Ast* > ();
         break;
 
-      case 87: // class_list
-      case 89: // member_list
-      case 91: // param_list
-      case 92: // param_list_noemp
-      case 94: // stmt_list
-      case 97: // arg_list
-      case 98: // arg_list_noemp
-      case 100: // dector_list
-      case 108: // try_list
-      case 109: // catch_list
-      case 111: // if_list
+      case 88: // class_list
+      case 90: // member_list
+      case 92: // param_list
+      case 93: // param_list_noemp
+      case 95: // stmt_list
+      case 98: // arg_list
+      case 99: // arg_list_noemp
+      case 101: // dector_list
+      case 109: // try_list
+      case 110: // catch_list
+      case 112: // if_list
+      case 142: // name_list
         value.template destroy< ListAst* > ();
         break;
 
-      case 85: // modifiers
-      case 86: // modifier
+      case 86: // modifiers
+      case 87: // modifier
         value.template destroy< Modifiers > ();
         break;
 
-      case 76: // "identifier"
-      case 77: // "number"
-      case 78: // "string"
-      case 79: // "void"
+      case 77: // "identifier"
+      case 78: // "number"
+      case 79: // "string"
+      case 80: // "void"
         value.template destroy< std::string > ();
         break;
 
@@ -1523,79 +1532,80 @@ namespace yy {
     super_type::move(s);
       switch (this->type_get ())
     {
-      case 82: // type_spec
-      case 83: // type_name
-      case 84: // ptype
-      case 88: // class
-      case 90: // decl_method
-      case 93: // decl_param
-      case 95: // stmt
-      case 96: // ident
-      case 99: // decl_var
-      case 101: // dector
-      case 102: // dector_name
-      case 103: // jump_stmt
-      case 104: // while_stmt
-      case 105: // do_while_stmt
-      case 106: // for_stmt
-      case 107: // for_init
-      case 110: // catch
-      case 112: // expr
-      case 113: // expr_lv0
-      case 114: // expr_lv1
-      case 115: // expr_lv2
-      case 116: // expr_lv3
-      case 117: // expr_lv4
-      case 118: // expr_lv5
-      case 119: // expr_lv6
-      case 120: // expr_lv7
-      case 121: // expr_lv8
-      case 122: // expr_lv9
-      case 123: // expr_lv10
-      case 124: // expr_lv11
-      case 125: // expr_lv12
-      case 126: // expr_ptype
-      case 127: // expr_unary
-      case 128: // expr_unary_logic
-      case 129: // expr_pp
-      case 130: // expr_post
-      case 131: // expr_prime
-      case 132: // expr_prime_noname
-      case 133: // expr_prime_cx
-      case 134: // expr_prime_cx_nude
-      case 135: // expr_call
-      case 136: // expr_field
-      case 137: // expr_new
-      case 138: // expr_new_plain
-      case 139: // callee
-      case 140: // name
-      case 141: // special_name
+      case 83: // type_spec
+      case 84: // type_name
+      case 85: // ptype
+      case 89: // class
+      case 91: // decl_method
+      case 94: // decl_param
+      case 96: // stmt
+      case 97: // ident
+      case 100: // decl_var
+      case 102: // dector
+      case 103: // dector_name
+      case 104: // jump_stmt
+      case 105: // while_stmt
+      case 106: // do_while_stmt
+      case 107: // for_stmt
+      case 108: // for_init
+      case 111: // catch
+      case 113: // expr
+      case 114: // expr_lv0
+      case 115: // expr_lv1
+      case 116: // expr_lv2
+      case 117: // expr_lv3
+      case 118: // expr_lv4
+      case 119: // expr_lv5
+      case 120: // expr_lv6
+      case 121: // expr_lv7
+      case 122: // expr_lv8
+      case 123: // expr_lv9
+      case 124: // expr_lv10
+      case 125: // expr_lv11
+      case 126: // expr_lv12
+      case 127: // expr_ptype
+      case 128: // expr_unary
+      case 129: // expr_unary_logic
+      case 130: // expr_pp
+      case 131: // expr_post
+      case 132: // expr_prime
+      case 133: // expr_prime_noname
+      case 134: // expr_prime_cx
+      case 135: // expr_prime_cx_nude
+      case 136: // expr_call
+      case 137: // expr_field
+      case 138: // expr_new
+      case 139: // expr_new_plain
+      case 140: // callee
+      case 141: // name
+      case 143: // special_name
         value.move< Ast* > (s.value);
         break;
 
-      case 87: // class_list
-      case 89: // member_list
-      case 91: // param_list
-      case 92: // param_list_noemp
-      case 94: // stmt_list
-      case 97: // arg_list
-      case 98: // arg_list_noemp
-      case 100: // dector_list
-      case 108: // try_list
-      case 109: // catch_list
-      case 111: // if_list
+      case 88: // class_list
+      case 90: // member_list
+      case 92: // param_list
+      case 93: // param_list_noemp
+      case 95: // stmt_list
+      case 98: // arg_list
+      case 99: // arg_list_noemp
+      case 101: // dector_list
+      case 109: // try_list
+      case 110: // catch_list
+      case 112: // if_list
+      case 142: // name_list
         value.move< ListAst* > (s.value);
         break;
 
-      case 85: // modifiers
-      case 86: // modifier
+      case 86: // modifiers
+      case 87: // modifier
         value.move< Modifiers > (s.value);
         break;
 
-      case 76: // "identifier"
-      case 77: // "number"
-      case 78: // "string"
-      case 79: // "void"
+      case 77: // "identifier"
+      case 78: // "number"
+      case 79: // "string"
+      case 80: // "void"
         value.move< std::string > (s.value);
         break;
 
@@ -1662,7 +1672,7 @@ namespace yy {
      305,   306,   307,   308,   309,   310,   311,   312,   313,   314,
      315,   316,   317,   318,   319,   320,   321,   322,   323,   324,
      325,   326,   327,   328,   329,   330,   331,   332,   333,   334,
-     335
+     335,   336
     };
     return static_cast<token_type> (yytoken_number_[type]);
   }
@@ -1731,6 +1741,12 @@ namespace yy {
   BisonParser::make_THROW (const location_type& l)
   {
     return symbol_type (token::TOK_THROW, l);
+  }
+
+  BisonParser::symbol_type
+  BisonParser::make_THROWS (const location_type& l)
+  {
+    return symbol_type (token::TOK_THROWS, l);
   }
 
   BisonParser::symbol_type
@@ -2138,7 +2154,7 @@ namespace yy {
 
 
 } // yy
-#line 2142 "bison.hh" // lalr1.cc:377
+#line 2158 "bison.hh" // lalr1.cc:377
 
 
 

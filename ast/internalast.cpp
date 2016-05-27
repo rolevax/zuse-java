@@ -64,9 +64,16 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
     case Type::DECL_VAR:
         return Type::IDENT;
     case Type::DECL_METHOD:
-        return pos == 0 || pos == 1 ? Type::IDENT
-                                    : pos == 2 ? Type::DECL_PARAM_LIST
-                                               : Type::STMT_LIST;
+        switch (pos) {
+        case 2:
+            return Type::DECL_PARAM_LIST;
+        case 3:
+            return Type::NAME_LIST;
+        case 4:
+            return Type::STMT_LIST;
+        default:
+            return Type::META;
+        }
     case Type::DECL_PARAM:
         return Type::IDENT;
     case Type::WHILE:

@@ -39,7 +39,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             hitClass(ast.asFixSize<2>(), buf);
             break;
         case Type::DECL_METHOD:
-            hitMethod(ast.asFixSize<4>(), buf);
+            hitMethod(ast.asFixSize<5>(), buf);
             break;
         case Type::DECL_VAR:
             hitVarDecl(ast.asFixSize<2>(), buf);
@@ -185,14 +185,19 @@ void Hammer::hitClass(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(1), buf); // member list
 }
 
-void Hammer::hitMethod(const FixSizeAst<4> &ast, Buf &buf)
+void Hammer::hitMethod(const FixSizeAst<5> &ast, Buf &buf)
 {
     hitModifiers(ast.getModifiers(), ast, buf);
     hitGeneral(ast.at(0), buf); // return type
     bone(ast, buf, Sym::SPACE);
     hitGeneral(ast.at(1), buf); // id
     hitGeneral(ast.at(2), buf); // param list
-    hitGeneral(ast.at(3), buf); // stmt list
+
+    if (ast.at(3).getType() != Ast::Type::HIDDEN) // throws
+        bone(ast, buf, Sym::THROWS);
+
+    hitGeneral(ast.at(3), buf); // throws name list
+    hitGeneral(ast.at(4), buf); // stmt list
 }
 
 void Hammer::hitVarDecl(const FixSizeAst<2> &ast, Buf &buf)
@@ -420,6 +425,7 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
     case Type::DECL_PARAM_LIST:
     case Type::ARG_LIST:
     case Type::DECTOR_LIST:
+    case Type::NAME_LIST:
         if (!end)
             bone(ast, buf, Sym::COMMA);
         break;

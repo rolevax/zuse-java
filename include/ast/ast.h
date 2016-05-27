@@ -21,7 +21,7 @@ public:
         // LIST, sync with isList() definition
         CLASS_LIST, MEMBER_LIST, DECL_PARAM_LIST, STMT_LIST,
         IF_LIST, TRY_LIST,
-        DECTOR_LIST, ARG_LIST,
+        DECTOR_LIST, ARG_LIST, NAME_LIST,
 
         // BOP-LIST, sync with isBopList() and isList() definition
         DOT_BOP_LIST, MUL_BOP_LIST, ADD_BOP_LIST,
@@ -43,7 +43,9 @@ public:
         // size 3
         QUESTION,
         // size 4
-        DECL_METHOD, FOR,
+        FOR,
+        // size 5
+        DECL_METHOD,
 
         // SCALAR, isScalar() := !isList() && !isFixSize()
         IDENT, NUMBER, STRING, META, HIDDEN
