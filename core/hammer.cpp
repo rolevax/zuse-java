@@ -48,9 +48,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             hitParamDecl(ast.asFixSize<2>(), buf);
             break;
         case Type::RETURN:
-            bone(ast, buf, Sym::RETURN);
-            hitGeneral(ast.asFixSize<1>().at(0), buf); // expr
-            bone(ast, buf, Sym::SEMICOLON);
+            hitReturn(ast.asFixSize<1>(), buf);
             break;
         case Type::WHILE:
             hitWhile(ast.asFixSize<2>(), buf);
@@ -268,6 +266,15 @@ void Hammer::hitFor(const FixSizeAst<4> &ast, Buf &buf)
     hitGeneral(ast.at(2), buf);
     bone(ast, buf, Sym::RPAREN);
     hitGeneral(ast.at(3), buf);
+}
+
+void Hammer::hitReturn(const FixSizeAst<1> &ast, Buf &buf)
+{
+    bone(ast, buf, Sym::RETURN);
+    if (ast.at(0).getType() != Type::HIDDEN)
+        bone(ast, buf, Sym::SPACE);
+    hitGeneral(ast.at(0), buf); // expr
+    bone(ast, buf, Sym::SEMICOLON);
 }
 
 void Hammer::hitInfixBop(const FixSizeAst<2> &ast, Buf &buf)

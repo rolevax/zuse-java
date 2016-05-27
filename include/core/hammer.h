@@ -37,6 +37,7 @@ private:
     void hitWhile(const FixSizeAst<2> &ast, Buf &buf);
     void hitDoWhile(const FixSizeAst<2> &ast, Buf &buf);
     void hitFor(const FixSizeAst<4> &ast, Buf &buf);
+    void hitReturn(const FixSizeAst<1> &ast, Buf &buf);
     void hitInfixBop(const FixSizeAst<2> &ast, Buf &buf);
     void hitPrefixUop(const FixSizeAst<1> &ast, Buf &buf);
     void hitPostfixUop(const FixSizeAst<1> &ast, Buf &buf);

@@ -370,6 +370,10 @@ dector_name: ident
 
 return_stmt: "return" expr ";"
 		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }
+		   | "return" ";"
+		 		{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $$ = new FixSizeAst<1>(Ast::Type::RETURN, hidden); }
+		   ;
 
 while_stmt: "while" "(" expr ")" stmt
 		 		{ ListAst *body = $5->bodify();
