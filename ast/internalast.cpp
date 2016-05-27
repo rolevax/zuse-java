@@ -79,6 +79,8 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
         return pos == 0 ? Type::DECL_VAR : Type::STMT_LIST;
     case Type::FOR:
         return pos == 3 ? Type::STMT_LIST : Type::META;
+    case Type::RETURN:
+        return Type::HIDDEN;
     default:
         return Type::META;
     }

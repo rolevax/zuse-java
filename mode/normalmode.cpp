@@ -35,12 +35,18 @@ Mode::Result NormalMode::keyboard(Key key)
     case Key::S: // senior previous node
         doc.sibling(-1);
         break;
-    case Key::F: // fall-in or assart
+    case Key::F: // fall-in, assart, or punch
         if (!doc.getInner().isScalar()) {
-            if (doc.getInner().asInternal().size() > 0)
+            if (doc.getInner().asInternal().size() > 0) {
                 doc.fallIn();
-            else
+                if (doc.getInner().getType() == Ast::Type::HIDDEN) {
+                    // punch
+                    doc.change(Ast::Type::META);
+                    nextPush = doc.createModifyMode(true);
+                }
+            } else { // assart
                 nextPush = menulessListOp(ListOp::ASSART);
+            }
         }
         break;
     case Key::S_F: // fall-search

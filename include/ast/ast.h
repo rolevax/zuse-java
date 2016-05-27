@@ -45,7 +45,7 @@ public:
         DECL_METHOD, FOR,
 
         // SCALAR, isScalar() := !isList() && !isFixSize()
-        IDENT, NUMBER, STRING, META
+        IDENT, NUMBER, STRING, META, HIDDEN
     };
 
     Ast(Type t);

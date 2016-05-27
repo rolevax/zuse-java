@@ -128,6 +128,8 @@ void Hammer::hitScalar(const ScalarAst &ast, Buf &buf)
 {
     if (ast.getType() == Type::META) {
         bone(ast, buf, Sym::META);
+    } else if (ast.getType() == Type::HIDDEN) {
+        // do nothing, reserve for future feature
     } else {
         bool isString = ast.getType() == Type::STRING;
         if (isString)

@@ -537,6 +537,9 @@ Ast *Doc::newTree(Ast::Type type)
         case Ast::Type::META:
             a = new ScalarAst(Ast::Type::META, "");
             break;
+        case Ast::Type::HIDDEN:
+            a = new ScalarAst(Ast::Type::HIDDEN, "");
+            break;
         default:
             throw "WTF";
         }

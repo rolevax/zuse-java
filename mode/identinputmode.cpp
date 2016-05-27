@@ -172,7 +172,7 @@ Mode *IdentInputMode::promoteToStmt()
         return doc.createModifyMode(true, 0);
     } else if (text == "return") {
         doc.change(Ast::Type::RETURN);
-        return doc.createModifyMode(true, 0);
+        return nullptr; // manually punch or not punch
     } else if (text == "try") {
         doc.change(Ast::Type::TRY_LIST);
         doc.fallIn(); // now inner is stmt_list
