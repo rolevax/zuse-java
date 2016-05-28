@@ -32,6 +32,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Tokens &ts);
 
 private:
+    static bool isHjklTarget(const Ast *a);
     Region locate(const Ast *tar);
     void suckComma(Region &region);
     void newLine(size_t r, size_t c);

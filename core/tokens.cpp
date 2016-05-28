@@ -98,7 +98,7 @@ void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
          down ? i++ : i--) {
         std::vector<size_t> fleshes;
         for (size_t j = 0; j < rows[i].size(); j++)
-            if (rows[i][j]->getAst()->isScalar())
+            if (isHjklTarget(rows[i][j]->getAst()))
                 fleshes.push_back(j);
 
         if (!fleshes.empty()) {
@@ -139,14 +139,14 @@ void Tokens::hackLead(InternalAst *&outer, size_t &inner, bool right)
     Region r = locate(&outer->at(inner));
     // flesh token cannot have column index 0 since it's
     // surrounded by soul tokens.
-    // this condition is also preventing 'i' in the loop below
+    // this condition is also for preventing 'i' in the loop
     // from overflow.
     if (r.br != r.er || r.bc == 0)
         return;
 
     for (size_t i = right ? r.ec + 1 : r.bc - 1;
          right ? i < rows[r.br].size() : i > 0; right ? i++ : i--) {
-        if (rows[r.br][i]->getAst()->isScalar()) {
+        if (isHjklTarget(rows[r.br][i]->getAst())) {
             const Ast *a = rows[r.br][i]->getAst();
             outer = &a->getParent();
             inner = outer->indexOf(a);
@@ -231,6 +231,11 @@ void Tokens::erase(const Region &r)
         joinLine(r.br + 1);
 
     ob.observeUpdateLine(r.br, pluck(r.br));
+}
+
+bool Tokens::isHjklTarget(const Ast *a)
+{
+    return a->isScalar() && a->getType() != Ast::Type::HIDDEN;
 }
 
 /**
