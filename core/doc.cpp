@@ -263,6 +263,9 @@ void Doc::remove()
 {
     assert(inner < outer->size());
 
+    // only handle list ill-one and ill-zero
+    // does not care about hidden node issues.
+    // hidden node issues are done in normal mode
     if (outer->isList()) {
         ListAst *l = &outer->asList();
         l->erase(inner);

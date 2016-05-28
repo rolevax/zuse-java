@@ -94,7 +94,12 @@ Mode::Result NormalMode::keyboard(Key key)
         break;
     case Key::R: // remove
         doc.remove();
-        // TODO get to clipboard
+        if (doc.getInner().getType() == Ast::Type::HIDDEN) {
+            if (doc.getOuter().size() == 1)
+                doc.digOut();
+            else
+                doc.sibling(-1, true);
+        }
         break;
     case Key::Y: // yank
         // TODO
