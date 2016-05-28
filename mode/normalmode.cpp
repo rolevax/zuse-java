@@ -82,6 +82,12 @@ Mode::Result NormalMode::keyboard(Key key)
                 nextPush = new MenuMode(doc, MenuMode::Context::BOP_INSERT);
             else
                 nextPush = menulessListOp(ListOp::INSERT);
+        } else if (doc.getInnerIndex() > 0
+                   && doc.getOuter().at(doc.getInnerIndex() - 1).getType()
+                   == Ast::Type::HIDDEN) {
+            doc.sibling(-1, false);
+            doc.change(doc.getOuter().typeAt(doc.getInnerIndex(), false));
+            nextPush = doc.createModifyMode(true);
         }
         break;
     case Key::O: // oh, append
@@ -90,6 +96,12 @@ Mode::Result NormalMode::keyboard(Key key)
                 nextPush = new MenuMode(doc, MenuMode::Context::BOP_APPEND);
             else
                 nextPush = menulessListOp(ListOp::APPEND);
+        } else if (doc.getInnerIndex() + 1 < doc.getOuter().size()
+                   && doc.getOuter().at(doc.getInnerIndex() + 1).getType()
+                   == Ast::Type::HIDDEN) {
+            doc.sibling(+1, false);
+            doc.change(doc.getOuter().typeAt(doc.getInnerIndex(), false));
+            nextPush = doc.createModifyMode(true);
         }
         break;
     case Key::R: // remove
@@ -147,29 +159,16 @@ Mode *NormalMode::menulessListOp(ListOp op)
     const ListAst &l = (op == ListOp::ASSART ? doc.getInner()
                                              : doc.getOuter()).asList();
     Ast::Type tar;
-
-    switch (l.getType()) {
-    case Ast::Type::CLASS_LIST:
-        tar = Ast::Type::DECL_CLASS;
+    switch (op) {
+    case ListOp::INSERT:
+        tar = l.typeAt(doc.getInnerIndex());
         break;
-    case Ast::Type::DECL_PARAM_LIST:
-        tar = Ast::Type::DECL_PARAM;
+    case ListOp::APPEND:
+        tar = l.typeAt(doc.getInnerIndex() + 1);
         break;
-    case Ast::Type::IF_LIST:
-        tar = Ast::Type::IF_CONDBODY;
+    case ListOp::ASSART:
+        tar = l.typeAt(0);
         break;
-    case Ast::Type::TRY_LIST:
-        tar = Ast::Type::CATCH;
-        break;
-    case Ast::Type::STMT_LIST:
-    case Ast::Type::MEMBER_LIST:
-    case Ast::Type::ARG_LIST:
-    case Ast::Type::LOGIC_AND_BOP_LIST:
-    case Ast::Type::LOGIC_OR_BOP_LIST:
-        tar = Ast::Type::META;
-        break;
-    default:
-        return nullptr; // silently do nothing
     }
 
     switch (op) {

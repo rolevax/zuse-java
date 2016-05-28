@@ -43,7 +43,7 @@ void InternalAst::expose(size_t vanisher, size_t exposee)
     change(vanisher, at(vanisher).asInternal().at(exposee).clone());
 }
 
-Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
+Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos, bool allowHidden)
 {
     // mainly for fix-size trees, don't reuse too much
     // for bop list, return LHS and RHS type when op is default
@@ -68,7 +68,7 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
         case 2:
             return Type::DECL_PARAM_LIST;
         case 3:
-            return Type::HIDDEN; // throws
+            return allowHidden ? Type::HIDDEN : Type::NAME_LIST;
         case 4:
             return Type::STMT_LIST;
         default:
@@ -89,14 +89,14 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
     case Type::RETURN:
     case Type::BREAK:
     case Type::CONTINUE:
-        return Type::HIDDEN;
+        return allowHidden ? Type::HIDDEN : Type::META;
     default:
         return Type::META;
     }
 }
 
-Ast::Type InternalAst::typeAt(size_t pos) const
+Ast::Type InternalAst::typeAt(size_t pos, bool allowHidden) const
 {
-    return typeAt(getType(), pos);
+    return typeAt(getType(), pos, allowHidden);
 }
 
