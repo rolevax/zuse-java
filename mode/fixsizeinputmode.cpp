@@ -20,12 +20,15 @@ Mode::Result FixSizeInputMode::keyboard(Key key)
     if (&doc.getOuter() == &ast
             && doc.getInner().isList()
             && doc.getInner().asList().size() == 0
-            && (key == Key::F || key == Key::SPACE)) {
+            && (key == Key::F || key == Key::S || key == Key::SPACE)) {
         // implements "fix-size forgetting" logic
         if (key == Key::F) {
             doc.assart(doc.getInner().asList().typeAt(0));
             // the user will focus on the list and forget about the fix-size
             return { ResultType::DONE_POP, doc.createModifyMode(true) };
+        } else if (key == Key::S) {
+            doc.sibling(-1, true);
+            return DONE_POP_NOPUSH;
         } else { // key == Key::SPACE
             return nextStage();
         }
@@ -81,13 +84,13 @@ Mode::Result FixSizeInputMode::nextStage()
 
     if (++stage == ast.size()) { // already input last child
         // cannot use single dig-out since some mode involves
-        // unsymetric fall-dig behaviors
+        // unsymetric focus-in/dolly-out behaviors
         while (digCount --> 0)
             doc.digOut();
 
         return { ResultType::DONE_POP, nullptr };
     } else { // advance
-        digCount--; // dig-out 'upto', not 'onto'
+        digCount--; // dolly-out 'upto', not 'onto'
         while (digCount --> 0)
             doc.digOut();
 
