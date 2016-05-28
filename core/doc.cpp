@@ -162,10 +162,24 @@ void Doc::digOut()
     outer = nextOuter;
 }
 
-void Doc::sibling(int step)
+void Doc::sibling(int step, bool skipHidden)
 {
     size_t size = outer->size();
-    inner = (ssize_t(inner + size) + step) % size;
+    if (skipHidden) {
+        if (step == 0 || outer->size() < 2)
+            return;
+
+        // assume there is no internal node whose children are all hidden
+        // such that this loop always terminate
+        int dir = step > 0 ? 1 : -1;
+        while (step != 0) {
+            inner = (inner + dir) % size;
+            if (getInner().getType() != Ast::Type::HIDDEN)
+                step -= dir;
+        }
+    } else {
+        inner = (ssize_t(inner + size) + step) % size;
+    }
 }
 
 void Doc::jackKick(bool down)

@@ -90,7 +90,8 @@ bool ListAst::illZero(bool assumeSize) const
         return true;
 
     Type t = getType();
-    return t == Type::TRY_LIST;
+    return t == Type::TRY_LIST
+            || t == Type::NAME_LIST;
 }
 
 bool ListAst::illOne(bool assumeSize) const

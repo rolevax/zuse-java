@@ -40,7 +40,7 @@ Mode::Result FixSizeInputMode::onPushed()
 {
     // assume all fix-size node has at least size one
     doc.fallIn();
-    doc.sibling(int(stage));
+    doc.sibling(int(stage), false); // not skipping hidden node
     return pushOrWait();
 }
 
@@ -91,7 +91,7 @@ Mode::Result FixSizeInputMode::nextStage()
         while (digCount --> 0)
             doc.digOut();
 
-        doc.sibling(+1);
+        doc.sibling(+1, true); // skip hidden node
 
         return pushOrWait();
     }

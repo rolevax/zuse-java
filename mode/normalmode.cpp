@@ -29,11 +29,11 @@ Mode::Result NormalMode::keyboard(Key key)
 
     switch (key) {
     // logical cursor moving
-    case Key::G: // get next node
-        doc.sibling(+1);
+    case Key::G: // next node
+        doc.sibling(+1, true);
         break;
-    case Key::S: // senior previous node
-        doc.sibling(-1);
+    case Key::S: // previous node
+        doc.sibling(-1, true);
         break;
     case Key::F: // fall-in, assart, or punch
         if (!doc.getInner().isScalar()) {

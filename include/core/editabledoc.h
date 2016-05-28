@@ -20,7 +20,7 @@ public:
 
     virtual void fallIn() = 0;
     virtual void digOut() = 0;
-    virtual void sibling(int step) = 0;
+    virtual void sibling(int step, bool skipHidden = false) = 0;
     virtual void jackKick(bool down) = 0;
     virtual void hackLead(bool right) = 0;
     virtual void flyIn(std::function<bool(const Ast*)> &match) = 0;

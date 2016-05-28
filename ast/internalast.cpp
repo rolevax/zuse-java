@@ -68,7 +68,7 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos)
         case 2:
             return Type::DECL_PARAM_LIST;
         case 3:
-            return Type::NAME_LIST;
+            return Type::HIDDEN; // throws
         case 4:
             return Type::STMT_LIST;
         default:

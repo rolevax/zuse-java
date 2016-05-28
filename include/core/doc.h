@@ -35,7 +35,7 @@ private:
 
     void fallIn() override;
     void digOut() override;
-    void sibling(int step) override;
+    void sibling(int step, bool skipHidden) override;
     void jackKick(bool down) override;
     void hackLead(bool right) override;
     void flyIn(std::function<bool(const Ast*)> &match) override;
