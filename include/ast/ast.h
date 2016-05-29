@@ -43,7 +43,7 @@ public:
         // size 3
         QUESTION,
         // size 4
-        DECL_CLASS, FOR,
+        DECL_CLASS, DECL_INTERFACE, FOR,
         // size 5
         DECL_METHOD,
 

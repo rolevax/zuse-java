@@ -295,6 +295,45 @@ class: "class" ident "{" member_list "}"
 	 			{ auto a = new FixSizeAst<4>(Ast::Type::DECL_CLASS, 
 											 $3, $5, $7, $9);
 				  a->setModifiers($1); $$ = a; }
+     | "interface" ident "{" member_list "}"	
+	 			{ Ast *h1 = new ScalarAst(Ast::Type::HIDDEN, "");
+	 			  Ast *h2 = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $$ = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+										 $2, h1, h2, $4); }
+	 | "interface" ident "extends" name_list "{" member_list "}"
+	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $$ = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+										 $2, $4, h, $6); }
+	 | "interface" ident "implements" name_list "{" member_list "}"
+	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $$ = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+										 $2, h, $4, $6); }
+	 | "interface" ident "extends" name_list "implements" name_list 
+				"{" member_list "}"
+	 			{ $$ = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+										 $2, $4, $6, $8); }
+	 | modifiers "interface" ident "{" member_list "}"	
+	 			{ Ast *h1 = new ScalarAst(Ast::Type::HIDDEN, "");
+	 			  Ast *h2 = new ScalarAst(Ast::Type::HIDDEN, "");
+				  auto a = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+											 $3, h1, h2, $5);
+				  a->setModifiers($1); $$ = a; }
+	 | modifiers "interface" ident "extends" name_list "{" member_list "}"
+	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
+				  auto a = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+											 $3, $5, h, $7);
+				  a->setModifiers($1); $$ = a; }
+	 | modifiers "interface" ident "implements" name_list 
+				"{" member_list "}"
+	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
+				  auto a = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+											 $3, h, $5, $7);
+				  a->setModifiers($1); $$ = a; }
+	 | modifiers "interface" ident "extends" name_list 
+				"implements" name_list "{" member_list "}"
+	 			{ auto a = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+											 $3, $5, $7, $9);
+				  a->setModifiers($1); $$ = a; }
 	 ;
 
 member_list: %empty					

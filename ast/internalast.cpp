@@ -60,6 +60,7 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos, bool allowHidden)
 
     // fix-size's
     case Type::DECL_CLASS:
+    case Type::DECL_INTERFACE:
         switch (pos) {
         case 1: // extends
             return allowHidden ? Type::HIDDEN : Type::NAME_LIST;

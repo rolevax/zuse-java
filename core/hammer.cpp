@@ -36,6 +36,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
     } else {
         switch (ast.getType()) {
         case Type::DECL_CLASS:
+        case Type::DECL_INTERFACE:
             hitClass(ast.asFixSize<4>(), buf);
             break;
         case Type::DECL_METHOD:
@@ -180,7 +181,7 @@ void Hammer::hitModifiers(Modifiers m, const Ast &ast, Buf &buf)
 void Hammer::hitClass(const FixSizeAst<4> &ast, Buf &buf)
 {
     hitModifiers(ast.getModifiers(), ast, buf);
-    bone(ast, buf, Sym::CLASS);
+    bone(ast, buf, ast.getType() == Type::DECL_CLASS ? Sym::CLASS : Sym::INTERFACE);
     hitGeneral(ast.at(0), buf); // identifier
 
     if (ast.at(1).getType() != Ast::Type::HIDDEN) // extends
