@@ -36,7 +36,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
     } else {
         switch (ast.getType()) {
         case Type::DECL_CLASS:
-            hitClass(ast.asFixSize<2>(), buf);
+            hitClass(ast.asFixSize<4>(), buf);
             break;
         case Type::DECL_METHOD:
             hitMethod(ast.asFixSize<5>(), buf);
@@ -177,12 +177,21 @@ void Hammer::hitModifiers(Modifiers m, const Ast &ast, Buf &buf)
         bone(ast, buf, Sym::SYNCHRONIZED);
 }
 
-void Hammer::hitClass(const FixSizeAst<2> &ast, Buf &buf)
+void Hammer::hitClass(const FixSizeAst<4> &ast, Buf &buf)
 {
     hitModifiers(ast.getModifiers(), ast, buf);
     bone(ast, buf, Sym::CLASS);
     hitGeneral(ast.at(0), buf); // identifier
-    hitGeneral(ast.at(1), buf); // member list
+
+    if (ast.at(1).getType() != Ast::Type::HIDDEN) // extends
+        bone(ast, buf, Sym::EXTENDS);
+    hitGeneral(ast.at(1), buf);
+
+    if (ast.at(2).getType() != Ast::Type::HIDDEN) // implements
+        bone(ast, buf, Sym::IMPLEMENTS);
+    hitGeneral(ast.at(2), buf);
+
+    hitGeneral(ast.at(3), buf); // member list
 }
 
 void Hammer::hitMethod(const FixSizeAst<5> &ast, Buf &buf)

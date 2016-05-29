@@ -41,6 +41,9 @@ blank 	[ \t]
 [\n]+      loc.lines(yyleng); loc.step();
 
 "class"		return yy::BisonParser::make_CLASS(loc);
+"interface"	return yy::BisonParser::make_INTERFACE(loc);
+"extends"	return yy::BisonParser::make_EXTENDS(loc);
+"implements" return yy::BisonParser::make_IMPLEMENTS(loc);
 "while"		return yy::BisonParser::make_WHILE(loc);
 "do"		return yy::BisonParser::make_DO(loc);
 "for"		return yy::BisonParser::make_FOR(loc);

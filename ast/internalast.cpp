@@ -60,7 +60,16 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos, bool allowHidden)
 
     // fix-size's
     case Type::DECL_CLASS:
-        return pos == 0 ? Type::IDENT : Type::MEMBER_LIST;
+        switch (pos) {
+        case 1: // extends
+            return allowHidden ? Type::HIDDEN : Type::NAME_LIST;
+        case 2: // implements
+            return allowHidden ? Type::HIDDEN : Type::NAME_LIST;
+        case 3: // member
+            return Type::MEMBER_LIST;
+        default: // ident
+            return Type::META;
+        }
     case Type::DECL_VAR:
         return Type::IDENT;
     case Type::DECL_METHOD:

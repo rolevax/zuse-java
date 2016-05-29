@@ -33,7 +33,7 @@ public:
         POST_INC, POST_DEC, PRE_INC, PRE_DEC,
         UNARY_PLUS, UNARY_MINUS, LOGIC_NOT, BIT_NOT,
         // size 2
-        DECL_CLASS, DECL_VAR, DECL_PARAM, WHILE, DO_WHILE, IF_CONDBODY,
+        DECL_VAR, DECL_PARAM, WHILE, DO_WHILE, IF_CONDBODY,
         CATCH,
         CAST,
         LT, LEQ, GT, GEQ, INSTANCEOF, EQ, NEQ, SHL, SHR, SHRA,
@@ -43,7 +43,7 @@ public:
         // size 3
         QUESTION,
         // size 4
-        FOR,
+        DECL_CLASS, FOR,
         // size 5
         DECL_METHOD,
 
