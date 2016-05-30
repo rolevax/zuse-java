@@ -78,6 +78,28 @@ Mode::Result MenuMode::keyboard(Key key)
             break;
         }
         break;
+    case Context::S_BIG:
+        switch (key) {
+        case Key::S:
+            doc.siblingBig(matchStmt, false);
+            break;
+        default:
+            if (ktype != Ast::Type::META)
+                doc.siblingBig(ktype, false);
+            break;
+        }
+        break;
+    case Context::G_BIG:
+        switch (key) {
+        case Key::S:
+            doc.siblingBig(matchStmt, true);
+            break;
+        default:
+            if (ktype != Ast::Type::META)
+                doc.siblingBig(ktype, true);
+            break;
+        }
+        break;
     }
 
     if (context == Context::BOP_INSERT
@@ -125,6 +147,8 @@ Ast::Type MenuMode::keyToType(Key key)
     case Context::NEST_AS_RIGHT:
     case Context::FOCUS_IN_BIG:
     case Context::DOLLY_OUT_BIG:
+    case Context::S_BIG:
+    case Context::G_BIG:
         switch (key) {
         case Key::DOT:
         case Key::LEFT_PAREN:

@@ -42,6 +42,8 @@ private:
     void focusInBig(Ast::Type match) override;
     void dollyOutBig(bool match(const Ast*)) override;
     void dollyOutBig(Ast::Type match) override;
+    void siblingBig(bool match(const Ast*), bool right) override;
+    void siblingBig(Ast::Type match, bool right) override;
     void insert(Ast::Type type, int bop) override;
     void append(Ast::Type type, int bop) override;
     void assart(Ast::Type type, int bop) override;

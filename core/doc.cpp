@@ -265,6 +265,81 @@ void Doc::dollyOutBig(Ast::Type match)
     }
 }
 
+void Doc::siblingBig(bool match(const Ast *), bool right)
+{
+    if (inner == 0 && !right)
+        return; // no elder sibling (ensure 'inner-1' not overflow)
+
+    std::queue<Ast*> queue;
+    if (right) {
+        for (size_t i = inner + 1; i < outer->size(); i++)
+            queue.push(&outer->at(i));
+    } else {
+        for (ssize_t i = inner - 1; i >= 0; i--)
+            queue.push(&outer->at(i));
+    }
+
+    // breadth-first search
+    while (!queue.empty()) {
+        Ast *test = queue.front();
+        queue.pop();
+        if (match(test) && test != &outer->at(inner)) { // found
+            outer = &test->getParent();
+            inner = outer->indexOf(test);
+            break;
+        } else if (!test->isScalar()) { // keep searching
+            InternalAst &inTest = test->asInternal();
+            if (right) {
+                for (size_t i = 0; i < inTest.size(); i++)
+                    queue.push(&inTest.at(i));
+            } else {
+                for (ssize_t i = inTest.size() - 1; i >= 0; i--)
+                    queue.push(&inTest.at(i));
+            }
+        }
+    }
+
+    // do nothing if not found
+}
+
+void Doc::siblingBig(Ast::Type match, bool right)
+{
+    if (inner == 0 && !right)
+        return; // no elder sibling (ensure 'inner-1' not overflow)
+
+    std::queue<Ast*> queue;
+    if (right) {
+        for (size_t i = inner + 1; i < outer->size(); i++)
+            queue.push(&outer->at(i));
+    } else {
+        for (ssize_t i = inner - 1; i >= 0; i--)
+            queue.push(&outer->at(i));
+    }
+
+
+    // breadth-first search
+    while (!queue.empty()) {
+        Ast *test = queue.front();
+        queue.pop();
+        if (test->getType() == match && test != &outer->at(inner)) { // found
+            outer = &test->getParent();
+            inner = outer->indexOf(test);
+            break;
+        } else if (!test->isScalar()) { // keep searching
+            InternalAst &inTest = test->asInternal();
+            if (right) {
+                for (size_t i = 0; i < inTest.size(); i++)
+                    queue.push(&inTest.at(i));
+            } else {
+                for (ssize_t i = inTest.size() - 1; i >= 0; i--)
+                    queue.push(&inTest.at(i));
+            }
+        }
+    }
+
+    // do nothing if not found
+}
+
 /**
  * @brief Create and insert a new node at 'current' position
  * @param type The type of the new node

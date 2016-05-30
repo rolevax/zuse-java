@@ -27,6 +27,8 @@ public:
     virtual void focusInBig(Ast::Type match) = 0;
     virtual void dollyOutBig(bool match(const Ast*)) = 0;
     virtual void dollyOutBig(Ast::Type match) = 0;
+    virtual void siblingBig(bool match(const Ast*), bool right) = 0;
+    virtual void siblingBig(Ast::Type match, bool right) = 0;
     virtual void insert(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void append(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void assart(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
