@@ -11,6 +11,11 @@
 #include <cassert>
 #include <QDebug>
 
+static bool matchStmt(const Ast *a)
+{
+    return a->getParent().getType() == Ast::Type::STMT_LIST;
+}
+
 MenuMode::MenuMode(EditableDoc &doc, Context context) :
     Mode(doc),
     context(context)
@@ -53,14 +58,13 @@ Mode::Result MenuMode::keyboard(Key key)
         break;
     case Context::FALL_SEARCH:
         switch (key) {
+        case Key::S:
+            doc.focusInBig(matchStmt);
+            break;
         // TODO: pattern matching cases keyToPattern
         default:
-            // TODO: do-nothing if no map
-            std::function<bool(const Ast *)> match = [ktype](const Ast *a)
-            {
-                return a->getType() == ktype;
-            };
-            doc.flyIn(match);
+            doc.focusInBig(ktype);
+            break;
         }
 
         break;
@@ -73,8 +77,8 @@ Mode::Result MenuMode::keyboard(Key key)
             || context == Context::NEST_AS_LEFT
             || context == Context::NEST_AS_RIGHT) {
         return { ResultType::DONE_POP, doc.createModifyMode(true) };
-    } else {
-        return DONE_STAY_NOPUSH;
+    } else { // big motions
+        return DONE_POP_NOPUSH;
     }
 }
 

@@ -192,7 +192,7 @@ void Doc::hackLead(bool right)
     tokens.hackLead(outer, inner, right);
 }
 
-void Doc::flyIn(std::function<bool(const Ast *)> &match)
+void Doc::focusInBig(bool match(const Ast*))
 {
     std::queue<Ast*> queue;
     queue.push(&outer->at(inner));
@@ -201,11 +201,34 @@ void Doc::flyIn(std::function<bool(const Ast *)> &match)
     while (!queue.empty()) {
         Ast *test = queue.front();
         queue.pop();
-        if (match(test)) {
+        if (match(test) && test != &outer->at(inner)) { // found
             outer = &test->getParent();
             inner = outer->indexOf(test);
             break;
-        } else if (!test->isScalar()) {
+        } else if (!test->isScalar()) { // keep searching
+            InternalAst &inTest = test->asInternal();
+            for (size_t i = 0; i < inTest.size(); i++)
+                queue.push(&inTest.at(i));
+        }
+    }
+
+    // do nothing if not found
+}
+
+void Doc::focusInBig(Ast::Type match)
+{
+    std::queue<Ast*> queue;
+    queue.push(&outer->at(inner));
+
+    // breadth-first search
+    while (!queue.empty()) {
+        Ast *test = queue.front();
+        queue.pop();
+        if (test->getType() == match && test != &outer->at(inner)) { // found
+            outer = &test->getParent();
+            inner = outer->indexOf(test);
+            break;
+        } else if (!test->isScalar()) { // keep searching
             InternalAst &inTest = test->asInternal();
             for (size_t i = 0; i < inTest.size(); i++)
                 queue.push(&inTest.at(i));

@@ -38,7 +38,8 @@ private:
     void sibling(int step, bool skipHidden) override;
     void jackKick(bool down) override;
     void hackLead(bool right) override;
-    void flyIn(std::function<bool(const Ast*)> &match) override;
+    void focusInBig(bool match(const Ast*)) override;
+    void focusInBig(Ast::Type match) override;
     void insert(Ast::Type type, int bop) override;
     void append(Ast::Type type, int bop) override;
     void assart(Ast::Type type, int bop) override;

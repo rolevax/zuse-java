@@ -23,7 +23,8 @@ public:
     virtual void sibling(int step, bool skipHidden = false) = 0;
     virtual void jackKick(bool down) = 0;
     virtual void hackLead(bool right) = 0;
-    virtual void flyIn(std::function<bool(const Ast*)> &match) = 0;
+    virtual void focusInBig(bool match(const Ast*)) = 0;
+    virtual void focusInBig(Ast::Type match) = 0;
     virtual void insert(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void append(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void assart(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
