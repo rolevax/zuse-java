@@ -40,6 +40,8 @@ private:
     void hackLead(bool right) override;
     void focusInBig(bool match(const Ast*)) override;
     void focusInBig(Ast::Type match) override;
+    void dollyOutBig(bool match(const Ast*)) override;
+    void dollyOutBig(Ast::Type match) override;
     void insert(Ast::Type type, int bop) override;
     void append(Ast::Type type, int bop) override;
     void assart(Ast::Type type, int bop) override;

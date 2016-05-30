@@ -238,6 +238,33 @@ void Doc::focusInBig(Ast::Type match)
     // do nothing if not found
 }
 
+void Doc::dollyOutBig(bool match(const Ast *))
+{
+    const Ast *a = outer;
+    while (a->getType() != Ast::Type::CLASS_LIST) {
+        if (match(a)) {
+            outer = &a->getParent();
+            inner = outer->indexOf(a);
+            return;
+        }
+        a = &a->getParent();
+    }
+}
+
+void Doc::dollyOutBig(Ast::Type match)
+{
+    const Ast *a = outer;
+
+    while (a->getType() != Ast::Type::CLASS_LIST) {
+        if (a->getType() == match) {
+            outer = &a->getParent();
+            inner = outer->indexOf(a);
+            return;
+        }
+        a = &a->getParent();
+    }
+}
+
 /**
  * @brief Create and insert a new node at 'current' position
  * @param type The type of the new node

@@ -25,6 +25,8 @@ public:
     virtual void hackLead(bool right) = 0;
     virtual void focusInBig(bool match(const Ast*)) = 0;
     virtual void focusInBig(Ast::Type match) = 0;
+    virtual void dollyOutBig(bool match(const Ast*)) = 0;
+    virtual void dollyOutBig(Ast::Type match) = 0;
     virtual void insert(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void append(Ast::Type type, int bop = BopListAst::UNUSED) = 0;
     virtual void assart(Ast::Type type, int bop = BopListAst::UNUSED) = 0;

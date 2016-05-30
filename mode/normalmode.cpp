@@ -52,13 +52,13 @@ Mode::Result NormalMode::keyboard(Key key)
     case Key::S_F: // fall-search
         if (!doc.getInner().isScalar()
                 && doc.getInner().asInternal().size() > 0)
-            nextPush = new MenuMode(doc, MenuMode::Context::FALL_SEARCH);
+            nextPush = new MenuMode(doc, MenuMode::Context::FOCUS_IN_BIG);
         break;
     case Key::D: // dig-out
         doc.digOut();
         break;
     case Key::S_D: // dig-search
-        nextPush = new MenuMode(doc, MenuMode::Context::DIG_SEARCH);
+        nextPush = new MenuMode(doc, MenuMode::Context::DOLLY_OUT_BIG);
         break;
 
     // HIJK cursor moving

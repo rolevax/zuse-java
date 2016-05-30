@@ -56,19 +56,27 @@ Mode::Result MenuMode::keyboard(Key key)
             doc.fallIn();
         }
         break;
-    case Context::FALL_SEARCH:
+    case Context::FOCUS_IN_BIG:
         switch (key) {
         case Key::S:
             doc.focusInBig(matchStmt);
             break;
-        // TODO: pattern matching cases keyToPattern
         default:
-            doc.focusInBig(ktype);
+            if (ktype != Ast::Type::META)
+                doc.focusInBig(ktype);
             break;
         }
-
         break;
-    default:
+    case Context::DOLLY_OUT_BIG:
+        switch (key) {
+        case Key::S:
+            doc.dollyOutBig(matchStmt);
+            break;
+        default:
+            if (ktype != Ast::Type::META)
+                doc.dollyOutBig(ktype);
+            break;
+        }
         break;
     }
 
@@ -115,8 +123,8 @@ Ast::Type MenuMode::keyToType(Key key)
         }
     case Context::NEST_AS_LEFT: // nester type
     case Context::NEST_AS_RIGHT:
-    case Context::FALL_SEARCH:
-    case Context::DIG_SEARCH:
+    case Context::FOCUS_IN_BIG:
+    case Context::DOLLY_OUT_BIG:
         switch (key) {
         case Key::DOT:
         case Key::LEFT_PAREN:
@@ -157,8 +165,8 @@ Ast::Type MenuMode::keyToType(Key key)
         default:
             return Ast::Type::META;
         }
-    default: // useless, for supress 'return' warning
-        return Ast::Type::IDENT;
+    default:
+        throw "unreached";
     }
 }
 
