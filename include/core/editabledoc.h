@@ -57,7 +57,7 @@ public:
     virtual void toggleSynchronized() = 0;
 
     virtual void switchClip(char c) = 0;
-    virtual void copy(const Ast &a) = 0;
+    virtual void yank(const Ast &a) = 0;
     virtual void paste() = 0;
 
     virtual void setHotLight(HotLightLevel level) = 0;

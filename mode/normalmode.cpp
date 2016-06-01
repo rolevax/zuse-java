@@ -120,7 +120,7 @@ Mode::Result NormalMode::keyboard(Key key)
         }
         break;
     case Key::Y: // yank
-        // TODO
+        doc.yank(doc.getInner());
         break;
     case Key::P: // switch clipslot
         nextPush = new MenuMode(doc, MenuMode::Context::SWITCH_CLIP);

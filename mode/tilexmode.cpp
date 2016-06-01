@@ -31,6 +31,10 @@ Mode::Result TilexMode::keyboard(Key key)
     } else if (key == Key::DOUBLE_QUOTE) {
         doc.change(Ast::Type::STRING);
         return { ResultType::DONE_POP, new StringInputMode(doc, true) };
+    } else if (key == Key::TAB) { // paste
+        doc.paste();
+        doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+        return DONE_POP_NOPUSH;
     } else if (key == Key::SPACE) {
         return keyboardSpace();
     } else if (key == Key::EQUAL) {

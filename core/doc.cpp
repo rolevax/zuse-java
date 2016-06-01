@@ -603,13 +603,16 @@ void Doc::switchClip(char c)
     ob.observeSwitchClip(c);
 }
 
-void Doc::copy(const Ast &a)
+void Doc::yank(const Ast &a)
 {
     clipslots[clipIndex].reset(a.clone());
 }
 
 void Doc::paste()
 {
+    if (clipslots[clipIndex] == nullptr)
+        return;
+
     Ast *a = clipslots[clipIndex]->clone();
     outer->change(inner, a);
     tokens.sync(root.get());

@@ -71,7 +71,7 @@ private:
     void toggleSynchronized() override;
 
     void switchClip(char c) override;
-    void copy(const Ast &a) override;
+    void yank(const Ast &a) override;
     void paste() override;
 
     void setHotLight(HotLightLevel level) override;
