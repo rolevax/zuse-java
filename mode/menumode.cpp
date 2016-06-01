@@ -100,6 +100,13 @@ Mode::Result MenuMode::keyboard(Key key)
             break;
         }
         break;
+    case Context::SWITCH_CLIP:
+        do {
+            char c = KeyCode::toChar(key);
+            if ('a' <= c && c <= 'z')
+                doc.switchClip(c);
+        } while (false);
+        break;
     }
 
     if (context == Context::BOP_INSERT
@@ -114,13 +121,15 @@ Mode::Result MenuMode::keyboard(Key key)
 
 Mode::Result MenuMode::onPushed()
 {
-    doc.toggleTension(true);
+    if (context != Context::SWITCH_CLIP)
+        doc.toggleTension(true);
     return DONE_STAY_NOPUSH;
 }
 
 void MenuMode::onPopped()
 {
-    doc.toggleTension(false);
+    if (context != Context::SWITCH_CLIP)
+        doc.toggleTension(false);
 }
 
 const char *MenuMode::name()
@@ -189,6 +198,8 @@ Ast::Type MenuMode::keyToType(Key key)
         default:
             return Ast::Type::META;
         }
+    case Context::SWITCH_CLIP:
+        return Ast::Type::META;
     default:
         throw "unreached";
     }

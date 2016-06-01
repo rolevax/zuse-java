@@ -56,6 +56,10 @@ public:
     virtual void toggleNative() = 0;
     virtual void toggleSynchronized() = 0;
 
+    virtual void switchClip(char c) = 0;
+    virtual void copy(const Ast &a) = 0;
+    virtual void paste() = 0;
+
     virtual void setHotLight(HotLightLevel level) = 0;
     virtual void toggleTension(bool b) = 0;
 };

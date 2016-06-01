@@ -122,7 +122,8 @@ Mode::Result NormalMode::keyboard(Key key)
     case Key::Y: // yank
         // TODO
         break;
-    case Key::P: // paste
+    case Key::P: // switch clipslot
+        nextPush = new MenuMode(doc, MenuMode::Context::SWITCH_CLIP);
         break;
     case Key::C: // change
         // TODO

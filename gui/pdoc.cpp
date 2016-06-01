@@ -55,6 +55,11 @@ void PDoc::observePop()
     emit popped();
 }
 
+void PDoc::observeSwitchClip(char c)
+{
+    emit clipSwitched(c);
+}
+
 void PDoc::observeInsertLine(size_t r, size_t ct)
 {
     emit insertLine(r, ct);

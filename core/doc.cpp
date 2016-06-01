@@ -596,6 +596,25 @@ void Doc::toggleSynchronized()
     tokens.sync(root.get());
 }
 
+void Doc::switchClip(char c)
+{
+    assert('a' <= c && c <= 'z');
+    clipIndex = c - 'a';
+    ob.observeSwitchClip(c);
+}
+
+void Doc::copy(const Ast &a)
+{
+    clipslots[clipIndex].reset(a.clone());
+}
+
+void Doc::paste()
+{
+    Ast *a = clipslots[clipIndex]->clone();
+    outer->change(inner, a);
+    tokens.sync(root.get());
+}
+
 void Doc::setHotLight(HotLightLevel level)
 {
     switch (level) {

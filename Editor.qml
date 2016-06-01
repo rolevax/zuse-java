@@ -30,6 +30,7 @@ Rectangle {
             modesModel.remove(modesModel.count - 1, 1);
         }
 
+        onClipSwitched: { clipIndex.curr = c; }
         onInsertLine: { showPad.insertLine(r, ct); }
         onRemoveLine: { showPad.removeLine(r, ct); }
         onUpdateLine: { showPad.updateLine(r, str); }
@@ -64,6 +65,24 @@ Rectangle {
                 text: modelText
                 font.pixelSize: 20
             }
+        }
+    }
+
+    Rectangle {
+        property string curr: "a"
+
+        id: clipIndex
+        color: "#331199"
+        width: 25
+        height: 25
+        anchors.top: parent.top
+        anchors.right: parent.right
+
+        Text {
+            anchors.centerIn: parent
+            text: parent.curr
+            color: "white"
+            font.pixelSize: 20
         }
     }
 

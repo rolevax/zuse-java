@@ -70,6 +70,10 @@ private:
     void toggleNative() override;
     void toggleSynchronized() override;
 
+    void switchClip(char c) override;
+    void copy(const Ast &a) override;
+    void paste() override;
+
     void setHotLight(HotLightLevel level) override;
     void toggleTension(bool b) override;
     ///@}
@@ -85,7 +89,8 @@ private:
     std::unique_ptr<RootAst> root = nullptr;
     InternalAst *outer = nullptr;
     size_t inner = 0;
-    std::unique_ptr<Ast> clipboard = nullptr;
+    std::unique_ptr<Ast> clipslots[26];
+    size_t clipIndex = 0;
     Tokens tokens;
     PDoc &ob;
 };

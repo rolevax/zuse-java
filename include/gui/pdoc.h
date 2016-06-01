@@ -18,6 +18,8 @@ public:
     void observePush(const char *name);
     void observePop();
 
+    void observeSwitchClip(char c);
+
     void observeInsertLine(size_t r, size_t ct) override;
     void observeRemoveLine(size_t r, size_t ct) override;
     void observeUpdateLine(size_t r, const std::string &s) override;
@@ -32,6 +34,8 @@ signals:
     void tension(bool b);
     void pushed(QString name);
     void popped();
+
+    void clipSwitched(char c);
 
     void insertLine(int r, int ct);
     void removeLine(int r, int ct);
