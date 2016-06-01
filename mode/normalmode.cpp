@@ -142,6 +142,14 @@ Mode::Result NormalMode::keyboard(Key key)
         nextPush = new MenuMode(doc, MenuMode::Context::NEST_AS_RIGHT);
         break;
     case Key::X: // expose
+    case Key::S_X: // expose-clip
+        if (key == Key::S_X) {
+            if (doc.getOuter().size() == 2) {
+                // if inner is 1, clip 0; vice versa
+                size_t toClip = 1 - doc.getInnerIndex();
+                doc.yank(doc.getOuter().at(toClip));
+            }
+        }
         doc.expose();
         break;
     case Key::M: // modify
