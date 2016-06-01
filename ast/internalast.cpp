@@ -71,8 +71,6 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos, bool allowHidden)
         default: // ident
             return Type::META;
         }
-    case Type::DECL_VAR:
-        return Type::IDENT;
     case Type::DECL_METHOD:
         switch (pos) {
         case 2:

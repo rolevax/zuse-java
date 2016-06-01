@@ -111,6 +111,9 @@ Mode::Result NormalMode::keyboard(Key key)
         }
         break;
     case Key::R: // remove
+    case Key::S_R: // remove-clip
+        if (key == Key::S_R)
+            doc.yank(doc.getInner());
         doc.remove();
         if (doc.getInner().getType() == Ast::Type::HIDDEN) {
             if (doc.getOuter().size() == 1)
@@ -126,7 +129,11 @@ Mode::Result NormalMode::keyboard(Key key)
         nextPush = new MenuMode(doc, MenuMode::Context::SWITCH_CLIP);
         break;
     case Key::C: // change
-        // TODO
+    case Key::S_C: // change-clip
+        if (key == Key::S_C)
+            doc.yank(doc.getInner());
+        doc.change(doc.getOuter().typeAt(doc.getInnerIndex()));
+        nextPush = doc.createModifyMode(true);
         break;
     case Key::N: // nest as left
         nextPush = new MenuMode(doc, MenuMode::Context::NEST_AS_LEFT);
