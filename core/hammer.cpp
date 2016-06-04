@@ -72,6 +72,9 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
         case Type::CAST:
             hitCast(ast.asFixSize<2>(), buf);
             break;
+        case Type::NEW_CLASS:
+            hitNew(ast.asFixSize<3>(), buf);
+            break;
         case Type::SHL:
         case Type::SHR:
         case Type::SHRA:
@@ -339,6 +342,14 @@ void Hammer::hitCast(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(1), buf); // val
 }
 
+void Hammer::hitNew(const FixSizeAst<3> &ast, Hammer::Buf &buf)
+{
+    bone(ast, buf, Sym::NEW);
+    hitGeneral(ast.at(0), buf); // type
+    hitGeneral(ast.at(1), buf); // arg list
+    hitGeneral(ast.at(2), buf); // member list or hidden
+}
+
 void Hammer::hitQuestion(const FixSizeAst<3> &ast, Buf &buf)
 {
     hitGeneral(ast.at(0), buf); // condition
@@ -494,6 +505,7 @@ bool Hammer::needBrace(const ListAst &ast, bool norec)
     if (pt == Type::DECL_METHOD
             || pt == Type::TRY_LIST
             || pt == Type::CATCH
+            || pt == Type::NEW_CLASS
             || ast.size() != 1)
         return true;
 

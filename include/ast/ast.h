@@ -41,7 +41,7 @@ public:
         ASSIGN, ASS_ADD, ASS_SUB, ASS_MUL, ASS_DIV, ASS_MOD,
         ASS_AND, ASS_XOR, ASS_OR, ASS_SHL, ASS_SHR, ASS_SHRA,
         // size 3
-        QUESTION,
+        QUESTION, NEW_CLASS, NEW_ARRAY,
         // size 4
         DECL_CLASS, DECL_INTERFACE, FOR,
         // size 5

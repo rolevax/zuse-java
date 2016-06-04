@@ -82,6 +82,15 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos, bool allowHidden)
         default:
             return Type::META;
         }
+    case Type::NEW_CLASS:
+        switch (pos) {
+        case 1: // arg
+            return Type::ARG_LIST;
+        case 2: // anoy
+            return allowHidden ? Type::HIDDEN : Type::MEMBER_LIST;
+        default: // type name
+            return Type::META;
+        }
     case Type::DECL_PARAM:
         return Type::IDENT;
     case Type::WHILE:

@@ -742,6 +742,7 @@ expr_prime: name
 				{ $$ = $1; }
 		  ;
 
+// same as 'NotJustName' in the sample
 expr_prime_noname: expr_prime_cx
 				{ $$ = $1; }
 				 | special_name
@@ -781,11 +782,17 @@ expr_new: expr_new_plain
 				{ $$ = $1; }
 		| name "." expr_new_plain
 				{ $$=$1; }
+// TODO: what's this? haven't seen... (A.B.C.new D(a, b, c)...?)
 		;
 
 expr_new_plain: "new" type_name "(" arg_list ")"
-				{ $$=$2; }
-			  // TODO various new
+				{ Ast* hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $$ = new FixSizeAst<3>(Ast::Type::NEW_CLASS, 
+										 $2, $4, hidden); } 
+			  | "new" type_name "(" arg_list ")" "{" member_list "}"
+				{ $$ = new FixSizeAst<3>(Ast::Type::NEW_CLASS, 
+										 $2, $4, $7); } 
+			  // TODO array new
 			  ;
 
 callee: expr_prime_cx_nude
@@ -811,11 +818,11 @@ name_list: name
 		 ;
 
 special_name: "this"
-				{ $$= new ScalarAst(Ast::Type::IDENT,"xxx"); }
+				{ $$= new ScalarAst(Ast::Type::IDENT,"this"); }
 			| "super"
-				{ $$= new ScalarAst(Ast::Type::IDENT,"xxx"); }
+				{ $$= new ScalarAst(Ast::Type::IDENT,"super"); }
 			| "null"
-				{ $$= new ScalarAst(Ast::Type::IDENT,"xxx"); }
+				{ $$= new ScalarAst(Ast::Type::IDENT,"null"); }
 			;
 
 dims: "[]"

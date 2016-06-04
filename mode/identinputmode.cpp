@@ -96,7 +96,7 @@ Mode *IdentInputMode::promotion()
     if (Mode *ret = promoteToDeclVar())
         return ret;
 
-    if (Mode *ret = promoteToStmt())
+    if (Mode *ret = promoteByKeyword())
         return ret;
 
     return nullptr;
@@ -155,7 +155,7 @@ Mode *IdentInputMode::promoteToDeclVar()
     return nullptr;
 }
 
-Mode *IdentInputMode::promoteToStmt()
+Mode *IdentInputMode::promoteByKeyword()
 {
     const std::string &text = doc.getInner().asScalar().getText();
     if (text == "while") {
@@ -177,6 +177,9 @@ Mode *IdentInputMode::promoteToStmt()
         doc.change(Ast::Type::TRY_LIST);
         doc.fallIn(); // now inner is stmt_list
         return doc.createModifyMode(true); // a list input mode
+    } else if (text == "new") {
+        doc.change(Ast::Type::NEW_CLASS);
+        return doc.createModifyMode(true, 0);
     }
 
     return nullptr;

@@ -34,7 +34,7 @@ bool Ast::isFixSize(Ast::Type type, size_t s)
     case 2:
         return Type::DECL_VAR <= type && type <= Type::ASS_SHRA;
     case 3:
-        return Type::QUESTION <= type && type <= Type::QUESTION;
+        return Type::QUESTION <= type && type <= Type::NEW_ARRAY;
     case 4:
         return Type::DECL_CLASS <= type && type <= Type::FOR;
     case 5:
@@ -156,6 +156,8 @@ int Ast::precedence(Ast::Type type)
     case Type::LOGIC_NOT:
     case Type::BIT_NOT:
         return 14;
+    case Type::NEW_CLASS:
+    case Type::NEW_ARRAY:
     case Type::CAST:
         return 13;
     case Type::MUL_BOP_LIST:

@@ -20,7 +20,7 @@ private:
     static bool isUpperCamel(const std::string &id);
     Mode *promotion();
     Mode *promoteToDeclVar();
-    Mode *promoteToStmt();
+    Mode *promoteByKeyword();
     void setModifier(int modId);
 
 private:
