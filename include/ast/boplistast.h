@@ -12,6 +12,7 @@ public:
     static const int DOT = 0, CALL = 1, ARR = 2;
 
     BopListAst(Ast::Type t, Ast *lhs, Ast *rhs, int op);
+    BopListAst(Ast *name, int dims);
 
     void dump() const override;
     BopListAst *clone() const override;

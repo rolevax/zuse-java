@@ -79,6 +79,9 @@ Mode::Result TilexMode::keyboardSpace()
         doc.sibling(1);
         doc.nestAsRight(t);
         doc.expose();
+    } else if (outer.getType() == Ast::Type::DOT_BOP_LIST
+               && outer.asBopList().opAt(doc.getInnerIndex()) == BopListAst::ARR) {
+        doc.change(Ast::Type::HIDDEN);
     } else {
         doc.remove(); // remove the meta node
     }

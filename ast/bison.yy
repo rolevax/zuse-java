@@ -135,6 +135,8 @@
 %token	<std::string>	STRING		"string"
 %token	<std::string>	VOID		"void" 
 
+%type	<int>			dims
+
 %type	<ListAst*>		class_list
 %type	<ListAst*>		member_list
 %type	<ListAst*>		param_list
@@ -213,8 +215,7 @@
 type_spec: type_name
 	 			{ $$ = $1; }
 		 | type_name dims
-//TODO: dims
-	 			{ $$ = $1; }
+				{ $$ = new BopListAst($1, $2); }
 		 ;
 
 type_name: ptype
@@ -450,14 +451,13 @@ dector_list: dector "," dector
 dector: dector_name
 				{ $$ = $1; }
 	  | dector_name "=" expr // TODO: array init
-				// TODO: change to ASS_BOP_LIST
 				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
 	  ;
 
 dector_name: ident
 				{ $$ = $1; }
-		   | dector_name "[]"
-				{ $$ = $1; } // TODO: scalar.dim++ (?)
+		   | dector_name dims
+				{ $$ = new BopListAst($1, $2); }
 		   ;
 
 jump_stmt: "return" expr ";"
@@ -694,8 +694,8 @@ expr_lv12: expr_unary
 		 | "(" expr_ptype ")" expr_lv12
 				{ $$ = new FixSizeAst<2>(Ast::Type::CAST, $2, $4); } 
 		 | "(" name dims ")" expr_lv12
-//TODO: dims
-				{ $$ = new FixSizeAst<2>(Ast::Type::CAST, $2, $5); } 
+				{ Ast *d = new BopListAst($2, $3);
+				  $$ = new FixSizeAst<2>(Ast::Type::CAST, d, $5); } 
 		 | "(" expr ")" expr_unary_logic
 				{ $$ = new FixSizeAst<2>(Ast::Type::CAST, $2, $4); } 
 		 ;
@@ -703,7 +703,7 @@ expr_lv12: expr_unary
 expr_ptype: ptype
 				{ $$ = $1; } 
 		  | ptype dims
-				{ $$=$1; } 
+				{ $$ = new BopListAst($1, $2); }
 		  ;
 
 expr_unary: "++" expr_unary
@@ -834,7 +834,9 @@ special_name: "this"
 			;
 
 dims: "[]"
+				{ $$ = 1; }
 	| dims "[]"
+				{ $$ = $1 + 1; }
 	;
 
 %%

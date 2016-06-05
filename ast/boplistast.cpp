@@ -1,4 +1,5 @@
 #include "ast/boplistast.h"
+#include "ast/scalarast.h"
 
 #include <cassert>
 
@@ -19,6 +20,16 @@ BopListAst::BopListAst(Ast::Type t, Ast *lhs, Ast *rhs, int op)
         append(lhs);
         append(rhs);
         setOpAt(1, op);
+    }
+}
+
+BopListAst::BopListAst(Ast *name, int dims)
+    : ListAst(Type::DOT_BOP_LIST)
+{
+    append(name);
+    while (dims --> 0) {
+        append(new ScalarAst(Type::HIDDEN, ""));
+        setOpAt(size() - 1, ARR);
     }
 }
 

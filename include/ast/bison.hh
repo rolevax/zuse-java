@@ -362,11 +362,14 @@ namespace yy {
       // modifier
       char dummy3[sizeof(Modifiers)];
 
+      // dims
+      char dummy4[sizeof(int)];
+
       // "identifier"
       // "number"
       // "string"
       // "void"
-      char dummy4[sizeof(std::string)];
+      char dummy5[sizeof(std::string)];
 };
 
     /// Symbol semantic values.
@@ -515,6 +518,8 @@ namespace yy {
   basic_symbol (typename Base::kind_type t, const ListAst* v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const Modifiers v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const int v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const std::string v, const location_type& l);
 
@@ -1288,6 +1293,10 @@ namespace yy {
         value.copy< Modifiers > (other.value);
         break;
 
+      case 149: // dims
+        value.copy< int > (other.value);
+        break;
+
       case 82: // "identifier"
       case 83: // "number"
       case 84: // "string"
@@ -1382,6 +1391,10 @@ namespace yy {
         value.copy< Modifiers > (v);
         break;
 
+      case 149: // dims
+        value.copy< int > (v);
+        break;
+
       case 82: // "identifier"
       case 83: // "number"
       case 84: // "string"
@@ -1420,6 +1433,13 @@ namespace yy {
 
   template <typename Base>
   BisonParser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const Modifiers v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  BisonParser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const int v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
@@ -1528,6 +1548,10 @@ namespace yy {
         value.template destroy< Modifiers > ();
         break;
 
+      case 149: // dims
+        value.template destroy< int > ();
+        break;
+
       case 82: // "identifier"
       case 83: // "number"
       case 84: // "string"
@@ -1626,6 +1650,10 @@ namespace yy {
       case 91: // modifiers
       case 92: // modifier
         value.move< Modifiers > (s.value);
+        break;
+
+      case 149: // dims
+        value.move< int > (s.value);
         break;
 
       case 82: // "identifier"
@@ -2210,7 +2238,7 @@ namespace yy {
 
 
 } // yy
-#line 2214 "bison.hh" // lalr1.cc:377
+#line 2242 "bison.hh" // lalr1.cc:377
 
 
 
