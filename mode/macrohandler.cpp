@@ -198,6 +198,10 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
         type = Ast::Type::DOT_BOP_LIST;
         op = BopListAst::CALL;
         break;
+    case Key::LEFT_SQUARE:
+        type = Ast::Type::DOT_BOP_LIST;
+        op = BopListAst::ARR;
+        break;
     case Key::RIGHT_PAREN:
         type = Ast::Type::CAST;
         break;
