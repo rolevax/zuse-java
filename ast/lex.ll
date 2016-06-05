@@ -104,6 +104,8 @@ blank 	[ \t]
 
 "{"		return yy::BisonParser::make_LBRACE(loc);
 "}"		return yy::BisonParser::make_RBRACE(loc);
+"["		return yy::BisonParser::make_LSQUARE(loc);
+"]"		return yy::BisonParser::make_RSQUARE(loc);
 "("		return yy::BisonParser::make_LPAREN(loc);
 ")"		return yy::BisonParser::make_RPAREN(loc);
 

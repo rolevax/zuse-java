@@ -99,5 +99,7 @@ Modifiers &FixSizes::getModifiers(Ast &ast)
         return ast.asFixSize<3>().getModifiers();
     if (ast.isFixSize(4))
         return ast.asFixSize<4>().getModifiers();
+    if (ast.isFixSize(5))
+        return ast.asFixSize<5>().getModifiers();
     throw "WTF";
 }

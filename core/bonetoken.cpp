@@ -6,7 +6,7 @@
 std::string BoneToken::syms[128]
 {
     "class ", "interface ", " extends ", " implements ",
-    " {", "{", "}", "", "(", ")",
+    " {", "{", "}", "", "(", ")", "[", "]",
     "if ", "else ", "while ", "do", "for ",
     "return",  "continue", "break", "throw ", " throws ", "new ",
     "try", " catch ", " finally",

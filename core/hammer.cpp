@@ -476,14 +476,20 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
             bone(ast, buf, sym);
         }
         break;
-    case Type::DOT_BOP_LIST:
+    case Type::DOT_BOP_LIST: {
+        const BopListAst &bast = ast.asBopList();
+        if (bast.opAt(pos)) // previous bop
+            bone(ast, buf, Sym::RSQUARE);
+
         if (!end) {
-            const BopListAst &bast = ast.asBopList();
             int bop = bast.opAt(pos + 1);
             if (bop == BopListAst::DOT)
                 bone(ast, buf, Sym::DOT);
+            else if (bop == BopListAst::ARR)
+                bone(ast, buf, Sym::LSQUARE);
         }
         break;
+    }
     case Type::LOGIC_AND_BOP_LIST:
         if (!end)
             bone(ast, buf, Sym::LOGIC_AND);

@@ -105,6 +105,8 @@
 	COMMA		","
 	LBRACE		"{"
 	RBRACE		"}"
+	LSQUARE		"["
+	RSQUARE		"]"
 	LPAREN		"("
 	RPAREN		")"
 	LOGIC_OR	"||"
@@ -765,6 +767,12 @@ expr_prime_cx_nude: "number"
 				{ $$ = $1; }
 				  | expr_field
 				{ $$ = $1; }
+				  | name "[" expr "]"
+				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
+									  BopListAst::ARR); }
+				  | expr_prime_cx "[" expr "]"
+				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
+									  BopListAst::ARR); }
 			;
 
 expr_call: callee "(" arg_list ")"
