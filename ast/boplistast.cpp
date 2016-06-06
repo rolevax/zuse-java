@@ -27,6 +27,31 @@ BopListAst::BopListAst(Ast *name, int dims)
     : ListAst(Type::DOT_BOP_LIST)
 {
     append(name);
+    addDims(dims);
+}
+
+BopListAst *BopListAst::makeDims(Ast *a)
+{
+    BopListAst *res = new BopListAst(Type::DOT_BOP_LIST);
+    res->addDims(a);
+    return res;
+}
+
+BopListAst *BopListAst::makeDims(int dims)
+{
+    BopListAst *res = new BopListAst(Type::DOT_BOP_LIST);
+    res->addDims(dims);
+    return res;
+}
+
+void BopListAst::addDims(Ast *a)
+{
+    append(a);
+    setOpAt(size() - 1, ARR);
+}
+
+void BopListAst::addDims(int dims)
+{
     while (dims --> 0) {
         append(new ScalarAst(Type::HIDDEN, ""));
         setOpAt(size() - 1, ARR);

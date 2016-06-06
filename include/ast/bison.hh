@@ -339,6 +339,7 @@ namespace yy {
       // expr_field
       // expr_new
       // expr_new_plain
+      // dim_exprs
       // callee
       // name
       // special_name
@@ -1131,8 +1132,8 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 1889,     ///< Last index in yytable_.
-      yynnts_ = 63,  ///< Number of nonterminal symbols.
+      yylast_ = 1952,     ///< Last index in yytable_.
+      yynnts_ = 64,  ///< Number of nonterminal symbols.
       yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -1267,9 +1268,10 @@ namespace yy {
       case 142: // expr_field
       case 143: // expr_new
       case 144: // expr_new_plain
-      case 145: // callee
-      case 146: // name
-      case 148: // special_name
+      case 145: // dim_exprs
+      case 146: // callee
+      case 147: // name
+      case 149: // special_name
         value.copy< Ast* > (other.value);
         break;
 
@@ -1284,7 +1286,7 @@ namespace yy {
       case 114: // try_list
       case 115: // catch_list
       case 117: // if_list
-      case 147: // name_list
+      case 148: // name_list
         value.copy< ListAst* > (other.value);
         break;
 
@@ -1293,7 +1295,7 @@ namespace yy {
         value.copy< Modifiers > (other.value);
         break;
 
-      case 149: // dims
+      case 150: // dims
         value.copy< int > (other.value);
         break;
 
@@ -1365,9 +1367,10 @@ namespace yy {
       case 142: // expr_field
       case 143: // expr_new
       case 144: // expr_new_plain
-      case 145: // callee
-      case 146: // name
-      case 148: // special_name
+      case 145: // dim_exprs
+      case 146: // callee
+      case 147: // name
+      case 149: // special_name
         value.copy< Ast* > (v);
         break;
 
@@ -1382,7 +1385,7 @@ namespace yy {
       case 114: // try_list
       case 115: // catch_list
       case 117: // if_list
-      case 147: // name_list
+      case 148: // name_list
         value.copy< ListAst* > (v);
         break;
 
@@ -1391,7 +1394,7 @@ namespace yy {
         value.copy< Modifiers > (v);
         break;
 
-      case 149: // dims
+      case 150: // dims
         value.copy< int > (v);
         break;
 
@@ -1522,9 +1525,10 @@ namespace yy {
       case 142: // expr_field
       case 143: // expr_new
       case 144: // expr_new_plain
-      case 145: // callee
-      case 146: // name
-      case 148: // special_name
+      case 145: // dim_exprs
+      case 146: // callee
+      case 147: // name
+      case 149: // special_name
         value.template destroy< Ast* > ();
         break;
 
@@ -1539,7 +1543,7 @@ namespace yy {
       case 114: // try_list
       case 115: // catch_list
       case 117: // if_list
-      case 147: // name_list
+      case 148: // name_list
         value.template destroy< ListAst* > ();
         break;
 
@@ -1548,7 +1552,7 @@ namespace yy {
         value.template destroy< Modifiers > ();
         break;
 
-      case 149: // dims
+      case 150: // dims
         value.template destroy< int > ();
         break;
 
@@ -1626,9 +1630,10 @@ namespace yy {
       case 142: // expr_field
       case 143: // expr_new
       case 144: // expr_new_plain
-      case 145: // callee
-      case 146: // name
-      case 148: // special_name
+      case 145: // dim_exprs
+      case 146: // callee
+      case 147: // name
+      case 149: // special_name
         value.move< Ast* > (s.value);
         break;
 
@@ -1643,7 +1648,7 @@ namespace yy {
       case 114: // try_list
       case 115: // catch_list
       case 117: // if_list
-      case 147: // name_list
+      case 148: // name_list
         value.move< ListAst* > (s.value);
         break;
 
@@ -1652,7 +1657,7 @@ namespace yy {
         value.move< Modifiers > (s.value);
         break;
 
-      case 149: // dims
+      case 150: // dims
         value.move< int > (s.value);
         break;
 
@@ -2238,7 +2243,7 @@ namespace yy {
 
 
 } // yy
-#line 2242 "bison.hh" // lalr1.cc:377
+#line 2247 "bison.hh" // lalr1.cc:377
 
 
 

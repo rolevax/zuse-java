@@ -73,6 +73,7 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
             hitCast(ast.asFixSize<2>(), buf);
             break;
         case Type::NEW_CLASS:
+        case Type::NEW_ARRAY:
             hitNew(ast.asFixSize<3>(), buf);
             break;
         case Type::SHL:
@@ -346,7 +347,7 @@ void Hammer::hitNew(const FixSizeAst<3> &ast, Hammer::Buf &buf)
 {
     bone(ast, buf, Sym::NEW);
     hitGeneral(ast.at(0), buf); // type
-    hitGeneral(ast.at(1), buf); // arg list
+    hitGeneral(ast.at(1), buf); // arg list or array dims
     hitGeneral(ast.at(2), buf); // member list or hidden
 }
 
@@ -381,10 +382,13 @@ void Hammer::hitListBegin(const ListAst &ast, Buf &buf)
     case Type::DECL_PARAM_LIST:
         bone(ast, buf, Sym::LPAREN);
         break;
-    case Type::ARG_LIST: {
+    case Type::ARG_LIST:
         bone(ast, buf, Sym::LPAREN);
         break;
-    }
+    case Type::DOT_BOP_LIST:
+        if (ast.size() > 0 && ast.asBopList().opAt(0) == BopListAst::ARR)
+            bone(ast, buf, Sym::LSQUARE);
+        break;
     default:
         break;
     }

@@ -14,6 +14,11 @@ public:
     BopListAst(Ast::Type t, Ast *lhs, Ast *rhs, int op);
     BopListAst(Ast *name, int dims);
 
+    static BopListAst *makeDims(Ast *a);
+    static BopListAst *makeDims(int dims);
+    void addDims(Ast *a);
+    void addDims(int dims);
+
     void dump() const override;
     BopListAst *clone() const override;
     Ast *remove(size_t pos) override;

@@ -198,6 +198,7 @@
 %type	<Ast*>			callee
 %type	<Ast*>			name
 %type	<Ast*>			special_name
+%type	<Ast*>			dim_exprs
 
 %type	<Modifiers>		modifiers
 %type	<Modifiers>		modifier
@@ -380,9 +381,9 @@ param_list_noemp: decl_param
 				{ $1->append($3); $$ = $1; }
 		  ;
 
-decl_param: ident ident
+decl_param: type_spec ident
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_PARAM, $1, $2); } 
-		  | "final" ident ident
+		  | "final" type_spec ident
 		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_PARAM, $2, $3); 
 				  $$->asFixSize<2>().getModifiers().final = true; } 
 		  ;
@@ -788,8 +789,10 @@ expr_field: expr_prime_noname "." ident
 
 expr_new: expr_new_plain
 				{ $$ = $1; }
+/*
 		| name "." expr_new_plain
 				{ $$=$1; }
+*/
 // TODO: what's this? haven't seen... (A.B.C.new D(a, b, c)...?)
 		;
 
@@ -800,8 +803,29 @@ expr_new_plain: "new" type_name "(" arg_list ")"
 			  | "new" type_name "(" arg_list ")" "{" member_list "}"
 				{ $$ = new FixSizeAst<3>(Ast::Type::NEW_CLASS, 
 										 $2, $4, $7); } 
-			  // TODO array new
+// TODO: causes shift-reduce. also not supporting array init
+			  | "new" type_name dim_exprs dims
+				{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $3->asBopList().addDims($4);
+				  $$ = new FixSizeAst<3>(Ast::Type::NEW_ARRAY,
+										 $2, $3, hidden); }
+			  | "new" type_name dim_exprs
+				{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+				  $$ = new FixSizeAst<3>(Ast::Type::NEW_ARRAY,
+										 $2, $3, hidden); }
+			  | "new" type_name dims
+				{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+				  Ast *dimsA = BopListAst::makeDims($3);
+				  $$ = new FixSizeAst<3>(Ast::Type::NEW_ARRAY,
+										 $2, dimsA, hidden); }
 			  ;
+
+dim_exprs: "[" expr "]"
+		 		{ $$ = BopListAst::makeDims($2); }
+		 | dim_exprs "[" expr "]"
+		 		{ $1->asBopList().addDims($3);
+				  $$ = $1; }
+		 ;
 
 callee: expr_prime_cx_nude
 				{ $$ = $1; }
