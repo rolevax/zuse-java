@@ -212,6 +212,8 @@ int MenuMode::keyToBop(Key key)
         return BopListAst::DOT;
     case Key::LEFT_PAREN:
         return BopListAst::CALL;
+    case Key::LEFT_SQUARE:
+        return BopListAst::ARR;
     case Key::PLUS:
         return BopListAst::ADD;
     case Key::MINUS:
