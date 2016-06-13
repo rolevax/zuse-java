@@ -161,6 +161,7 @@ Ast::Type MenuMode::keyToType(Key key)
         switch (key) {
         case Key::DOT:
         case Key::LEFT_PAREN:
+        case Key::LEFT_SQUARE:
             return Ast::Type::DOT_BOP_LIST;
         case Key::RIGHT_PAREN:
             return Ast::Type::CAST;
