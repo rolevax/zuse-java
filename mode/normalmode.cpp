@@ -115,7 +115,8 @@ Mode::Result NormalMode::keyboard(Key key)
         if (key == Key::S_R)
             doc.yank(doc.getInner());
         doc.remove();
-        if (doc.getInner().getType() == Ast::Type::HIDDEN) {
+        if (doc.getOuter().getType() != Ast::Type::CLASS_LIST
+                && doc.getInner().getType() == Ast::Type::HIDDEN) {
             if (doc.getOuter().size() == 1)
                 doc.digOut();
             else
