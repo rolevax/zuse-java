@@ -49,6 +49,8 @@ Ast::Type InternalAst::typeAt(Ast::Type type, size_t pos, bool allowHidden)
     // for bop list, return LHS and RHS type when op is default
     switch (type) {
     // lists
+    case Type::CLASS_LIST:
+        return Type::DECL_CLASS;
     case Type::DECL_PARAM_LIST:
         return Type::DECL_PARAM;
     case Type::IF_LIST:
