@@ -158,7 +158,8 @@ Mode::Result NormalMode::keyboard(Key key)
         bool clear = key == Key::S_M;
         if (doc.getInner().isScalar())
             nextPush = doc.createModifyMode(clear);
-        else if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST)
+        else if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST
+                 || doc.getOuter().getType() == Ast::Type::CLASS_LIST)
             nextPush = new MoggleMode(doc);
         else if (doc.getInner().getType() == Ast::Type::DECL_PARAM
                  || doc.getInner().getType() == Ast::Type::DECL_VAR) // local var

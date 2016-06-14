@@ -81,7 +81,7 @@ bool IdentInputMode::isPrimitiveType(const std::string &id)
 {
     return id == "void" || id == "byte" || id == "short"
             || id == "int" || id == "long" || id == "char"
-            || id == "float" || id == "double";
+            || id == "float" || id == "double" || id == "boolean";
 }
 
 bool IdentInputMode::isUpperCamel(const std::string &id)

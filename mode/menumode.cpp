@@ -189,7 +189,7 @@ Ast::Type MenuMode::keyToType(Key key)
         case Key::S_C:
             return Ast::Type::DECL_CLASS;
         case Key::I:
-            return Ast::Type::IF_LIST;
+            return Ast::Type::IF_CONDBODY;
         case Key::S_M:
             return Ast::Type::DECL_METHOD;
         case Key::V:
