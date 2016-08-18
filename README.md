@@ -12,5 +12,5 @@ Build:
 
 This repository has not been well-documented yet. 
 Please reference to the corresponding thesis for explanations for
-Zuse project. 
+the Zuse project. 
 
