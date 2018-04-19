@@ -8,8 +8,8 @@
 #include <cassert>
 
 Ast::Ast(Type t) :
-    type(t),
-    parent(nullptr)
+    mType(t),
+    mParent(nullptr)
 {
 
 }
@@ -51,22 +51,22 @@ bool Ast::isScalar(Ast::Type type)
 
 bool Ast::isList() const
 {
-    return isList(type);
+    return isList(mType);
 }
 
 bool Ast::isBopList() const
 {
-    return isBopList(type);
+    return isBopList(mType);
 }
 
 bool Ast::isFixSize(size_t s) const
 {
-    return isFixSize(type, s);
+    return isFixSize(mType, s);
 }
 
 bool Ast::isScalar() const
 {
-    return isScalar(type);
+    return isScalar(mType);
 }
 
 ScalarAst &Ast::asScalar()
@@ -209,35 +209,35 @@ int Ast::precedence(Ast::Type type)
 
 int Ast::precedence() const
 {
-    return precedence(type);
+    return precedence(mType);
 }
 
 Ast::Type Ast::getType() const
 {
-    return type;
+    return mType;
 }
 
 InternalAst &Ast::getParent() const
 {
-    return *parent;
+    return *mParent;
 }
 
 void Ast::setParent(InternalAst *next)
 {
-    parent = next;
+    mParent = next;
 }
 
 bool Ast::hasIndent() const
 {
-    Type ptype = parent->type;
+    Type ptype = mParent->mType;
     return ptype == Type::MEMBER_LIST || ptype == Type::STMT_LIST;
 }
 
 int Ast::indentLevel() const
 {
     int ret = 0;
-    for (const Ast *a = parent;
-         a->parent != a && a->parent != nullptr;
+    for (const Ast *a = mParent;
+         a->mParent != a && a->mParent != nullptr;
          a = &a->getParent())
         if (a->getType() == Type::STMT_LIST
                 || a->getType() == Type::MEMBER_LIST)

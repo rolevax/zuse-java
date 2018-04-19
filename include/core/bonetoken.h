@@ -26,14 +26,14 @@ public:
         META
     };
 
-    BoneToken(const Ast *ast, Sym sym);
-    BoneToken(const Ast *ast);
+    BoneToken(const Ast *mAst, Sym mSym);
+    BoneToken(const Ast *mAst);
 
     const std::string &getText() const override;
 
 private:
-    Sym sym;
-    static std::string syms[128]; // MUST SYNC WITH # OF ENUM
+    Sym mSym;
+    static std::string mSyms[128]; // MUST SYNC WITH # OF ENUM
 };
 
 #endif // BONETOKEN_H

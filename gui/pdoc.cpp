@@ -7,14 +7,14 @@
 
 PDoc::PDoc(QObject *parent) :
     QObject(parent),
-    doc(new Doc(*this, *this))
+    mDoc(new Doc(*this, *this))
 {
 }
 
 void PDoc::load(QString filename)
 {
     try {
-        doc->load(filename.toStdString());
+        mDoc->load(filename.toStdString());
     } catch (const std::exception &e) {
         emit message(e.what());
     }
@@ -23,7 +23,7 @@ void PDoc::load(QString filename)
 void PDoc::save(QString filename)
 {
     try {
-        doc->save(filename.toStdString());
+        mDoc->save(filename.toStdString());
     } catch (const std::exception &e) {
         emit message(e.what());
     }
@@ -36,7 +36,7 @@ void PDoc::keyboard(QString key, int modifier)
         Key k = KeyCode::fromChar(c);
         if (modifier & Qt::ShiftModifier)
             k = KeyCode::makeShifted(k);
-        doc->keyboard(k);
+        mDoc->keyboard(k);
     }
 }
 

@@ -37,8 +37,8 @@ public:
     virtual const char *name() = 0;
 
 protected:
-    Mode(EditableDoc &doc) : doc(doc) {}
-    EditableDoc &doc;
+    Mode(EditableDoc &doc) : mDoc(doc) {}
+    EditableDoc &mDoc;
 };
 
 #endif // MODE_H

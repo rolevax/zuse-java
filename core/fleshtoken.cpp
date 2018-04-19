@@ -2,13 +2,13 @@
 
 FleshToken::FleshToken(const ScalarAst *ast) :
     Token(ast, Role::FLESH),
-    scalar(ast)
+    mScalar(ast)
 {
 
 }
 
 const std::string &FleshToken::getText() const
 {
-    return scalar->getText();
+    return mScalar->getText();
 }
 

@@ -1,15 +1,15 @@
 #include "mode/macrohandler.h"
 
 MacroHandler::MacroHandler(EditableDoc &doc)
-    : doc(doc)
+    : mDoc(doc)
 {
 
 }
 
 bool MacroHandler::macro(Key key, Mode *&nextPush)
 {
-    Ast::Type ot = doc.getOuter().getType();
-    if (ot == Ast::Type::CLASS_LIST && doc.getOuter().size() == 0)
+    Ast::Type ot = mDoc.getOuter().getType();
+    if (ot == Ast::Type::CLASS_LIST && mDoc.getOuter().size() == 0)
         return false;
 
     // meta comment:
@@ -32,19 +32,19 @@ bool MacroHandler::macro(Key key, Mode *&nextPush)
 
 bool MacroHandler::macroLeftParen(Mode *&nextPush)
 {
-    Ast::Type ot = doc.getOuter().getType();
-    Ast::Type it = doc.getInner().getType();
+    Ast::Type ot = mDoc.getOuter().getType();
+    Ast::Type it = mDoc.getInner().getType();
 
     if (ot == Ast::Type::MEMBER_LIST && it == Ast::Type::DECL_VAR) {
         // decl_var ==> decl_method
-        doc.cast(Ast::Type::DECL_METHOD);
+        mDoc.cast(Ast::Type::DECL_METHOD);
         // use offset 2 to skip return type and identifier
         nextPush = createMode(2);
         return true;
     } else if (ot == Ast::Type::DECL_VAR) {
         // dector --> decl_var ==> decl_method
-        doc.digOut();
-        doc.cast(Ast::Type::DECL_METHOD);
+        mDoc.digOut();
+        mDoc.cast(Ast::Type::DECL_METHOD);
         // use offset 2 to skip return type and identifier
         nextPush = createMode(2);
         return true;
@@ -52,10 +52,10 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
         if (it == Ast::Type::STMT_LIST) {
             // stmt_list ==> if_condbody
             // convert an 'else' into an 'else if'
-            doc.nestAsRight(Ast::Type::IF_CONDBODY);
-            doc.fallIn(); // inner becomes if-condition
+            mDoc.nestAsRight(Ast::Type::IF_CONDBODY);
+            mDoc.fallIn(); // inner becomes if-condition
         } else  {
-            doc.append(Ast::Type::IF_CONDBODY);
+            mDoc.append(Ast::Type::IF_CONDBODY);
         }
         nextPush = createMode();
         return true;
@@ -63,9 +63,9 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
         // if_condbody (bare) ==> if_list
         // if_list is ill-one and if_list.typeAt() == if_condbody
         // so this will create a if_condbody child
-        doc.nestAsLeft(Ast::Type::IF_LIST);
-        doc.fallIn();
-        doc.sibling(+1);
+        mDoc.nestAsLeft(Ast::Type::IF_LIST);
+        mDoc.fallIn();
+        mDoc.sibling(+1);
         nextPush = createMode();
         return true;
     } else if (ot == Ast::Type::IF_CONDBODY && it == Ast::Type::STMT_LIST) {
@@ -77,14 +77,14 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
         // it's may actullay be a bug and I'll think about it if I had time.
         // ...a solution may be "if the condition is a name, then make it a
         // method call; else append another if_condbody".
-        doc.digOut();
+        mDoc.digOut();
         return macroLeftParen(nextPush);
     } else if (ot == Ast::Type::TRY_LIST) {
-        doc.append(Ast::Type::CATCH);
+        mDoc.append(Ast::Type::CATCH);
         nextPush = createMode();
         return true;
     } else if (ot == Ast::Type::CATCH) {
-        doc.digOut();
+        mDoc.digOut();
         return macroLeftParen(nextPush);
     } else {
         return macroBop(Key::LEFT_PAREN, nextPush);
@@ -93,29 +93,29 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
 
 bool MacroHandler::macroLeftBrace(Mode *&nextPush)
 {
-    Ast::Type ot = doc.getOuter().getType();
-    Ast::Type it = doc.getInner().getType();
+    Ast::Type ot = mDoc.getOuter().getType();
+    Ast::Type it = mDoc.getInner().getType();
 
     if (ot == Ast::Type::IF_LIST) {
-        doc.append(Ast::Type::STMT_LIST);
+        mDoc.append(Ast::Type::STMT_LIST);
         nextPush = createMode();
         return true;
     } else if (it == Ast::Type::IF_CONDBODY) {
-        doc.nestAsLeft(Ast::Type::IF_LIST);
-        doc.fallIn(); // now outer is if_condbody (else if)
-        doc.sibling(+1);
-        doc.change(Ast::Type::STMT_LIST);
+        mDoc.nestAsLeft(Ast::Type::IF_LIST);
+        mDoc.fallIn(); // now outer is if_condbody (else if)
+        mDoc.sibling(+1);
+        mDoc.change(Ast::Type::STMT_LIST);
         nextPush = createMode();
         return true;
     } else if (ot == Ast::Type::IF_CONDBODY && it == Ast::Type::STMT_LIST) {
-        doc.digOut();
+        mDoc.digOut();
         return macroLeftBrace(nextPush);
     } else if (ot == Ast::Type::TRY_LIST) {
-        doc.append(Ast::Type::STMT_LIST);
+        mDoc.append(Ast::Type::STMT_LIST);
         nextPush = createMode();
         return true;
     } else if (ot == Ast::Type::CATCH) {
-        doc.digOut();
+        mDoc.digOut();
         return macroLeftBrace(nextPush);
     } else {
         return false;
@@ -124,7 +124,7 @@ bool MacroHandler::macroLeftBrace(Mode *&nextPush)
 
 bool MacroHandler::macroComma(Mode *&nextPush)
 {
-    const Ast *a = &doc.getOuter();
+    const Ast *a = &mDoc.getOuter();
     Ast::Type at;
     int digCount = 0;
 
@@ -141,19 +141,19 @@ bool MacroHandler::macroComma(Mode *&nextPush)
         return false; // comma-able node not found
     } else {
         while (digCount --> 0)
-            doc.digOut();
+            mDoc.digOut();
 
         if (at == Ast::Type::DECL_VAR) {
             // if there is a declarator list, variable declaration
             // node won't be reached in the loop.
             // so here we must nest.
-            doc.nestAsLeft(Ast::Type::DECTOR_LIST);
+            mDoc.nestAsLeft(Ast::Type::DECTOR_LIST);
             // TODO check nest with dector_list
-            doc.fallIn();
-            doc.sibling(+1);
+            mDoc.fallIn();
+            mDoc.sibling(+1);
         } else {
             // already had list
-            doc.append(doc.getOuter().typeAt(0));
+            mDoc.append(mDoc.getOuter().typeAt(0));
         }
         nextPush = createMode();
         return true;
@@ -162,7 +162,7 @@ bool MacroHandler::macroComma(Mode *&nextPush)
 
 bool MacroHandler::macroEnter(Mode *&nextPush, bool shift)
 {
-    const Ast *a = &doc.getOuter();
+    const Ast *a = &mDoc.getOuter();
     Ast::Type at;
     int digCount = 0;
 
@@ -176,12 +176,12 @@ bool MacroHandler::macroEnter(Mode *&nextPush, bool shift)
         return false; // statement list not found
     } else {
         while (digCount --> 0)
-            doc.digOut();
+            mDoc.digOut();
 
         if (shift)
-            doc.insert(doc.getOuter().typeAt(0));
+            mDoc.insert(mDoc.getOuter().typeAt(0));
         else
-            doc.append(doc.getOuter().typeAt(0));
+            mDoc.append(mDoc.getOuter().typeAt(0));
 
         nextPush = createMode();
         return true;
@@ -261,30 +261,30 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
 
     // simulate plain-text input by comparing precedence
     // and the inner should be the last child
-    while (Ast::precedence(type) < doc.getOuter().precedence()
-           && doc.getInnerIndex() == doc.getOuter().size() - 1)
-        doc.digOut();
+    while (Ast::precedence(type) < mDoc.getOuter().precedence()
+           && mDoc.getInnerIndex() == mDoc.getOuter().size() - 1)
+        mDoc.digOut();
 
     if (type == Ast::Type::CAST) {
-        doc.nestAsRight(type);
-        doc.fallIn();
-    } else if (doc.getOuter().getType() == type && doc.getOuter().isList()) {
-        doc.append(Ast::Type::META, op);
+        mDoc.nestAsRight(type);
+        mDoc.fallIn();
+    } else if (mDoc.getOuter().getType() == type && mDoc.getOuter().isList()) {
+        mDoc.append(Ast::Type::META, op);
     } else {
         if (type == Ast::Type::ASSIGN
-                && doc.getInner().getType() == Ast::Type::LOGIC_NOT) {
+                && mDoc.getInner().getType() == Ast::Type::LOGIC_NOT) {
             // !x ==> x != ??
-            doc.fallIn();
-            doc.expose();
+            mDoc.fallIn();
+            mDoc.expose();
             type = Ast::Type::NEQ;
         }
 
-        doc.nestAsLeft(type, op);
+        mDoc.nestAsLeft(type, op);
 
         // no need for modifying '!' and '~'
         if (!Ast::isFixSize(type, 1)) {
-            doc.fallIn();
-            doc.sibling(+1);
+            mDoc.fallIn();
+            mDoc.sibling(+1);
         }
     }
 
@@ -296,6 +296,6 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
 
 Mode *MacroHandler::createMode(int offset)
 {
-    return doc.createModifyMode(true, offset, true);
+    return mDoc.createModifyMode(true, offset, true);
 }
 

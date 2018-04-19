@@ -6,17 +6,17 @@
 
 StringInputMode::StringInputMode(EditableDoc &doc, bool clear) :
     Mode(doc),
-    clear(clear)
+    mClear(clear)
 {
 
 }
 
 Mode::Result StringInputMode::keyboard(Key key)
 {
-    assert(doc.getInner().getType() == Ast::Type::STRING);
+    assert(mDoc.getInner().getType() == Ast::Type::STRING);
 
     if (Key::DOUBLE_QUOTE == key) {
-        const std::string &text = doc.getInner().asScalar().getText();
+        const std::string &text = mDoc.getInner().asScalar().getText();
         // count postfix '\' run
         int backSlashCount = 0;
         for (auto it = text.rbegin(); it != text.rend() && '\\' == *it; ++it)
@@ -26,24 +26,24 @@ Mode::Result StringInputMode::keyboard(Key key)
         }
     }
 
-    doc.scalarAppend(KeyCode::toChar(key));
+    mDoc.scalarAppend(KeyCode::toChar(key));
     return DONE_STAY_NOPUSH;
 }
 
 Mode::Result StringInputMode::onPushed()
 {
-    if (clear) {
-        assert(doc.getInner().isScalar());
-        doc.scalarClear();
+    if (mClear) {
+        assert(mDoc.getInner().isScalar());
+        mDoc.scalarClear();
     }
 
-    doc.setHotLight(EditableDoc::HotLightLevel::POINT);
+    mDoc.setHotLight(EditableDoc::HotLightLevel::POINT);
     return DONE_STAY_NOPUSH;
 }
 
 void StringInputMode::onPopped()
 {
-    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+    mDoc.setHotLight(EditableDoc::HotLightLevel::OFF);
 }
 
 const char *StringInputMode::name()

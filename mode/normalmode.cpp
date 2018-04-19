@@ -10,39 +10,39 @@
 
 NormalMode::NormalMode(EditableDoc &doc)
     : Mode(doc)
-    , macro(doc)
+    , mMacro(doc)
 {
 
 }
 
 Mode::Result NormalMode::keyboard(Key key)
 {
-    if (doc.getOuter().getType() == Ast::Type::CLASS_LIST
-            && doc.getOuter().size() == 0
+    if (mDoc.getOuter().getType() == Ast::Type::CLASS_LIST
+            && mDoc.getOuter().size() == 0
             && key != Key::I && key != Key::S_I)
         return DONE_STAY_NOPUSH;
 
     Mode *nextPush = nullptr;
 
-    if (macro.macro(key, nextPush))
+    if (mMacro.macro(key, nextPush))
         return { ResultType::DONE_STAY, nextPush };
 
     switch (key) {
     // logical cursor moving
     case Key::G: // next node
-        doc.sibling(+1, true);
+        mDoc.sibling(+1, true);
         break;
     case Key::S: // previous node
-        doc.sibling(-1, true);
+        mDoc.sibling(-1, true);
         break;
     case Key::F: // fall-in, assart, or punch
-        if (!doc.getInner().isScalar()) {
-            if (doc.getInner().asInternal().size() > 0) {
-                doc.fallIn();
-                if (doc.getInner().getType() == Ast::Type::HIDDEN) {
+        if (!mDoc.getInner().isScalar()) {
+            if (mDoc.getInner().asInternal().size() > 0) {
+                mDoc.fallIn();
+                if (mDoc.getInner().getType() == Ast::Type::HIDDEN) {
                     // punch
-                    doc.change(Ast::Type::META);
-                    nextPush = doc.createModifyMode(true);
+                    mDoc.change(Ast::Type::META);
+                    nextPush = mDoc.createModifyMode(true);
                 }
             } else { // assart
                 nextPush = menulessListOp(ListOp::ASSART);
@@ -50,120 +50,120 @@ Mode::Result NormalMode::keyboard(Key key)
         }
         break;
     case Key::D: // dig-out
-        doc.digOut();
+        mDoc.digOut();
         break;
     case Key::S_S:
-        nextPush = new MenuMode(doc, MenuMode::Context::S_BIG);
+        nextPush = new MenuMode(mDoc, MenuMode::Context::S_BIG);
         break;
     case Key::S_G:
-        nextPush = new MenuMode(doc, MenuMode::Context::G_BIG);
+        nextPush = new MenuMode(mDoc, MenuMode::Context::G_BIG);
         break;
     case Key::S_F: // fall-search
-        if (!doc.getInner().isScalar()
-                && doc.getInner().asInternal().size() > 0)
-            nextPush = new MenuMode(doc, MenuMode::Context::FOCUS_IN_BIG);
+        if (!mDoc.getInner().isScalar()
+                && mDoc.getInner().asInternal().size() > 0)
+            nextPush = new MenuMode(mDoc, MenuMode::Context::FOCUS_IN_BIG);
         break;
     case Key::S_D: // dig-search
-        nextPush = new MenuMode(doc, MenuMode::Context::DOLLY_OUT_BIG);
+        nextPush = new MenuMode(mDoc, MenuMode::Context::DOLLY_OUT_BIG);
         break;
 
     // HIJK cursor moving
     case Key::H:
-        doc.hackLead(false);
+        mDoc.hackLead(false);
         break;
     case Key::L:
-        doc.hackLead(true);
+        mDoc.hackLead(true);
         break;
     case Key::K:
-        doc.jackKick(false);
+        mDoc.jackKick(false);
         break;
     case Key::J:
-        doc.jackKick(true);
+        mDoc.jackKick(true);
         break;
 
     // modification
     case Key::I: // insert
-        if (doc.getOuter().isList()) {
-            if (doc.getOuter().isBopList() && doc.getOuter().asBopList().numOp() > 1)
-                nextPush = new MenuMode(doc, MenuMode::Context::BOP_INSERT);
+        if (mDoc.getOuter().isList()) {
+            if (mDoc.getOuter().isBopList() && mDoc.getOuter().asBopList().numOp() > 1)
+                nextPush = new MenuMode(mDoc, MenuMode::Context::BOP_INSERT);
             else
                 nextPush = menulessListOp(ListOp::INSERT);
-        } else if (doc.getInnerIndex() > 0
-                   && doc.getOuter().at(doc.getInnerIndex() - 1).getType()
+        } else if (mDoc.getInnerIndex() > 0
+                   && mDoc.getOuter().at(mDoc.getInnerIndex() - 1).getType()
                    == Ast::Type::HIDDEN) {
-            doc.sibling(-1, false);
-            doc.change(doc.getOuter().typeAt(doc.getInnerIndex(), false));
-            nextPush = doc.createModifyMode(true);
+            mDoc.sibling(-1, false);
+            mDoc.change(mDoc.getOuter().typeAt(mDoc.getInnerIndex(), false));
+            nextPush = mDoc.createModifyMode(true);
         }
         break;
     case Key::O: // oh, append
-        if (doc.getOuter().isList()) {
-            if (doc.getOuter().isBopList() && doc.getOuter().asBopList().numOp() > 1)
-                nextPush = new MenuMode(doc, MenuMode::Context::BOP_APPEND);
+        if (mDoc.getOuter().isList()) {
+            if (mDoc.getOuter().isBopList() && mDoc.getOuter().asBopList().numOp() > 1)
+                nextPush = new MenuMode(mDoc, MenuMode::Context::BOP_APPEND);
             else
                 nextPush = menulessListOp(ListOp::APPEND);
-        } else if (doc.getInnerIndex() + 1 < doc.getOuter().size()
-                   && doc.getOuter().at(doc.getInnerIndex() + 1).getType()
+        } else if (mDoc.getInnerIndex() + 1 < mDoc.getOuter().size()
+                   && mDoc.getOuter().at(mDoc.getInnerIndex() + 1).getType()
                    == Ast::Type::HIDDEN) {
-            doc.sibling(+1, false);
-            doc.change(doc.getOuter().typeAt(doc.getInnerIndex(), false));
-            nextPush = doc.createModifyMode(true);
+            mDoc.sibling(+1, false);
+            mDoc.change(mDoc.getOuter().typeAt(mDoc.getInnerIndex(), false));
+            nextPush = mDoc.createModifyMode(true);
         }
         break;
     case Key::R: // remove
     case Key::S_R: // remove-clip
         if (key == Key::S_R)
-            doc.yank(doc.getInner());
-        doc.remove();
-        if (doc.getOuter().getType() != Ast::Type::CLASS_LIST
-                && doc.getInner().getType() == Ast::Type::HIDDEN) {
-            if (doc.getOuter().size() == 1)
-                doc.digOut();
+            mDoc.yank(mDoc.getInner());
+        mDoc.remove();
+        if (mDoc.getOuter().getType() != Ast::Type::CLASS_LIST
+                && mDoc.getInner().getType() == Ast::Type::HIDDEN) {
+            if (mDoc.getOuter().size() == 1)
+                mDoc.digOut();
             else
-                doc.sibling(-1, true);
+                mDoc.sibling(-1, true);
         }
         break;
     case Key::Y: // yank
-        doc.yank(doc.getInner());
+        mDoc.yank(mDoc.getInner());
         break;
     case Key::P: // switch clipslot
-        nextPush = new MenuMode(doc, MenuMode::Context::SWITCH_CLIP);
+        nextPush = new MenuMode(mDoc, MenuMode::Context::SWITCH_CLIP);
         break;
     case Key::C: // change
     case Key::S_C: // change-clip
         if (key == Key::S_C)
-            doc.yank(doc.getInner());
-        doc.change(doc.getOuter().typeAt(doc.getInnerIndex()));
-        nextPush = doc.createModifyMode(true);
+            mDoc.yank(mDoc.getInner());
+        mDoc.change(mDoc.getOuter().typeAt(mDoc.getInnerIndex()));
+        nextPush = mDoc.createModifyMode(true);
         break;
     case Key::N: // nest as left
-        nextPush = new MenuMode(doc, MenuMode::Context::NEST_AS_LEFT);
+        nextPush = new MenuMode(mDoc, MenuMode::Context::NEST_AS_LEFT);
         break;
     case Key::S_N: // nest as right
-        nextPush = new MenuMode(doc, MenuMode::Context::NEST_AS_RIGHT);
+        nextPush = new MenuMode(mDoc, MenuMode::Context::NEST_AS_RIGHT);
         break;
     case Key::X: // expose
     case Key::S_X: // expose-clip
         if (key == Key::S_X) {
-            if (doc.getOuter().size() == 2) {
+            if (mDoc.getOuter().size() == 2) {
                 // if inner is 1, clip 0; vice versa
-                size_t toClip = 1 - doc.getInnerIndex();
-                doc.yank(doc.getOuter().at(toClip));
+                size_t toClip = 1 - mDoc.getInnerIndex();
+                mDoc.yank(mDoc.getOuter().at(toClip));
             }
         }
-        doc.expose();
+        mDoc.expose();
         break;
     case Key::M: // modify
     case Key::S_M: {
         bool clear = key == Key::S_M;
-        if (doc.getInner().isScalar())
-            nextPush = doc.createModifyMode(clear);
-        else if (doc.getOuter().getType() == Ast::Type::MEMBER_LIST
-                 || doc.getOuter().getType() == Ast::Type::CLASS_LIST)
-            nextPush = new MoggleMode(doc);
-        else if (doc.getInner().getType() == Ast::Type::DECL_PARAM
-                 || doc.getInner().getType() == Ast::Type::DECL_VAR) // local var
-            doc.toggleFinal();
+        if (mDoc.getInner().isScalar())
+            nextPush = mDoc.createModifyMode(clear);
+        else if (mDoc.getOuter().getType() == Ast::Type::MEMBER_LIST
+                 || mDoc.getOuter().getType() == Ast::Type::CLASS_LIST)
+            nextPush = new MoggleMode(mDoc);
+        else if (mDoc.getInner().getType() == Ast::Type::DECL_PARAM
+                 || mDoc.getInner().getType() == Ast::Type::DECL_VAR) // local var
+            mDoc.toggleFinal();
         break;
     }
     default:
@@ -180,15 +180,15 @@ const char *NormalMode::name()
 
 Mode *NormalMode::menulessListOp(ListOp op)
 {
-    const ListAst &l = (op == ListOp::ASSART ? doc.getInner()
-                                             : doc.getOuter()).asList();
+    const ListAst &l = (op == ListOp::ASSART ? mDoc.getInner()
+                                             : mDoc.getOuter()).asList();
     Ast::Type tar;
     switch (op) {
     case ListOp::INSERT:
-        tar = l.typeAt(doc.getInnerIndex());
+        tar = l.typeAt(mDoc.getInnerIndex());
         break;
     case ListOp::APPEND:
-        tar = l.typeAt(doc.getInnerIndex() + 1);
+        tar = l.typeAt(mDoc.getInnerIndex() + 1);
         break;
     case ListOp::ASSART:
         tar = l.typeAt(0);
@@ -197,18 +197,18 @@ Mode *NormalMode::menulessListOp(ListOp op)
 
     switch (op) {
     case ListOp::INSERT:
-        doc.insert(tar);
+        mDoc.insert(tar);
         break;
     case ListOp::APPEND:
-        doc.append(tar);
+        mDoc.append(tar);
         break;
     case ListOp::ASSART:
-        doc.assart(tar);
+        mDoc.assart(tar);
         break;
     }
 
     // after insertion jobs
-    return doc.createModifyMode(true);
+    return mDoc.createModifyMode(true);
 }
 
 

@@ -3,7 +3,7 @@
 #include <vector>
 #include <cassert>
 
-std::string BoneToken::syms[128]
+std::string BoneToken::mSyms[128]
 {
     "class ", "interface ", " extends ", " implements ",
     " {", "{", "}", "", "(", ")", "[", "]",
@@ -24,7 +24,7 @@ std::string BoneToken::syms[128]
 
 BoneToken::BoneToken(const Ast *ast, Sym sym) :
     Token(ast, Role::BONE),
-    sym(sym)
+    mSym(sym)
 {
 }
 
@@ -33,99 +33,99 @@ BoneToken::BoneToken(const Ast *ast) :
 {
     switch (ast->getType()) {
     case Ast::Type::SHL:
-        sym = Sym::SHL;
+        mSym = Sym::SHL;
         break;
     case Ast::Type::SHR:
-        sym = Sym::SHR;
+        mSym = Sym::SHR;
         break;
     case Ast::Type::SHRA:
-        sym = Sym::SHRA;
+        mSym = Sym::SHRA;
         break;
     case Ast::Type::LT:
-        sym = Sym::LT;
+        mSym = Sym::LT;
         break;
     case Ast::Type::LEQ:
-        sym = Sym::LEQ;
+        mSym = Sym::LEQ;
         break;
     case Ast::Type::GT:
-        sym = Sym::GT;
+        mSym = Sym::GT;
         break;
     case Ast::Type::GEQ:
-        sym = Sym::GEQ;
+        mSym = Sym::GEQ;
         break;
     case Ast::Type::INSTANCEOF:
-        sym = Sym::INSTANCEOF;
+        mSym = Sym::INSTANCEOF;
         break;
     case Ast::Type::EQ:
-        sym = Sym::EQ;
+        mSym = Sym::EQ;
         break;
     case Ast::Type::NEQ:
-        sym = Sym::NEQ;
+        mSym = Sym::NEQ;
         break;
     case Ast::Type::BIT_OR:
-        sym = Sym::BIT_OR;
+        mSym = Sym::BIT_OR;
         break;
     case Ast::Type::BIT_XOR:
-        sym = Sym::BIT_XOR;
+        mSym = Sym::BIT_XOR;
         break;
     case Ast::Type::BIT_AND:
-        sym = Sym::BIT_AND;
+        mSym = Sym::BIT_AND;
         break;
     case Ast::Type::ASSIGN:
-        sym = Sym::ASSIGN;
+        mSym = Sym::ASSIGN;
         break;
     case Ast::Type::ASS_ADD:
-        sym = Sym::ASS_ADD;
+        mSym = Sym::ASS_ADD;
         break;
     case Ast::Type::ASS_SUB:
-        sym = Sym::ASS_SUB;
+        mSym = Sym::ASS_SUB;
         break;
     case Ast::Type::ASS_MUL:
-        sym = Sym::ASS_MUL;
+        mSym = Sym::ASS_MUL;
         break;
     case Ast::Type::ASS_DIV:
-        sym = Sym::ASS_DIV;
+        mSym = Sym::ASS_DIV;
         break;
     case Ast::Type::ASS_MOD:
-        sym = Sym::ASS_MOD;
+        mSym = Sym::ASS_MOD;
         break;
     case Ast::Type::ASS_AND:
-        sym = Sym::ASS_AND;
+        mSym = Sym::ASS_AND;
         break;
     case Ast::Type::ASS_XOR:
-        sym = Sym::ASS_XOR;
+        mSym = Sym::ASS_XOR;
         break;
     case Ast::Type::ASS_OR:
-        sym = Sym::ASS_OR;
+        mSym = Sym::ASS_OR;
         break;
     case Ast::Type::ASS_SHL:
-        sym = Sym::ASS_SHL;
+        mSym = Sym::ASS_SHL;
         break;
     case Ast::Type::ASS_SHR:
-        sym = Sym::ASS_SHR;
+        mSym = Sym::ASS_SHR;
         break;
     case Ast::Type::ASS_SHRA:
-        sym = Sym::ASS_SHRA;
+        mSym = Sym::ASS_SHRA;
         break;
     case Ast::Type::POST_INC:
     case Ast::Type::PRE_INC:
-        sym = Sym::INC;
+        mSym = Sym::INC;
         break;
     case Ast::Type::POST_DEC:
     case Ast::Type::PRE_DEC:
-        sym = Sym::DEC;
+        mSym = Sym::DEC;
         break;
     case Ast::Type::UNARY_PLUS:
-        sym = Sym::UNARY_PLUS;
+        mSym = Sym::UNARY_PLUS;
         break;
     case Ast::Type::UNARY_MINUS:
-        sym = Sym::UNARY_MINUS;
+        mSym = Sym::UNARY_MINUS;
         break;
     case Ast::Type::LOGIC_NOT:
-        sym = Sym::LOGIC_NOT;
+        mSym = Sym::LOGIC_NOT;
         break;
     case Ast::Type::BIT_NOT:
-        sym = Sym::BIT_NOT;
+        mSym = Sym::BIT_NOT;
         break;
     default:
         throw "unhandled";
@@ -137,7 +137,7 @@ const std::string &BoneToken::getText() const
     static std::vector<std::string> tabBrace;
     static std::vector<std::string> tabOnly;
 
-    if (sym == Sym::RBRACE || sym == Sym::RBRACE_VT) {
+    if (mSym == Sym::RBRACE || mSym == Sym::RBRACE_VT) {
         size_t level = getAst()->indentLevel();
         if (level >= tabBrace.size()) {
             for (size_t i = tabBrace.size(); i <= level; i++) {
@@ -145,9 +145,9 @@ const std::string &BoneToken::getText() const
                 tabBrace.push_back(tabOnly.back() + '}');
             }
         }
-        return sym == Sym::RBRACE ? tabBrace[level] : tabOnly[level];
+        return mSym == Sym::RBRACE ? tabBrace[level] : tabOnly[level];
     } else {
-        return syms[static_cast<size_t>(sym)];
+        return mSyms[static_cast<size_t>(mSym)];
     }
 }
 

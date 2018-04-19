@@ -6,7 +6,7 @@
 class MacroHandler
 {
 public:
-    explicit MacroHandler(EditableDoc &doc);
+    explicit MacroHandler(EditableDoc &mDoc);
 
     MacroHandler(const MacroHandler& copy) = delete;
     MacroHandler &operator=(const MacroHandler &assign) = delete;
@@ -22,7 +22,7 @@ private:
     Mode *createMode(int offset = 0);
 
 private:
-    EditableDoc &doc;
+    EditableDoc &mDoc;
 };
 
 #endif // MACROHANDLER_H

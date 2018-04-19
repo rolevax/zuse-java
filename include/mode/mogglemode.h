@@ -6,7 +6,7 @@
 class MoggleMode : public Mode
 {
 public:
-    MoggleMode(EditableDoc &doc);
+    MoggleMode(EditableDoc &mDoc);
 
     Result keyboard(Key key) override;
     Result onPushed() override;

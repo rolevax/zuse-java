@@ -85,14 +85,14 @@ private:
     ///@}
 
 private:
-    std::vector<std::unique_ptr<Mode>> modes;
-    std::unique_ptr<RootAst> root = nullptr;
-    InternalAst *outer = nullptr;
-    size_t inner = 0;
-    std::unique_ptr<Ast> clipslots[26];
-    size_t clipIndex = 0;
-    Tokens tokens;
-    PDoc &ob;
+    std::vector<std::unique_ptr<Mode>> mModes;
+    std::unique_ptr<RootAst> mRoot = nullptr;
+    InternalAst *mOuter = nullptr;
+    size_t mInner = 0;
+    std::unique_ptr<Ast> mClipslots[26];
+    size_t mClipIndex = 0;
+    Tokens mTokens;
+    PDoc &mOb;
 };
 
 #endif // DOC_H

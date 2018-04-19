@@ -7,12 +7,12 @@
 class FleshToken : public Token
 {
 public:
-    FleshToken(const ScalarAst *ast);
+    FleshToken(const ScalarAst *mAst);
 
     const std::string &getText() const override;
 
 private:
-    const ScalarAst *scalar;
+    const ScalarAst *mScalar;
 };
 
 #endif // FLESHTOKEN_H

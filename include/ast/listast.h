@@ -31,7 +31,7 @@ protected:
     void doChange(size_t pos, Ast *next) override;
 
 private:
-    std::vector<std::unique_ptr<Ast>> subtrees;
+    std::vector<std::unique_ptr<Ast>> mSubtrees;
 };
 
 #endif // LISTAST_H

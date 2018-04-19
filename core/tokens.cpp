@@ -10,15 +10,15 @@
 #include <sstream>
 
 Tokens::Tokens(TokensObserver &ob) :
-    hammer(*this),
-    ob(ob)
+    mHammer(*this),
+    mOb(ob)
 {
     clear();
 }
 
 void Tokens::setHotLight(ssize_t back)
 {
-    ob.observeHotLight(back);
+    mOb.observeHotLight(back);
 }
 
 /**
@@ -32,24 +32,24 @@ void Tokens::light(const Ast *inner)
     Ast *outer = &inner->getParent();
     Region out = anchor(locate(outer));
 
-    ob.observeLight(out.br, out.bc, out.er, out.ec,
+    mOb.observeLight(out.br, out.bc, out.er, out.ec,
                     in.br, in.bc, in.er, in.ec);
 }
 
 void Tokens::clear()
 {
-    if (rows.size() > 1)
-        ob.observeRemoveLine(1, rows.size() - 1);
-    rows.clear();
-    rows.emplace_back();
-    ob.observeUpdateLine(0, pluck(0));
+    if (mRows.size() > 1)
+        mOb.observeRemoveLine(1, mRows.size() - 1);
+    mRows.clear();
+    mRows.emplace_back();
+    mOb.observeUpdateLine(0, pluck(0));
 }
 
 void Tokens::sync(const ListAst *root)
 {
     assert(root->getType() == Ast::Type::CLASS_LIST);
     clear();
-    hammer.hit(*root, 0, 0);
+    mHammer.hit(*root, 0, 0);
 }
 
 /**
@@ -60,7 +60,7 @@ void Tokens::updateScalar(const InternalAst *outer, size_t inner)
     assert(outer->at(inner).isScalar());
     Region r = locate(&outer->at(inner));
 
-    ob.observeUpdateLine(r.br, pluck(r.br));
+    mOb.observeUpdateLine(r.br, pluck(r.br));
 }
 
 /**
@@ -68,10 +68,10 @@ void Tokens::updateScalar(const InternalAst *outer, size_t inner)
  */
 std::string Tokens::pluck(size_t r)
 {
-    assert(r < rows.size());
+    assert(r < mRows.size());
 
     std::string ret;
-    for (const std::unique_ptr<Token> &t : rows[r])
+    for (const std::unique_ptr<Token> &t : mRows[r])
         ret += t->getText();
 
     return ret;
@@ -94,18 +94,18 @@ void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
     }
 
     for (ssize_t i = down ? r.er + 1 : r.br - 1;
-         down ? i < ssize_t(rows.size()) : i >= 0;
+         down ? i < ssize_t(mRows.size()) : i >= 0;
          down ? i++ : i--) {
         std::vector<size_t> fleshes;
-        for (size_t j = 0; j < rows[i].size(); j++)
-            if (isHjklTarget(rows[i][j]->getAst()))
+        for (size_t j = 0; j < mRows[i].size(); j++)
+            if (isHjklTarget(mRows[i][j]->getAst()))
                 fleshes.push_back(j);
 
         if (!fleshes.empty()) {
             auto evalDiff = [this, i, sugg](size_t j)
             {
                 size_t left = anchor(i, j);
-                size_t right = left + rows[i][j]->getText().size();
+                size_t right = left + mRows[i][j]->getText().size();
                 size_t mid = (left + right) / 2;
                 return std::abs(ssize_t(mid) - ssize_t(sugg));
             };
@@ -122,7 +122,7 @@ void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
                 }
             }
 
-            const Ast *a = rows[i][tar]->getAst();
+            const Ast *a = mRows[i][tar]->getAst();
             outer = &a->getParent();
             inner = outer->indexOf(a);
 
@@ -145,9 +145,9 @@ void Tokens::hackLead(InternalAst *&outer, size_t &inner, bool right)
         return;
 
     for (size_t i = right ? r.ec + 1 : r.bc - 1;
-         right ? i < rows[r.br].size() : i > 0; right ? i++ : i--) {
-        if (isHjklTarget(rows[r.br][i]->getAst())) {
-            const Ast *a = rows[r.br][i]->getAst();
+         right ? i < mRows[r.br].size() : i > 0; right ? i++ : i--) {
+        if (isHjklTarget(mRows[r.br][i]->getAst())) {
+            const Ast *a = mRows[r.br][i]->getAst();
             outer = &a->getParent();
             inner = outer->indexOf(a);
             break;
@@ -167,17 +167,17 @@ void Tokens::put(size_t r, size_t c, const std::vector<Token *> &ts)
             ++r;
             c = 0;
         } else {
-            auto &row = rows[r];
+            auto &row = mRows[r];
             row.emplace(row.begin() + c, t);
             ++c;
         }
     }
 
     if (r > origR)
-    ob.observeInsertLine(origR, r - origR);
+    mOb.observeInsertLine(origR, r - origR);
 
     while (origR <= r) {
-        ob.observeUpdateLine(origR, pluck(origR));
+        mOb.observeUpdateLine(origR, pluck(origR));
         ++origR;
     }
 }
@@ -189,8 +189,8 @@ void Tokens::put(size_t r, size_t c, const std::vector<Token *> &ts)
  */
 void Tokens::erase(const Region &r)
 {
-    assert(r.br < rows.size() && r.bc < rows[r.br].size());
-    assert(r.er < rows.size() && r.ec < rows[r.er].size());
+    assert(r.br < mRows.size() && r.bc < mRows[r.br].size());
+    assert(r.er < mRows.size() && r.ec < mRows[r.er].size());
     assert(r.br <= r.er);
 
     int needJoin = 0;
@@ -230,7 +230,7 @@ void Tokens::erase(const Region &r)
     while (needJoin --> 0)
         joinLine(r.br + 1);
 
-    ob.observeUpdateLine(r.br, pluck(r.br));
+    mOb.observeUpdateLine(r.br, pluck(r.br));
 }
 
 bool Tokens::isHjklTarget(const Ast *a)
@@ -243,7 +243,7 @@ bool Tokens::isHjklTarget(const Ast *a)
  */
 std::ostream &operator<<(std::ostream &os, const Tokens &ts)
 {
-    for (const auto &row : ts.rows) {
+    for (const auto &row : ts.mRows) {
         for (const auto &t : row)
             os << t->getText();
         os << std::endl;
@@ -262,16 +262,16 @@ Region Tokens::locate(const Ast *tar)
     Region res;
     bool found = false; // debug use
 
-    for (auto rit = rows.begin(); rit != rows.end(); ++rit) {
+    for (auto rit = mRows.begin(); rit != mRows.end(); ++rit) {
         for (auto cit = rit->begin(); cit != rit->end(); ++cit) {
             const Ast *a = (*cit)->getAst();
             if (a == tar) {
                 Token::Role role = (*cit)->getRole();
                 if (role == Token::Role::BEGIN) {
-                    res.br = rit - rows.begin();
+                    res.br = rit - mRows.begin();
                     res.bc = cit - rit->begin();
                 } else if (role == Token::Role::END) {
-                    res.er = rit - rows.begin();
+                    res.er = rit - mRows.begin();
                     res.ec = cit - rit->begin();
                     found = true;
                     break;
@@ -294,19 +294,19 @@ Region Tokens::locate(const Ast *tar)
  */
 void Tokens::suckComma(Region &r)
 {
-    const Ast *in = rows[r.br][r.bc]->getAst();
+    const Ast *in = mRows[r.br][r.bc]->getAst();
     const InternalAst &par = in->getParent();
     if (par.size() > 1) {
         if (par.indexOf(in) == par.size() - 1) {
             /* very end of a non-single-element list
                then include the previous comma,
                which is assumed to be the end of the previous row. */
-            if (rows[r.br - 1].back()->getAst() == &par) {
+            if (mRows[r.br - 1].back()->getAst() == &par) {
                 --r.br;
-                r.bc = rows[r.br].size() - 1;
+                r.bc = mRows[r.br].size() - 1;
             }
         } else { // first or internel list element
-            if (rows[r.er][r.ec + 1]->getAst() == &par)
+            if (mRows[r.er][r.ec + 1]->getAst() == &par)
                 ++r.ec; // include the following comma
         }
     }
@@ -314,13 +314,13 @@ void Tokens::suckComma(Region &r)
 
 void Tokens::newLine(size_t r, size_t c)
 {
-    assert(r < rows.size() && c <= rows[r].size());
-    rows.emplace(rows.begin() + r + 1);
-    auto &newRow = rows[r + 1];
+    assert(r < mRows.size() && c <= mRows[r].size());
+    mRows.emplace(mRows.begin() + r + 1);
+    auto &newRow = mRows[r + 1];
     newRow.insert(newRow.end(),
-                  std::make_move_iterator(rows[r].begin() + c),
-                  std::make_move_iterator(rows[r].end()));
-    rows[r].erase(rows[r].begin() + c, rows[r].end());
+                  std::make_move_iterator(mRows[r].begin() + c),
+                  std::make_move_iterator(mRows[r].end()));
+    mRows[r].erase(mRows[r].begin() + c, mRows[r].end());
 }
 
 /**
@@ -329,12 +329,12 @@ void Tokens::newLine(size_t r, size_t c)
  */
 void Tokens::joinLine(size_t r)
 {
-    assert(r > 0 && r < rows.size());
-    auto &prevRow = rows[r - 1];
+    assert(r > 0 && r < mRows.size());
+    auto &prevRow = mRows[r - 1];
     prevRow.insert(prevRow.end(),
-                   std::make_move_iterator(rows[r].begin()),
-                   std::make_move_iterator(rows[r].end()));
-    rows.erase(rows.begin() + r);
+                   std::make_move_iterator(mRows[r].begin()),
+                   std::make_move_iterator(mRows[r].end()));
+    mRows.erase(mRows.begin() + r);
 }
 
 /**
@@ -346,10 +346,10 @@ void Tokens::joinLine(size_t r)
  */
 size_t Tokens::anchor(size_t r, size_t c)
 {
-    assert(r < rows.size() && c <= rows[r].size());
+    assert(r < mRows.size() && c <= mRows[r].size());
     size_t offset = 0;
     for (size_t i = 0; i < c; i++)
-        offset += rows[r][i]->getText().size();
+        offset += mRows[r][i]->getText().size();
     return offset;
 }
 
@@ -359,7 +359,7 @@ Region Tokens::anchor(const Region &r)
    c.bc = anchor(c.br, c.bc);
    if (r.br != r.er && r.ec == 0) {
        c.er = r.er - 1;
-       c.ec = anchor(r.er - 1, rows[r.er - 1].size());
+       c.ec = anchor(r.er - 1, mRows[r.er - 1].size());
    } else {
        c.ec = anchor(c.er, c.ec + 1);
    }

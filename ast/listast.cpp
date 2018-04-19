@@ -32,12 +32,12 @@ ListAst *ListAst::clone() const
 
 size_t ListAst::size() const
 {
-    return subtrees.size();
+    return mSubtrees.size();
 }
 
 Ast &ListAst::at(size_t pos) const
 {
-    return *subtrees[pos];
+    return *mSubtrees[pos];
 }
 
 size_t ListAst::indexOf(const Ast *child) const
@@ -45,12 +45,12 @@ size_t ListAst::indexOf(const Ast *child) const
     auto eq = [child](const std::unique_ptr<Ast> &a) {
         return a.get() == child;
     };
-    auto it = std::find_if(subtrees.begin(), subtrees.end(), eq);
+    auto it = std::find_if(mSubtrees.begin(), mSubtrees.end(), eq);
 
-    if (it == subtrees.end())
+    if (it == mSubtrees.end())
         return assert(false && "child not found"), 0;
     else
-        return it - subtrees.begin();
+        return it - mSubtrees.begin();
 }
 
 void ListAst::insert(size_t pos, Ast *child)
@@ -71,15 +71,15 @@ void ListAst::erase(size_t pos)
 
 Ast *ListAst::remove(size_t pos)
 {
-    assert(pos < subtrees.size());
-    Ast *res = subtrees[pos].release();
-    subtrees.erase(subtrees.begin() + pos);
+    assert(pos < mSubtrees.size());
+    Ast *res = mSubtrees[pos].release();
+    mSubtrees.erase(mSubtrees.begin() + pos);
     return res;
 }
 
 void ListAst::clear()
 {
-    subtrees.clear();
+    mSubtrees.clear();
 }
 
 bool ListAst::illZero(bool assumeSize) const
@@ -109,12 +109,12 @@ bool ListAst::illOne(bool assumeSize) const
 
 void ListAst::doInsert(size_t pos, Ast *child)
 {
-    subtrees.emplace(subtrees.begin() + pos, child);
+    mSubtrees.emplace(mSubtrees.begin() + pos, child);
 }
 
 void ListAst::doChange(size_t pos, Ast *next)
 {
-    assert(pos < subtrees.size());
-    subtrees[pos].reset(next);
+    assert(pos < mSubtrees.size());
+    mSubtrees[pos].reset(next);
 }
 

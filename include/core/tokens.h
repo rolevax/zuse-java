@@ -9,7 +9,7 @@
 class Tokens
 {
 public:
-    Tokens(TokensObserver &ob);
+    Tokens(TokensObserver &mOb);
 
     Tokens(const Tokens&) = delete;
     Tokens &operator=(const Tokens&) = delete;
@@ -41,9 +41,9 @@ private:
     Region anchor(const Region &r);
 
 private:
-    std::vector<std::vector<std::unique_ptr<Token>>> rows;
-    Hammer hammer;
-    TokensObserver &ob;
+    std::vector<std::vector<std::unique_ptr<Token>>> mRows;
+    Hammer mHammer;
+    TokensObserver &mOb;
 };
 
 std::ostream &operator<<(std::ostream &os, const Tokens &ts);

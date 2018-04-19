@@ -8,30 +8,30 @@
 
 IdentInputMode::IdentInputMode(EditableDoc &doc, bool clear)
     : Mode(doc),
-      clear(clear)
+      mClear(clear)
 {
 
 }
 
 Mode::Result IdentInputMode::keyboard(Key key)
 {
-    assert(doc.getInner().getType() == Ast::Type::IDENT);
+    assert(mDoc.getInner().getType() == Ast::Type::IDENT);
 
     if (key == Key::SPACE) {
         Mode *nextPush = promotion();
         return { ResultType::DONE_POP, nextPush };
     }
 
-    if (clear) {
-        doc.setHotLight(EditableDoc::HotLightLevel::POINT);
-        doc.scalarClear();
-        clear = false;
+    if (mClear) {
+        mDoc.setHotLight(EditableDoc::HotLightLevel::POINT);
+        mDoc.scalarClear();
+        mClear = false;
     }
 
     if (KeyCode::isAlpha(key) || KeyCode::isDigit(key)
             || key == Key::BACKSPACE || key == Key::UNDERSCORE
             || key == Key::DOLLAR) {
-        doc.scalarAppend(KeyCode::toChar(key));
+        mDoc.scalarAppend(KeyCode::toChar(key));
         return DONE_STAY_NOPUSH;
     } else {
         return RAISE_POP_NOPUSH;
@@ -40,16 +40,16 @@ Mode::Result IdentInputMode::keyboard(Key key)
 
 Mode::Result IdentInputMode::onPushed()
 {
-    if (clear)
-        doc.setHotLight(EditableDoc::HotLightLevel::AREA);
+    if (mClear)
+        mDoc.setHotLight(EditableDoc::HotLightLevel::AREA);
     else
-        doc.setHotLight(EditableDoc::HotLightLevel::POINT);
+        mDoc.setHotLight(EditableDoc::HotLightLevel::POINT);
     return DONE_STAY_NOPUSH;
 }
 
 void IdentInputMode::onPopped()
 {
-    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+    mDoc.setHotLight(EditableDoc::HotLightLevel::OFF);
 }
 
 const char *IdentInputMode::name()
@@ -111,44 +111,44 @@ Mode *IdentInputMode::promoteToDeclVar()
                 || (ot == Ast::Type::FOR && inner == 0);
     };
 
-    const std::string &text = doc.getInner().asScalar().getText();
+    const std::string &text = mDoc.getInner().asScalar().getText();
     if (isType(text)) {
         // case 1: check bare identifier
-        Ast::Type otype = doc.getOuter().getType();
-        if (canHaveDeclVar(otype, doc.getInnerIndex())) {
-            doc.nestAsLeft(Ast::Type::DECL_VAR);
-            return doc.createModifyMode(true, 1);
+        Ast::Type otype = mDoc.getOuter().getType();
+        if (canHaveDeclVar(otype, mDoc.getInnerIndex())) {
+            mDoc.nestAsLeft(Ast::Type::DECL_VAR);
+            return mDoc.createModifyMode(true, 1);
         }
 
         // case 2: check qualified name
         if (otype == Ast::Type::DOT_BOP_LIST) {
-            const BopListAst &bast = doc.getOuter().asBopList();
+            const BopListAst &bast = mDoc.getOuter().asBopList();
             assert(bast.size() >= 2);
             size_t i = 1;
             while (i != bast.size() && bast.opAt(i) == BopListAst::DOT)
                 i++;
             if (i == bast.size()) { // all op is member access
-                Ast::Type ootype = doc.getOuter().getParent().getType();
-                size_t oInOo = doc.getOuter().getParent().indexOf(&doc.getOuter());
+                Ast::Type ootype = mDoc.getOuter().getParent().getType();
+                size_t oInOo = mDoc.getOuter().getParent().indexOf(&mDoc.getOuter());
                 if (canHaveDeclVar(ootype, oInOo)) {
-                    doc.digOut();
-                    doc.nestAsLeft(Ast::Type::DECL_VAR);
-                    return doc.createModifyMode(true, 1);
+                    mDoc.digOut();
+                    mDoc.nestAsLeft(Ast::Type::DECL_VAR);
+                    return mDoc.createModifyMode(true, 1);
                 }
             }
         }
     } else if (int modId = isModifier(text)) {
-        Ast::Type otype = doc.getOuter().getType();
-        if (canHaveDeclVar(otype, doc.getInnerIndex())) {
-            doc.change(Ast::Type::DECL_VAR);
+        Ast::Type otype = mDoc.getOuter().getType();
+        if (canHaveDeclVar(otype, mDoc.getInnerIndex())) {
+            mDoc.change(Ast::Type::DECL_VAR);
             setModifier(modId);
-            return doc.createModifyMode(true, 0);
+            return mDoc.createModifyMode(true, 0);
         } else if (otype == Ast::Type::DECL_PARAM) {
-            doc.digOut();
-            doc.toggleFinal();
-            doc.fallIn();
+            mDoc.digOut();
+            mDoc.toggleFinal();
+            mDoc.fallIn();
             // silent onResume() if fix-size-mode and re-input the identifier
-            return doc.createModifyMode(true, 0);
+            return mDoc.createModifyMode(true, 0);
         }
     }
 
@@ -157,29 +157,29 @@ Mode *IdentInputMode::promoteToDeclVar()
 
 Mode *IdentInputMode::promoteByKeyword()
 {
-    const std::string &text = doc.getInner().asScalar().getText();
+    const std::string &text = mDoc.getInner().asScalar().getText();
     if (text == "while") {
-        doc.change(Ast::Type::WHILE);
-        return doc.createModifyMode(true, 0);
+        mDoc.change(Ast::Type::WHILE);
+        return mDoc.createModifyMode(true, 0);
     } else if (text == "if") {
-        doc.change(Ast::Type::IF_CONDBODY);
-        return doc.createModifyMode(true, 0);
+        mDoc.change(Ast::Type::IF_CONDBODY);
+        return mDoc.createModifyMode(true, 0);
     } else if (text == "do") {
-        doc.change(Ast::Type::DO_WHILE);
-        return doc.createModifyMode(true, 0);
+        mDoc.change(Ast::Type::DO_WHILE);
+        return mDoc.createModifyMode(true, 0);
     } else if (text == "for") {
-        doc.change(Ast::Type::FOR);
-        return doc.createModifyMode(true, 0);
+        mDoc.change(Ast::Type::FOR);
+        return mDoc.createModifyMode(true, 0);
     } else if (text == "return") {
-        doc.change(Ast::Type::RETURN);
+        mDoc.change(Ast::Type::RETURN);
         return nullptr; // manually punch or not punch
     } else if (text == "try") {
-        doc.change(Ast::Type::TRY_LIST);
-        doc.fallIn(); // now inner is stmt_list
-        return doc.createModifyMode(true); // a list input mode
+        mDoc.change(Ast::Type::TRY_LIST);
+        mDoc.fallIn(); // now inner is stmt_list
+        return mDoc.createModifyMode(true); // a list input mode
     } else if (text == "new") {
-        doc.change(Ast::Type::NEW_CLASS);
-        return doc.createModifyMode(true, 0);
+        mDoc.change(Ast::Type::NEW_CLASS);
+        return mDoc.createModifyMode(true, 0);
     }
 
     return nullptr;
@@ -188,24 +188,24 @@ Mode *IdentInputMode::promoteByKeyword()
 void IdentInputMode::setModifier(int modId)
 {
     if (modId == 1)
-        doc.toggleAbstract();
+        mDoc.toggleAbstract();
     else if(modId == 2)
-        doc.toggleFinal();
+        mDoc.toggleFinal();
     else if (modId == 3)
-        doc.toggleAccess(true);
+        mDoc.toggleAccess(true);
     else if (modId == 4)
-        doc.toggleAccess(true), doc.toggleAccess(true);
+        mDoc.toggleAccess(true), mDoc.toggleAccess(true);
     else if (modId == 5)
-        doc.toggleAccess(false);
+        mDoc.toggleAccess(false);
     else if (modId == 6)
-        doc.toggleStatic();
+        mDoc.toggleStatic();
     else if (modId == 7)
-        doc.toggleTransient();
+        mDoc.toggleTransient();
     else if (modId == 8)
-        doc.toggleVolatile();
+        mDoc.toggleVolatile();
     else if (modId == 9)
-        doc.toggleNative();
+        mDoc.toggleNative();
     else if (modId == 10)
-        doc.toggleSynchronized();
+        mDoc.toggleSynchronized();
 }
 

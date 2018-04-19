@@ -8,7 +8,7 @@
 class FixSizeInputMode : public Mode
 {
 public:
-    explicit FixSizeInputMode(EditableDoc &doc, const InternalAst &f,
+    explicit FixSizeInputMode(EditableDoc &mDoc, const InternalAst &f,
                               size_t offset = 0);
 
     Result keyboard(Key key) override;
@@ -21,9 +21,9 @@ private:
     Result pushOrWait();
 
 private:
-    const InternalAst &ast;
-    size_t stage;
-    MacroHandler macro;
+    const InternalAst &mAst;
+    size_t mStage;
+    MacroHandler mMacro;
 };
 
 #endif // FIXSIZEINPUTMODE_H

@@ -25,32 +25,32 @@
 #include <cstdlib>
 
 Doc::Doc(PDoc &dob, TokensObserver &tob)
-    : tokens(tob),
-      ob(dob)
+    : mTokens(tob),
+      mOb(dob)
 {
-    modes.emplace_back(new NormalMode(*this));
+    mModes.emplace_back(new NormalMode(*this));
 }
 
 void Doc::load(const std::string &filename)
 {
-    if (modes.size() > 1)
+    if (mModes.size() > 1)
         throw std::runtime_error("Load failed: modifying mode not popped");
 
-    root.reset(yaloe::parse(filename));
-    outer = root.get();
-    inner = 0;
+    mRoot.reset(yaloe::parse(filename));
+    mOuter = mRoot.get();
+    mInner = 0;
 
-    tokens.sync(root.get());
-    tokens.light(&outer->at(inner));
+    mTokens.sync(mRoot.get());
+    mTokens.light(&mOuter->at(mInner));
 }
 
 void Doc::save(const std::string &filename)
 {
-    if (modes.size() > 1)
+    if (mModes.size() > 1)
         throw std::runtime_error("Save failed: modifying mode not popped");
 
     std::ofstream ofs(filename.c_str());
-    ofs << tokens;
+    ofs << mTokens;
     ofs.close();
 }
 
@@ -60,18 +60,18 @@ void Doc::save(const std::string &filename)
  */
 void Doc::keyboard(Key key)
 {
-    assert(modes.size() > 0);
+    assert(mModes.size() > 0);
 
-    for (int i = modes.size() - 1; i >= 0; i--) {
-        assert(i < int(modes.size()));
-        Mode::Result res = modes[i]->keyboard(key);
+    for (int i = mModes.size() - 1; i >= 0; i--) {
+        assert(i < int(mModes.size()));
+        Mode::Result res = mModes[i]->keyboard(key);
         handleModeResult(res);
         if (res.handled())
             break;
     }
 
-    if (root->size() > 0)
-        tokens.light(&outer->at(inner));
+    if (mRoot->size() > 0)
+        mTokens.light(&mOuter->at(mInner));
 }
 
 /**
@@ -84,9 +84,9 @@ void Doc::push(Mode *mode)
     if (mode == nullptr)
         return;
 
-    modes.emplace_back(mode);
-    ob.observePush(modes.back()->name());
-    Mode::Result res = modes.back()->onPushed();
+    mModes.emplace_back(mode);
+    mOb.observePush(mModes.back()->name());
+    Mode::Result res = mModes.back()->onPushed();
     handleModeResult(res);
     assert(res.handled());
 }
@@ -97,12 +97,12 @@ void Doc::push(Mode *mode)
  */
 void Doc::pop()
 {
-    assert(modes.size() > 1); // bottom normal mode reserved
+    assert(mModes.size() > 1); // bottom normal mode reserved
 
-    ob.observePop();
+    mOb.observePop();
 
-    std::unique_ptr<Mode> popped = std::move(modes.back());
-    modes.pop_back();
+    std::unique_ptr<Mode> popped = std::move(mModes.back());
+    mModes.pop_back();
     popped->onPopped();
 }
 
@@ -112,7 +112,7 @@ void Doc::handleModeResult(const Mode::Result &res)
         pop();
         push(res.nextPush);
         if (res.type == Mode::ResultType::DONE_POP) {
-            Mode::Result r = modes.back()->onResume();
+            Mode::Result r = mModes.back()->onResume();
             handleModeResult(r);
         }
     } else { // stay on the stack
@@ -122,88 +122,88 @@ void Doc::handleModeResult(const Mode::Result &res)
 
 const InternalAst &Doc::getOuter() const
 {
-    return *outer;
+    return *mOuter;
 }
 
 const Ast &Doc::getInner() const
 {
-    return outer->at(inner);
+    return mOuter->at(mInner);
 }
 
 size_t Doc::getInnerIndex() const
 {
-    return inner;
+    return mInner;
 }
 
 void Doc::fallIn()
 {
-    assert(inner < outer->size());
+    assert(mInner < mOuter->size());
 
-    InternalAst &focus = outer->at(inner).asInternal();
+    InternalAst &focus = mOuter->at(mInner).asInternal();
     assert(focus.size() > 0);
 
     if (focus.isList()) {
-        outer = &focus;
-        inner = 0;
+        mOuter = &focus;
+        mInner = 0;
     } else {
         assert(focus.isFixSize());
-        outer = &focus;
-        inner = 0;
+        mOuter = &focus;
+        mInner = 0;
     }
 }
 
 void Doc::digOut()
 {
-    if (outer == root.get())
+    if (mOuter == mRoot.get())
         return;
 
-    InternalAst *nextOuter = &outer->getParent();
-    inner = nextOuter->indexOf(outer);
-    outer = nextOuter;
+    InternalAst *nextOuter = &mOuter->getParent();
+    mInner = nextOuter->indexOf(mOuter);
+    mOuter = nextOuter;
 }
 
 void Doc::sibling(int step, bool skipHidden)
 {
-    size_t size = outer->size();
+    size_t size = mOuter->size();
     if (skipHidden) {
-        if (step == 0 || outer->size() < 2)
+        if (step == 0 || mOuter->size() < 2)
             return;
 
         // assume there is no internal node whose children are all hidden
         // such that this loop always terminate
         int dir = step > 0 ? 1 : -1;
         while (step != 0) {
-            inner = (inner + dir) % size;
+            mInner = (mInner + dir) % size;
             if (getInner().getType() != Ast::Type::HIDDEN)
                 step -= dir;
         }
     } else {
-        inner = (ssize_t(inner + size) + step) % size;
+        mInner = (ssize_t(mInner + size) + step) % size;
     }
 }
 
 void Doc::jackKick(bool down)
 {
-    tokens.jackKick(outer, inner, down);
+    mTokens.jackKick(mOuter, mInner, down);
 }
 
 void Doc::hackLead(bool right)
 {
-    tokens.hackLead(outer, inner, right);
+    mTokens.hackLead(mOuter, mInner, right);
 }
 
 void Doc::focusInBig(bool match(const Ast*))
 {
     std::queue<Ast*> queue;
-    queue.push(&outer->at(inner));
+    queue.push(&mOuter->at(mInner));
 
     // breadth-first search
     while (!queue.empty()) {
         Ast *test = queue.front();
         queue.pop();
-        if (match(test) && test != &outer->at(inner)) { // found
-            outer = &test->getParent();
-            inner = outer->indexOf(test);
+        if (match(test) && test != &mOuter->at(mInner)) { // found
+            mOuter = &test->getParent();
+            mInner = mOuter->indexOf(test);
             break;
         } else if (!test->isScalar()) { // keep searching
             InternalAst &inTest = test->asInternal();
@@ -218,15 +218,15 @@ void Doc::focusInBig(bool match(const Ast*))
 void Doc::focusInBig(Ast::Type match)
 {
     std::queue<Ast*> queue;
-    queue.push(&outer->at(inner));
+    queue.push(&mOuter->at(mInner));
 
     // breadth-first search
     while (!queue.empty()) {
         Ast *test = queue.front();
         queue.pop();
-        if (test->getType() == match && test != &outer->at(inner)) { // found
-            outer = &test->getParent();
-            inner = outer->indexOf(test);
+        if (test->getType() == match && test != &mOuter->at(mInner)) { // found
+            mOuter = &test->getParent();
+            mInner = mOuter->indexOf(test);
             break;
         } else if (!test->isScalar()) { // keep searching
             InternalAst &inTest = test->asInternal();
@@ -240,11 +240,11 @@ void Doc::focusInBig(Ast::Type match)
 
 void Doc::dollyOutBig(bool match(const Ast *))
 {
-    const Ast *a = outer;
+    const Ast *a = mOuter;
     while (a->getType() != Ast::Type::CLASS_LIST) {
         if (match(a)) {
-            outer = &a->getParent();
-            inner = outer->indexOf(a);
+            mOuter = &a->getParent();
+            mInner = mOuter->indexOf(a);
             return;
         }
         a = &a->getParent();
@@ -253,12 +253,12 @@ void Doc::dollyOutBig(bool match(const Ast *))
 
 void Doc::dollyOutBig(Ast::Type match)
 {
-    const Ast *a = outer;
+    const Ast *a = mOuter;
 
     while (a->getType() != Ast::Type::CLASS_LIST) {
         if (a->getType() == match) {
-            outer = &a->getParent();
-            inner = outer->indexOf(a);
+            mOuter = &a->getParent();
+            mInner = mOuter->indexOf(a);
             return;
         }
         a = &a->getParent();
@@ -267,25 +267,25 @@ void Doc::dollyOutBig(Ast::Type match)
 
 void Doc::siblingBig(bool match(const Ast *), bool right)
 {
-    if (inner == 0 && !right)
+    if (mInner == 0 && !right)
         return; // no elder sibling (ensure 'inner-1' not overflow)
 
     std::queue<Ast*> queue;
     if (right) {
-        for (size_t i = inner + 1; i < outer->size(); i++)
-            queue.push(&outer->at(i));
+        for (size_t i = mInner + 1; i < mOuter->size(); i++)
+            queue.push(&mOuter->at(i));
     } else {
-        for (ssize_t i = inner - 1; i >= 0; i--)
-            queue.push(&outer->at(i));
+        for (ssize_t i = mInner - 1; i >= 0; i--)
+            queue.push(&mOuter->at(i));
     }
 
     // breadth-first search
     while (!queue.empty()) {
         Ast *test = queue.front();
         queue.pop();
-        if (match(test) && test != &outer->at(inner)) { // found
-            outer = &test->getParent();
-            inner = outer->indexOf(test);
+        if (match(test) && test != &mOuter->at(mInner)) { // found
+            mOuter = &test->getParent();
+            mInner = mOuter->indexOf(test);
             break;
         } else if (!test->isScalar()) { // keep searching
             InternalAst &inTest = test->asInternal();
@@ -304,16 +304,16 @@ void Doc::siblingBig(bool match(const Ast *), bool right)
 
 void Doc::siblingBig(Ast::Type match, bool right)
 {
-    if (inner == 0 && !right)
+    if (mInner == 0 && !right)
         return; // no elder sibling (ensure 'inner-1' not overflow)
 
     std::queue<Ast*> queue;
     if (right) {
-        for (size_t i = inner + 1; i < outer->size(); i++)
-            queue.push(&outer->at(i));
+        for (size_t i = mInner + 1; i < mOuter->size(); i++)
+            queue.push(&mOuter->at(i));
     } else {
-        for (ssize_t i = inner - 1; i >= 0; i--)
-            queue.push(&outer->at(i));
+        for (ssize_t i = mInner - 1; i >= 0; i--)
+            queue.push(&mOuter->at(i));
     }
 
 
@@ -321,9 +321,9 @@ void Doc::siblingBig(Ast::Type match, bool right)
     while (!queue.empty()) {
         Ast *test = queue.front();
         queue.pop();
-        if (test->getType() == match && test != &outer->at(inner)) { // found
-            outer = &test->getParent();
-            inner = outer->indexOf(test);
+        if (test->getType() == match && test != &mOuter->at(mInner)) { // found
+            mOuter = &test->getParent();
+            mInner = mOuter->indexOf(test);
             break;
         } else if (!test->isScalar()) { // keep searching
             InternalAst &inTest = test->asInternal();
@@ -346,80 +346,80 @@ void Doc::siblingBig(Ast::Type match, bool right)
  */
 void Doc::insert(Ast::Type type, int bop)
 {
-    assert(inner <= outer->size());
+    assert(mInner <= mOuter->size());
 
     Ast *a = newTree(type);
 
-    outer->asList().insert(inner, a);
+    mOuter->asList().insert(mInner, a);
     if (BopListAst::UNUSED != bop) {
-        BopListAst &bast = outer->asBopList();
-        setBop(outer->asBopList(), inner, bast.opAt(inner + 1));
-        setBop(outer->asBopList(), inner + 1, bop);
+        BopListAst &bast = mOuter->asBopList();
+        setBop(mOuter->asBopList(), mInner, bast.opAt(mInner + 1));
+        setBop(mOuter->asBopList(), mInner + 1, bop);
     }
 
-    tokens.sync(root.get());
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::append(Ast::Type type, int bop)
 {
-    ++inner;
-    assert(inner <= outer->size());
+    ++mInner;
+    assert(mInner <= mOuter->size());
 
     Ast *a = newTree(type);
 
-    outer->asList().insert(inner, a);
+    mOuter->asList().insert(mInner, a);
     if (BopListAst::UNUSED != bop)
-        setBop(outer->asBopList(), inner, bop);
+        setBop(mOuter->asBopList(), mInner, bop);
 
-    tokens.sync(root.get());
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::assart(Ast::Type type, int bop)
 {
-    outer = &outer->at(inner).asInternal();
-    inner = 0;
+    mOuter = &mOuter->at(mInner).asInternal();
+    mInner = 0;
 
-    assert(outer->size() == 0);
+    assert(mOuter->size() == 0);
 
     insert(type, bop);
 }
 
 void Doc::remove()
 {
-    assert(inner < outer->size());
+    assert(mInner < mOuter->size());
 
     // only handle list ill-one and ill-zero
     // does not care about hidden node issues.
     // hidden node issues are done in normal mode
-    if (outer->isList()) {
-        ListAst *l = &outer->asList();
-        l->erase(inner);
+    if (mOuter->isList()) {
+        ListAst *l = &mOuter->asList();
+        l->erase(mInner);
 
         bool toRemoveSelf = l->illZero();
         bool toExposeChild = l->illOne();
 
-        if (outer->size() == 0)
+        if (mOuter->size() == 0)
             digOut();
-        else if (inner >= outer->size())
-            --inner;
+        else if (mInner >= mOuter->size())
+            --mInner;
 
         if (toRemoveSelf)
             remove();
         else if (toExposeChild)
             expose();
     } else {
-        change(outer->typeAt(inner));
+        change(mOuter->typeAt(mInner));
     }
 
-    tokens.sync(root.get());
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::change(Ast *a)
 {
-    assert(inner < outer->size());
+    assert(mInner < mOuter->size());
 
-    outer->change(inner, a);
-    tokens.sync(root.get());
+    mOuter->change(mInner, a);
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::change(Ast::Type type)
@@ -429,39 +429,39 @@ void Doc::change(Ast::Type type)
 
 void Doc::nestAsLeft(Ast::Type type, int bop)
 {
-    assert(inner < outer->size());
+    assert(mInner < mOuter->size());
 
     InternalAst *nester = &newTree(type)->asInternal();
-    outer->nestAsLeft(inner, nester);
+    mOuter->nestAsLeft(mInner, nester);
 
     if (BopListAst::UNUSED != bop)
-        setBop(outer->at(inner).asBopList(), 1, bop); // set inner, not outer!
+        setBop(mOuter->at(mInner).asBopList(), 1, bop); // set inner, not outer!
 
-    tokens.sync(root.get());
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::nestAsRight(Ast::Type type, int bop)
 {
-    assert(inner < outer->size());
+    assert(mInner < mOuter->size());
 
     InternalAst *nester = &newTree(type)->asInternal();
-    outer->nestAsRight(inner, nester);
+    mOuter->nestAsRight(mInner, nester);
 
     if (BopListAst::UNUSED != bop)
-        setBop(outer->at(inner).asBopList(), 1, bop); // set inner, not outer!
+        setBop(mOuter->at(mInner).asBopList(), 1, bop); // set inner, not outer!
 
-    tokens.sync(root.get());
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::expose()
 {
-    assert(inner < outer->size());
+    assert(mInner < mOuter->size());
 
-    size_t exposee = inner;
+    size_t exposee = mInner;
     digOut();
-    outer->expose(inner, exposee);
+    mOuter->expose(mInner, exposee);
 
-    tokens.sync(root.get());
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::cast(Ast::Type to)
@@ -481,7 +481,7 @@ void Doc::cast(Ast::Type to)
             // copy return type and name
             a->change(0, getInner().asInternal().at(0).clone());
             a->change(1, getInner().asInternal().at(1).clone());
-            outer->change(inner, a);
+            mOuter->change(mInner, a);
         }
     } else if (Ast::isFixSize(from, 2)
                 || (Ast::isBopList(from) && getInner().asBopList().size() == 2)) {
@@ -491,11 +491,11 @@ void Doc::cast(Ast::Type to)
             InternalAst *a = &newTree(to)->asInternal();
             a->change(0, getInner().asInternal().at(0).clone());
             a->change(1, getInner().asInternal().at(1).clone());
-            outer->change(inner, a);
+            mOuter->change(mInner, a);
         }
     }
 
-    tokens.sync(root.get());
+    mTokens.sync(mRoot.get());
 }
 
 Mode *Doc::createModifyMode(bool clear, size_t offset, bool macroContext)
@@ -521,123 +521,123 @@ Mode *Doc::createModifyMode(bool clear, size_t offset, bool macroContext)
 
 void Doc::scalarAppend(const char *str)
 {
-    ScalarAst &scalar = outer->at(inner).asScalar();
+    ScalarAst &scalar = mOuter->at(mInner).asScalar();
     while ('\0' != *str)
         scalar.append(*str++);
-    tokens.updateScalar(outer, inner);
+    mTokens.updateScalar(mOuter, mInner);
 }
 
 void Doc::scalarAppend(char c)
 {
-    outer->at(inner).asScalar().append(c);
-    tokens.updateScalar(outer, inner);
+    mOuter->at(mInner).asScalar().append(c);
+    mTokens.updateScalar(mOuter, mInner);
 }
 
 void Doc::scalarClear()
 {
-    outer->at(inner).asScalar().clear();
-    tokens.updateScalar(outer, inner);
+    mOuter->at(mInner).asScalar().clear();
+    mTokens.updateScalar(mOuter, mInner);
 }
 
 void Doc::listClear()
 {
-    outer->at(inner).asList().clear();
+    mOuter->at(mInner).asList().clear();
 }
 
 void Doc::toggleAbstract()
 {
-    FixSizes::getModifiers(outer->at(inner)).abstract ^= 1;
-    tokens.sync(root.get());
+    FixSizes::getModifiers(mOuter->at(mInner)).abstract ^= 1;
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::toggleFinal()
 {
-    FixSizes::getModifiers(outer->at(inner)).final ^= 1;
-    tokens.sync(root.get());
+    FixSizes::getModifiers(mOuter->at(mInner)).final ^= 1;
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::toggleAccess(bool up)
 {
     // circulate by guarenteed 2-bit overflow
     if (up)
-        FixSizes::getModifiers(outer->at(inner)).access++;
+        FixSizes::getModifiers(mOuter->at(mInner)).access++;
     else
-        FixSizes::getModifiers(outer->at(inner)).access--;
-    tokens.sync(root.get());
+        FixSizes::getModifiers(mOuter->at(mInner)).access--;
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::toggleStatic()
 {
-    FixSizes::getModifiers(outer->at(inner)).statik ^= 1;
-    tokens.sync(root.get());
+    FixSizes::getModifiers(mOuter->at(mInner)).statik ^= 1;
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::toggleTransient()
 {
-    FixSizes::getModifiers(outer->at(inner)).transient ^= 1;
-    tokens.sync(root.get());
+    FixSizes::getModifiers(mOuter->at(mInner)).transient ^= 1;
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::toggleVolatile()
 {
-    FixSizes::getModifiers(outer->at(inner)).voladile ^= 1;
-    tokens.sync(root.get());
+    FixSizes::getModifiers(mOuter->at(mInner)).voladile ^= 1;
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::toggleNative()
 {
-    FixSizes::getModifiers(outer->at(inner)).native ^= 1;
-    tokens.sync(root.get());
+    FixSizes::getModifiers(mOuter->at(mInner)).native ^= 1;
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::toggleSynchronized()
 {
-    FixSizes::getModifiers(outer->at(inner)).synchronized ^= 1;
-    tokens.sync(root.get());
+    FixSizes::getModifiers(mOuter->at(mInner)).synchronized ^= 1;
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::switchClip(char c)
 {
     assert('a' <= c && c <= 'z');
-    clipIndex = c - 'a';
-    ob.observeSwitchClip(c);
+    mClipIndex = c - 'a';
+    mOb.observeSwitchClip(c);
 }
 
 void Doc::yank(const Ast &a)
 {
-    clipslots[clipIndex].reset(a.clone());
+    mClipslots[mClipIndex].reset(a.clone());
 }
 
 void Doc::paste()
 {
-    if (clipslots[clipIndex] == nullptr)
+    if (mClipslots[mClipIndex] == nullptr)
         return;
 
-    Ast *a = clipslots[clipIndex]->clone();
-    outer->change(inner, a);
-    tokens.sync(root.get());
+    Ast *a = mClipslots[mClipIndex]->clone();
+    mOuter->change(mInner, a);
+    mTokens.sync(mRoot.get());
 }
 
 void Doc::setHotLight(HotLightLevel level)
 {
     switch (level) {
     case HotLightLevel::OFF:
-        tokens.setHotLight(-1); // TODO: de-magic
+        mTokens.setHotLight(-1); // TODO: de-magic
         break;
     case HotLightLevel::POINT: {
         ssize_t back = getInner().getType() == Ast::Type::STRING ? 1 : 0;
-        tokens.setHotLight(back);
+        mTokens.setHotLight(back);
         break;
     }
     case HotLightLevel::AREA:
-        tokens.setHotLight(-2); // TODO: de-magic
+        mTokens.setHotLight(-2); // TODO: de-magic
         break;
     }
 }
 
 void Doc::toggleTension(bool b)
 {
-    ob.observeTension(b);
+    mOb.observeTension(b);
 }
 
 void Doc::setBop(BopListAst &blist, size_t pos, int bop)

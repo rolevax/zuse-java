@@ -47,7 +47,7 @@ signals:
 public slots:
 
 private:
-    std::unique_ptr<Doc> doc;
+    std::unique_ptr<Doc> mDoc;
 };
 
 #endif // PDOC_H

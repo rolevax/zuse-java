@@ -17,31 +17,31 @@ Mode::Result MoggleMode::keyboard(Key key)
     case Key::M:
         return DONE_POP_NOPUSH;
     case Key::A:
-        doc.toggleAbstract();
+        mDoc.toggleAbstract();
         break;
     case Key::F:
-        doc.toggleFinal();
+        mDoc.toggleFinal();
         break;
     case Key::P:
-        doc.toggleAccess(true);
+        mDoc.toggleAccess(true);
         break;
     case Key::S_P:
-        doc.toggleAccess(false);
+        mDoc.toggleAccess(false);
         break;
     case Key::S:
-        doc.toggleStatic();
+        mDoc.toggleStatic();
         break;
     case Key::T:
-        doc.toggleTransient();
+        mDoc.toggleTransient();
         break;
     case Key::V:
-        doc.toggleVolatile();
+        mDoc.toggleVolatile();
         break;
     case Key::N:
-        doc.toggleNative();
+        mDoc.toggleNative();
         break;
     case Key::C:
-        doc.toggleSynchronized();
+        mDoc.toggleSynchronized();
         break;
     default:
         break;
@@ -52,15 +52,15 @@ Mode::Result MoggleMode::keyboard(Key key)
 
 Mode::Result MoggleMode::onPushed()
 {
-    assert(doc.getInner().isFixSize());
+    assert(mDoc.getInner().isFixSize());
 
-    doc.toggleTension(true);
+    mDoc.toggleTension(true);
     return DONE_STAY_NOPUSH;
 }
 
 void MoggleMode::onPopped()
 {
-    doc.toggleTension(false);
+    mDoc.toggleTension(false);
 }
 
 const char *MoggleMode::name()

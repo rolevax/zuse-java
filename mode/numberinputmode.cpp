@@ -6,14 +6,14 @@
 
 NumberInputMode::NumberInputMode(EditableDoc &doc, bool clear) :
     Mode(doc),
-    clear(clear)
+    mClear(clear)
 {
 
 }
 
 Mode::Result NumberInputMode::keyboard(Key key)
 {
-    assert(doc.getInner().getType() == Ast::Type::NUMBER);
+    assert(mDoc.getInner().getType() == Ast::Type::NUMBER);
 
     if (Key::SPACE == key)
         return DONE_POP_NOPUSH;
@@ -38,24 +38,24 @@ Mode::Result NumberInputMode::keyboard(Key key)
     else
         return RAISE_POP_NOPUSH;
 
-    doc.scalarAppend(input);
+    mDoc.scalarAppend(input);
     return DONE_STAY_NOPUSH;
 }
 
 Mode::Result NumberInputMode::onPushed()
 {
-    if (clear) {
-        assert(doc.getInner().getType() == Ast::Type::NUMBER);
-        doc.scalarClear();
+    if (mClear) {
+        assert(mDoc.getInner().getType() == Ast::Type::NUMBER);
+        mDoc.scalarClear();
     }
 
-    doc.setHotLight(EditableDoc::HotLightLevel::POINT);
+    mDoc.setHotLight(EditableDoc::HotLightLevel::POINT);
     return DONE_STAY_NOPUSH;
 }
 
 void NumberInputMode::onPopped()
 {
-    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+    mDoc.setHotLight(EditableDoc::HotLightLevel::OFF);
 }
 
 const char *NumberInputMode::name()

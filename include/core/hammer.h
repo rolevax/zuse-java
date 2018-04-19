@@ -12,7 +12,7 @@ class Tokens;
 class Hammer
 {
 public:
-    Hammer(Tokens &tokens);
+    Hammer(Tokens &mTokens);
 
     Hammer(const Hammer&) = delete;
     Hammer &operator=(const Hammer&) = delete;
@@ -53,7 +53,7 @@ private:
     void bone(const Ast &ast, Buf &buf, BoneToken::Sym sym);
 
 private:
-    Tokens &tokens;
+    Tokens &mTokens;
 };
 
 #endif // HAMMER_H

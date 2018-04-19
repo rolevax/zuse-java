@@ -7,7 +7,7 @@
 class NormalMode : public Mode
 {
 public:
-    NormalMode(EditableDoc &doc);
+    NormalMode(EditableDoc &mDoc);
 
     Result keyboard(Key key) override;
     const char *name() override;
@@ -16,7 +16,8 @@ private:
     enum class ListOp { INSERT, APPEND, ASSART };
     Mode *menulessListOp(ListOp op);
 
-    MacroHandler macro;
+private:
+    MacroHandler mMacro;
 };
 
 #endif // NORMALMODE_H

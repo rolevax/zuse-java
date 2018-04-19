@@ -77,7 +77,7 @@ BopListAst *BopListAst::clone() const
 Ast *BopListAst::remove(size_t pos)
 {
     Ast *ret = ListAst::remove(pos);
-    ops.erase(ops.begin() + pos);
+    mOps.erase(mOps.begin() + pos);
     return ret;
 }
 
@@ -85,20 +85,20 @@ void BopListAst::clear()
 {
     // TODO: this causes ill-zero. is this ok?
     ListAst::clear();
-    ops.clear();
+    mOps.clear();
 }
 
 int BopListAst::opAt(size_t pos) const
 {
     assert(pos < size());
-    return ops[pos];
+    return mOps[pos];
 }
 
 void BopListAst::setOpAt(size_t pos, int op)
 {
     assert(pos < size());
     assert(0 <= op && op < numOp());
-    ops[pos] = op;
+    mOps[pos] = op;
 }
 
 int BopListAst::numOp() const
@@ -121,7 +121,7 @@ int BopListAst::numOp() const
 void BopListAst::doInsert(size_t pos, Ast *child)
 {
     ListAst::doInsert(pos, child);
-    ops.insert(ops.begin() + pos, 0);
+    mOps.insert(mOps.begin() + pos, 0);
 }
 
 BopListAst::BopListAst(Ast::Type t)

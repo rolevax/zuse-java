@@ -7,7 +7,7 @@ void FixSizeAst<N>::dump() const
 {
     std::cout << "(";
     for (size_t i = 0; i < N; i++) {
-        subtrees[i]->dump();
+        mSubtrees[i]->dump();
         if (i != N - 1)
             std::cout << ", ";
     }
@@ -18,7 +18,7 @@ template<std::size_t N>
 FixSizeAst<N> *FixSizeAst<N>::clone() const
 {
     FixSizeAst<N> *ret = new FixSizeAst<N>(getType());
-    ret->modifiers = modifiers;
+    ret->mModifiers = mModifiers;
     for (size_t i = 0; i < N; i++)
         ret->change(i, at(i).clone());
     return ret;
@@ -34,41 +34,41 @@ template<std::size_t N>
 Ast &FixSizeAst<N>::at(size_t pos) const
 {
     assert(pos < N);
-    return *subtrees[pos];
+    return *mSubtrees[pos];
 }
 
 template<std::size_t N>
 size_t FixSizeAst<N>::indexOf(const Ast *child) const
 {
     auto eq = [child](const std::unique_ptr<Ast> &p) { return p.get() == child; };
-    auto it = std::find_if(subtrees.begin(), subtrees.end(), eq);
-    assert(it != subtrees.end());
-    return it - subtrees.begin();
+    auto it = std::find_if(mSubtrees.begin(), mSubtrees.end(), eq);
+    assert(it != mSubtrees.end());
+    return it - mSubtrees.begin();
 }
 
 template<std::size_t N>
 Modifiers &FixSizeAst<N>::getModifiers()
 {
-    return modifiers;
+    return mModifiers;
 }
 
 template<std::size_t N>
 const Modifiers &FixSizeAst<N>::getModifiers() const
 {
-    return modifiers;
+    return mModifiers;
 }
 
 template<std::size_t N>
 void FixSizeAst<N>::setModifiers(const Modifiers &m)
 {
-    modifiers = m;
+    mModifiers = m;
 }
 
 template<std::size_t N>
 void FixSizeAst<N>::doChange(size_t pos, Ast *next)
 {
     assert(pos < N);
-    subtrees[pos].reset(next);
+    mSubtrees[pos].reset(next);
 }
 
 template<std::size_t N>

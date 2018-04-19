@@ -6,7 +6,7 @@
 class ListInputMode : public Mode
 {
 public:
-    ListInputMode(EditableDoc &doc);
+    ListInputMode(EditableDoc &mDoc);
     Result onPushed() override;
     const char *name() override;
 };

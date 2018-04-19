@@ -6,7 +6,7 @@
 class NumberInputMode : public Mode
 {
 public:
-    NumberInputMode(EditableDoc &doc, bool clear);
+    NumberInputMode(EditableDoc &mDoc, bool mClear);
 
     Result keyboard(Key key) override;
     Result onPushed() override;
@@ -14,7 +14,7 @@ public:
     const char *name() override;
 
 private:
-    bool clear;
+    bool mClear;
 };
 
 #endif // NUMBERINPUTMODE_H

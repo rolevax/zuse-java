@@ -38,7 +38,7 @@ private:
     bool isRightAssoc() const;
 
 private:
-    std::vector<int> ops;
+    std::vector<int> mOps;
 };
 
 #endif // BOPLISTAST_H

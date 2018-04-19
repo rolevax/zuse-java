@@ -18,7 +18,7 @@ static bool matchStmt(const Ast *a)
 
 MenuMode::MenuMode(EditableDoc &doc, Context context) :
     Mode(doc),
-    context(context)
+    mContext(context)
 {
 
 }
@@ -31,72 +31,72 @@ Mode::Result MenuMode::keyboard(Key key)
     Ast::Type ktype = keyToType(key);
     int bop = keyToBop(key);
 
-    switch (context) {
+    switch (mContext) {
     case Context::BOP_INSERT:
     case Context::BOP_APPEND: {
-        if (context == Context::BOP_INSERT) {
-            doc.insert(ktype, bop);
+        if (mContext == Context::BOP_INSERT) {
+            mDoc.insert(ktype, bop);
         } else {
-            doc.append(ktype, bop);
+            mDoc.append(ktype, bop);
         }
         break;
     }
     case Context::NEST_AS_LEFT:
         // TODO: smart condition check (nester cannot be scalar)
         if (ktype != Ast::Type::META) {
-            doc.nestAsLeft(ktype, bop);
-            doc.fallIn();
-            doc.sibling(+1);
+            mDoc.nestAsLeft(ktype, bop);
+            mDoc.fallIn();
+            mDoc.sibling(+1);
         }
         break;
     case Context::NEST_AS_RIGHT:
         // TODO: smart condition check (nester cannot be scalar)
         if (ktype != Ast::Type::META) {
-            doc.nestAsRight(ktype, bop);
-            doc.fallIn();
+            mDoc.nestAsRight(ktype, bop);
+            mDoc.fallIn();
         }
         break;
     case Context::FOCUS_IN_BIG:
         switch (key) {
         case Key::S:
-            doc.focusInBig(matchStmt);
+            mDoc.focusInBig(matchStmt);
             break;
         default:
             if (ktype != Ast::Type::META)
-                doc.focusInBig(ktype);
+                mDoc.focusInBig(ktype);
             break;
         }
         break;
     case Context::DOLLY_OUT_BIG:
         switch (key) {
         case Key::S:
-            doc.dollyOutBig(matchStmt);
+            mDoc.dollyOutBig(matchStmt);
             break;
         default:
             if (ktype != Ast::Type::META)
-                doc.dollyOutBig(ktype);
+                mDoc.dollyOutBig(ktype);
             break;
         }
         break;
     case Context::S_BIG:
         switch (key) {
         case Key::S:
-            doc.siblingBig(matchStmt, false);
+            mDoc.siblingBig(matchStmt, false);
             break;
         default:
             if (ktype != Ast::Type::META)
-                doc.siblingBig(ktype, false);
+                mDoc.siblingBig(ktype, false);
             break;
         }
         break;
     case Context::G_BIG:
         switch (key) {
         case Key::S:
-            doc.siblingBig(matchStmt, true);
+            mDoc.siblingBig(matchStmt, true);
             break;
         default:
             if (ktype != Ast::Type::META)
-                doc.siblingBig(ktype, true);
+                mDoc.siblingBig(ktype, true);
             break;
         }
         break;
@@ -104,16 +104,16 @@ Mode::Result MenuMode::keyboard(Key key)
         do {
             char c = KeyCode::toChar(key);
             if ('a' <= c && c <= 'z')
-                doc.switchClip(c);
+                mDoc.switchClip(c);
         } while (false);
         break;
     }
 
-    if (context == Context::BOP_INSERT
-            || context == Context::BOP_APPEND
-            || context == Context::NEST_AS_LEFT
-            || context == Context::NEST_AS_RIGHT) {
-        return { ResultType::DONE_POP, doc.createModifyMode(true) };
+    if (mContext == Context::BOP_INSERT
+            || mContext == Context::BOP_APPEND
+            || mContext == Context::NEST_AS_LEFT
+            || mContext == Context::NEST_AS_RIGHT) {
+        return { ResultType::DONE_POP, mDoc.createModifyMode(true) };
     } else { // big motions
         return DONE_POP_NOPUSH;
     }
@@ -121,15 +121,15 @@ Mode::Result MenuMode::keyboard(Key key)
 
 Mode::Result MenuMode::onPushed()
 {
-    if (context != Context::SWITCH_CLIP)
-        doc.toggleTension(true);
+    if (mContext != Context::SWITCH_CLIP)
+        mDoc.toggleTension(true);
     return DONE_STAY_NOPUSH;
 }
 
 void MenuMode::onPopped()
 {
-    if (context != Context::SWITCH_CLIP)
-        doc.toggleTension(false);
+    if (mContext != Context::SWITCH_CLIP)
+        mDoc.toggleTension(false);
 }
 
 const char *MenuMode::name()
@@ -139,13 +139,13 @@ const char *MenuMode::name()
 
 Ast::Type MenuMode::keyToType(Key key)
 {
-    switch (context) {
+    switch (mContext) {
     case Context::BOP_INSERT:
     case Context::BOP_APPEND:
         switch (key) {
         case Key::LEFT_PAREN:
-            if (doc.getOuter().getType() == Ast::Type::DOT_BOP_LIST
-                    && context == Context::BOP_APPEND)
+            if (mDoc.getOuter().getType() == Ast::Type::DOT_BOP_LIST
+                    && mContext == Context::BOP_APPEND)
                 return Ast::Type::ARG_LIST;
             else
                 return Ast::Type::META;

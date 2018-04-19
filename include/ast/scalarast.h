@@ -9,7 +9,7 @@
 class ScalarAst : public Ast
 {
 public:
-    ScalarAst(Type t, const std::string &text);
+    ScalarAst(Type t, const std::string &mText);
 
     void dump() const override;
     ScalarAst *clone() const override;
@@ -20,7 +20,7 @@ public:
     void clear();
 
 private:
-    std::string text;
+    std::string mText;
 };
 
 #endif // SCALARAST_H

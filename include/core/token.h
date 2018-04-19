@@ -19,7 +19,7 @@ public:
         BEGIN, END, META, BONE, FLESH
     };
 
-    Token(const Ast *ast, Role role);
+    Token(const Ast *mAst, Role mRole);
     Token(const Token &copy) = delete;
     Token &operator=(const Token &assign) = delete;
     virtual ~Token() = default;
@@ -29,8 +29,8 @@ public:
     virtual const std::string &getText() const = 0;
 
 private:
-    const Ast *ast;
-    Role role;
+    const Ast *mAst;
+    Role mRole;
 };
 
 #endif // TOKEN_H

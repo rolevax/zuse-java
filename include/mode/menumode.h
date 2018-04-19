@@ -13,7 +13,7 @@ public:
         SWITCH_CLIP
     };
 
-    MenuMode(EditableDoc &doc, Context context);
+    MenuMode(EditableDoc &mDoc, Context mContext);
 
     Result keyboard(Key key) override;
     Result onPushed() override;
@@ -25,7 +25,7 @@ private:
     static int keyToBop(Key key);
 
 private:
-    Context context;
+    Context mContext;
 };
 
 #endif // MENUMODE_H

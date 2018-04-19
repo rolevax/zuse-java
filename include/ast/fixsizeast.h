@@ -29,8 +29,8 @@ private:
     explicit FixSizeAst(Type t);
 
 private:
-    std::array<std::unique_ptr<Ast>, N> subtrees;
-    Modifiers modifiers;
+    std::array<std::unique_ptr<Ast>, N> mSubtrees;
+    Modifiers mModifiers;
 };
 
 /**

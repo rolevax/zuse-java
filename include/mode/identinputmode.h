@@ -6,7 +6,7 @@
 class IdentInputMode : public Mode
 {
 public:
-    IdentInputMode(EditableDoc &doc, bool clear);
+    IdentInputMode(EditableDoc &mDoc, bool mClear);
 
     Result keyboard(Key key) override;
     Result onPushed() override;
@@ -24,7 +24,7 @@ private:
     void setModifier(int modId);
 
 private:
-    bool clear;
+    bool mClear;
 };
 
 #endif // IDENTINPUTMODE_H

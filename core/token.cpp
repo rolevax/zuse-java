@@ -1,20 +1,20 @@
 #include "core/token.h"
 
 Token::Token(const Ast *ast, Role role) :
-    ast(ast),
-    role(role)
+    mAst(ast),
+    mRole(role)
 {
 
 }
 
 const Ast *Token::getAst() const
 {
-    return ast;
+    return mAst;
 }
 
 Token::Role Token::getRole() const
 {
-    return role;
+    return mRole;
 }
 
 

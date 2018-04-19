@@ -4,39 +4,39 @@
 
 ScalarAst::ScalarAst(Type t, const std::string &text)
     : Ast(t),
-      text(text)
+      mText(text)
 {
     assert(isScalar());
 }
 
 void ScalarAst::dump() const
 {
-    std::cout << text;
+    std::cout << mText;
 }
 
 ScalarAst *ScalarAst::clone() const
 {
-    ScalarAst *ret = new ScalarAst(getType(), text);
+    ScalarAst *ret = new ScalarAst(getType(), mText);
     return ret;
 }
 
 const std::string &ScalarAst::getText() const
 {
-    return text;
+    return mText;
 }
 
 void ScalarAst::append(char c)
 {
-    if (c == '\b' && !text.empty()) {
-        text.pop_back();
+    if (c == '\b' && !mText.empty()) {
+        mText.pop_back();
     } else {
-        text += c;
+        mText += c;
     }
 }
 
 void ScalarAst::clear()
 {
-    text.clear();
+    mText.clear();
 }
 
 

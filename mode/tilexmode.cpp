@@ -8,7 +8,7 @@
 
 TilexMode::TilexMode(EditableDoc &doc, bool macroContext)
     : Mode(doc)
-    , macroContext(macroContext)
+    , mMacroContext(macroContext)
 {
 
 }
@@ -16,24 +16,24 @@ TilexMode::TilexMode(EditableDoc &doc, bool macroContext)
 Mode::Result TilexMode::keyboard(Key key)
 {
     char str[2] = { KeyCode::toChar(key), '\0' };
-    Ast::Type ot = doc.getOuter().getType();
+    Ast::Type ot = mDoc.getOuter().getType();
 
     if (KeyCode::isAlpha(key)) {
-        doc.change(Ast::Type::IDENT);
-        doc.scalarClear();
-        doc.scalarAppend(str);
-        return { ResultType::DONE_POP, new IdentInputMode(doc, false) };
+        mDoc.change(Ast::Type::IDENT);
+        mDoc.scalarClear();
+        mDoc.scalarAppend(str);
+        return { ResultType::DONE_POP, new IdentInputMode(mDoc, false) };
     } else if (KeyCode::isDigit(key)) {
-        doc.change(Ast::Type::NUMBER);
-        doc.scalarClear();
-        doc.scalarAppend(str);
-        return { ResultType::DONE_POP, new NumberInputMode(doc, false) };
+        mDoc.change(Ast::Type::NUMBER);
+        mDoc.scalarClear();
+        mDoc.scalarAppend(str);
+        return { ResultType::DONE_POP, new NumberInputMode(mDoc, false) };
     } else if (key == Key::DOUBLE_QUOTE) {
-        doc.change(Ast::Type::STRING);
-        return { ResultType::DONE_POP, new StringInputMode(doc, true) };
+        mDoc.change(Ast::Type::STRING);
+        return { ResultType::DONE_POP, new StringInputMode(mDoc, true) };
     } else if (key == Key::TAB) { // paste
-        doc.paste();
-        doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+        mDoc.paste();
+        mDoc.setHotLight(EditableDoc::HotLightLevel::OFF);
         return DONE_POP_NOPUSH;
     } else if (key == Key::SPACE) {
         return keyboardSpace();
@@ -58,8 +58,8 @@ Mode::Result TilexMode::keyboard(Key key)
 
 Mode::Result TilexMode::onPushed()
 {
-    assert(doc.getInner().getType() == Ast::Type::META);
-    doc.setHotLight(EditableDoc::HotLightLevel::AREA);
+    assert(mDoc.getInner().getType() == Ast::Type::META);
+    mDoc.setHotLight(EditableDoc::HotLightLevel::AREA);
     return DONE_STAY_NOPUSH;
 }
 
@@ -70,32 +70,32 @@ const char *TilexMode::name()
 
 Mode::Result TilexMode::keyboardSpace()
 {
-    const InternalAst &outer = doc.getOuter();
+    const InternalAst &outer = mDoc.getOuter();
     if (outer.getType() == Ast::Type::ADD_BOP_LIST
             && outer.size() == 2
-            && doc.getInnerIndex() == 0) {
+            && mDoc.getInnerIndex() == 0) {
         Ast::Type t = outer.asBopList().opAt(1) == BopListAst::ADD ?
                     Ast::Type::UNARY_PLUS : Ast::Type::UNARY_MINUS;
-        doc.sibling(1);
-        doc.nestAsRight(t);
-        doc.expose();
+        mDoc.sibling(1);
+        mDoc.nestAsRight(t);
+        mDoc.expose();
     } else if (outer.getType() == Ast::Type::DOT_BOP_LIST
-               && outer.asBopList().opAt(doc.getInnerIndex()) == BopListAst::ARR) {
-        doc.change(Ast::Type::HIDDEN);
+               && outer.asBopList().opAt(mDoc.getInnerIndex()) == BopListAst::ARR) {
+        mDoc.change(Ast::Type::HIDDEN);
     } else {
-        doc.remove(); // remove the meta node
+        mDoc.remove(); // remove the meta node
     }
 
-    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+    mDoc.setHotLight(EditableDoc::HotLightLevel::OFF);
     return DONE_POP_NOPUSH;
 }
 
 Mode::Result TilexMode::keyboardEqual()
 {
-    if (doc.getOuter().size() != 2)
+    if (mDoc.getOuter().size() != 2)
         return DONE_STAY_NOPUSH;
 
-    switch (doc.getOuter().getType()) {
+    switch (mDoc.getOuter().getType()) {
     case Ast::Type::ASSIGN:
         castOuter(Ast::Type::EQ);
         break;
@@ -124,7 +124,7 @@ Mode::Result TilexMode::keyboardEqual()
         castOuter(Ast::Type::ASS_AND);
         break;
     case Ast::Type::ADD_BOP_LIST:
-        switch (doc.getOuter().asBopList().opAt(1)) {
+        switch (mDoc.getOuter().asBopList().opAt(1)) {
         case BopListAst::ADD:
             castOuter(Ast::Type::ASS_ADD);
             break;
@@ -136,7 +136,7 @@ Mode::Result TilexMode::keyboardEqual()
         }
         break;
     case Ast::Type::MUL_BOP_LIST:
-        switch (doc.getOuter().asBopList().opAt(1)) {
+        switch (mDoc.getOuter().asBopList().opAt(1)) {
         case BopListAst::MUL:
             castOuter(Ast::Type::ASS_MUL);
             break;
@@ -159,22 +159,22 @@ Mode::Result TilexMode::keyboardEqual()
 
 Mode::Result TilexMode::ppmm(bool inc)
 {
-    const InternalAst &outer = doc.getOuter();
+    const InternalAst &outer = mDoc.getOuter();
     if (outer.getType() != Ast::Type::ADD_BOP_LIST || outer.size() != 2)
         return DONE_STAY_NOPUSH;
 
-    bool prefix = doc.getInnerIndex() == 0;
+    bool prefix = mDoc.getInnerIndex() == 0;
     bool plus = outer.asBopList().opAt(1) == BopListAst::ADD;
     if (plus != inc) // "+-" or "-+"
         return DONE_STAY_NOPUSH;
 
     Ast::Type t = prefix ? (inc ? Ast::Type::PRE_INC : Ast::Type::PRE_DEC)
                          : (inc ? Ast::Type::POST_INC : Ast::Type::POST_DEC);
-    doc.sibling(prefix ? +1 : -1);
-    doc.nestAsLeft(t); // unary nest, both left and right is ok
-    doc.expose();
+    mDoc.sibling(prefix ? +1 : -1);
+    mDoc.nestAsLeft(t); // unary nest, both left and right is ok
+    mDoc.expose();
 
-    doc.setHotLight(EditableDoc::HotLightLevel::OFF);
+    mDoc.setHotLight(EditableDoc::HotLightLevel::OFF);
     return DONE_POP_NOPUSH;
 }
 
@@ -183,60 +183,60 @@ void TilexMode::castOuter(Ast::Type ot)
     assert(!Ast::isScalar(ot));
 
     // remember cursor position of the meta and dolly-out
-    size_t inner = doc.getInnerIndex();
-    doc.digOut();
+    size_t inner = mDoc.getInnerIndex();
+    mDoc.digOut();
 
-    doc.cast(ot);
+    mDoc.cast(ot);
 
     // set cursor back
-    doc.fallIn();
-    doc.sibling(inner);
+    mDoc.fallIn();
+    mDoc.sibling(inner);
 
-    if (macroContext)
+    if (mMacroContext)
         relayMacro(inner);
 }
 
 void TilexMode::relayMacro(int savedInner)
 {
-    Ast::Type ot = doc.getOuter().getType();
-    Ast::Type oot = doc.getOuter().getParent().getType();
+    Ast::Type ot = mDoc.getOuter().getType();
+    Ast::Type oot = mDoc.getOuter().getParent().getType();
 
     if (Ast::isBopList(oot) && oot == ot) {
-        doc.digOut();
-        const BopListAst &flattenee = doc.getInner().asBopList();
+        mDoc.digOut();
+        const BopListAst &flattenee = mDoc.getInner().asBopList();
         int flatteneeSize = flattenee.size();
         for (int i = 0; i < flatteneeSize; i++) {
             int infix = i == 0 ? BopListAst::UNUSED : flattenee.opAt(i);
-            doc.append(Ast::Type::META, infix);
-            doc.change(flattenee.at(i).clone());
+            mDoc.append(Ast::Type::META, infix);
+            mDoc.change(flattenee.at(i).clone());
         }
 
-        doc.sibling(-flatteneeSize); // back to the meta-containing tree
-        doc.remove();
-        doc.sibling(savedInner); // back to the copied meta
-        assert(doc.getInner().getType() == Ast::Type::META);
-    } else if (doc.getOuter().size() == 2
+        mDoc.sibling(-flatteneeSize); // back to the meta-containing tree
+        mDoc.remove();
+        mDoc.sibling(savedInner); // back to the copied meta
+        assert(mDoc.getInner().getType() == Ast::Type::META);
+    } else if (mDoc.getOuter().size() == 2
                && Ast::precedence(ot) < Ast::precedence(oot)) {
         // a macro either nest-as-left or append.
         // (the only exception is type-cast, but that's not double-char op)
         // if the outer's size is two, it must be a nest.
-        assert(doc.getInnerIndex() == 1);
+        assert(mDoc.getInnerIndex() == 1);
         // revert the node created by the single-char macro
-        doc.sibling(-1);
-        doc.expose();
+        mDoc.sibling(-1);
+        mDoc.expose();
 
         // auto dolly-out as macros did
-        while (Ast::precedence(ot) < doc.getOuter().precedence()
-               && doc.getInnerIndex() == doc.getOuter().size() - 1)
-            doc.digOut();
+        while (Ast::precedence(ot) < mDoc.getOuter().precedence()
+               && mDoc.getInnerIndex() == mDoc.getOuter().size() - 1)
+            mDoc.digOut();
 
         // nest-or-append as macros did
-        if (doc.getOuter().getType() == ot && doc.getOuter().isList()) {
-            doc.append(Ast::Type::META);
+        if (mDoc.getOuter().getType() == ot && mDoc.getOuter().isList()) {
+            mDoc.append(Ast::Type::META);
         } else {
-            doc.nestAsLeft(ot);
-            doc.fallIn();
-            doc.sibling(+1);
+            mDoc.nestAsLeft(ot);
+            mDoc.fallIn();
+            mDoc.sibling(+1);
         }
     }
 }

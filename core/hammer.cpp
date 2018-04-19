@@ -8,7 +8,7 @@
 #include <cassert>
 
 Hammer::Hammer(Tokens &tokens) :
-    tokens(tokens)
+    mTokens(tokens)
 {
 
 }
@@ -17,7 +17,7 @@ void Hammer::hit(const Ast &ast, size_t r, size_t c)
 {
     Buf ts;
     hitGeneral(ast, ts);
-    tokens.put(r, c, ts);
+    mTokens.put(r, c, ts);
 }
 
 void Hammer::hitGeneral(const Ast &ast, Buf &buf)

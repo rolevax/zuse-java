@@ -6,7 +6,7 @@
 class StringInputMode : public Mode
 {
 public:
-    StringInputMode(EditableDoc &doc, bool clear);
+    StringInputMode(EditableDoc &mDoc, bool mClear);
 
     Result keyboard(Key key) override;
     Result onPushed() override;
@@ -14,7 +14,7 @@ public:
     const char *name() override;
 
 private:
-    bool clear;
+    bool mClear;
 };
 
 #endif // STRINGINPUTMODE_H

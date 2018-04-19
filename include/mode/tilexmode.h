@@ -6,7 +6,7 @@
 class TilexMode : public Mode
 {
 public:
-    TilexMode(EditableDoc &doc, bool macroContext);
+    TilexMode(EditableDoc &mDoc, bool mMacroContext);
 
     Result keyboard(Key key) override;
     Result onPushed() override;
@@ -20,7 +20,7 @@ private:
     void relayMacro(int savedInner);
 
 private:
-    bool macroContext;
+    bool mMacroContext;
 };
 
 #endif // TILEXMODE_H

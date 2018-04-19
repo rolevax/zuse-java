@@ -17,7 +17,7 @@ public:
     virtual Ast &at(size_t pos) const = 0;
     virtual size_t indexOf(const Ast *child) const = 0;
 
-    static Ast::Type typeAt(Type type, size_t pos, bool allowHidden = true);
+    static Ast::Type typeAt(Type mType, size_t pos, bool allowHidden = true);
     Ast::Type typeAt(size_t pos, bool allowHidden = true) const;
 
 protected:
