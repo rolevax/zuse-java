@@ -1,9 +1,10 @@
-#include "core/hammer.h"
-#include "core/tokens.h"
-#include "core/fleshtoken.h"
-#include "core/soultoken.h"
-#include "ast/boplistast.h"
-#include "ast/fixsizeast.h"
+#include "hammer.h"
+#include "tokens.h"
+#include "fleshtoken.h"
+#include "soultoken.h"
+
+#include "../ast/boplistast.h"
+#include "../ast/fixsizeast.h"
 
 #include <cassert>
 

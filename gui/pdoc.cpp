@@ -1,4 +1,5 @@
-#include "gui/pdoc.h"
+#include "pdoc.h"
+
 #include <Qt>
 #include <QKeySequence>
 #include <QChar>

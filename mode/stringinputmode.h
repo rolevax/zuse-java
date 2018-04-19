@@ -1,7 +1,7 @@
 #ifndef STRINGINPUTMODE_H
 #define STRINGINPUTMODE_H
 
-#include "mode/mode.h"
+#include "mode.h"
 
 class StringInputMode : public Mode
 {

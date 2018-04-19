@@ -1,6 +1,7 @@
-#include "mode/identinputmode.h"
-#include "core/editabledoc.h"
-#include "ast/scalarast.h"
+#include "identinputmode.h"
+
+#include "../core/editabledoc.h"
+#include "../ast/scalarast.h"
 
 #include <algorithm>
 #include <cstdlib>

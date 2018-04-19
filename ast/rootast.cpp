@@ -1,4 +1,4 @@
-#include "ast/rootast.h"
+#include "rootast.h"
 
 #include <cassert>
 

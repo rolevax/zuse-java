@@ -1,7 +1,7 @@
 #ifndef LISTINPUTMODE_H
 #define LISTINPUTMODE_H
 
-#include "mode/mode.h"
+#include "mode.h"
 
 class ListInputMode : public Mode
 {

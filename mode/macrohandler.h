@@ -1,7 +1,7 @@
 #ifndef MACROHANDLER_H
 #define MACROHANDLER_H
 
-#include "core/editabledoc.h"
+#include "../core/editabledoc.h"
 
 class MacroHandler
 {

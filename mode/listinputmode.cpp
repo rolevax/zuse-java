@@ -1,5 +1,6 @@
-#include "mode/listinputmode.h"
-#include "core/editabledoc.h"
+#include "listinputmode.h"
+
+#include "../core/editabledoc.h"
 
 #include <cassert>
 

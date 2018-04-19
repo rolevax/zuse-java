@@ -1,4 +1,4 @@
-#include "ast/scalarast.h"
+#include "scalarast.h"
 
 #include <cassert>
 

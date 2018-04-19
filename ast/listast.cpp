@@ -1,5 +1,5 @@
-#include "ast/listast.h"
-#include "ast/scalarast.h"
+#include "listast.h"
+#include "scalarast.h"
 
 #include <algorithm>
 #include <cassert>

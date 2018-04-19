@@ -1,11 +1,13 @@
 #ifndef EDITABLEDOC_H
 #define EDITABLEDOC_H
 
-#include "ast/boplistast.h"
-#include "mode/mode.h"
+#include "../ast/boplistast.h"
+#include "../mode/mode.h"
 
 #include <string>
 #include <functional>
+
+
 
 class EditableDoc
 {

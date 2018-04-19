@@ -1,4 +1,4 @@
-CXX=clang++ -std=c++11 -I. -I../include 
+CXX=clang++ -std=c++11 -I.
 
 ASTSRC=ast.cpp rootast.cpp listast.cpp boplistast.cpp\
 	   fixsizeast.cpp scalarast.cpp internalast.cpp
@@ -9,8 +9,7 @@ all: lex.cpp bison.cc
 
 bison.cc: bison.yy
 	@bison -o bison.cc bison.yy
-	@cp *.hh ../include/ast
-	@echo 'Bison parser generated, headers copied to ../include/ast'
+	@echo 'Bison parser generated'
 
 lex.cpp: lex.ll
 	@flex -o lex.cpp lex.ll 

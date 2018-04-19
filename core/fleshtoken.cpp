@@ -1,4 +1,4 @@
-#include "core/fleshtoken.h"
+#include "fleshtoken.h"
 
 FleshToken::FleshToken(const ScalarAst *ast) :
     Token(ast, Role::FLESH),

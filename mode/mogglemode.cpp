@@ -1,5 +1,6 @@
-#include "mode/mogglemode.h"
-#include "core/editabledoc.h"
+#include "mogglemode.h"
+
+#include "../core/editabledoc.h"
 
 #include <cassert>
 

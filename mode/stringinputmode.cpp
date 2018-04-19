@@ -1,6 +1,7 @@
-#include "core/editabledoc.h"
-#include "mode/stringinputmode.h"
-#include "ast/scalarast.h"
+#include "stringinputmode.h"
+
+#include "../core/editabledoc.h"
+#include "../ast/scalarast.h"
 
 #include <cassert>
 

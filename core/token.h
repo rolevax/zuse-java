@@ -1,8 +1,11 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include "ast/ast.h"
+#include "../ast/ast.h"
+
 #include <string>
+
+
 
 struct Region
 {

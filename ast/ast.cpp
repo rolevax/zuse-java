@@ -1,9 +1,9 @@
-#include "ast/ast.h"
-#include "ast/scalarast.h"
-#include "ast/fixsizeast.h"
-#include "ast/internalast.h"
-#include "ast/listast.h"
-#include "ast/boplistast.h"
+#include "ast.h"
+#include "scalarast.h"
+#include "fixsizeast.h"
+#include "internalast.h"
+#include "listast.h"
+#include "boplistast.h"
 
 #include <cassert>
 

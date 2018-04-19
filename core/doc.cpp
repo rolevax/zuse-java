@@ -1,15 +1,16 @@
 // Zuse headers
-#include "core/doc.h"
-#include "ast/parser.h"
-#include "mode/normalmode.h"
-#include "mode/menumode.h"
-#include "mode/tilexmode.h"
-#include "mode/identinputmode.h"
-#include "mode/numberinputmode.h"
-#include "mode/stringinputmode.h"
-#include "mode/listinputmode.h"
-#include "mode/fixsizeinputmode.h"
-#include "gui/pdoc.h"
+#include "doc.h"
+
+#include "../ast/parser.h"
+#include "../mode/normalmode.h"
+#include "../mode/menumode.h"
+#include "../mode/tilexmode.h"
+#include "../mode/identinputmode.h"
+#include "../mode/numberinputmode.h"
+#include "../mode/stringinputmode.h"
+#include "../mode/listinputmode.h"
+#include "../mode/fixsizeinputmode.h"
+#include "../gui/pdoc.h"
 
 // headers for file I/O
 #include <fstream>

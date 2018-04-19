@@ -1,5 +1,5 @@
-#include "ast/internalast.h"
-#include "ast/listast.h"
+#include "internalast.h"
+#include "listast.h"
 
 #include <cassert>
 

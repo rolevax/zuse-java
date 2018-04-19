@@ -1,8 +1,10 @@
 #ifndef MODE_H
 #define MODE_H
 
-#include "core/keycode.h"
-#include "ast/ast.h"
+#include "../core/keycode.h"
+#include "../ast/ast.h"
+
+
 
 class EditableDoc;
 

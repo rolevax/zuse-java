@@ -1,5 +1,5 @@
-#include "ast/boplistast.h"
-#include "ast/scalarast.h"
+#include "boplistast.h"
+#include "scalarast.h"
 
 #include <cassert>
 

@@ -1,4 +1,4 @@
-#include "core/token.h"
+#include "token.h"
 
 Token::Token(const Ast *ast, Role role) :
     mAst(ast),

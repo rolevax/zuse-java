@@ -47,37 +47,35 @@ QML_IMPORT_PATH =
 # Default rules for deployment.
 include(deployment.pri)
 
-INCLUDEPATH += "include"
-
 HEADERS += \
-    include/core/doc.h \
-    include/core/token.h \
-    include/ast/ast.h \
-    include/ast/listast.h \
-    include/gui/pdoc.h \
-    include/ast/scalarast.h \
-    include/ast/rootast.h \
-    include/core/bonetoken.h \
-    include/core/fleshtoken.h \
-    include/core/soultoken.h \
-    include/core/tokens.h \
-    include/core/hammer.h \
-    include/core/tokensobserver.h \
-    include/mode/mode.h \
-    include/mode/menumode.h \
-    include/mode/stringinputmode.h \
-    include/mode/numberinputmode.h \
-    include/core/editabledoc.h \
-    include/ast/internalast.h \
-    include/ast/fixsizeast.h \
-    include/mode/identinputmode.h \
-    include/ast/boplistast.h \
-    include/mode/listinputmode.h \
-    include/core/keycode.h \
-    include/mode/tilexmode.h \
-    include/mode/fixsizeinputmode.h \
-    include/mode/macrohandler.h \
-    include/ast/modifiers.h \
-    include/mode/mogglemode.h \
-    include/mode/normalmode.h
+    core/doc.h \
+    core/token.h \
+    ast/ast.h \
+    ast/listast.h \
+    gui/pdoc.h \
+    ast/scalarast.h \
+    ast/rootast.h \
+    core/bonetoken.h \
+    core/fleshtoken.h \
+    core/soultoken.h \
+    core/tokens.h \
+    core/hammer.h \
+    core/tokensobserver.h \
+    mode/mode.h \
+    mode/menumode.h \
+    mode/stringinputmode.h \
+    mode/numberinputmode.h \
+    core/editabledoc.h \
+    ast/internalast.h \
+    ast/fixsizeast.h \
+    mode/identinputmode.h \
+    ast/boplistast.h \
+    mode/listinputmode.h \
+    core/keycode.h \
+    mode/tilexmode.h \
+    mode/fixsizeinputmode.h \
+    mode/macrohandler.h \
+    ast/modifiers.h \
+    mode/mogglemode.h \
+    mode/normalmode.h
 

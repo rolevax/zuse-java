@@ -1,11 +1,12 @@
-#include "core/editabledoc.h"
-#include "ast/boplistast.h"
-#include "mode/menumode.h"
-#include "mode/identinputmode.h"
-#include "mode/stringinputmode.h"
-#include "mode/numberinputmode.h"
-#include "mode/tilexmode.h"
-#include "mode/fixsizeinputmode.h"
+#include "menumode.h"
+#include "identinputmode.h"
+#include "stringinputmode.h"
+#include "numberinputmode.h"
+#include "tilexmode.h"
+#include "fixsizeinputmode.h"
+
+#include "../core/editabledoc.h"
+#include "../ast/boplistast.h"
 
 #include <cctype>
 #include <cassert>

@@ -1,12 +1,13 @@
-#include "mode/normalmode.h"
-#include "mode/menumode.h"
-#include "mode/tilexmode.h"
-#include "mode/identinputmode.h"
-#include "mode/stringinputmode.h"
-#include "mode/numberinputmode.h"
-#include "mode/mogglemode.h"
-#include "core/editabledoc.h"
-#include "ast/listast.h"
+#include "normalmode.h"
+#include "menumode.h"
+#include "tilexmode.h"
+#include "identinputmode.h"
+#include "stringinputmode.h"
+#include "numberinputmode.h"
+#include "mogglemode.h"
+
+#include "../core/editabledoc.h"
+#include "../ast/listast.h"
 
 NormalMode::NormalMode(EditableDoc &doc)
     : Mode(doc)

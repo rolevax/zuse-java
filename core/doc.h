@@ -1,10 +1,13 @@
 #ifndef DOC_H
 #define DOC_H
 
-#include "core/editabledoc.h"
-#include "core/keycode.h"
-#include "core/tokens.h"
-#include "ast/rootast.h"
+#include "editabledoc.h"
+#include "keycode.h"
+#include "tokens.h"
+
+#include "../ast/rootast.h"
+
+
 
 class BopListAst;
 class PDoc;

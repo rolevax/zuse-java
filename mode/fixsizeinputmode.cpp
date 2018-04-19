@@ -1,7 +1,8 @@
-#include "core/editabledoc.h"
-#include "mode/fixsizeinputmode.h"
-#include "mode/menumode.h"
-#include "mode/stringinputmode.h"
+#include "fixsizeinputmode.h"
+#include "menumode.h"
+#include "stringinputmode.h"
+
+#include "../core/editabledoc.h"
 
 #include <cassert>
 

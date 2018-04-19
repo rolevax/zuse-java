@@ -1,10 +1,12 @@
 #ifndef HAMMER_H
 #define HAMMER_H
 
-#include "core/bonetoken.h"
-#include "ast/scalarast.h"
-#include "ast/fixsizeast.h"
-#include "ast/listast.h"
+#include "bonetoken.h"
+#include "../ast/scalarast.h"
+#include "../ast/fixsizeast.h"
+#include "../ast/listast.h"
+
+
 
 class Token;
 class Tokens;

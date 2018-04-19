@@ -1,6 +1,6 @@
-#include "core/tokens.h"
-#include "core/bonetoken.h"
-#include "core/soultoken.h"
+#include "tokens.h"
+#include "bonetoken.h"
+#include "soultoken.h"
 
 #include <cassert>
 #include <cstdlib>

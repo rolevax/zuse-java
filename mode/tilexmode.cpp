@@ -1,8 +1,9 @@
-#include "mode/tilexmode.h"
-#include "mode/identinputmode.h"
-#include "mode/stringinputmode.h"
-#include "mode/numberinputmode.h"
-#include "core/editabledoc.h"
+#include "tilexmode.h"
+#include "identinputmode.h"
+#include "stringinputmode.h"
+#include "numberinputmode.h"
+
+#include "../core/editabledoc.h"
 
 #include <cassert>
 

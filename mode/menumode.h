@@ -1,7 +1,7 @@
 #ifndef MENUMODE_H
 #define MENUMODE_H
 
-#include "mode/mode.h"
+#include "mode.h"
 
 class MenuMode : public Mode
 {

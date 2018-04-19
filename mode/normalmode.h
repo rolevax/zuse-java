@@ -1,8 +1,8 @@
 #ifndef NORMALMODE_H
 #define NORMALMODE_H
 
-#include "mode/mode.h"
-#include "mode/macrohandler.h"
+#include "mode.h"
+#include "macrohandler.h"
 
 class NormalMode : public Mode
 {

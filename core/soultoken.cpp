@@ -1,4 +1,4 @@
-#include "core/soultoken.h"
+#include "soultoken.h"
 
 #include <vector>
 #include <cassert>

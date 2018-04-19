@@ -1,9 +1,12 @@
 #ifndef FIXSIZEINPUTMODE_H
 #define FIXSIZEINPUTMODE_H
 
-#include "mode/mode.h"
-#include "mode/macrohandler.h"
-#include "ast/internalast.h"
+#include "mode.h"
+#include "macrohandler.h"
+
+#include "../ast/internalast.h"
+
+
 
 class FixSizeInputMode : public Mode
 {

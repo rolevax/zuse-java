@@ -1,4 +1,4 @@
-#include "core/bonetoken.h"
+#include "bonetoken.h"
 
 #include <vector>
 #include <cassert>

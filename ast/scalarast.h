@@ -1,7 +1,7 @@
 #ifndef SCALARAST_H
 #define SCALARAST_H
 
-#include "ast/ast.h"
+#include "ast.h"
 #include <string>
 
 #include <iostream>

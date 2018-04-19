@@ -1,7 +1,7 @@
 #ifndef SOULTOKEN_H
 #define SOULTOKEN_H
 
-#include "core/token.h"
+#include "token.h"
 
 class SoulToken : public Token
 {

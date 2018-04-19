@@ -1,4 +1,4 @@
-#include "mode/macrohandler.h"
+#include "macrohandler.h"
 
 MacroHandler::MacroHandler(EditableDoc &doc)
     : mDoc(doc)
