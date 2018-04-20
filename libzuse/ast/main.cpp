@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 		} else {
 			using namespace yaloe;
 			try {
-				RootAst *root = parse(argv[i], traceLex, traceParse);
+				AstRoot *root = parse(argv[i], traceLex, traceParse);
 				std::cout << "Pre-order dump:" << std::endl;
 				root->dump();
 			} catch (std::exception &e) {

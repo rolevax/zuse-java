@@ -1,5 +1,5 @@
-#ifndef CALCXX_DRIVER_HH
-#define CALCXX_DRIVER_HH
+#ifndef ZUSE_PARSER_H
+#define ZUSE_PARSER_H
 
 #include "bison.hh"
 
@@ -9,9 +9,10 @@ class Ast;
 
 namespace yaloe
 {
-RootAst *parse(const std::string& f, bool traceLex = false, 
+AstRoot *parse(const std::string& f, bool traceLex = false, 
 									 bool traceParse = false);
 
-};
-#endif // ! CALCXX_DRIVER_HH
+}
+
+#endif // ZUSE_PARSER_H
 

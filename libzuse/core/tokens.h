@@ -1,5 +1,5 @@
-#ifndef TOKENS_H
-#define TOKENS_H
+#ifndef ZUSE_TOKENS_H
+#define ZUSE_TOKENS_H
 
 #include "hammer.h"
 #include "token.h"
@@ -20,11 +20,11 @@ public:
     void setHotLight(ssize_t back);
     void light(const Ast *inner);
     void clear();
-    void sync(const ListAst *root);
-    void updateScalar(const InternalAst *outer, size_t inner);
+    void sync(const AstList *root);
+    void updateScalar(const AstInternal *outer, size_t inner);
     std::string pluck(size_t r);
-    void jackKick(InternalAst *&outer, size_t &inner, bool down);
-    void hackLead(InternalAst *&outer, size_t &inner, bool right);
+    void jackKick(AstInternal *&outer, size_t &inner, bool down);
+    void hackLead(AstInternal *&outer, size_t &inner, bool right);
 
     /// @name Hammer's Interface
     ///@{
@@ -51,4 +51,4 @@ private:
 
 std::ostream &operator<<(std::ostream &os, const Tokens &ts);
 
-#endif // TOKENS_H
+#endif // ZUSE_TOKENS_H

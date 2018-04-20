@@ -11,17 +11,17 @@
 {
 	#include <string>
 	#include "ast.h"
-	#include "scalarast.h"
-	#include "fixsizeast.h"
-	#include "listast.h"
-	#include "boplistast.h"
-	#include "rootast.h"
+	#include "ast_scalar.h"
+	#include "ast_fix_size.h"
+	#include "ast_list.h"
+	#include "ast_list_bop.h"
+	#include "ast_root.h"
 	class ParseException;
 }
 
 /* The parsing context. */
 %param { const std::string &filename }
-%param { RootAst *result }
+%param { AstRoot *result }
 
 %locations
 %initial-action
@@ -37,7 +37,7 @@
 %code
 {
 	#include "lexproto.h"
-	#include "parseexception.h"
+	#include "parse_exception.h"
 }
 
 %define api.token.prefix {TOK_}
@@ -137,18 +137,18 @@
 
 %type	<int>			dims
 
-%type	<ListAst*>		class_list
-%type	<ListAst*>		member_list
-%type	<ListAst*>		param_list
-%type	<ListAst*>		param_list_noemp
-%type	<ListAst*>		stmt_list
-%type	<ListAst*>		if_list
-%type	<ListAst*>		arg_list
-%type	<ListAst*>		arg_list_noemp
-%type	<ListAst*>		dector_list
-%type	<ListAst*>		try_list
-%type	<ListAst*>		catch_list
-%type	<ListAst*>		name_list
+%type	<AstList*>		class_list
+%type	<AstList*>		member_list
+%type	<AstList*>		param_list
+%type	<AstList*>		param_list_noemp
+%type	<AstList*>		stmt_list
+%type	<AstList*>		if_list
+%type	<AstList*>		arg_list
+%type	<AstList*>		arg_list_noemp
+%type	<AstList*>		dector_list
+%type	<AstList*>		try_list
+%type	<AstList*>		catch_list
+%type	<AstList*>		name_list
 
 %type	<Ast*>			class
 %type	<Ast*>			decl_method
@@ -216,7 +216,7 @@
 type_spec: type_name
 	 			{ $$ = $1; }
 		 | type_name dims
-				{ $$ = new BopListAst($1, $2); }
+				{ $$ = new AstListBop($1, $2); }
 		 ;
 
 type_name: ptype
@@ -226,7 +226,7 @@ type_name: ptype
 		 ;
 
 ptype: "void"
-	 			{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
+	 			{ $$ = new AstScalar(Ast::Type::IDENT, $1); }
 	 ;
 
 modifiers: modifier
@@ -262,86 +262,86 @@ class_list: %empty					{ /* already newwed as 'result' */ }
 		  ;
 
 class: "class" ident "{" member_list "}"	
-	 			{ Ast *h1 = new ScalarAst(Ast::Type::HIDDEN, "");
-	 			  Ast *h2 = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<4>(Ast::Type::DECL_CLASS, 
+	 			{ Ast *h1 = new AstScalar(Ast::Type::HIDDEN, "");
+	 			  Ast *h2 = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<4>(Ast::Type::DECL_CLASS, 
 										 $2, h1, h2, $4); }
 	 | "class" ident "extends" name_list "{" member_list "}"
-	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<4>(Ast::Type::DECL_CLASS, 
+	 			{ Ast *h = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<4>(Ast::Type::DECL_CLASS, 
 										 $2, $4, h, $6); }
 	 | "class" ident "implements" name_list "{" member_list "}"
-	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<4>(Ast::Type::DECL_CLASS, 
+	 			{ Ast *h = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<4>(Ast::Type::DECL_CLASS, 
 										 $2, h, $4, $6); }
 	 | "class" ident "extends" name_list "implements" name_list 
 				"{" member_list "}"
-	 			{ $$ = new FixSizeAst<4>(Ast::Type::DECL_CLASS, 
+	 			{ $$ = new AstFixSize<4>(Ast::Type::DECL_CLASS, 
 										 $2, $4, $6, $8); }
 	 | modifiers "class" ident "{" member_list "}"	
-	 			{ Ast *h1 = new ScalarAst(Ast::Type::HIDDEN, "");
-	 			  Ast *h2 = new ScalarAst(Ast::Type::HIDDEN, "");
-				  auto a = new FixSizeAst<4>(Ast::Type::DECL_CLASS, 
+	 			{ Ast *h1 = new AstScalar(Ast::Type::HIDDEN, "");
+	 			  Ast *h2 = new AstScalar(Ast::Type::HIDDEN, "");
+				  auto a = new AstFixSize<4>(Ast::Type::DECL_CLASS, 
 											 $3, h1, h2, $5);
 				  a->setModifiers($1); $$ = a; }
 	 | modifiers "class" ident "extends" name_list "{" member_list "}"
-	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
-				  auto a = new FixSizeAst<4>(Ast::Type::DECL_CLASS, 
+	 			{ Ast *h = new AstScalar(Ast::Type::HIDDEN, "");
+				  auto a = new AstFixSize<4>(Ast::Type::DECL_CLASS, 
 											 $3, $5, h, $7);
 				  a->setModifiers($1); $$ = a; }
 	 | modifiers "class" ident "implements" name_list "{" member_list "}"
-	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
-				  auto a = new FixSizeAst<4>(Ast::Type::DECL_CLASS, 
+	 			{ Ast *h = new AstScalar(Ast::Type::HIDDEN, "");
+				  auto a = new AstFixSize<4>(Ast::Type::DECL_CLASS, 
 											 $3, h, $5, $7);
 				  a->setModifiers($1); $$ = a; }
 	 | modifiers "class" ident "extends" name_list "implements" name_list 
 				"{" member_list "}"
-	 			{ auto a = new FixSizeAst<4>(Ast::Type::DECL_CLASS, 
+	 			{ auto a = new AstFixSize<4>(Ast::Type::DECL_CLASS, 
 											 $3, $5, $7, $9);
 				  a->setModifiers($1); $$ = a; }
      | "interface" ident "{" member_list "}"	
-	 			{ Ast *h1 = new ScalarAst(Ast::Type::HIDDEN, "");
-	 			  Ast *h2 = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+	 			{ Ast *h1 = new AstScalar(Ast::Type::HIDDEN, "");
+	 			  Ast *h2 = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<4>(Ast::Type::DECL_INTERFACE, 
 										 $2, h1, h2, $4); }
 	 | "interface" ident "extends" name_list "{" member_list "}"
-	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+	 			{ Ast *h = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<4>(Ast::Type::DECL_INTERFACE, 
 										 $2, $4, h, $6); }
 	 | "interface" ident "implements" name_list "{" member_list "}"
-	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+	 			{ Ast *h = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<4>(Ast::Type::DECL_INTERFACE, 
 										 $2, h, $4, $6); }
 	 | "interface" ident "extends" name_list "implements" name_list 
 				"{" member_list "}"
-	 			{ $$ = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+	 			{ $$ = new AstFixSize<4>(Ast::Type::DECL_INTERFACE, 
 										 $2, $4, $6, $8); }
 	 | modifiers "interface" ident "{" member_list "}"	
-	 			{ Ast *h1 = new ScalarAst(Ast::Type::HIDDEN, "");
-	 			  Ast *h2 = new ScalarAst(Ast::Type::HIDDEN, "");
-				  auto a = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+	 			{ Ast *h1 = new AstScalar(Ast::Type::HIDDEN, "");
+	 			  Ast *h2 = new AstScalar(Ast::Type::HIDDEN, "");
+				  auto a = new AstFixSize<4>(Ast::Type::DECL_INTERFACE, 
 											 $3, h1, h2, $5);
 				  a->setModifiers($1); $$ = a; }
 	 | modifiers "interface" ident "extends" name_list "{" member_list "}"
-	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
-				  auto a = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+	 			{ Ast *h = new AstScalar(Ast::Type::HIDDEN, "");
+				  auto a = new AstFixSize<4>(Ast::Type::DECL_INTERFACE, 
 											 $3, $5, h, $7);
 				  a->setModifiers($1); $$ = a; }
 	 | modifiers "interface" ident "implements" name_list 
 				"{" member_list "}"
-	 			{ Ast *h = new ScalarAst(Ast::Type::HIDDEN, "");
-				  auto a = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+	 			{ Ast *h = new AstScalar(Ast::Type::HIDDEN, "");
+				  auto a = new AstFixSize<4>(Ast::Type::DECL_INTERFACE, 
 											 $3, h, $5, $7);
 				  a->setModifiers($1); $$ = a; }
 	 | modifiers "interface" ident "extends" name_list 
 				"implements" name_list "{" member_list "}"
-	 			{ auto a = new FixSizeAst<4>(Ast::Type::DECL_INTERFACE, 
+	 			{ auto a = new AstFixSize<4>(Ast::Type::DECL_INTERFACE, 
 											 $3, $5, $7, $9);
 				  a->setModifiers($1); $$ = a; }
 	 ;
 
 member_list: %empty					
-		   		{ $$ = new ListAst(Ast::Type::MEMBER_LIST); }
+		   		{ $$ = new AstList(Ast::Type::MEMBER_LIST); }
 		   | member_list decl_method
 				{ $1->append($2); $$ = $1; }
 		   | member_list decl_var
@@ -349,47 +349,47 @@ member_list: %empty
 		   ;
 
 decl_method: type_spec dector_name "(" param_list ")" "{" stmt_list "}"
- 				{ Ast* hidden = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<5>(Ast::Type::DECL_METHOD, 
+ 				{ Ast* hidden = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<5>(Ast::Type::DECL_METHOD, 
 										 $1, $2, $4, hidden, $7); }
            | modifiers type_spec dector_name "(" param_list ")" 
 				"{" stmt_list "}"
- 				{ Ast* hidden = new ScalarAst(Ast::Type::HIDDEN, "");
- 				  $$ = new FixSizeAst<5>(Ast::Type::DECL_METHOD, 
+ 				{ Ast* hidden = new AstScalar(Ast::Type::HIDDEN, "");
+ 				  $$ = new AstFixSize<5>(Ast::Type::DECL_METHOD, 
 										 $2, $3, $5, hidden, $8); 
 				  $$->asFixSize<5>().setModifiers($1); }
 		   | type_spec dector_name "(" param_list ")" 
 				"throws" name_list "{" stmt_list "}"
- 				{ $$ = new FixSizeAst<5>(Ast::Type::DECL_METHOD, 
+ 				{ $$ = new AstFixSize<5>(Ast::Type::DECL_METHOD, 
 										 $1, $2, $4, $7, $9); }
            | modifiers type_spec dector_name "(" param_list ")" 
 				"throws" name_list "{" stmt_list "}"
- 				{ $$ = new FixSizeAst<5>(Ast::Type::DECL_METHOD, 
+ 				{ $$ = new AstFixSize<5>(Ast::Type::DECL_METHOD, 
 										 $2, $3, $5, $8, $10); 
 				  $$->asFixSize<5>().setModifiers($1); }
 		   ;
 
 param_list: %empty
-		 		{ $$ = new ListAst(Ast::Type::DECL_PARAM_LIST); } 
+		 		{ $$ = new AstList(Ast::Type::DECL_PARAM_LIST); } 
 		  | param_list_noemp
 		 		{ $$ = $1; }
 
 param_list_noemp: decl_param
-		 		{ $$ = new ListAst(Ast::Type::DECL_PARAM_LIST); 
+		 		{ $$ = new AstList(Ast::Type::DECL_PARAM_LIST); 
 				  $$->append($1); } 
 		  | param_list_noemp "," decl_param
 				{ $1->append($3); $$ = $1; }
 		  ;
 
 decl_param: type_spec ident
-		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_PARAM, $1, $2); } 
+		 		{ $$ = new AstFixSize<2>(Ast::Type::DECL_PARAM, $1, $2); } 
 		  | "final" type_spec ident
-		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_PARAM, $2, $3); 
+		 		{ $$ = new AstFixSize<2>(Ast::Type::DECL_PARAM, $2, $3); 
 				  $$->asFixSize<2>().getModifiers().final = true; } 
 		  ;
 
 stmt_list: %empty
-		 		{ $$ = new ListAst(Ast::Type::STMT_LIST); }
+		 		{ $$ = new AstList(Ast::Type::STMT_LIST); }
 		 | stmt_list stmt
 				{ $1->append($2); $$ = $1; }
 		 ;
@@ -415,35 +415,35 @@ stmt: expr ";"
 	;
 
 ident: "identifier"
-				{ $$ = new ScalarAst(Ast::Type::IDENT, $1); }
+				{ $$ = new AstScalar(Ast::Type::IDENT, $1); }
 		;
 
 arg_list: %empty
-		 		{ $$ = new ListAst(Ast::Type::ARG_LIST); }
+		 		{ $$ = new AstList(Ast::Type::ARG_LIST); }
 		| arg_list_noemp
 		 		{ $$ = $1; }
 		;
 
 arg_list_noemp: expr
-		 		{ $$ = new ListAst(Ast::Type::ARG_LIST); $$->append($1); }
+		 		{ $$ = new AstList(Ast::Type::ARG_LIST); $$->append($1); }
 			  | arg_list_noemp "," expr
 		 		{ $1->append($3); $$ = $1; }
 			  ;
 
 decl_var: type_spec dector ";"
-		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_VAR, $1, $2); }
+		 		{ $$ = new AstFixSize<2>(Ast::Type::DECL_VAR, $1, $2); }
 		| type_spec dector_list ";" 
-		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_VAR, $1, $2); }
+		 		{ $$ = new AstFixSize<2>(Ast::Type::DECL_VAR, $1, $2); }
 		| modifiers type_spec dector ";" 
-		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_VAR, $2, $3); 
+		 		{ $$ = new AstFixSize<2>(Ast::Type::DECL_VAR, $2, $3); 
 				  $$->asFixSize<2>().setModifiers($1); }
 		| modifiers type_spec dector_list ";" 
-		 		{ $$ = new FixSizeAst<2>(Ast::Type::DECL_VAR, $2, $3); 
+		 		{ $$ = new AstFixSize<2>(Ast::Type::DECL_VAR, $2, $3); 
 				  $$->asFixSize<2>().setModifiers($1); }
 		;
 
 dector_list: dector "," dector
-		 		{ $$ = new ListAst(Ast::Type::DECTOR_LIST); 
+		 		{ $$ = new AstList(Ast::Type::DECTOR_LIST); 
 				  $$->append($1); $$->append($3); }
 		   | dector_list "," dector
 		 		{ $1->append($3); $$ = $1; }
@@ -452,45 +452,45 @@ dector_list: dector "," dector
 dector: dector_name
 				{ $$ = $1; }
 	  | dector_name "=" expr // TODO: array init
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASSIGN, $1, $3); } 
 	  ;
 
 dector_name: ident
 				{ $$ = $1; }
 		   | dector_name dims
-				{ $$ = new BopListAst($1, $2); }
+				{ $$ = new AstListBop($1, $2); }
 		   ;
 
 jump_stmt: "return" expr ";"
-		 		{ $$ = new FixSizeAst<1>(Ast::Type::RETURN, $2); }
+		 		{ $$ = new AstFixSize<1>(Ast::Type::RETURN, $2); }
 		 | "return" ";"
-		 		{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<1>(Ast::Type::RETURN, hidden); }
+		 		{ Ast *hidden = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<1>(Ast::Type::RETURN, hidden); }
 		 | "break" ident ";"
-		 		{ $$ = new FixSizeAst<1>(Ast::Type::BREAK, $2); }
+		 		{ $$ = new AstFixSize<1>(Ast::Type::BREAK, $2); }
 		 | "break" ";"
-		 		{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<1>(Ast::Type::BREAK, hidden); }
+		 		{ Ast *hidden = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<1>(Ast::Type::BREAK, hidden); }
 		 | "continue" ident ";"
-		 		{ $$ = new FixSizeAst<1>(Ast::Type::CONTINUE, $2); }
+		 		{ $$ = new AstFixSize<1>(Ast::Type::CONTINUE, $2); }
 		 | "continue" ";"
-		 		{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<1>(Ast::Type::CONTINUE, hidden); }
+		 		{ Ast *hidden = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<1>(Ast::Type::CONTINUE, hidden); }
 		 | "throw" ident ";"
-		 		{ $$ = new FixSizeAst<1>(Ast::Type::THROW, $2); }
+		 		{ $$ = new AstFixSize<1>(Ast::Type::THROW, $2); }
 		 ;
 
 while_stmt: "while" "(" expr ")" stmt
-		 		{ ListAst *body = $5->bodify();
-				  $$ = new FixSizeAst<2>(Ast::Type::WHILE, $3, body); }
+		 		{ AstList *body = $5->bodify();
+				  $$ = new AstFixSize<2>(Ast::Type::WHILE, $3, body); }
 
 do_while_stmt: "do" stmt "while" "(" expr ")" ";"
-		 		{ ListAst *body = $2->bodify();
-				  $$ = new FixSizeAst<2>(Ast::Type::DO_WHILE, body, $5); }
+		 		{ AstList *body = $2->bodify();
+				  $$ = new AstFixSize<2>(Ast::Type::DO_WHILE, body, $5); }
 
 for_stmt: "for" "(" for_init expr ";" expr ")" stmt
-		 		{ ListAst *body = $8->bodify();
-				  $$ = new FixSizeAst<4>(Ast::Type::FOR, 
+		 		{ AstList *body = $8->bodify();
+				  $$ = new AstFixSize<4>(Ast::Type::FOR, 
 										 $3, $4, $6, body); }
 		;
 
@@ -507,14 +507,14 @@ guard_stmt: "synchronized" "(" expression ")" stmt
 */
 
 try_list: "try" "{" stmt_list "}" catch_list
-				{ $$ = new ListAst(Ast::Type::TRY_LIST); 
+				{ $$ = new AstList(Ast::Type::TRY_LIST); 
 				  $$->append($3);
 				  size_t ct = $5->size();
 				  for (size_t i = 0; i < ct; i++)
 				  	  $$->append($5->remove(0));
 				  delete $5; }
 		| "try" "{" stmt_list "}" catch_list "finally" "{" stmt_list "}"
-				{ $$ = new ListAst(Ast::Type::TRY_LIST); 
+				{ $$ = new AstList(Ast::Type::TRY_LIST); 
 				  $$->append($3);
 				  size_t ct = $5->size();
 				  for (size_t i = 0; i < ct; i++)
@@ -525,37 +525,37 @@ try_list: "try" "{" stmt_list "}" catch_list
 
 catch_list: %empty
 		  		// type is dummy, list is temp
-				{ $$ = new ListAst(Ast::Type::IF_LIST); }
+				{ $$ = new AstList(Ast::Type::IF_LIST); }
 		  | catch_list catch
 				{ $1->append($2); 
 				  $$ = $1; }
 		  ;
 
 catch: "catch" "(" type_spec ident ")" "{" stmt_list "}"
-				{ Ast *decl = new FixSizeAst<2>(Ast::Type::DECL_VAR, 
+				{ Ast *decl = new AstFixSize<2>(Ast::Type::DECL_VAR, 
 												$3, $4);
-				  $$ = new FixSizeAst<2>(Ast::Type::CATCH, decl, $7); }
+				  $$ = new AstFixSize<2>(Ast::Type::CATCH, decl, $7); }
 	 | "catch" "(" type_spec ")" "{" stmt_list "}"
-				{ Ast *e = new ScalarAst(Ast::Type::IDENT, "e");
-				  Ast *decl = new FixSizeAst<2>(Ast::Type::DECL_VAR,
+				{ Ast *e = new AstScalar(Ast::Type::IDENT, "e");
+				  Ast *decl = new AstFixSize<2>(Ast::Type::DECL_VAR,
 												$3, e);
-				  $$ = new FixSizeAst<2>(Ast::Type::CATCH, decl, $6); }
+				  $$ = new AstFixSize<2>(Ast::Type::CATCH, decl, $6); }
 	 ;
 
 %right	"then" "else";
 
 if_list: "if" "(" expr ")" stmt %prec "then"
-				{ Ast *cond = new FixSizeAst<2>(Ast::Type::IF_CONDBODY,
+				{ Ast *cond = new AstFixSize<2>(Ast::Type::IF_CONDBODY,
 												$3, $5->bodify()); 
-				  $$ = new ListAst(Ast::Type::IF_LIST);
+				  $$ = new AstList(Ast::Type::IF_LIST);
 				  $$->append(cond); }
 	   | "if" "(" expr ")" stmt "else" stmt
-				{ Ast *cond = new FixSizeAst<2>(Ast::Type::IF_CONDBODY,
+				{ Ast *cond = new AstFixSize<2>(Ast::Type::IF_CONDBODY,
 												$3, $5->bodify()); 
-				  $$ = new ListAst(Ast::Type::IF_LIST);
+				  $$ = new AstList(Ast::Type::IF_LIST);
 				  $$->append(cond); 
 				  if ($7->getType() == Ast::Type::IF_LIST) {
-					  ListAst &tail = $7->asList();
+					  AstList &tail = $7->asList();
 					  size_t size = tail.size();
 					  for (size_t i = 0; i < size; i++)
 						  $$->append(tail.remove(0));
@@ -572,120 +572,120 @@ expr: expr_lv0
 expr_lv0: expr_lv1
 				{ $$ = $1; }
 		| expr_unary "=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASSIGN, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASSIGN, $1, $3); } 
 		| expr_unary "+=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_ADD, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_ADD, $1, $3); } 
 		| expr_unary "-=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_SUB, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_SUB, $1, $3); } 
 		| expr_unary "*=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_MUL, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_MUL, $1, $3); } 
 		| expr_unary "/=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_DIV, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_DIV, $1, $3); } 
 		| expr_unary "%=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_MOD, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_MOD, $1, $3); } 
 		| expr_unary "&=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_AND, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_AND, $1, $3); } 
 		| expr_unary "^=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_XOR, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_XOR, $1, $3); } 
 		| expr_unary "|=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_OR, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_OR, $1, $3); } 
 		| expr_unary "<<=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_SHL, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_SHL, $1, $3); } 
 		| expr_unary ">>=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_SHR, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_SHR, $1, $3); } 
 		| expr_unary ">>>=" expr_lv0
-				{ $$ = new FixSizeAst<2>(Ast::Type::ASS_SHRA, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::ASS_SHRA, $1, $3); } 
 		;
 
 expr_lv1: expr_lv2
 				{ $$ = $1; }
 		| expr_lv2 "?" expr ":" expr_lv1
-				{ $$ = new FixSizeAst<3>(Ast::Type::QUESTION, $1, $3, $5); }
+				{ $$ = new AstFixSize<3>(Ast::Type::QUESTION, $1, $3, $5); }
 		;
 
 expr_lv2: expr_lv3
 				{ $$ = $1; }
 		| expr_lv2 "||" expr_lv3
-				{ $$ = new BopListAst(Ast::Type::LOGIC_OR_BOP_LIST, 
-									  $1, $3, BopListAst::DEFAULT); } 
+				{ $$ = new AstListBop(Ast::Type::LOGIC_OR_BOP_LIST, 
+									  $1, $3, AstListBop::DEFAULT); } 
 		;
 
 expr_lv3: expr_lv4
 				{ $$ = $1; }
 		| expr_lv3 "&&" expr_lv4
-				{ $$ = new BopListAst(Ast::Type::LOGIC_AND_BOP_LIST, 
-									  $1, $3, BopListAst::DEFAULT); } 
+				{ $$ = new AstListBop(Ast::Type::LOGIC_AND_BOP_LIST, 
+									  $1, $3, AstListBop::DEFAULT); } 
 		;
 
 expr_lv4: expr_lv5
 				{ $$ = $1; }
 		| expr_lv4 "|" expr_lv5
-				{ $$ = new FixSizeAst<2>(Ast::Type::BIT_OR, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::BIT_OR, $1, $3); } 
 		;
 
 expr_lv5: expr_lv6
 				{ $$ = $1; }
 		| expr_lv5 "^" expr_lv6
-				{ $$ = new FixSizeAst<2>(Ast::Type::BIT_XOR, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::BIT_XOR, $1, $3); } 
 		;
 
 expr_lv6: expr_lv7
 				{ $$ = $1; }
 		| expr_lv6 "&" expr_lv7
-				{ $$ = new FixSizeAst<2>(Ast::Type::BIT_AND, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::BIT_AND, $1, $3); } 
 		;
 
 expr_lv7: expr_lv8
 				{ $$ = $1; }
 		| expr_lv7 "==" expr_lv8
-				{ $$ = new FixSizeAst<2>(Ast::Type::EQ, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::EQ, $1, $3); } 
 		| expr_lv7 "!=" expr_lv8
-				{ $$ = new FixSizeAst<2>(Ast::Type::NEQ, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::NEQ, $1, $3); } 
 		;
 
 expr_lv8: expr_lv9
 				{ $$ = $1; }
 		| expr_lv8 "<" expr_lv9
-				{ $$ = new FixSizeAst<2>(Ast::Type::LT, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::LT, $1, $3); } 
 		| expr_lv8 ">" expr_lv9
-				{ $$ = new FixSizeAst<2>(Ast::Type::GT, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::GT, $1, $3); } 
 		| expr_lv8 "<=" expr_lv9
-				{ $$ = new FixSizeAst<2>(Ast::Type::LEQ, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::LEQ, $1, $3); } 
 		| expr_lv8 ">=" expr_lv9
-				{ $$ = new FixSizeAst<2>(Ast::Type::GEQ, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::GEQ, $1, $3); } 
 		| expr_lv8 "instanceof" expr_lv9
-				{ $$ = new FixSizeAst<2>(Ast::Type::INSTANCEOF, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::INSTANCEOF, $1, $3); } 
 		;
 
 expr_lv9: expr_lv10
 				{ $$ = $1; }
 		| expr_lv9 "<<" expr_lv10
-				{ $$ = new FixSizeAst<2>(Ast::Type::SHL, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::SHL, $1, $3); } 
 		| expr_lv9 ">>" expr_lv10
-				{ $$ = new FixSizeAst<2>(Ast::Type::SHR, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::SHR, $1, $3); } 
 		| expr_lv9 ">>>" expr_lv10
-				{ $$ = new FixSizeAst<2>(Ast::Type::SHRA, $1, $3); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::SHRA, $1, $3); } 
 		;
 
 
 expr_lv10: expr_lv11
 				{ $$ = $1; }
 		 | expr_lv10 "+" expr_lv11
-				{ $$ = new BopListAst(Ast::Type::ADD_BOP_LIST, $1, $3, 
-									  BopListAst::ADD); }
+				{ $$ = new AstListBop(Ast::Type::ADD_BOP_LIST, $1, $3, 
+									  AstListBop::ADD); }
 		 | expr_lv10 "-" expr_lv11
-				{ $$ = new BopListAst(Ast::Type::ADD_BOP_LIST, $1, $3, 
-									  BopListAst::SUB); }
+				{ $$ = new AstListBop(Ast::Type::ADD_BOP_LIST, $1, $3, 
+									  AstListBop::SUB); }
 		 ;
 
 expr_lv11: expr_lv12
 				{ $$ = $1; }
 		 | expr_lv11 "*" expr_lv12
-				{ $$ = new BopListAst(Ast::Type::MUL_BOP_LIST, $1, $3, 
-									  BopListAst::MUL); }
+				{ $$ = new AstListBop(Ast::Type::MUL_BOP_LIST, $1, $3, 
+									  AstListBop::MUL); }
 		 | expr_lv11 "/" expr_lv12
-				{ $$ = new BopListAst(Ast::Type::MUL_BOP_LIST, $1, $3, 
-									  BopListAst::DIV); }
+				{ $$ = new AstListBop(Ast::Type::MUL_BOP_LIST, $1, $3, 
+									  AstListBop::DIV); }
 		 | expr_lv11 "%" expr_lv12
 				{ $$=$1; }
 		 ;
@@ -693,28 +693,28 @@ expr_lv11: expr_lv12
 expr_lv12: expr_unary
 				{ $$ = $1; } 
 		 | "(" expr_ptype ")" expr_lv12
-				{ $$ = new FixSizeAst<2>(Ast::Type::CAST, $2, $4); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::CAST, $2, $4); } 
 		 | "(" name dims ")" expr_lv12
-				{ Ast *d = new BopListAst($2, $3);
-				  $$ = new FixSizeAst<2>(Ast::Type::CAST, d, $5); } 
+				{ Ast *d = new AstListBop($2, $3);
+				  $$ = new AstFixSize<2>(Ast::Type::CAST, d, $5); } 
 		 | "(" expr ")" expr_unary_logic
-				{ $$ = new FixSizeAst<2>(Ast::Type::CAST, $2, $4); } 
+				{ $$ = new AstFixSize<2>(Ast::Type::CAST, $2, $4); } 
 		 ;
 
 expr_ptype: ptype
 				{ $$ = $1; } 
 		  | ptype dims
-				{ $$ = new BopListAst($1, $2); }
+				{ $$ = new AstListBop($1, $2); }
 		  ;
 
 expr_unary: "++" expr_unary
-				{ $$ = new FixSizeAst<1>(Ast::Type::PRE_INC, $2); } 
+				{ $$ = new AstFixSize<1>(Ast::Type::PRE_INC, $2); } 
 		  | "--" expr_unary
-				{ $$ = new FixSizeAst<1>(Ast::Type::PRE_DEC, $2); } 
+				{ $$ = new AstFixSize<1>(Ast::Type::PRE_DEC, $2); } 
 		  | "+" expr_lv12
-				{ $$ = new FixSizeAst<1>(Ast::Type::UNARY_PLUS, $2); } 
+				{ $$ = new AstFixSize<1>(Ast::Type::UNARY_PLUS, $2); } 
 		  | "-" expr_lv12
-				{ $$ = new FixSizeAst<1>(Ast::Type::UNARY_MINUS, $2); } 
+				{ $$ = new AstFixSize<1>(Ast::Type::UNARY_MINUS, $2); } 
 		  | expr_unary_logic
 				{ $$ = $1; }
 		  ;
@@ -722,9 +722,9 @@ expr_unary: "++" expr_unary
 expr_unary_logic: expr_pp
 				{ $$ = $1; }
 				| "~" expr_unary
-				{ $$ = new FixSizeAst<1>(Ast::Type::BIT_NOT, $2); } 
+				{ $$ = new AstFixSize<1>(Ast::Type::BIT_NOT, $2); } 
 				| "!" expr_unary
-				{ $$ = new FixSizeAst<1>(Ast::Type::LOGIC_NOT, $2); } 
+				{ $$ = new AstFixSize<1>(Ast::Type::LOGIC_NOT, $2); } 
 				;
 
 expr_pp: expr_post
@@ -734,9 +734,9 @@ expr_pp: expr_post
 	   ;
 
 expr_post: expr_pp "++"
-				{ $$ = new FixSizeAst<1>(Ast::Type::POST_INC, $1); } 
+				{ $$ = new AstFixSize<1>(Ast::Type::POST_INC, $1); } 
 		 | expr_pp "--"
-				{ $$ = new FixSizeAst<1>(Ast::Type::POST_DEC, $1); } 
+				{ $$ = new AstFixSize<1>(Ast::Type::POST_DEC, $1); } 
 		 ;
 
 expr_prime: name
@@ -761,24 +761,24 @@ expr_prime_cx: "(" expr ")"
 			 ;
 
 expr_prime_cx_nude: "number"
-				{ $$ = new ScalarAst(Ast::Type::NUMBER, $1); }
+				{ $$ = new AstScalar(Ast::Type::NUMBER, $1); }
 				  | "string"
-				{ $$ = new ScalarAst(Ast::Type::STRING, $1); }
+				{ $$ = new AstScalar(Ast::Type::STRING, $1); }
 				  | expr_call
 				{ $$ = $1; }
 				  | expr_field
 				{ $$ = $1; }
 				  | name "[" expr "]"
-				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
-									  BopListAst::ARR); }
+				{ $$ = new AstListBop(Ast::Type::DOT_BOP_LIST, $1, $3, 
+									  AstListBop::ARR); }
 				  | expr_prime_cx "[" expr "]"
-				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
-									  BopListAst::ARR); }
+				{ $$ = new AstListBop(Ast::Type::DOT_BOP_LIST, $1, $3, 
+									  AstListBop::ARR); }
 			;
 
 expr_call: callee "(" arg_list ")"
-				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
-									  BopListAst::CALL); }
+				{ $$ = new AstListBop(Ast::Type::DOT_BOP_LIST, $1, $3, 
+									  AstListBop::CALL); }
 	;
 
 expr_field: expr_prime_noname "." ident
@@ -797,31 +797,31 @@ expr_new: expr_new_plain
 		;
 
 expr_new_plain: "new" type_name "(" arg_list ")"
-				{ Ast* hidden = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<3>(Ast::Type::NEW_CLASS, 
+				{ Ast* hidden = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<3>(Ast::Type::NEW_CLASS, 
 										 $2, $4, hidden); } 
 			  | "new" type_name "(" arg_list ")" "{" member_list "}"
-				{ $$ = new FixSizeAst<3>(Ast::Type::NEW_CLASS, 
+				{ $$ = new AstFixSize<3>(Ast::Type::NEW_CLASS, 
 										 $2, $4, $7); } 
 // TODO: causes shift-reduce. also not supporting array init
 			  | "new" type_name dim_exprs dims
-				{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
+				{ Ast *hidden = new AstScalar(Ast::Type::HIDDEN, "");
 				  $3->asBopList().addDims($4);
-				  $$ = new FixSizeAst<3>(Ast::Type::NEW_ARRAY,
+				  $$ = new AstFixSize<3>(Ast::Type::NEW_ARRAY,
 										 $2, $3, hidden); }
 			  | "new" type_name dim_exprs
-				{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
-				  $$ = new FixSizeAst<3>(Ast::Type::NEW_ARRAY,
+				{ Ast *hidden = new AstScalar(Ast::Type::HIDDEN, "");
+				  $$ = new AstFixSize<3>(Ast::Type::NEW_ARRAY,
 										 $2, $3, hidden); }
 			  | "new" type_name dims
-				{ Ast *hidden = new ScalarAst(Ast::Type::HIDDEN, "");
-				  Ast *dimsA = BopListAst::makeDims($3);
-				  $$ = new FixSizeAst<3>(Ast::Type::NEW_ARRAY,
+				{ Ast *hidden = new AstScalar(Ast::Type::HIDDEN, "");
+				  Ast *dimsA = AstListBop::makeDims($3);
+				  $$ = new AstFixSize<3>(Ast::Type::NEW_ARRAY,
 										 $2, dimsA, hidden); }
 			  ;
 
 dim_exprs: "[" expr "]"
-		 		{ $$ = BopListAst::makeDims($2); }
+		 		{ $$ = AstListBop::makeDims($2); }
 		 | dim_exprs "[" expr "]"
 		 		{ $1->asBopList().addDims($3);
 				  $$ = $1; }
@@ -838,23 +838,23 @@ callee: expr_prime_cx_nude
 name: ident
 				{ $$ = $1; }
 	| name "." ident
-				{ $$ = new BopListAst(Ast::Type::DOT_BOP_LIST, $1, $3, 
-									  BopListAst::DOT); }
+				{ $$ = new AstListBop(Ast::Type::DOT_BOP_LIST, $1, $3, 
+									  AstListBop::DOT); }
 	;
 
 name_list: name
-		 		{ $$ = new ListAst(Ast::Type::NAME_LIST);
+		 		{ $$ = new AstList(Ast::Type::NAME_LIST);
 				  $$->append($1); }
 		 | name_list "," name
 				{ $1->append($3); $$ = $1; }
 		 ;
 
 special_name: "this"
-				{ $$= new ScalarAst(Ast::Type::IDENT,"this"); }
+				{ $$= new AstScalar(Ast::Type::IDENT,"this"); }
 			| "super"
-				{ $$= new ScalarAst(Ast::Type::IDENT,"super"); }
+				{ $$= new AstScalar(Ast::Type::IDENT,"super"); }
 			| "null"
-				{ $$= new ScalarAst(Ast::Type::IDENT,"null"); }
+				{ $$= new AstScalar(Ast::Type::IDENT,"null"); }
 			;
 
 dims: "[]"

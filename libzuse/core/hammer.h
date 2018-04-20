@@ -1,10 +1,10 @@
-#ifndef HAMMER_H
-#define HAMMER_H
+#ifndef ZUSE_HAMMER_H
+#define ZUSE_HAMMER_H
 
-#include "bonetoken.h"
-#include "../ast/scalarast.h"
-#include "../ast/fixsizeast.h"
-#include "../ast/listast.h"
+#include "token_bone.h"
+#include "../ast/ast_scalar.h"
+#include "../ast/ast_fix_size.h"
+#include "../ast/ast_list.h"
 
 
 
@@ -24,38 +24,38 @@ public:
 private:
     using Buf = std::vector<Token*>;
     using Type = Ast::Type;
-    using Sym = BoneToken::Sym;
+    using Sym = TokenBone::Sym;
 
     void hitGeneral(const Ast &ast, Buf &buf);
-    void hitScalar(const ScalarAst &ast, Buf &buf);
-    void hitList(const ListAst &ast, Buf &buf);
+    void hitScalar(const AstScalar &ast, Buf &buf);
+    void hitList(const AstList &ast, Buf &buf);
     void hitModifiers(Modifiers m, const Ast &ast, Buf &buf);
-    void hitClass(const FixSizeAst<4> &ast, Buf &buf);
-    void hitMethod(const FixSizeAst<5> &ast, Buf &buf);
-    void hitVarDecl(const FixSizeAst<2> &ast, Buf &buf);
-    void hitParamDecl(const FixSizeAst<2> &ast, Buf &buf);
-    void hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf);
-    void hitCatch(const FixSizeAst<2> &ast, Buf &buf);
-    void hitWhile(const FixSizeAst<2> &ast, Buf &buf);
-    void hitDoWhile(const FixSizeAst<2> &ast, Buf &buf);
-    void hitFor(const FixSizeAst<4> &ast, Buf &buf);
-    void hitJump(const FixSizeAst<1> &ast, Buf &buf);
-    void hitInfixBop(const FixSizeAst<2> &ast, Buf &buf);
-    void hitPrefixUop(const FixSizeAst<1> &ast, Buf &buf);
-    void hitPostfixUop(const FixSizeAst<1> &ast, Buf &buf);
-    void hitCast(const FixSizeAst<2> &ast, Buf &buf);
-    void hitNew(const FixSizeAst<3> &ast, Buf &buf);
-    void hitQuestion(const FixSizeAst<3> &ast, Buf &buf);
+    void hitClass(const AstFixSize<4> &ast, Buf &buf);
+    void hitMethod(const AstFixSize<5> &ast, Buf &buf);
+    void hitVarDecl(const AstFixSize<2> &ast, Buf &buf);
+    void hitParamDecl(const AstFixSize<2> &ast, Buf &buf);
+    void hitIfCondBody(const AstFixSize<2> &ast, Buf &buf);
+    void hitCatch(const AstFixSize<2> &ast, Buf &buf);
+    void hitWhile(const AstFixSize<2> &ast, Buf &buf);
+    void hitDoWhile(const AstFixSize<2> &ast, Buf &buf);
+    void hitFor(const AstFixSize<4> &ast, Buf &buf);
+    void hitJump(const AstFixSize<1> &ast, Buf &buf);
+    void hitInfixBop(const AstFixSize<2> &ast, Buf &buf);
+    void hitPrefixUop(const AstFixSize<1> &ast, Buf &buf);
+    void hitPostfixUop(const AstFixSize<1> &ast, Buf &buf);
+    void hitCast(const AstFixSize<2> &ast, Buf &buf);
+    void hitNew(const AstFixSize<3> &ast, Buf &buf);
+    void hitQuestion(const AstFixSize<3> &ast, Buf &buf);
 
-    void hitListBegin(const ListAst &ast, Buf &buf);
-    void hitListEnd(const ListAst &ast, Buf &buf);
-    void hitListSep(const ListAst &ast, Buf &buf, size_t pos);
-    static bool needBrace(const ListAst &ast, bool norec = false);
+    void hitListBegin(const AstList &ast, Buf &buf);
+    void hitListEnd(const AstList &ast, Buf &buf);
+    void hitListSep(const AstList &ast, Buf &buf, size_t pos);
+    static bool needBrace(const AstList &ast, bool norec = false);
 
-    void bone(const Ast &ast, Buf &buf, BoneToken::Sym sym);
+    void bone(const Ast &ast, Buf &buf, TokenBone::Sym sym);
 
 private:
     Tokens &mTokens;
 };
 
-#endif // HAMMER_H
+#endif // ZUSE_HAMMER_H

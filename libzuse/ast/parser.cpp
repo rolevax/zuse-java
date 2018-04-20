@@ -6,9 +6,9 @@ namespace yaloe
 void scan_begin(const std::string &filename, bool traceLex);
 void scan_end();
 
-RootAst *parse(const std::string& filename, bool traceLex, bool traceParse)
+AstRoot *parse(const std::string& filename, bool traceLex, bool traceParse)
 {
-	RootAst *root = new RootAst;
+	AstRoot *root = new AstRoot;
 
 	scan_begin(filename, traceLex); 
 	yy::BisonParser parser(filename, root);

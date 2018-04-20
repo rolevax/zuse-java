@@ -2,14 +2,14 @@
 #include "doc.h"
 
 #include "../ast/parser.h"
-#include "../mode/normalmode.h"
-#include "../mode/menumode.h"
-#include "../mode/tilexmode.h"
-#include "../mode/identinputmode.h"
-#include "../mode/numberinputmode.h"
-#include "../mode/stringinputmode.h"
-#include "../mode/listinputmode.h"
-#include "../mode/fixsizeinputmode.h"
+#include "../mode/mode_normal.h"
+#include "../mode/mode_menu.h"
+#include "../mode/mode_tilex.h"
+#include "../mode/mode_input_ident.h"
+#include "../mode/mode_input_number.h"
+#include "../mode/mode_input_string.h"
+#include "../mode/mode_input_list.h"
+#include "../mode/mode_input_fix_size.h"
 #include "../../gui/pdoc.h" // FUCK extract interface
 
 // headers for file I/O
@@ -29,7 +29,7 @@ Doc::Doc(DocListener &listener)
     : mTokens(listener)
     , mListener(listener)
 {
-    mModes.emplace_back(new NormalMode(*this));
+    mModes.emplace_back(new ModeNormal(*this));
 }
 
 void Doc::load(const std::string &filename)
@@ -121,7 +121,7 @@ void Doc::handleModeResult(const Mode::Result &res)
     }
 }
 
-const InternalAst &Doc::getOuter() const
+const AstInternal &Doc::getOuter() const
 {
     return *mOuter;
 }
@@ -140,7 +140,7 @@ void Doc::fallIn()
 {
     assert(mInner < mOuter->size());
 
-    InternalAst &focus = mOuter->at(mInner).asInternal();
+    AstInternal &focus = mOuter->at(mInner).asInternal();
     assert(focus.size() > 0);
 
     if (focus.isList()) {
@@ -158,7 +158,7 @@ void Doc::digOut()
     if (mOuter == mRoot.get())
         return;
 
-    InternalAst *nextOuter = &mOuter->getParent();
+    AstInternal *nextOuter = &mOuter->getParent();
     mInner = nextOuter->indexOf(mOuter);
     mOuter = nextOuter;
 }
@@ -207,7 +207,7 @@ void Doc::focusInBig(bool match(const Ast*))
             mInner = mOuter->indexOf(test);
             break;
         } else if (!test->isScalar()) { // keep searching
-            InternalAst &inTest = test->asInternal();
+            AstInternal &inTest = test->asInternal();
             for (size_t i = 0; i < inTest.size(); i++)
                 queue.push(&inTest.at(i));
         }
@@ -230,7 +230,7 @@ void Doc::focusInBig(Ast::Type match)
             mInner = mOuter->indexOf(test);
             break;
         } else if (!test->isScalar()) { // keep searching
-            InternalAst &inTest = test->asInternal();
+            AstInternal &inTest = test->asInternal();
             for (size_t i = 0; i < inTest.size(); i++)
                 queue.push(&inTest.at(i));
         }
@@ -289,7 +289,7 @@ void Doc::siblingBig(bool match(const Ast *), bool right)
             mInner = mOuter->indexOf(test);
             break;
         } else if (!test->isScalar()) { // keep searching
-            InternalAst &inTest = test->asInternal();
+            AstInternal &inTest = test->asInternal();
             if (right) {
                 for (size_t i = 0; i < inTest.size(); i++)
                     queue.push(&inTest.at(i));
@@ -327,7 +327,7 @@ void Doc::siblingBig(Ast::Type match, bool right)
             mInner = mOuter->indexOf(test);
             break;
         } else if (!test->isScalar()) { // keep searching
-            InternalAst &inTest = test->asInternal();
+            AstInternal &inTest = test->asInternal();
             if (right) {
                 for (size_t i = 0; i < inTest.size(); i++)
                     queue.push(&inTest.at(i));
@@ -352,8 +352,8 @@ void Doc::insert(Ast::Type type, int bop)
     Ast *a = newTree(type);
 
     mOuter->asList().insert(mInner, a);
-    if (BopListAst::UNUSED != bop) {
-        BopListAst &bast = mOuter->asBopList();
+    if (AstListBop::UNUSED != bop) {
+        AstListBop &bast = mOuter->asBopList();
         setBop(mOuter->asBopList(), mInner, bast.opAt(mInner + 1));
         setBop(mOuter->asBopList(), mInner + 1, bop);
     }
@@ -369,7 +369,7 @@ void Doc::append(Ast::Type type, int bop)
     Ast *a = newTree(type);
 
     mOuter->asList().insert(mInner, a);
-    if (BopListAst::UNUSED != bop)
+    if (AstListBop::UNUSED != bop)
         setBop(mOuter->asBopList(), mInner, bop);
 
     mTokens.sync(mRoot.get());
@@ -393,7 +393,7 @@ void Doc::remove()
     // does not care about hidden node issues.
     // hidden node issues are done in normal mode
     if (mOuter->isList()) {
-        ListAst *l = &mOuter->asList();
+        AstList *l = &mOuter->asList();
         l->erase(mInner);
 
         bool toRemoveSelf = l->illZero();
@@ -432,10 +432,10 @@ void Doc::nestAsLeft(Ast::Type type, int bop)
 {
     assert(mInner < mOuter->size());
 
-    InternalAst *nester = &newTree(type)->asInternal();
+    AstInternal *nester = &newTree(type)->asInternal();
     mOuter->nestAsLeft(mInner, nester);
 
-    if (BopListAst::UNUSED != bop)
+    if (AstListBop::UNUSED != bop)
         setBop(mOuter->at(mInner).asBopList(), 1, bop); // set inner, not outer!
 
     mTokens.sync(mRoot.get());
@@ -445,10 +445,10 @@ void Doc::nestAsRight(Ast::Type type, int bop)
 {
     assert(mInner < mOuter->size());
 
-    InternalAst *nester = &newTree(type)->asInternal();
+    AstInternal *nester = &newTree(type)->asInternal();
     mOuter->nestAsRight(mInner, nester);
 
-    if (BopListAst::UNUSED != bop)
+    if (AstListBop::UNUSED != bop)
         setBop(mOuter->at(mInner).asBopList(), 1, bop); // set inner, not outer!
 
     mTokens.sync(mRoot.get());
@@ -474,11 +474,11 @@ void Doc::cast(Ast::Type to)
         return;
 
     if (to == Type::ARG_LIST) {
-        nestAsLeft(Type::ARG_LIST, BopListAst::UNUSED);
+        nestAsLeft(Type::ARG_LIST, AstListBop::UNUSED);
     } else if (from == Type::DECL_VAR && to == Type::DECL_METHOD) {
         if (getInner().asInternal().at(1).isScalar()) {
             // from variable declaration to method declaration
-            InternalAst *a = &newTree(Type::DECL_METHOD)->asInternal();
+            AstInternal *a = &newTree(Type::DECL_METHOD)->asInternal();
             // copy return type and name
             a->change(0, getInner().asInternal().at(0).clone());
             a->change(1, getInner().asInternal().at(1).clone());
@@ -489,7 +489,7 @@ void Doc::cast(Ast::Type to)
         // size 2 ==> size 2
         if (Ast::isFixSize(to, 2) || Ast::isBopList(to)) {
             // simply copy children and change
-            InternalAst *a = &newTree(to)->asInternal();
+            AstInternal *a = &newTree(to)->asInternal();
             a->change(0, getInner().asInternal().at(0).clone());
             a->change(1, getInner().asInternal().at(1).clone());
             mOuter->change(mInner, a);
@@ -502,19 +502,19 @@ void Doc::cast(Ast::Type to)
 Mode *Doc::createModifyMode(bool clear, size_t offset, bool macroContext)
 {
     if (getInner().isList() && !getInner().isBopList())
-        return new ListInputMode(*this);
+        return new ModeInputList(*this);
     else if (getInner().isFixSize())
-        return new FixSizeInputMode(*this, getInner().asInternal(), offset);
+        return new ModeInputFixSize(*this, getInner().asInternal(), offset);
 
     switch (getInner().getType()) {
     case Ast::Type::META:
-        return new TilexMode(*this, macroContext);
+        return new ModeTilex(*this, macroContext);
     case Ast::Type::IDENT:
-        return new IdentInputMode(*this, clear);
+        return new ModeInputIdent(*this, clear);
     case Ast::Type::STRING:
-        return new StringInputMode(*this, clear);
+        return new ModeInputString(*this, clear);
     case Ast::Type::NUMBER:
-        return new NumberInputMode(*this, clear);
+        return new ModeInputNumber(*this, clear);
     default:
         return nullptr;
     }
@@ -522,7 +522,7 @@ Mode *Doc::createModifyMode(bool clear, size_t offset, bool macroContext)
 
 void Doc::scalarAppend(const char *str)
 {
-    ScalarAst &scalar = mOuter->at(mInner).asScalar();
+    AstScalar &scalar = mOuter->at(mInner).asScalar();
     while ('\0' != *str)
         scalar.append(*str++);
     mTokens.updateScalar(mOuter, mInner);
@@ -641,11 +641,11 @@ void Doc::toggleTension(bool b)
     mListener.onCursorTension(b);
 }
 
-void Doc::setBop(BopListAst &blist, size_t pos, int bop)
+void Doc::setBop(AstListBop &blist, size_t pos, int bop)
 {
     blist.setOpAt(pos, bop);
     if (blist.getType() == Ast::Type::DOT_BOP_LIST
-            && bop == BopListAst::CALL) {
+            && bop == AstListBop::CALL) {
         if (blist.at(pos).getType() != Ast::Type::ARG_LIST)
             blist.nestAsLeft(pos, &newTree(Ast::Type::ARG_LIST)->asList());
     }
@@ -659,11 +659,11 @@ Ast *Doc::newTree(Ast::Type type)
     Ast *a = nullptr;
 
     if (Ast::isBopList(type)) {
-        Ast *lhs = newTree(InternalAst::typeAt(type, 0));
-        Ast *rhs = newTree(InternalAst::typeAt(type, 1));
-        a = new BopListAst(type, lhs, rhs, BopListAst::DEFAULT);
+        Ast *lhs = newTree(AstInternal::typeAt(type, 0));
+        Ast *rhs = newTree(AstInternal::typeAt(type, 1));
+        a = new AstListBop(type, lhs, rhs, AstListBop::DEFAULT);
     } else if (Ast::isList(type)) {
-        ListAst *la = new ListAst(type);
+        AstList *la = new AstList(type);
         a = la;
         if (la->illZero())
             la->append(newTree(la->typeAt(0)));
@@ -671,30 +671,30 @@ Ast *Doc::newTree(Ast::Type type)
             la->append(newTree(la->typeAt(1)));
     } else if (Ast::isFixSize(type)) {
         if (Ast::isFixSize(type, 1)) {
-            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
-            a = new FixSizeAst<1>(type, t0);
+            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
+            a = new AstFixSize<1>(type, t0);
         } else if (Ast::isFixSize(type, 2)) {
-            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
-            Ast *t1 = newTree(InternalAst::typeAt(type, 1));
-            a = new FixSizeAst<2>(type, t0, t1);
+            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
+            Ast *t1 = newTree(AstInternal::typeAt(type, 1));
+            a = new AstFixSize<2>(type, t0, t1);
         } else if (Ast::isFixSize(type, 3)) {
-            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
-            Ast *t1 = newTree(InternalAst::typeAt(type, 1));
-            Ast *t2 = newTree(InternalAst::typeAt(type, 2));
-            a = new FixSizeAst<3>(type, t0, t1, t2);
+            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
+            Ast *t1 = newTree(AstInternal::typeAt(type, 1));
+            Ast *t2 = newTree(AstInternal::typeAt(type, 2));
+            a = new AstFixSize<3>(type, t0, t1, t2);
         } else if (Ast::isFixSize(type, 4)) {
-            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
-            Ast *t1 = newTree(InternalAst::typeAt(type, 1));
-            Ast *t2 = newTree(InternalAst::typeAt(type, 2));
-            Ast *t3 = newTree(InternalAst::typeAt(type, 3));
-            a = new FixSizeAst<4>(type, t0, t1, t2, t3);
+            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
+            Ast *t1 = newTree(AstInternal::typeAt(type, 1));
+            Ast *t2 = newTree(AstInternal::typeAt(type, 2));
+            Ast *t3 = newTree(AstInternal::typeAt(type, 3));
+            a = new AstFixSize<4>(type, t0, t1, t2, t3);
         } else if (Ast::isFixSize(type, 5)) {
-            Ast *t0 = newTree(InternalAst::typeAt(type, 0));
-            Ast *t1 = newTree(InternalAst::typeAt(type, 1));
-            Ast *t2 = newTree(InternalAst::typeAt(type, 2));
-            Ast *t3 = newTree(InternalAst::typeAt(type, 3));
-            Ast *t4 = newTree(InternalAst::typeAt(type, 4));
-            a = new FixSizeAst<5>(type, t0, t1, t2, t3, t4);
+            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
+            Ast *t1 = newTree(AstInternal::typeAt(type, 1));
+            Ast *t2 = newTree(AstInternal::typeAt(type, 2));
+            Ast *t3 = newTree(AstInternal::typeAt(type, 3));
+            Ast *t4 = newTree(AstInternal::typeAt(type, 4));
+            a = new AstFixSize<5>(type, t0, t1, t2, t3, t4);
         } else {
             throw "TODO";
         }
@@ -703,19 +703,19 @@ Ast *Doc::newTree(Ast::Type type)
 
         switch (type) {
         case Ast::Type::IDENT:
-            a = new ScalarAst(Ast::Type::IDENT, "id");
+            a = new AstScalar(Ast::Type::IDENT, "id");
             break;
         case Ast::Type::STRING:
-            a = new ScalarAst(Ast::Type::STRING, "");
+            a = new AstScalar(Ast::Type::STRING, "");
             break;
         case Ast::Type::NUMBER:
-            a = new ScalarAst(Ast::Type::NUMBER, "0");
+            a = new AstScalar(Ast::Type::NUMBER, "0");
             break;
         case Ast::Type::META:
-            a = new ScalarAst(Ast::Type::META, "");
+            a = new AstScalar(Ast::Type::META, "");
             break;
         case Ast::Type::HIDDEN:
-            a = new ScalarAst(Ast::Type::HIDDEN, "");
+            a = new AstScalar(Ast::Type::HIDDEN, "");
             break;
         default:
             throw "WTF";

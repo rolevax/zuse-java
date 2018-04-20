@@ -1,5 +1,5 @@
-#ifndef TOKEN_H
-#define TOKEN_H
+#ifndef ZUSE_TOKEN_H
+#define ZUSE_TOKEN_H
 
 #include "../ast/ast.h"
 
@@ -36,4 +36,4 @@ private:
     Role mRole;
 };
 
-#endif // TOKEN_H
+#endif // ZUSE_TOKEN_H

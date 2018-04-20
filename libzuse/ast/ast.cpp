@@ -1,9 +1,9 @@
 #include "ast.h"
-#include "scalarast.h"
-#include "fixsizeast.h"
-#include "internalast.h"
-#include "listast.h"
-#include "boplistast.h"
+#include "ast_scalar.h"
+#include "ast_fix_size.h"
+#include "ast_internal.h"
+#include "ast_list.h"
+#include "ast_list_bop.h"
 
 #include <cassert>
 
@@ -69,75 +69,75 @@ bool Ast::isScalar() const
     return isScalar(mType);
 }
 
-ScalarAst &Ast::asScalar()
+AstScalar &Ast::asScalar()
 {
     assert(isScalar());
-    return static_cast<ScalarAst&>(*this);
+    return static_cast<AstScalar&>(*this);
 }
 
-const ScalarAst &Ast::asScalar() const
+const AstScalar &Ast::asScalar() const
 {
     assert(isScalar());
-    return static_cast<const ScalarAst&>(*this);
+    return static_cast<const AstScalar&>(*this);
 }
 
-InternalAst &Ast::asInternal()
+AstInternal &Ast::asInternal()
 {
     assert(!isScalar());
-    return static_cast<InternalAst&>(*this);
+    return static_cast<AstInternal&>(*this);
 }
 
-const InternalAst &Ast::asInternal() const
+const AstInternal &Ast::asInternal() const
 {
     assert(!isScalar());
-    return static_cast<const InternalAst&>(*this);
+    return static_cast<const AstInternal&>(*this);
 }
 
 template<std::size_t N>
-FixSizeAst<N> &Ast::asFixSize()
+AstFixSize<N> &Ast::asFixSize()
 {
     assert(isFixSize(N));
-    return static_cast<FixSizeAst<N>&>(*this);
+    return static_cast<AstFixSize<N>&>(*this);
 }
 
 template<std::size_t N>
-const FixSizeAst<N> &Ast::asFixSize() const
+const AstFixSize<N> &Ast::asFixSize() const
 {
     assert(isFixSize(N));
-    return static_cast<const FixSizeAst<N>&>(*this);
+    return static_cast<const AstFixSize<N>&>(*this);
 }
 
-ListAst &Ast::asList()
+AstList &Ast::asList()
 {
     assert(isList());
-    return static_cast<ListAst&>(*this);
+    return static_cast<AstList&>(*this);
 }
 
-const ListAst &Ast::asList() const
+const AstList &Ast::asList() const
 {
     assert(isList());
-    return static_cast<const ListAst&>(*this);
+    return static_cast<const AstList&>(*this);
 }
 
-BopListAst &Ast::asBopList()
+AstListBop &Ast::asBopList()
 {
     assert(isBopList());
-    return static_cast<BopListAst&>(*this);
+    return static_cast<AstListBop&>(*this);
 }
 
-const BopListAst &Ast::asBopList() const
+const AstListBop &Ast::asBopList() const
 {
     assert(isBopList());
-    return static_cast<const BopListAst&>(*this);
+    return static_cast<const AstListBop&>(*this);
 }
 
-ListAst *Ast::bodify()
+AstList *Ast::bodify()
 {
     if (getType() == Type::STMT_LIST)
         return &this->asList();
 
     // nest with a stmt list, who takes over ownership of 'this'
-    ListAst *ret = new ListAst(Type::STMT_LIST);
+    AstList *ret = new AstList(Type::STMT_LIST);
     ret->append(this);
     return ret;
 }
@@ -217,12 +217,12 @@ Ast::Type Ast::getType() const
     return mType;
 }
 
-InternalAst &Ast::getParent() const
+AstInternal &Ast::getParent() const
 {
     return *mParent;
 }
 
-void Ast::setParent(InternalAst *next)
+void Ast::setParent(AstInternal *next)
 {
     mParent = next;
 }
@@ -246,17 +246,17 @@ int Ast::indentLevel() const
 }
 
 // instanciation
-template FixSizeAst<1> &Ast::asFixSize();
-template FixSizeAst<2> &Ast::asFixSize();
-template FixSizeAst<3> &Ast::asFixSize();
-template FixSizeAst<4> &Ast::asFixSize();
-template FixSizeAst<5> &Ast::asFixSize();
+template AstFixSize<1> &Ast::asFixSize();
+template AstFixSize<2> &Ast::asFixSize();
+template AstFixSize<3> &Ast::asFixSize();
+template AstFixSize<4> &Ast::asFixSize();
+template AstFixSize<5> &Ast::asFixSize();
 
 // instanciation
-template const FixSizeAst<1> &Ast::asFixSize() const;
-template const FixSizeAst<2> &Ast::asFixSize() const;
-template const FixSizeAst<3> &Ast::asFixSize() const;
-template const FixSizeAst<4> &Ast::asFixSize() const;
-template const FixSizeAst<5> &Ast::asFixSize() const;
+template const AstFixSize<1> &Ast::asFixSize() const;
+template const AstFixSize<2> &Ast::asFixSize() const;
+template const AstFixSize<3> &Ast::asFixSize() const;
+template const AstFixSize<4> &Ast::asFixSize() const;
+template const AstFixSize<5> &Ast::asFixSize() const;
 
 

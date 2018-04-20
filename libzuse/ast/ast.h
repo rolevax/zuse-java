@@ -1,15 +1,15 @@
-#ifndef AST_H
-#define AST_H
+#ifndef ZUSE_AST_H
+#define ZUSE_AST_H
 
 #include <cstddef>
 #include <memory>
 #include <iostream> // for Ast::dump()
 
-class ScalarAst;
-class InternalAst;
-template<std::size_t N> class FixSizeAst;
-class ListAst;
-class BopListAst;
+class AstScalar;
+class AstInternal;
+template<std::size_t N> class AstFixSize;
+class AstList;
+class AstListBop;
 
 class Ast
 {
@@ -67,18 +67,18 @@ public:
     bool isFixSize(size_t s = 0) const;
     bool isScalar() const;
 
-    ScalarAst &asScalar();
-    const ScalarAst &asScalar() const;
-    InternalAst &asInternal();
-    const InternalAst &asInternal() const;
-    template<std::size_t N> FixSizeAst<N> &asFixSize();
-    template<std::size_t N> const FixSizeAst<N> &asFixSize() const;
-    ListAst &asList();
-    const ListAst &asList() const;
-    BopListAst &asBopList();
-    const BopListAst &asBopList() const;
+    AstScalar &asScalar();
+    const AstScalar &asScalar() const;
+    AstInternal &asInternal();
+    const AstInternal &asInternal() const;
+    template<std::size_t N> AstFixSize<N> &asFixSize();
+    template<std::size_t N> const AstFixSize<N> &asFixSize() const;
+    AstList &asList();
+    const AstList &asList() const;
+    AstListBop &asBopList();
+    const AstListBop &asBopList() const;
 
-    ListAst *bodify();
+    AstList *bodify();
     static int precedence(Type mType);
     int precedence() const;
 
@@ -89,15 +89,15 @@ public:
     virtual Ast *clone() const = 0;
 
     Type getType() const;
-    InternalAst &getParent() const;
-    void setParent(InternalAst *next);
+    AstInternal &getParent() const;
+    void setParent(AstInternal *next);
 
     bool hasIndent() const;
     int indentLevel() const;
 
 private:
     Type mType;
-    InternalAst *mParent;
+    AstInternal *mParent;
 };
 
-#endif // AST_H
+#endif // ZUSE_AST_H

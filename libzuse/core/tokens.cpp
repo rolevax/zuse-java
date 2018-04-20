@@ -1,6 +1,6 @@
 #include "tokens.h"
-#include "bonetoken.h"
-#include "soultoken.h"
+#include "token_bone.h"
+#include "token_soul.h"
 
 #include <cassert>
 #include <cstdlib>
@@ -45,7 +45,7 @@ void Tokens::clear()
     mListener.onLineUpdated(0, pluck(0));
 }
 
-void Tokens::sync(const ListAst *root)
+void Tokens::sync(const AstList *root)
 {
     assert(root->getType() == Ast::Type::CLASS_LIST);
     clear();
@@ -55,7 +55,7 @@ void Tokens::sync(const ListAst *root)
 /**
  * @brief Apply a scalar change. Assuming it is a one-line change.
  */
-void Tokens::updateScalar(const InternalAst *outer, size_t inner)
+void Tokens::updateScalar(const AstInternal *outer, size_t inner)
 {
     assert(outer->at(inner).isScalar());
     Region r = locate(&outer->at(inner));
@@ -80,7 +80,7 @@ std::string Tokens::pluck(size_t r)
 /**
  * @brief Vertical concrete cursor moving
  */
-void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
+void Tokens::jackKick(AstInternal *&outer, size_t &inner, bool down)
 {
     Region r = locate(&outer->at(inner));
 
@@ -134,7 +134,7 @@ void Tokens::jackKick(InternalAst *&outer, size_t &inner, bool down)
 /**
  * @brief Horizontal concrete cursor moving
  */
-void Tokens::hackLead(InternalAst *&outer, size_t &inner, bool right)
+void Tokens::hackLead(AstInternal *&outer, size_t &inner, bool right)
 {
     Region r = locate(&outer->at(inner));
     // flesh token cannot have column index 0 since it's
@@ -295,7 +295,7 @@ Region Tokens::locate(const Ast *tar)
 void Tokens::suckComma(Region &r)
 {
     const Ast *in = mRows[r.br][r.bc]->getAst();
-    const InternalAst &par = in->getParent();
+    const AstInternal &par = in->getParent();
     if (par.size() > 1) {
         if (par.indexOf(in) == par.size() - 1) {
             /* very end of a non-single-element list

@@ -44,11 +44,11 @@
 
 	#include <string>
 	#include "ast.h"
-	#include "scalarast.h"
-	#include "fixsizeast.h"
-	#include "listast.h"
-	#include "boplistast.h"
-	#include "rootast.h"
+	#include "ast_scalar.h"
+	#include "ast_fix_size.h"
+	#include "ast_list.h"
+	#include "ast_list_bop.h"
+	#include "ast_root.h"
 	class ParseException;
 
 #line 55 "bison.hh" // lalr1.cc:377
@@ -357,7 +357,7 @@ namespace yy {
       // catch_list
       // if_list
       // name_list
-      char dummy2[sizeof(ListAst*)];
+      char dummy2[sizeof(AstList*)];
 
       // modifiers
       // modifier
@@ -516,7 +516,7 @@ namespace yy {
 
   basic_symbol (typename Base::kind_type t, const Ast* v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const ListAst* v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const AstList* v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const Modifiers v, const location_type& l);
 
@@ -929,7 +929,7 @@ namespace yy {
 
 
     /// Build a parser object.
-    BisonParser (const std::string &filename_yyarg, RootAst *result_yyarg);
+    BisonParser (const std::string &filename_yyarg, AstRoot *result_yyarg);
     virtual ~BisonParser ();
 
     /// Parse.
@@ -1143,7 +1143,7 @@ namespace yy {
 
     // User arguments.
     const std::string &filename;
-    RootAst *result;
+    AstRoot *result;
   };
 
   // Symbol number corresponding to token number t.
@@ -1287,7 +1287,7 @@ namespace yy {
       case 115: // catch_list
       case 117: // if_list
       case 148: // name_list
-        value.copy< ListAst* > (other.value);
+        value.copy< AstList* > (other.value);
         break;
 
       case 91: // modifiers
@@ -1386,7 +1386,7 @@ namespace yy {
       case 115: // catch_list
       case 117: // if_list
       case 148: // name_list
-        value.copy< ListAst* > (v);
+        value.copy< AstList* > (v);
         break;
 
       case 91: // modifiers
@@ -1428,7 +1428,7 @@ namespace yy {
   {}
 
   template <typename Base>
-  BisonParser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const ListAst* v, const location_type& l)
+  BisonParser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const AstList* v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
@@ -1544,7 +1544,7 @@ namespace yy {
       case 115: // catch_list
       case 117: // if_list
       case 148: // name_list
-        value.template destroy< ListAst* > ();
+        value.template destroy< AstList* > ();
         break;
 
       case 91: // modifiers
@@ -1649,7 +1649,7 @@ namespace yy {
       case 115: // catch_list
       case 117: // if_list
       case 148: // name_list
-        value.move< ListAst* > (s.value);
+        value.move< AstList* > (s.value);
         break;
 
       case 91: // modifiers

@@ -1,7 +1,7 @@
 CXX=clang++ -std=c++11 -I.
 
-ASTSRC=ast.cpp rootast.cpp listast.cpp boplistast.cpp\
-	   fixsizeast.cpp scalarast.cpp internalast.cpp
+ASTSRC=ast.cpp ast_root.cpp ast_list.cpp ast_list_bop.cpp\
+	   ast_fix_size.cpp ast_scalar.cpp ast_internal.cpp
 
 all: lex.cpp bison.cc
 	@${CXX} main.cpp parser.cpp bison.cc lex.cpp ${ASTSRC}

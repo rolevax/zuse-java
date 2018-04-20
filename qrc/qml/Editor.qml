@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Dialogs 1.2
-import sell 1.0
+import zuse 1.0
 
 Rectangle {
     property string filename

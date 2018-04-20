@@ -1,12 +1,12 @@
-#ifndef MODE_H
-#define MODE_H
+#ifndef ZUSE_MODE_H
+#define ZUSE_MODE_H
 
 #include "../core/keycode.h"
 #include "../ast/ast.h"
 
 
 
-class EditableDoc;
+class DocEditable;
 
 class Mode
 {
@@ -39,8 +39,8 @@ public:
     virtual const char *name() = 0;
 
 protected:
-    Mode(EditableDoc &doc) : mDoc(doc) {}
-    EditableDoc &mDoc;
+    Mode(DocEditable &doc) : mDoc(doc) {}
+    DocEditable &mDoc;
 };
 
-#endif // MODE_H
+#endif // ZUSE_MODE_H

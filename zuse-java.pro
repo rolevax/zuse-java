@@ -9,10 +9,10 @@ CONFIG(release, debug|release) {
     DEFINES += NDEBUG
 }
 
-HEADERS += gui/pdoc.h
+HEADERS += gui/p_doc.h
 
 SOURCES += main.cpp \
-    gui/pdoc.cpp
+    gui/p_doc.cpp
 
 RESOURCES += qrc/qml.qrc
 

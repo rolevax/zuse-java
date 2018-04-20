@@ -1,5 +1,5 @@
-#ifndef MODIFIERS_H
-#define MODIFIERS_H
+#ifndef ZUSE_MODIFIERS_H
+#define ZUSE_MODIFIERS_H
 
 #include <ostream>
 
@@ -73,4 +73,4 @@ inline std::ostream &operator<<(std::ostream &os, Modifiers m)
     return os << unsigned(m);
 }
 
-#endif // MODIFIERS_H
+#endif // ZUSE_MODIFIERS_H

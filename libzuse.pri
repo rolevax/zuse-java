@@ -17,66 +17,66 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Input
 HEADERS += libzuse/zuse.h \
            libzuse/ast/ast.h \
+           libzuse/ast/ast_fix_size.h \
+           libzuse/ast/ast_internal.h \
+           libzuse/ast/ast_list.h \
+           libzuse/ast/ast_list_bop.h \
+           libzuse/ast/ast_root.h \
+           libzuse/ast/ast_scalar.h \
            libzuse/ast/bison.hh \
-           libzuse/ast/boplistast.h \
-           libzuse/ast/fixsizeast.h \
-           libzuse/ast/internalast.h \
            libzuse/ast/lexproto.h \
-           libzuse/ast/listast.h \
            libzuse/ast/location.hh \
            libzuse/ast/modifiers.h \
-           libzuse/ast/parseexception.h \
+           libzuse/ast/parse_exception.h \
            libzuse/ast/parser.h \
            libzuse/ast/position.hh \
-           libzuse/ast/rootast.h \
-           libzuse/ast/scalarast.h \
            libzuse/ast/stack.hh \
-           libzuse/core/bonetoken.h \
            libzuse/core/doc.h \
+           libzuse/core/doc_editable.h \
            libzuse/core/doc_listener.h \
-           libzuse/core/editabledoc.h \
-           libzuse/core/fleshtoken.h \
            libzuse/core/hammer.h \
            libzuse/core/keycode.h \
-           libzuse/core/soultoken.h \
            libzuse/core/token.h \
+           libzuse/core/token_bone.h \
+           libzuse/core/token_flesh.h \
+           libzuse/core/token_soul.h \
            libzuse/core/tokens.h \
-           libzuse/mode/fixsizeinputmode.h \
-           libzuse/mode/identinputmode.h \
-           libzuse/mode/listinputmode.h \
-           libzuse/mode/macrohandler.h \
-           libzuse/mode/menumode.h \
+           libzuse/mode/macro_handler.h \
            libzuse/mode/mode.h \
-           libzuse/mode/mogglemode.h \
-           libzuse/mode/normalmode.h \
-           libzuse/mode/numberinputmode.h \
-           libzuse/mode/stringinputmode.h \
-           libzuse/mode/tilexmode.h
+           libzuse/mode/mode_input_fix_size.h \
+           libzuse/mode/mode_input_ident.h \
+           libzuse/mode/mode_input_list.h \
+           libzuse/mode/mode_input_number.h \
+           libzuse/mode/mode_input_string.h \
+           libzuse/mode/mode_menu.h \
+           libzuse/mode/mode_moggle.h \
+           libzuse/mode/mode_normal.h \
+           libzuse/mode/mode_tilex.h
 SOURCES += libzuse/ast/ast.cpp \
+           libzuse/ast/ast_fix_size.cpp \
+           libzuse/ast/ast_internal.cpp \
+           libzuse/ast/ast_list.cpp \
+           libzuse/ast/ast_list_bop.cpp \
+           libzuse/ast/ast_root.cpp \
+           libzuse/ast/ast_scalar.cpp \
            libzuse/ast/bison.cc \
-           libzuse/ast/boplistast.cpp \
-           libzuse/ast/fixsizeast.cpp \
-           libzuse/ast/internalast.cpp \
            libzuse/ast/lex.cpp \
-           libzuse/ast/listast.cpp \
            libzuse/ast/parser.cpp \
-           libzuse/ast/rootast.cpp \
-           libzuse/ast/scalarast.cpp \
-           libzuse/core/bonetoken.cpp \
            libzuse/core/doc.cpp \
-           libzuse/core/fleshtoken.cpp \
            libzuse/core/hammer.cpp \
            libzuse/core/keycode.cpp \
-           libzuse/core/soultoken.cpp \
            libzuse/core/token.cpp \
+           libzuse/core/token_bone.cpp \
+           libzuse/core/token_flesh.cpp \
+           libzuse/core/token_soul.cpp \
            libzuse/core/tokens.cpp \
-           libzuse/mode/fixsizeinputmode.cpp \
-           libzuse/mode/identinputmode.cpp \
-           libzuse/mode/listinputmode.cpp \
-           libzuse/mode/macrohandler.cpp \
-           libzuse/mode/menumode.cpp \
-           libzuse/mode/mogglemode.cpp \
-           libzuse/mode/normalmode.cpp \
-           libzuse/mode/numberinputmode.cpp \
-           libzuse/mode/stringinputmode.cpp \
-           libzuse/mode/tilexmode.cpp
+           libzuse/mode/macro_handler.cpp \
+           libzuse/mode/mode_input_fix_size.cpp \
+           libzuse/mode/mode_input_ident.cpp \
+           libzuse/mode/mode_input_list.cpp \
+           libzuse/mode/mode_input_number.cpp \
+           libzuse/mode/mode_input_string.cpp \
+           libzuse/mode/mode_menu.cpp \
+           libzuse/mode/mode_moggle.cpp \
+           libzuse/mode/mode_normal.cpp \
+           libzuse/mode/mode_tilex.cpp

@@ -1,10 +1,10 @@
 #include "hammer.h"
 #include "tokens.h"
-#include "fleshtoken.h"
-#include "soultoken.h"
+#include "token_flesh.h"
+#include "token_soul.h"
 
-#include "../ast/boplistast.h"
-#include "../ast/fixsizeast.h"
+#include "../ast/ast_list_bop.h"
+#include "../ast/ast_fix_size.h"
 
 #include <cassert>
 
@@ -23,7 +23,7 @@ void Hammer::hit(const Ast &ast, size_t r, size_t c)
 
 void Hammer::hitGeneral(const Ast &ast, Buf &buf)
 {
-    buf.push_back(new SoulToken(&ast, Token::Role::BEGIN));
+    buf.push_back(new TokenSoul(&ast, Token::Role::BEGIN));
 
     bool autoParen = ast.precedence() > 0
             && ast.precedence() <= ast.getParent().precedence();
@@ -128,10 +128,10 @@ void Hammer::hitGeneral(const Ast &ast, Buf &buf)
     if (autoParen)
         bone(ast, buf, Sym::RPAREN);
 
-    buf.push_back(new SoulToken(&ast, Token::Role::END));
+    buf.push_back(new TokenSoul(&ast, Token::Role::END));
 }
 
-void Hammer::hitScalar(const ScalarAst &ast, Buf &buf)
+void Hammer::hitScalar(const AstScalar &ast, Buf &buf)
 {
     if (ast.getType() == Type::META) {
         bone(ast, buf, Sym::META);
@@ -141,13 +141,13 @@ void Hammer::hitScalar(const ScalarAst &ast, Buf &buf)
         bool isString = ast.getType() == Type::STRING;
         if (isString)
             bone(ast, buf, Sym::DQUOTE);
-        buf.push_back(new FleshToken(&ast.asScalar()));
+        buf.push_back(new TokenFlesh(&ast.asScalar()));
         if (isString)
             bone(ast, buf, Sym::DQUOTE);
     }
 }
 
-void Hammer::hitList(const ListAst &ast, Buf &buf)
+void Hammer::hitList(const AstList &ast, Buf &buf)
 {
     hitListBegin(ast, buf);
 
@@ -183,7 +183,7 @@ void Hammer::hitModifiers(Modifiers m, const Ast &ast, Buf &buf)
         bone(ast, buf, Sym::SYNCHRONIZED);
 }
 
-void Hammer::hitClass(const FixSizeAst<4> &ast, Buf &buf)
+void Hammer::hitClass(const AstFixSize<4> &ast, Buf &buf)
 {
     hitModifiers(ast.getModifiers(), ast, buf);
     bone(ast, buf, ast.getType() == Type::DECL_CLASS ? Sym::CLASS : Sym::INTERFACE);
@@ -200,7 +200,7 @@ void Hammer::hitClass(const FixSizeAst<4> &ast, Buf &buf)
     hitGeneral(ast.at(3), buf); // member list
 }
 
-void Hammer::hitMethod(const FixSizeAst<5> &ast, Buf &buf)
+void Hammer::hitMethod(const AstFixSize<5> &ast, Buf &buf)
 {
     hitModifiers(ast.getModifiers(), ast, buf);
     hitGeneral(ast.at(0), buf); // return type
@@ -215,7 +215,7 @@ void Hammer::hitMethod(const FixSizeAst<5> &ast, Buf &buf)
     hitGeneral(ast.at(4), buf); // stmt list
 }
 
-void Hammer::hitVarDecl(const FixSizeAst<2> &ast, Buf &buf)
+void Hammer::hitVarDecl(const AstFixSize<2> &ast, Buf &buf)
 {
     hitModifiers(ast.getModifiers(), ast, buf);
     hitGeneral(ast.at(0), buf); // type
@@ -229,7 +229,7 @@ void Hammer::hitVarDecl(const FixSizeAst<2> &ast, Buf &buf)
         bone(ast, buf, Sym::SEMICOLON);
 }
 
-void Hammer::hitParamDecl(const FixSizeAst<2> &ast, Buf &buf)
+void Hammer::hitParamDecl(const AstFixSize<2> &ast, Buf &buf)
 {
     hitModifiers(ast.getModifiers(), ast, buf);
     hitGeneral(ast.at(0), buf); // type
@@ -237,7 +237,7 @@ void Hammer::hitParamDecl(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(1), buf); // identifier
 }
 
-void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf)
+void Hammer::hitIfCondBody(const AstFixSize<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::IF);
     bone(ast, buf, Sym::LPAREN);
@@ -246,7 +246,7 @@ void Hammer::hitIfCondBody(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(1), buf); // statement list
 }
 
-void Hammer::hitCatch(const FixSizeAst<2> &ast, Buf &buf)
+void Hammer::hitCatch(const AstFixSize<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::CATCH);
     bone(ast, buf, Sym::LPAREN);
@@ -255,7 +255,7 @@ void Hammer::hitCatch(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(1), buf); // statement list
 }
 
-void Hammer::hitWhile(const FixSizeAst<2> &ast, Buf &buf)
+void Hammer::hitWhile(const AstFixSize<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::WHILE);
     bone(ast, buf, Sym::LPAREN);
@@ -264,7 +264,7 @@ void Hammer::hitWhile(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(1), buf); // stmt
 }
 
-void Hammer::hitDoWhile(const FixSizeAst<2> &ast, Buf &buf)
+void Hammer::hitDoWhile(const AstFixSize<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::DO);
     hitGeneral(ast.at(0), buf); // stmt
@@ -276,7 +276,7 @@ void Hammer::hitDoWhile(const FixSizeAst<2> &ast, Buf &buf)
     bone(ast, buf, Sym::SEMICOLON);
 }
 
-void Hammer::hitFor(const FixSizeAst<4> &ast, Buf &buf)
+void Hammer::hitFor(const AstFixSize<4> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::FOR);
     bone(ast, buf, Sym::LPAREN);
@@ -291,7 +291,7 @@ void Hammer::hitFor(const FixSizeAst<4> &ast, Buf &buf)
     hitGeneral(ast.at(3), buf);
 }
 
-void Hammer::hitJump(const FixSizeAst<1> &ast, Buf &buf)
+void Hammer::hitJump(const AstFixSize<1> &ast, Buf &buf)
 {
     switch (ast.getType()) {
     case Type::RETURN:
@@ -317,26 +317,26 @@ void Hammer::hitJump(const FixSizeAst<1> &ast, Buf &buf)
     bone(ast, buf, Sym::SEMICOLON);
 }
 
-void Hammer::hitInfixBop(const FixSizeAst<2> &ast, Buf &buf)
+void Hammer::hitInfixBop(const AstFixSize<2> &ast, Buf &buf)
 {
     hitGeneral(ast.at(0), buf); // lhs
-    buf.push_back(new BoneToken(&ast));
+    buf.push_back(new TokenBone(&ast));
     hitGeneral(ast.at(1), buf); // rhs
 }
 
-void Hammer::hitPrefixUop(const FixSizeAst<1> &ast, Buf &buf)
+void Hammer::hitPrefixUop(const AstFixSize<1> &ast, Buf &buf)
 {
-    buf.push_back(new BoneToken(&ast)); // operator
+    buf.push_back(new TokenBone(&ast)); // operator
     hitGeneral(ast.at(0), buf); // operand
 }
 
-void Hammer::hitPostfixUop(const FixSizeAst<1> &ast, Buf &buf)
+void Hammer::hitPostfixUop(const AstFixSize<1> &ast, Buf &buf)
 {
     hitGeneral(ast.at(0), buf); // operand
-    buf.push_back(new BoneToken(&ast)); // operator
+    buf.push_back(new TokenBone(&ast)); // operator
 }
 
-void Hammer::hitCast(const FixSizeAst<2> &ast, Buf &buf)
+void Hammer::hitCast(const AstFixSize<2> &ast, Buf &buf)
 {
     bone(ast, buf, Sym::LPAREN);
     hitGeneral(ast.at(0), buf); // type
@@ -344,7 +344,7 @@ void Hammer::hitCast(const FixSizeAst<2> &ast, Buf &buf)
     hitGeneral(ast.at(1), buf); // val
 }
 
-void Hammer::hitNew(const FixSizeAst<3> &ast, Hammer::Buf &buf)
+void Hammer::hitNew(const AstFixSize<3> &ast, Hammer::Buf &buf)
 {
     bone(ast, buf, Sym::NEW);
     hitGeneral(ast.at(0), buf); // type
@@ -352,7 +352,7 @@ void Hammer::hitNew(const FixSizeAst<3> &ast, Hammer::Buf &buf)
     hitGeneral(ast.at(2), buf); // member list or hidden
 }
 
-void Hammer::hitQuestion(const FixSizeAst<3> &ast, Buf &buf)
+void Hammer::hitQuestion(const AstFixSize<3> &ast, Buf &buf)
 {
     hitGeneral(ast.at(0), buf); // condition
     bone(ast, buf, Sym::QUESTION);
@@ -361,7 +361,7 @@ void Hammer::hitQuestion(const FixSizeAst<3> &ast, Buf &buf)
     hitGeneral(ast.at(2), buf); // val2
 }
 
-void Hammer::hitListBegin(const ListAst &ast, Buf &buf)
+void Hammer::hitListBegin(const AstList &ast, Buf &buf)
 {
     switch (ast.getType()) {
     case Type::MEMBER_LIST:
@@ -387,7 +387,7 @@ void Hammer::hitListBegin(const ListAst &ast, Buf &buf)
         bone(ast, buf, Sym::LPAREN);
         break;
     case Type::DOT_BOP_LIST:
-        if (ast.size() > 0 && ast.asBopList().opAt(0) == BopListAst::ARR)
+        if (ast.size() > 0 && ast.asBopList().opAt(0) == AstListBop::ARR)
             bone(ast, buf, Sym::LSQUARE);
         break;
     default:
@@ -395,7 +395,7 @@ void Hammer::hitListBegin(const ListAst &ast, Buf &buf)
     }
 }
 
-void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
+void Hammer::hitListEnd(const AstList &ast, Hammer::Buf &buf)
 {
     switch (ast.getType()) {
     case Type::MEMBER_LIST:
@@ -417,7 +417,7 @@ void Hammer::hitListEnd(const ListAst &ast, Hammer::Buf &buf)
 }
 
 // pos: position of just already hit child
-void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
+void Hammer::hitListSep(const AstList &ast, Hammer::Buf &buf, size_t pos)
 {
     bool end = pos == ast.size() - 1;
 
@@ -468,29 +468,29 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
         break;
     case Type::ADD_BOP_LIST:
         if (!end) {
-            const BopListAst &bast = ast.asBopList();
+            const AstListBop &bast = ast.asBopList();
             Sym sym = bast.opAt(pos + 1) == 0 ? Sym::ADD : Sym::SUB;
             bone(ast, buf, sym);
         }
         break;
     case Type::MUL_BOP_LIST:
         if (!end) {
-            const BopListAst &bast = ast.asBopList();
+            const AstListBop &bast = ast.asBopList();
             int op = bast.opAt(pos + 1);
             Sym sym = op == 0 ? Sym::MUL : op == 1 ? Sym::DIV : Sym::MOD;
             bone(ast, buf, sym);
         }
         break;
     case Type::DOT_BOP_LIST: {
-        const BopListAst &bast = ast.asBopList();
-        if (bast.opAt(pos) == BopListAst::ARR) // previous bop
+        const AstListBop &bast = ast.asBopList();
+        if (bast.opAt(pos) == AstListBop::ARR) // previous bop
             bone(ast, buf, Sym::RSQUARE);
 
         if (!end) {
             int bop = bast.opAt(pos + 1);
-            if (bop == BopListAst::DOT)
+            if (bop == AstListBop::DOT)
                 bone(ast, buf, Sym::DOT);
-            else if (bop == BopListAst::ARR)
+            else if (bop == AstListBop::ARR)
                 bone(ast, buf, Sym::LSQUARE);
         }
         break;
@@ -508,7 +508,7 @@ void Hammer::hitListSep(const ListAst &ast, Hammer::Buf &buf, size_t pos)
     }
 }
 
-bool Hammer::needBrace(const ListAst &ast, bool norec)
+bool Hammer::needBrace(const AstList &ast, bool norec)
 {
     assert(ast.getType() == Type::STMT_LIST);
 
@@ -526,9 +526,9 @@ bool Hammer::needBrace(const ListAst &ast, bool norec)
     // a body inside 'if' needs braces whenever one of its siblings does
     // the following lines are all for that
 
-    const ListAst *ifList = nullptr;
+    const AstList *ifList = nullptr;
     if (pt == Type::IF_CONDBODY) {
-        const InternalAst &par = ast.getParent().getParent();
+        const AstInternal &par = ast.getParent().getParent();
         if (par.getType() == Type::IF_LIST)
             ifList = &par.asList();
     } else if (pt == Type::IF_LIST) {
@@ -552,6 +552,6 @@ bool Hammer::needBrace(const ListAst &ast, bool norec)
 
 void Hammer::bone(const Ast &ast, Buf &buf, Sym sym)
 {
-    buf.push_back(new BoneToken(&ast, sym));
+    buf.push_back(new TokenBone(&ast, sym));
 }
 

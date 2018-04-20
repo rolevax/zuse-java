@@ -1,18 +1,18 @@
-#ifndef DOC_H
-#define DOC_H
+#ifndef ZUSE_DOC_H
+#define ZUSE_DOC_H
 
-#include "editabledoc.h"
+#include "doc_editable.h"
 #include "keycode.h"
 #include "tokens.h"
 
-#include "../ast/rootast.h"
+#include "../ast/ast_root.h"
 
 
 
-class BopListAst;
+class AstListBop;
 class PDoc;
 
-class Doc : public EditableDoc
+class Doc : public DocEditable
 {
 public:
     explicit Doc(DocListener &listener);
@@ -32,7 +32,7 @@ private:
 
     /// @name EditableDoc interface
     ///@{
-    const InternalAst &getOuter() const override;
+    const AstInternal &getOuter() const override;
     const Ast &getInner() const override;
     size_t getInnerIndex() const override;
 
@@ -83,14 +83,14 @@ private:
 
     /// @name "really" private functions
     ///@{
-    void setBop(BopListAst &blist, size_t pos, int bop);
+    void setBop(AstListBop &blist, size_t pos, int bop);
     Ast *newTree(Ast::Type type);
     ///@}
 
 private:
     std::vector<std::unique_ptr<Mode>> mModes;
-    std::unique_ptr<RootAst> mRoot = nullptr;
-    InternalAst *mOuter = nullptr;
+    std::unique_ptr<AstRoot> mRoot = nullptr;
+    AstInternal *mOuter = nullptr;
     size_t mInner = 0;
     std::unique_ptr<Ast> mClipslots[26];
     size_t mClipIndex = 0;
@@ -98,4 +98,4 @@ private:
     DocListener &mListener;
 };
 
-#endif // DOC_H
+#endif // ZUSE_DOC_H

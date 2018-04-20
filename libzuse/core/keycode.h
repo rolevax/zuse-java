@@ -1,5 +1,5 @@
-#ifndef KEYCODE_H
-#define KEYCODE_H
+#ifndef ZUSE_KEYCODE_H
+#define ZUSE_KEYCODE_H
 
 enum class Key
 {
@@ -33,4 +33,4 @@ Key fromChar(char c);
 
 }
 
-#endif // KEYCODE_H
+#endif // ZUSE_KEYCODE_H
