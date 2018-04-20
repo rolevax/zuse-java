@@ -3,9 +3,9 @@
 	#include <climits>
 	#include <cstdlib>
 	#include <string>
-	#include "ast/bison.hh"
-	#include "ast/lexproto.h"
-	#include "ast/parseexception.h"
+	#include "bison.hh"
+	#include "lexproto.h"
+	#include "parseexception.h"
 
 	// Work around an incompatibility in flex (at least versions
 	// 2.5.31 through 2.5.33): it generates code that does

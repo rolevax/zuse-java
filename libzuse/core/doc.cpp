@@ -10,7 +10,7 @@
 #include "../mode/stringinputmode.h"
 #include "../mode/listinputmode.h"
 #include "../mode/fixsizeinputmode.h"
-#include "../gui/pdoc.h"
+#include "../../gui/pdoc.h" // FUCK extract interface
 
 // headers for file I/O
 #include <fstream>

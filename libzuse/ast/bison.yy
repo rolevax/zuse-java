@@ -10,12 +10,12 @@
 %code requires
 {
 	#include <string>
-	#include "ast/ast.h"
-	#include "ast/scalarast.h"
-	#include "ast/fixsizeast.h"
-	#include "ast/listast.h"
-	#include "ast/boplistast.h"
-	#include "ast/rootast.h"
+	#include "ast.h"
+	#include "scalarast.h"
+	#include "fixsizeast.h"
+	#include "listast.h"
+	#include "boplistast.h"
+	#include "rootast.h"
 	class ParseException;
 }
 
@@ -36,8 +36,8 @@
 
 %code
 {
-	#include "ast/lexproto.h"
-	#include "ast/parseexception.h"
+	#include "lexproto.h"
+	#include "parseexception.h"
 }
 
 %define api.token.prefix {TOK_}

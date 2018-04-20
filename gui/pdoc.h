@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <memory>
-#include "core/doc.h"
+#include "libzuse/zuse.h"
 
 class PDoc : public QObject, public TokensObserver
 {

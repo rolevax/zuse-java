@@ -4,7 +4,7 @@ ASTSRC=ast.cpp rootast.cpp listast.cpp boplistast.cpp\
 	   fixsizeast.cpp scalarast.cpp internalast.cpp
 
 all: lex.cpp bison.cc
-	@${CXX} mian.cpp parser.cpp bison.cc lex.cpp ${ASTSRC}
+	@${CXX} main.cpp parser.cpp bison.cc lex.cpp ${ASTSRC}
 	@echo 'Test harness generated'
 
 bison.cc: bison.yy

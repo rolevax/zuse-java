@@ -1,7 +1,7 @@
 #ifndef NUMBERINPUTMODE_H
 #define NUMBERINPUTMODE_H
 
-#include "mode/mode.h"
+#include "mode.h"
 
 class NumberInputMode : public Mode
 {

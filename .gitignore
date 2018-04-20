@@ -1,7 +1,4 @@
 *.pro.user
-ast/a.out
-ast/*.cc
-ast/*.hh
-ast/lex.cpp
-ast/*.java
+libzuse/ast/a.out
+libzuse/ast/*.java
 
