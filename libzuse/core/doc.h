@@ -15,7 +15,7 @@ class PDoc;
 class Doc : public EditableDoc
 {
 public:
-    Doc(PDoc &dob, TokensObserver &tob);
+    explicit Doc(DocListener &listener);
 
     Doc(const Doc&) = delete;
     Doc &operator=(const Doc&) = delete;
@@ -95,7 +95,7 @@ private:
     std::unique_ptr<Ast> mClipslots[26];
     size_t mClipIndex = 0;
     Tokens mTokens;
-    PDoc &mOb;
+    DocListener &mListener;
 };
 
 #endif // DOC_H

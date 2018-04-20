@@ -25,9 +25,9 @@
 #include <iostream>
 #include <cstdlib>
 
-Doc::Doc(PDoc &dob, TokensObserver &tob)
-    : mTokens(tob),
-      mOb(dob)
+Doc::Doc(DocListener &listener)
+    : mTokens(listener)
+    , mListener(listener)
 {
     mModes.emplace_back(new NormalMode(*this));
 }
@@ -86,7 +86,7 @@ void Doc::push(Mode *mode)
         return;
 
     mModes.emplace_back(mode);
-    mOb.observePush(mModes.back()->name());
+    mListener.onModePushed(mModes.back()->name());
     Mode::Result res = mModes.back()->onPushed();
     handleModeResult(res);
     assert(res.handled());
@@ -100,7 +100,7 @@ void Doc::pop()
 {
     assert(mModes.size() > 1); // bottom normal mode reserved
 
-    mOb.observePop();
+    mListener.onModePopped();
 
     std::unique_ptr<Mode> popped = std::move(mModes.back());
     mModes.pop_back();
@@ -601,7 +601,7 @@ void Doc::switchClip(char c)
 {
     assert('a' <= c && c <= 'z');
     mClipIndex = c - 'a';
-    mOb.observeSwitchClip(c);
+    mListener.onClipSwitched(c);
 }
 
 void Doc::yank(const Ast &a)
@@ -638,7 +638,7 @@ void Doc::setHotLight(HotLightLevel level)
 
 void Doc::toggleTension(bool b)
 {
-    mOb.observeTension(b);
+    mListener.onCursorTension(b);
 }
 
 void Doc::setBop(BopListAst &blist, size_t pos, int bop)

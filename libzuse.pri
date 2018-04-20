@@ -33,6 +33,7 @@ HEADERS += libzuse/zuse.h \
            libzuse/ast/stack.hh \
            libzuse/core/bonetoken.h \
            libzuse/core/doc.h \
+           libzuse/core/doc_listener.h \
            libzuse/core/editabledoc.h \
            libzuse/core/fleshtoken.h \
            libzuse/core/hammer.h \
@@ -40,7 +41,6 @@ HEADERS += libzuse/zuse.h \
            libzuse/core/soultoken.h \
            libzuse/core/token.h \
            libzuse/core/tokens.h \
-           libzuse/core/tokensobserver.h \
            libzuse/mode/fixsizeinputmode.h \
            libzuse/mode/identinputmode.h \
            libzuse/mode/listinputmode.h \

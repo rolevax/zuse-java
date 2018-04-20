@@ -9,16 +9,16 @@
 #include <iostream>
 #include <sstream>
 
-Tokens::Tokens(TokensObserver &ob) :
+Tokens::Tokens(DocListener &listener) :
     mHammer(*this),
-    mOb(ob)
+    mListener(listener)
 {
     clear();
 }
 
 void Tokens::setHotLight(ssize_t back)
 {
-    mOb.observeHotLight(back);
+    mListener.onHotLight(back);
 }
 
 /**
@@ -32,17 +32,17 @@ void Tokens::light(const Ast *inner)
     Ast *outer = &inner->getParent();
     Region out = anchor(locate(outer));
 
-    mOb.observeLight(out.br, out.bc, out.er, out.ec,
+    mListener.onLight(out.br, out.bc, out.er, out.ec,
                     in.br, in.bc, in.er, in.ec);
 }
 
 void Tokens::clear()
 {
     if (mRows.size() > 1)
-        mOb.observeRemoveLine(1, mRows.size() - 1);
+        mListener.onLineRemoved(1, mRows.size() - 1);
     mRows.clear();
     mRows.emplace_back();
-    mOb.observeUpdateLine(0, pluck(0));
+    mListener.onLineUpdated(0, pluck(0));
 }
 
 void Tokens::sync(const ListAst *root)
@@ -60,7 +60,7 @@ void Tokens::updateScalar(const InternalAst *outer, size_t inner)
     assert(outer->at(inner).isScalar());
     Region r = locate(&outer->at(inner));
 
-    mOb.observeUpdateLine(r.br, pluck(r.br));
+    mListener.onLineUpdated(r.br, pluck(r.br));
 }
 
 /**
@@ -174,10 +174,10 @@ void Tokens::put(size_t r, size_t c, const std::vector<Token *> &ts)
     }
 
     if (r > origR)
-    mOb.observeInsertLine(origR, r - origR);
+        mListener.onLineInserted(origR, r - origR);
 
     while (origR <= r) {
-        mOb.observeUpdateLine(origR, pluck(origR));
+        mListener.onLineUpdated(origR, pluck(origR));
         ++origR;
     }
 }
@@ -230,7 +230,7 @@ void Tokens::erase(const Region &r)
     while (needJoin --> 0)
         joinLine(r.br + 1);
 
-    mOb.observeUpdateLine(r.br, pluck(r.br));
+    mListener.onLineUpdated(r.br, pluck(r.br));
 }
 
 bool Tokens::isHjklTarget(const Ast *a)

@@ -3,7 +3,7 @@
 
 #include "hammer.h"
 #include "token.h"
-#include "tokensobserver.h"
+#include "doc_listener.h"
 
 #include <vector>
 
@@ -12,7 +12,7 @@
 class Tokens
 {
 public:
-    Tokens(TokensObserver &mOb);
+    Tokens(DocListener &listener);
 
     Tokens(const Tokens&) = delete;
     Tokens &operator=(const Tokens&) = delete;
@@ -46,7 +46,7 @@ private:
 private:
     std::vector<std::vector<std::unique_ptr<Token>>> mRows;
     Hammer mHammer;
-    TokensObserver &mOb;
+    DocListener &mListener;
 };
 
 std::ostream &operator<<(std::ostream &os, const Tokens &ts);

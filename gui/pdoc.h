@@ -1,33 +1,34 @@
 #ifndef PDOC_H
 #define PDOC_H
 
-#include <QObject>
-#include <memory>
 #include "libzuse/zuse.h"
 
-class PDoc : public QObject, public TokensObserver
+#include <QObject>
+
+
+
+class PDoc : public QObject, public DocListener
 {
     Q_OBJECT
 public:
-    explicit PDoc(QObject *parent = 0);
+    explicit PDoc(QObject *parent = nullptr);
+
     Q_INVOKABLE void load(QString filename);
     Q_INVOKABLE void save(QString filename);
     Q_INVOKABLE void keyboard(QString key, int modifier);
 
-    void observeTension(bool b);
-    void observePush(const char *name);
-    void observePop();
-
-    void observeSwitchClip(char c);
-
-    void observeInsertLine(size_t r, size_t ct) override;
-    void observeRemoveLine(size_t r, size_t ct) override;
-    void observeUpdateLine(size_t r, const std::string &s) override;
-    void observeLight(size_t lbr, size_t lbc,
+    void onLineInserted(size_t r, size_t ct) override;
+    void onLineRemoved(size_t r, size_t ct) override;
+    void onLineUpdated(size_t r, const std::string &s) override;
+    void onLight(size_t lbr, size_t lbc,
                       size_t ler, size_t lec,
                       size_t hbr, size_t hbc,
                       size_t her, size_t hec) override;
-    void observeHotLight(ssize_t back) override;
+    void onHotLight(ssize_t back) override;
+    void onCursorTension(bool b) override;
+    void onModePushed(const char *name) override;
+    void onModePopped() override;
+    void onClipSwitched(char c) override;
 
 signals:
     void message(QString text);
@@ -47,7 +48,9 @@ signals:
 public slots:
 
 private:
-    std::unique_ptr<Doc> mDoc;
+    Doc mDoc;
 };
+
+
 
 #endif // PDOC_H
