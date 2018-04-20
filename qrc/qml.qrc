@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Editor.qml</file>
+        <file>qml/LightBar.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/ShowPad.qml</file>
+    </qresource>
+</RCC>

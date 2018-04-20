@@ -14,7 +14,9 @@ HEADERS += gui/pdoc.h
 SOURCES += main.cpp \
     gui/pdoc.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qrc/qml.qrc
+
+OTHER_FILES += qrc/qml/*.qml
 
 include(libzuse.pri)
 include(deployment.pri)
