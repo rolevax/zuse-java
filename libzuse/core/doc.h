@@ -25,12 +25,11 @@ public:
     void keyboard(Key key); // TODO XXX: change here, and be a M
 
 private:
-    // TODO: re-sort
     void push(Mode *mode);
     void pop();
     void handleModeResult(const Mode::Result &res);
 
-    /// @name EditableDoc interface
+    /// \name DocEditable interface
     ///@{
     const AstInternal &getOuter() const override;
     const Ast &getInner() const override;
@@ -81,7 +80,7 @@ private:
     void toggleTension(bool b) override;
     ///@}
 
-    /// @name "really" private functions
+    /// \name internal detail functions
     ///@{
     void setBop(AstListBop &blist, size_t pos, int bop);
     Ast *newTree(Ast::Type type);
@@ -89,7 +88,7 @@ private:
 
 private:
     std::vector<std::unique_ptr<Mode>> mModes;
-    std::unique_ptr<AstRoot> mRoot = nullptr;
+    std::unique_ptr<AstRoot> mRoot;
     AstInternal *mOuter = nullptr;
     size_t mInner = 0;
     std::unique_ptr<Ast> mClipslots[26];

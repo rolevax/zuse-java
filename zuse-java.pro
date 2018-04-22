@@ -2,7 +2,7 @@ TEMPLATE = app
 
 QT += qml quick widgets
 
-CONFIG += c++11
+CONFIG += c++1z
 
 CONFIG(release, debug|release) {
     DEFINES += QT_NO_DEBUG_OUTPUT

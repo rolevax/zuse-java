@@ -1,4 +1,4 @@
-CXX=clang++ -std=c++11 -I.
+CXX=clang++ -std=c++1z -I.
 
 ASTSRC=ast.cpp ast_root.cpp ast_list.cpp ast_list_bop.cpp\
 	   ast_fix_size.cpp ast_scalar.cpp ast_internal.cpp

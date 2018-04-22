@@ -86,6 +86,7 @@ bool AstList::illZero(bool assumeSize) const
 {
     if (!assumeSize && 0 != size())
         return false;
+
     if (illOne(true)) // assume all ill-one is also ill-zero
         return true;
 

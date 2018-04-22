@@ -10,7 +10,6 @@
 #include "../mode/mode_input_string.h"
 #include "../mode/mode_input_list.h"
 #include "../mode/mode_input_fix_size.h"
-#include "../../gui/pdoc.h" // FUCK extract interface
 
 // headers for file I/O
 #include <fstream>
@@ -26,7 +25,9 @@
 #include <cstdlib>
 
 Doc::Doc(DocListener &listener)
-    : mTokens(listener)
+    : mRoot(std::make_unique<AstRoot>())
+    , mOuter(mRoot.get())
+    , mTokens(listener)
     , mListener(listener)
 {
     mModes.emplace_back(new ModeNormal(*this));

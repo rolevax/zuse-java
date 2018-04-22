@@ -6,9 +6,9 @@
 
 #include <QDebug>
 
-PDoc::PDoc(QObject *parent) :
-    QObject(parent),
-    mDoc(*this)
+PDoc::PDoc(QObject *parent)
+    : QObject(parent)
+    , mDoc(*this)
 {
 }
 
