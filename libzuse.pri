@@ -24,6 +24,7 @@ HEADERS += libzuse/zuse.h \
            libzuse/ast/ast_root.h \
            libzuse/ast/ast_scalar.h \
            libzuse/ast/bison.hh \
+           libzuse/ast/bop.h \
            libzuse/ast/lexproto.h \
            libzuse/ast/location.hh \
            libzuse/ast/modifiers.h \

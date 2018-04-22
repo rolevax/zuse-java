@@ -9,14 +9,14 @@ AstInternal::AstInternal(Type t)
     assert(!isScalar());
 }
 
-void AstInternal::change(size_t pos, Ast *next)
+void AstInternal::change(size_t pos, std::unique_ptr<Ast> next)
 {
     if (next != nullptr)
         next->setParent(this);
-    doChange(pos, next);
+    doChange(pos, std::move(next));
 }
 
-void AstInternal::nestAsLeft(size_t pos, AstInternal *nester)
+void AstInternal::nestAsLeft(size_t pos, std::unique_ptr<AstInternal> nester)
 {
     if (nester->size() >= 1) {
         nester->change(0, at(pos).clone());
@@ -24,10 +24,10 @@ void AstInternal::nestAsLeft(size_t pos, AstInternal *nester)
         nester->asList().append(at(pos).clone());
     }
 
-    change(pos, nester);
+    change(pos, std::move(nester));
 }
 
-void AstInternal::nestAsRight(size_t pos, AstInternal *nester)
+void AstInternal::nestAsRight(size_t pos, std::unique_ptr<AstInternal> nester)
 {
     if (nester->size() >= 1) {
         nester->change(nester->size() - 1, at(pos).clone());
@@ -35,7 +35,7 @@ void AstInternal::nestAsRight(size_t pos, AstInternal *nester)
         nester->asList().append(at(pos).clone());
     }
 
-    change(pos, nester);
+    change(pos, std::move(nester));
 }
 
 void AstInternal::expose(size_t vanisher, size_t exposee)

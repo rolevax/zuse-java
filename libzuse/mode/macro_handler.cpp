@@ -191,43 +191,43 @@ bool MacroHandler::macroEnter(Mode *&nextPush, bool shift)
 bool MacroHandler::macroBop(Key key, Mode *&nextPush)
 {
     Ast::Type type;
-    int op = AstListBop::UNUSED;
+    Bop op = Bop::UNUSED;
 
     switch (key) {
     case Key::LEFT_PAREN:
         type = Ast::Type::DOT_BOP_LIST;
-        op = AstListBop::CALL;
+        op = Bop::CALL;
         break;
     case Key::LEFT_SQUARE:
         type = Ast::Type::DOT_BOP_LIST;
-        op = AstListBop::ARR;
+        op = Bop::ARR;
         break;
     case Key::RIGHT_PAREN:
         type = Ast::Type::CAST;
         break;
     case Key::DOT:
         type = Ast::Type::DOT_BOP_LIST;
-        op = AstListBop::DOT;
+        op = Bop::DOT;
         break;
     case Key::ASTERISK:
         type = Ast::Type::MUL_BOP_LIST;
-        op = AstListBop::MUL;
+        op = Bop::MUL;
         break;
     case Key::SLASH:
         type = Ast::Type::MUL_BOP_LIST;
-        op = AstListBop::DIV;
+        op = Bop::DIV;
         break;
     case Key::PERCENT:
         type = Ast::Type::MUL_BOP_LIST;
-        op = AstListBop::MOD;
+        op = Bop::MOD;
         break;
     case Key::PLUS:
         type = Ast::Type::ADD_BOP_LIST;
-        op = AstListBop::ADD;
+        op = Bop::ADD;
         break;
     case Key::MINUS:
         type = Ast::Type::ADD_BOP_LIST;
-        op = AstListBop::SUB;
+        op = Bop::SUB;
         break;
     case Key::EQUAL:
         type = Ast::Type::ASSIGN;

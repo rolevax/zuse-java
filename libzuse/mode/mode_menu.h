@@ -2,6 +2,9 @@
 #define ZUSE_MODE_MENU_H
 
 #include "mode.h"
+#include "../ast/bop.h"
+
+
 
 class ModeMenu : public Mode
 {
@@ -22,7 +25,7 @@ public:
 
 private:
     Ast::Type keyToType(Key key);
-    static int keyToBop(Key key);
+    static Bop keyToBop(Key key);
 
 private:
     Context mContext;

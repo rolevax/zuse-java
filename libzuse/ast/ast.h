@@ -52,9 +52,13 @@ public:
     };
 
     Ast(Type t);
+    virtual ~Ast() = default;
+
     Ast(const Ast &copy) = delete;
     Ast &operator=(const Ast &assign) = delete;
-    virtual ~Ast() = default;
+
+    Ast(Ast &&move) = default;
+    Ast &operator=(Ast &&moveAssign) = default;
 
     virtual void dump() const {} // for debug use
 
@@ -78,15 +82,15 @@ public:
     AstListBop &asBopList();
     const AstListBop &asBopList() const;
 
-    AstList *bodify();
+    std::unique_ptr<AstList> bodify();
     static int precedence(Type mType);
     int precedence() const;
 
-    /**
-     * @brief Recursive value deep copy
-     * @return Ast with same value but parent is null
-     */
-    virtual Ast *clone() const = 0;
+    ///
+    /// \brief Deep copy
+    /// \return Ast with same value, but parent is null
+    ///
+    virtual std::unique_ptr<Ast> clone() const = 0;
 
     Type getType() const;
     AstInternal &getParent() const;

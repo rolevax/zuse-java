@@ -131,15 +131,15 @@ const AstListBop &Ast::asBopList() const
     return static_cast<const AstListBop&>(*this);
 }
 
-AstList *Ast::bodify()
+std::unique_ptr<AstList> Ast::bodify()
 {
     if (getType() == Type::STMT_LIST)
-        return &this->asList();
+        return std::unique_ptr<AstList>(&clone().release()->asList());
 
     // nest with a stmt list, who takes over ownership of 'this'
-    AstList *ret = new AstList(Type::STMT_LIST);
-    ret->append(this);
-    return ret;
+    auto res = std::make_unique<AstList>(Type::STMT_LIST);
+    res->append(clone());
+    return res;
 }
 
 int Ast::precedence(Ast::Type type)

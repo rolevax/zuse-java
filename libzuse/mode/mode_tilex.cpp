@@ -75,13 +75,13 @@ Mode::Result ModeTilex::keyboardSpace()
     if (outer.getType() == Ast::Type::ADD_BOP_LIST
             && outer.size() == 2
             && mDoc.getInnerIndex() == 0) {
-        Ast::Type t = outer.asBopList().opAt(1) == AstListBop::ADD ?
+        Ast::Type t = outer.asBopList().opAt(1) == Bop::ADD ?
                     Ast::Type::UNARY_PLUS : Ast::Type::UNARY_MINUS;
         mDoc.sibling(1);
         mDoc.nestAsRight(t);
         mDoc.expose();
     } else if (outer.getType() == Ast::Type::DOT_BOP_LIST
-               && outer.asBopList().opAt(mDoc.getInnerIndex()) == AstListBop::ARR) {
+               && outer.asBopList().opAt(mDoc.getInnerIndex()) == Bop::ARR) {
         mDoc.change(Ast::Type::HIDDEN);
     } else {
         mDoc.remove(); // remove the meta node
@@ -126,10 +126,10 @@ Mode::Result ModeTilex::keyboardEqual()
         break;
     case Ast::Type::ADD_BOP_LIST:
         switch (mDoc.getOuter().asBopList().opAt(1)) {
-        case AstListBop::ADD:
+        case Bop::ADD:
             castOuter(Ast::Type::ASS_ADD);
             break;
-        case AstListBop::SUB:
+        case Bop::SUB:
             castOuter(Ast::Type::ASS_SUB);
             break;
         default:
@@ -138,13 +138,13 @@ Mode::Result ModeTilex::keyboardEqual()
         break;
     case Ast::Type::MUL_BOP_LIST:
         switch (mDoc.getOuter().asBopList().opAt(1)) {
-        case AstListBop::MUL:
+        case Bop::MUL:
             castOuter(Ast::Type::ASS_MUL);
             break;
-        case AstListBop::DIV:
+        case Bop::DIV:
             castOuter(Ast::Type::ASS_DIV);
             break;
-        case AstListBop::MOD:
+        case Bop::MOD:
             castOuter(Ast::Type::ASS_MOD);
             break;
         default:
@@ -165,7 +165,7 @@ Mode::Result ModeTilex::ppmm(bool inc)
         return DONE_STAY_NOPUSH;
 
     bool prefix = mDoc.getInnerIndex() == 0;
-    bool plus = outer.asBopList().opAt(1) == AstListBop::ADD;
+    bool plus = outer.asBopList().opAt(1) == Bop::ADD;
     if (plus != inc) // "+-" or "-+"
         return DONE_STAY_NOPUSH;
 
@@ -207,7 +207,7 @@ void ModeTilex::relayMacro(int savedInner)
         const AstListBop &flattenee = mDoc.getInner().asBopList();
         int flatteneeSize = flattenee.size();
         for (int i = 0; i < flatteneeSize; i++) {
-            int infix = i == 0 ? AstListBop::UNUSED : flattenee.opAt(i);
+            Bop infix = i == 0 ? Bop::UNUSED : flattenee.opAt(i);
             mDoc.append(Ast::Type::META, infix);
             mDoc.change(flattenee.at(i).clone());
         }

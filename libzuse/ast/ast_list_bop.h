@@ -2,43 +2,51 @@
 #define ZUSE_AST_LIST_BOP_H
 
 #include "ast_list.h"
+#include "bop.h"
+
+
 
 class AstListBop : public AstList
 {
 public:
-    static const int UNUSED = -1, DEFAULT = 0;
-    static const int ADD = 0, SUB = 1;
-    static const int MUL = 0, DIV = 1, MOD = 2;
-    static const int DOT = 0, CALL = 1, ARR = 2;
+    AstListBop(Ast::Type t, std::unique_ptr<Ast> lhs, std::unique_ptr<Ast> rhs, Bop op);
+    AstListBop(std::unique_ptr<Ast> name, int dims);
 
-    AstListBop(Ast::Type t, Ast *lhs, Ast *rhs, int op);
+    AstListBop(Ast::Type t, Ast *lhs, Ast *rhs, Bop op);
     AstListBop(Ast *name, int dims);
 
-    static AstListBop *makeDims(Ast *a);
-    static AstListBop *makeDims(int dims);
-    void addDims(Ast *a);
+    AstListBop(AstListBop &&move) = default;
+    AstListBop &operator=(AstListBop &&moveAssign) = default;
+
+    static std::unique_ptr<AstListBop> makeDims(std::unique_ptr<Ast> a);
+    static std::unique_ptr<AstListBop> makeDims(int dims);
+    void addDims(std::unique_ptr<Ast> a);
     void addDims(int dims);
 
     void dump() const override;
-    AstListBop *clone() const override;
-    Ast *remove(size_t pos) override;
+    std::unique_ptr<Ast> clone() const override;
+    std::unique_ptr<Ast> remove(size_t pos) override;
     void clear() override;
 
-    int opAt(size_t pos) const;
-    void setOpAt(size_t pos, int op);
+    Bop opAt(size_t pos) const;
+    void setOpAt(size_t pos, Bop op);
     int numOp() const;
 
 protected:
-    void doInsert(size_t pos, Ast *child) override;
+    void doInsert(size_t pos, std::unique_ptr<Ast> child) override;
 
 private:
     AstListBop(Ast::Type t);
-    void mergeIn(AstListBop *t, int lead = 0);
+
+    void init(Type t, std::unique_ptr<Ast> lhs, std::unique_ptr<Ast> rhs, Bop op);
+    void initDotList(std::unique_ptr<Ast> name, int dims);
+
+    void mergeIn(AstListBop &t, Bop lead = Bop::DEFAULT);
     bool isLeftAssoc() const;
     bool isRightAssoc() const;
 
 private:
-    std::vector<int> mOps;
+    std::vector<Bop> mOps;
 };
 
 #endif // ZUSE_AST_LIST_BOP_H

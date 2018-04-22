@@ -22,12 +22,12 @@ void AstList::dump() const
     std::cout << ']';
 }
 
-AstList *AstList::clone() const
+std::unique_ptr<Ast> AstList::clone() const
 {
-    AstList *ret = new AstList(getType());
+    auto res = std::make_unique<AstList>(getType());
     for (size_t i = 0; i < size(); i++)
-        ret->append(at(i).clone());
-    return ret;
+        res->append(at(i).clone());
+    return res;
 }
 
 size_t AstList::size() const
@@ -53,26 +53,34 @@ size_t AstList::indexOf(const Ast *child) const
         return it - mSubtrees.begin();
 }
 
-void AstList::insert(size_t pos, Ast *child)
+void AstList::insert(size_t pos, std::unique_ptr<Ast> child)
 {
     child->setParent(this);
-    doInsert(pos, child);
+    doInsert(pos, std::move(child));
 }
 
+void AstList::append(std::unique_ptr<Ast> subtree)
+{
+    insert(size(), std::move(subtree));
+}
+
+///
+/// \param subtree Owning
+///
 void AstList::append(Ast *subtree)
 {
-    insert(size(), subtree);
+    append(std::unique_ptr<Ast>(subtree));
 }
 
 void AstList::erase(size_t pos)
 {
-    delete remove(pos);
+    remove(pos); // return value discarded
 }
 
-Ast *AstList::remove(size_t pos)
+std::unique_ptr<Ast> AstList::remove(size_t pos)
 {
     assert(pos < mSubtrees.size());
-    Ast *res = mSubtrees[pos].release();
+    auto res = std::move(mSubtrees[pos]);
     mSubtrees.erase(mSubtrees.begin() + pos);
     return res;
 }
@@ -108,14 +116,14 @@ bool AstList::illOne(bool assumeSize) const
             || t == Type::IF_LIST;
 }
 
-void AstList::doInsert(size_t pos, Ast *child)
+void AstList::doInsert(size_t pos, std::unique_ptr<Ast> child)
 {
-    mSubtrees.emplace(mSubtrees.begin() + pos, child);
+    mSubtrees.emplace(mSubtrees.begin() + pos, std::move(child));
 }
 
-void AstList::doChange(size_t pos, Ast *next)
+void AstList::doChange(size_t pos, std::unique_ptr<Ast> next)
 {
     assert(pos < mSubtrees.size());
-    mSubtrees[pos].reset(next);
+    mSubtrees[pos] = std::move(next);
 }
 

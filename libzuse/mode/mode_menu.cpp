@@ -30,7 +30,7 @@ Mode::Result ModeMenu::keyboard(Key key)
         return DONE_POP_NOPUSH;
 
     Ast::Type ktype = keyToType(key);
-    int bop = keyToBop(key);
+    Bop bop = keyToBop(key);
 
     switch (mContext) {
     case Context::BOP_INSERT:
@@ -207,27 +207,27 @@ Ast::Type ModeMenu::keyToType(Key key)
     }
 }
 
-int ModeMenu::keyToBop(Key key)
+Bop ModeMenu::keyToBop(Key key)
 {
     switch (key) {
     case Key::DOT:
-        return AstListBop::DOT;
+        return Bop::DOT;
     case Key::LEFT_PAREN:
-        return AstListBop::CALL;
+        return Bop::CALL;
     case Key::LEFT_SQUARE:
-        return AstListBop::ARR;
+        return Bop::ARR;
     case Key::PLUS:
-        return AstListBop::ADD;
+        return Bop::ADD;
     case Key::MINUS:
-        return AstListBop::SUB;
+        return Bop::SUB;
     case Key::ASTERISK:
-        return AstListBop::MUL;
+        return Bop::MUL;
     case Key::SLASH:
-        return AstListBop::DIV;
+        return Bop::DIV;
     case Key::PERCENT:
-        return AstListBop::MOD;
+        return Bop::MOD;
     default:
-        return AstListBop::UNUSED;
+        return Bop::UNUSED;
     }
 }
 

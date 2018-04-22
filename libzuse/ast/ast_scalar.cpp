@@ -14,10 +14,9 @@ void AstScalar::dump() const
     std::cout << mText;
 }
 
-AstScalar *AstScalar::clone() const
+std::unique_ptr<Ast> AstScalar::clone() const
 {
-    AstScalar *ret = new AstScalar(getType(), mText);
-    return ret;
+    return std::make_unique<AstScalar>(getType(), mText);
 }
 
 const std::string &AstScalar::getText() const

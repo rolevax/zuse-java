@@ -481,15 +481,15 @@ jump_stmt: "return" expr ";"
 		 ;
 
 while_stmt: "while" "(" expr ")" stmt
-		 		{ AstList *body = $5->bodify();
+		 		{ AstList *body = $5->bodify().release();
 				  $$ = new AstFixSize<2>(Ast::Type::WHILE, $3, body); }
 
 do_while_stmt: "do" stmt "while" "(" expr ")" ";"
-		 		{ AstList *body = $2->bodify();
+		 		{ AstList *body = $2->bodify().release();
 				  $$ = new AstFixSize<2>(Ast::Type::DO_WHILE, body, $5); }
 
 for_stmt: "for" "(" for_init expr ";" expr ")" stmt
-		 		{ AstList *body = $8->bodify();
+		 		{ AstList *body = $8->bodify().release();
 				  $$ = new AstFixSize<4>(Ast::Type::FOR, 
 										 $3, $4, $6, body); }
 		;
@@ -546,12 +546,12 @@ catch: "catch" "(" type_spec ident ")" "{" stmt_list "}"
 
 if_list: "if" "(" expr ")" stmt %prec "then"
 				{ Ast *cond = new AstFixSize<2>(Ast::Type::IF_CONDBODY,
-												$3, $5->bodify()); 
+												$3, $5->bodify().release()); 
 				  $$ = new AstList(Ast::Type::IF_LIST);
 				  $$->append(cond); }
 	   | "if" "(" expr ")" stmt "else" stmt
 				{ Ast *cond = new AstFixSize<2>(Ast::Type::IF_CONDBODY,
-												$3, $5->bodify()); 
+												$3, $5->bodify().release()); 
 				  $$ = new AstList(Ast::Type::IF_LIST);
 				  $$->append(cond); 
 				  if ($7->getType() == Ast::Type::IF_LIST) {
@@ -560,7 +560,7 @@ if_list: "if" "(" expr ")" stmt %prec "then"
 					  for (size_t i = 0; i < size; i++)
 						  $$->append(tail.remove(0));
 				  } else {
-					  $$->append($7->bodify());
+					  $$->append($7->bodify().release());
 				  } }
 	   ;
 
@@ -607,14 +607,14 @@ expr_lv2: expr_lv3
 				{ $$ = $1; }
 		| expr_lv2 "||" expr_lv3
 				{ $$ = new AstListBop(Ast::Type::LOGIC_OR_BOP_LIST, 
-									  $1, $3, AstListBop::DEFAULT); } 
+									  $1, $3, Bop::DEFAULT); } 
 		;
 
 expr_lv3: expr_lv4
 				{ $$ = $1; }
 		| expr_lv3 "&&" expr_lv4
 				{ $$ = new AstListBop(Ast::Type::LOGIC_AND_BOP_LIST, 
-									  $1, $3, AstListBop::DEFAULT); } 
+									  $1, $3, Bop::DEFAULT); } 
 		;
 
 expr_lv4: expr_lv5
@@ -672,20 +672,20 @@ expr_lv10: expr_lv11
 				{ $$ = $1; }
 		 | expr_lv10 "+" expr_lv11
 				{ $$ = new AstListBop(Ast::Type::ADD_BOP_LIST, $1, $3, 
-									  AstListBop::ADD); }
+									  Bop::ADD); }
 		 | expr_lv10 "-" expr_lv11
 				{ $$ = new AstListBop(Ast::Type::ADD_BOP_LIST, $1, $3, 
-									  AstListBop::SUB); }
+									  Bop::SUB); }
 		 ;
 
 expr_lv11: expr_lv12
 				{ $$ = $1; }
 		 | expr_lv11 "*" expr_lv12
 				{ $$ = new AstListBop(Ast::Type::MUL_BOP_LIST, $1, $3, 
-									  AstListBop::MUL); }
+									  Bop::MUL); }
 		 | expr_lv11 "/" expr_lv12
 				{ $$ = new AstListBop(Ast::Type::MUL_BOP_LIST, $1, $3, 
-									  AstListBop::DIV); }
+									  Bop::DIV); }
 		 | expr_lv11 "%" expr_lv12
 				{ $$=$1; }
 		 ;
@@ -770,15 +770,15 @@ expr_prime_cx_nude: "number"
 				{ $$ = $1; }
 				  | name "[" expr "]"
 				{ $$ = new AstListBop(Ast::Type::DOT_BOP_LIST, $1, $3, 
-									  AstListBop::ARR); }
+									  Bop::ARR); }
 				  | expr_prime_cx "[" expr "]"
 				{ $$ = new AstListBop(Ast::Type::DOT_BOP_LIST, $1, $3, 
-									  AstListBop::ARR); }
+									  Bop::ARR); }
 			;
 
 expr_call: callee "(" arg_list ")"
 				{ $$ = new AstListBop(Ast::Type::DOT_BOP_LIST, $1, $3, 
-									  AstListBop::CALL); }
+									  Bop::CALL); }
 	;
 
 expr_field: expr_prime_noname "." ident
@@ -815,15 +815,15 @@ expr_new_plain: "new" type_name "(" arg_list ")"
 										 $2, $3, hidden); }
 			  | "new" type_name dims
 				{ Ast *hidden = new AstScalar(Ast::Type::HIDDEN, "");
-				  Ast *dimsA = AstListBop::makeDims($3);
+				  auto dimsA = AstListBop::makeDims($3);
 				  $$ = new AstFixSize<3>(Ast::Type::NEW_ARRAY,
-										 $2, dimsA, hidden); }
+										 $2, dimsA.release(), hidden); }
 			  ;
 
 dim_exprs: "[" expr "]"
-		 		{ $$ = AstListBop::makeDims($2); }
+		 		{ $$ = AstListBop::makeDims(std::unique_ptr<Ast>($2)).release(); }
 		 | dim_exprs "[" expr "]"
-		 		{ $1->asBopList().addDims($3);
+		 		{ $1->asBopList().addDims(std::unique_ptr<Ast>($3));
 				  $$ = $1; }
 		 ;
 
@@ -839,7 +839,7 @@ name: ident
 				{ $$ = $1; }
 	| name "." ident
 				{ $$ = new AstListBop(Ast::Type::DOT_BOP_LIST, $1, $3, 
-									  AstListBop::DOT); }
+									  Bop::DOT); }
 	;
 
 name_list: name

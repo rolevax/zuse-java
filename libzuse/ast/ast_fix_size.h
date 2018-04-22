@@ -12,18 +12,23 @@ class AstFixSize : public AstInternal
 {
 public:
     template<typename... T> AstFixSize(Type t, T... ts);
+    virtual ~AstFixSize() = default;
+
+    AstFixSize(AstFixSize &&move) = default;
+    AstFixSize &operator=(AstFixSize &&moveAssign) = default;
 
     void dump() const override;
-    AstFixSize<N> *clone() const override;
+    std::unique_ptr<Ast> clone() const override;
     virtual size_t size() const override;
     virtual Ast &at(size_t pos) const override;
     virtual size_t indexOf(const Ast *child) const override;
+
     Modifiers &getModifiers();
     const Modifiers &getModifiers() const;
     void setModifiers(const Modifiers &m);
 
 protected:
-    virtual void doChange(size_t pos, Ast *next) override;
+    virtual void doChange(size_t pos, std::unique_ptr<Ast> next) override;
 
 private:
     explicit AstFixSize(Type t);
@@ -33,23 +38,27 @@ private:
     Modifiers mModifiers;
 };
 
-/**
- * This definition is in the header because it's using
- * parameter pack which is tedious to be explicitly instantiated.
- * The template class itself is explicitly instantiated in
- * the cpp file because putting everything in headers might
- * lead headers to mutually include each other.
- */
+///
+/// \brief Construct by pointers to subtrees
+/// \param type Node type
+/// \param subtree Pointers to subtrees
+/// \tparam T Pointer type movable to std::unique_ptr<Ast>
+///
+/// This definition is in the header because it's using
+/// parameter pack which is tedious to explicitly instantiate.
+/// The template class itself is explicitly instantiated in
+/// the cpp file to avoid include loop.
+///
 template<std::size_t N>
 template<typename... T>
-AstFixSize<N>::AstFixSize(Type t, T... ts)
-    : AstInternal(t)
+AstFixSize<N>::AstFixSize(Type type, T... subtree)
+    : AstInternal(type)
 {
-    static_assert(sizeof...(ts) == N, "FixSizeAst bound check");
+    static_assert(sizeof...(subtree) == N, "FixSizeAst bound check");
     assert(isFixSize(N));
-    std::array<Ast*, N> tmp{ ts... };
-    for (size_t i = 0; i < N; i++)
-        change(i, tmp[i]);
+
+    size_t index = 0;
+    (change(index++, std::unique_ptr<Ast>(std::move(subtree))), ...);
 }
 
 namespace FixSizes

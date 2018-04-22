@@ -387,7 +387,7 @@ void Hammer::hitListBegin(const AstList &ast, Buf &buf)
         bone(ast, buf, Sym::LPAREN);
         break;
     case Type::DOT_BOP_LIST:
-        if (ast.size() > 0 && ast.asBopList().opAt(0) == AstListBop::ARR)
+        if (ast.size() > 0 && ast.asBopList().opAt(0) == Bop::ARR)
             bone(ast, buf, Sym::LSQUARE);
         break;
     default:
@@ -469,28 +469,29 @@ void Hammer::hitListSep(const AstList &ast, Hammer::Buf &buf, size_t pos)
     case Type::ADD_BOP_LIST:
         if (!end) {
             const AstListBop &bast = ast.asBopList();
-            Sym sym = bast.opAt(pos + 1) == 0 ? Sym::ADD : Sym::SUB;
+            Sym sym = bast.opAt(pos + 1) == Bop::ADD ? Sym::ADD : Sym::SUB;
             bone(ast, buf, sym);
         }
         break;
     case Type::MUL_BOP_LIST:
         if (!end) {
             const AstListBop &bast = ast.asBopList();
-            int op = bast.opAt(pos + 1);
-            Sym sym = op == 0 ? Sym::MUL : op == 1 ? Sym::DIV : Sym::MOD;
+            Bop op = bast.opAt(pos + 1);
+            Sym sym = op == Bop::MUL ? Sym::MUL
+                                    : op == Bop::DIV ? Sym::DIV : Sym::MOD;
             bone(ast, buf, sym);
         }
         break;
     case Type::DOT_BOP_LIST: {
         const AstListBop &bast = ast.asBopList();
-        if (bast.opAt(pos) == AstListBop::ARR) // previous bop
+        if (bast.opAt(pos) == Bop::ARR) // previous bop
             bone(ast, buf, Sym::RSQUARE);
 
         if (!end) {
-            int bop = bast.opAt(pos + 1);
-            if (bop == AstListBop::DOT)
+            Bop bop = bast.opAt(pos + 1);
+            if (bop == Bop::DOT)
                 bone(ast, buf, Sym::DOT);
-            else if (bop == AstListBop::ARR)
+            else if (bop == Bop::ARR)
                 bone(ast, buf, Sym::LSQUARE);
         }
         break;

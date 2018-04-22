@@ -346,14 +346,12 @@ void Doc::siblingBig(Ast::Type match, bool right)
  * @brief Create and insert a new node at 'current' position
  * @param type The type of the new node
  */
-void Doc::insert(Ast::Type type, int bop)
+void Doc::insert(Ast::Type type, Bop bop)
 {
     assert(mInner <= mOuter->size());
 
-    Ast *a = newTree(type);
-
-    mOuter->asList().insert(mInner, a);
-    if (AstListBop::UNUSED != bop) {
+    mOuter->asList().insert(mInner, newTree(type));
+    if (Bop::UNUSED != bop) {
         AstListBop &bast = mOuter->asBopList();
         setBop(mOuter->asBopList(), mInner, bast.opAt(mInner + 1));
         setBop(mOuter->asBopList(), mInner + 1, bop);
@@ -362,21 +360,19 @@ void Doc::insert(Ast::Type type, int bop)
     mTokens.sync(mRoot.get());
 }
 
-void Doc::append(Ast::Type type, int bop)
+void Doc::append(Ast::Type type, Bop bop)
 {
     ++mInner;
     assert(mInner <= mOuter->size());
 
-    Ast *a = newTree(type);
-
-    mOuter->asList().insert(mInner, a);
-    if (AstListBop::UNUSED != bop)
+    mOuter->asList().insert(mInner, newTree(type));
+    if (Bop::UNUSED != bop)
         setBop(mOuter->asBopList(), mInner, bop);
 
     mTokens.sync(mRoot.get());
 }
 
-void Doc::assart(Ast::Type type, int bop)
+void Doc::assart(Ast::Type type, Bop bop)
 {
     mOuter = &mOuter->at(mInner).asInternal();
     mInner = 0;
@@ -416,11 +412,11 @@ void Doc::remove()
     mTokens.sync(mRoot.get());
 }
 
-void Doc::change(Ast *a)
+void Doc::change(std::unique_ptr<Ast> a)
 {
     assert(mInner < mOuter->size());
 
-    mOuter->change(mInner, a);
+    mOuter->change(mInner, std::move(a));
     mTokens.sync(mRoot.get());
 }
 
@@ -429,27 +425,25 @@ void Doc::change(Ast::Type type)
     change(newTree(type));
 }
 
-void Doc::nestAsLeft(Ast::Type type, int bop)
+void Doc::nestAsLeft(Ast::Type type, Bop bop)
 {
     assert(mInner < mOuter->size());
 
-    AstInternal *nester = &newTree(type)->asInternal();
-    mOuter->nestAsLeft(mInner, nester);
+    mOuter->nestAsLeft(mInner, newInternalTree(type));
 
-    if (AstListBop::UNUSED != bop)
+    if (Bop::UNUSED != bop)
         setBop(mOuter->at(mInner).asBopList(), 1, bop); // set inner, not outer!
 
     mTokens.sync(mRoot.get());
 }
 
-void Doc::nestAsRight(Ast::Type type, int bop)
+void Doc::nestAsRight(Ast::Type type, Bop bop)
 {
     assert(mInner < mOuter->size());
 
-    AstInternal *nester = &newTree(type)->asInternal();
-    mOuter->nestAsRight(mInner, nester);
+    mOuter->nestAsRight(mInner, newInternalTree(type));
 
-    if (AstListBop::UNUSED != bop)
+    if (Bop::UNUSED != bop)
         setBop(mOuter->at(mInner).asBopList(), 1, bop); // set inner, not outer!
 
     mTokens.sync(mRoot.get());
@@ -475,25 +469,25 @@ void Doc::cast(Ast::Type to)
         return;
 
     if (to == Type::ARG_LIST) {
-        nestAsLeft(Type::ARG_LIST, AstListBop::UNUSED);
+        nestAsLeft(Type::ARG_LIST, Bop::UNUSED);
     } else if (from == Type::DECL_VAR && to == Type::DECL_METHOD) {
         if (getInner().asInternal().at(1).isScalar()) {
             // from variable declaration to method declaration
-            AstInternal *a = &newTree(Type::DECL_METHOD)->asInternal();
+            auto a = newInternalTree(Type::DECL_METHOD);
             // copy return type and name
             a->change(0, getInner().asInternal().at(0).clone());
             a->change(1, getInner().asInternal().at(1).clone());
-            mOuter->change(mInner, a);
+            mOuter->change(mInner, std::move(a));
         }
     } else if (Ast::isFixSize(from, 2)
                 || (Ast::isBopList(from) && getInner().asBopList().size() == 2)) {
         // size 2 ==> size 2
         if (Ast::isFixSize(to, 2) || Ast::isBopList(to)) {
             // simply copy children and change
-            AstInternal *a = &newTree(to)->asInternal();
+            auto a = newInternalTree(to);
             a->change(0, getInner().asInternal().at(0).clone());
             a->change(1, getInner().asInternal().at(1).clone());
-            mOuter->change(mInner, a);
+            mOuter->change(mInner, std::move(a));
         }
     }
 
@@ -607,7 +601,7 @@ void Doc::switchClip(char c)
 
 void Doc::yank(const Ast &a)
 {
-    mClipslots[mClipIndex].reset(a.clone());
+    mClipslots[mClipIndex] = a.clone();
 }
 
 void Doc::paste()
@@ -615,8 +609,7 @@ void Doc::paste()
     if (mClipslots[mClipIndex] == nullptr)
         return;
 
-    Ast *a = mClipslots[mClipIndex]->clone();
-    mOuter->change(mInner, a);
+    mOuter->change(mInner, mClipslots[mClipIndex]->clone());
     mTokens.sync(mRoot.get());
 }
 
@@ -642,85 +635,91 @@ void Doc::toggleTension(bool b)
     mListener.onCursorTension(b);
 }
 
-void Doc::setBop(AstListBop &blist, size_t pos, int bop)
+void Doc::setBop(AstListBop &blist, size_t pos, Bop bop)
 {
     blist.setOpAt(pos, bop);
     if (blist.getType() == Ast::Type::DOT_BOP_LIST
-            && bop == AstListBop::CALL) {
+            && bop == Bop::CALL) {
         if (blist.at(pos).getType() != Ast::Type::ARG_LIST)
-            blist.nestAsLeft(pos, &newTree(Ast::Type::ARG_LIST)->asList());
+            blist.nestAsLeft(pos, newInternalTree(Ast::Type::ARG_LIST));
     }
 }
 
-/**
- * Make a minimal non-ill tree
- */
-Ast *Doc::newTree(Ast::Type type)
+///
+/// \brief Make a minimal non-ill tree
+/// \param type Type of the tree
+///
+std::unique_ptr<Ast> Doc::newTree(Ast::Type type)
 {
-    Ast *a = nullptr;
+    if (!Ast::isScalar(type))
+        return newInternalTree(type);
+
+    switch (type) {
+    case Ast::Type::IDENT:
+        return std::make_unique<AstScalar>(Ast::Type::IDENT, "id");
+    case Ast::Type::STRING:
+        return std::make_unique<AstScalar>(Ast::Type::STRING, "");
+    case Ast::Type::NUMBER:
+        return std::make_unique<AstScalar>(Ast::Type::NUMBER, "0");
+    case Ast::Type::META:
+        return std::make_unique<AstScalar>(Ast::Type::META, "");
+    case Ast::Type::HIDDEN:
+        return std::make_unique<AstScalar>(Ast::Type::HIDDEN, "");
+    default:
+        throw "WTF";
+    }
+}
+
+std::unique_ptr<AstInternal> Doc::newInternalTree(Ast::Type type)
+{
+    std::unique_ptr<AstInternal> a;
 
     if (Ast::isBopList(type)) {
-        Ast *lhs = newTree(AstInternal::typeAt(type, 0));
-        Ast *rhs = newTree(AstInternal::typeAt(type, 1));
-        a = new AstListBop(type, lhs, rhs, AstListBop::DEFAULT);
+        auto lhs = newTree(AstInternal::typeAt(type, 0));
+        auto rhs = newTree(AstInternal::typeAt(type, 1));
+        a = std::make_unique<AstListBop>(type, std::move(lhs), std::move(rhs), Bop::DEFAULT);
     } else if (Ast::isList(type)) {
-        AstList *la = new AstList(type);
-        a = la;
-        if (la->illZero())
-            la->append(newTree(la->typeAt(0)));
-        if (la->illOne())
-            la->append(newTree(la->typeAt(1)));
+        a = std::make_unique<AstList>(type);
+        AstList &list = a->asList();
+        if (list.illZero())
+            list.append(newTree(list.typeAt(0)));
+        if (list.illOne())
+            list.append(newTree(list.typeAt(1)));
     } else if (Ast::isFixSize(type)) {
         if (Ast::isFixSize(type, 1)) {
-            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
-            a = new AstFixSize<1>(type, t0);
+            auto t0 = newTree(AstInternal::typeAt(type, 0));
+            a = std::make_unique<AstFixSize<1>>(type, std::move(t0));
         } else if (Ast::isFixSize(type, 2)) {
-            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
-            Ast *t1 = newTree(AstInternal::typeAt(type, 1));
-            a = new AstFixSize<2>(type, t0, t1);
+            auto t0 = newTree(AstInternal::typeAt(type, 0));
+            auto t1 = newTree(AstInternal::typeAt(type, 1));
+            a = std::make_unique<AstFixSize<2>>(type, std::move(t0), std::move(t1));
         } else if (Ast::isFixSize(type, 3)) {
-            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
-            Ast *t1 = newTree(AstInternal::typeAt(type, 1));
-            Ast *t2 = newTree(AstInternal::typeAt(type, 2));
-            a = new AstFixSize<3>(type, t0, t1, t2);
+            auto t0 = newTree(AstInternal::typeAt(type, 0));
+            auto t1 = newTree(AstInternal::typeAt(type, 1));
+            auto t2 = newTree(AstInternal::typeAt(type, 2));
+            a = std::make_unique<AstFixSize<3>>(type, std::move(t0), std::move(t1), std::move(t2));
         } else if (Ast::isFixSize(type, 4)) {
-            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
-            Ast *t1 = newTree(AstInternal::typeAt(type, 1));
-            Ast *t2 = newTree(AstInternal::typeAt(type, 2));
-            Ast *t3 = newTree(AstInternal::typeAt(type, 3));
-            a = new AstFixSize<4>(type, t0, t1, t2, t3);
+            auto t0 = newTree(AstInternal::typeAt(type, 0));
+            auto t1 = newTree(AstInternal::typeAt(type, 1));
+            auto t2 = newTree(AstInternal::typeAt(type, 2));
+            auto t3 = newTree(AstInternal::typeAt(type, 3));
+            a = std::make_unique<AstFixSize<4>>(type,
+                                                std::move(t0), std::move(t1),
+                                                std::move(t2), std::move(t3));
         } else if (Ast::isFixSize(type, 5)) {
-            Ast *t0 = newTree(AstInternal::typeAt(type, 0));
-            Ast *t1 = newTree(AstInternal::typeAt(type, 1));
-            Ast *t2 = newTree(AstInternal::typeAt(type, 2));
-            Ast *t3 = newTree(AstInternal::typeAt(type, 3));
-            Ast *t4 = newTree(AstInternal::typeAt(type, 4));
-            a = new AstFixSize<5>(type, t0, t1, t2, t3, t4);
+            auto t0 = newTree(AstInternal::typeAt(type, 0));
+            auto t1 = newTree(AstInternal::typeAt(type, 1));
+            auto t2 = newTree(AstInternal::typeAt(type, 2));
+            auto t3 = newTree(AstInternal::typeAt(type, 3));
+            auto t4 = newTree(AstInternal::typeAt(type, 4));
+            a = std::make_unique<AstFixSize<5>>(type,
+                                                std::move(t0), std::move(t1),
+                                                std::move(t2), std::move(t3), std::move(t4));
         } else {
             throw "TODO";
         }
     } else {
-        assert(Ast::isScalar(type));
-
-        switch (type) {
-        case Ast::Type::IDENT:
-            a = new AstScalar(Ast::Type::IDENT, "id");
-            break;
-        case Ast::Type::STRING:
-            a = new AstScalar(Ast::Type::STRING, "");
-            break;
-        case Ast::Type::NUMBER:
-            a = new AstScalar(Ast::Type::NUMBER, "0");
-            break;
-        case Ast::Type::META:
-            a = new AstScalar(Ast::Type::META, "");
-            break;
-        case Ast::Type::HIDDEN:
-            a = new AstScalar(Ast::Type::HIDDEN, "");
-            break;
-        default:
-            throw "WTF";
-        }
+        throw "WTF";
     }
 
     return a;

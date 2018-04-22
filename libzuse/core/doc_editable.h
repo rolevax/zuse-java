@@ -31,14 +31,14 @@ public:
     virtual void dollyOutBig(Ast::Type match) = 0;
     virtual void siblingBig(bool match(const Ast*), bool right) = 0;
     virtual void siblingBig(Ast::Type match, bool right) = 0;
-    virtual void insert(Ast::Type type, int bop = AstListBop::UNUSED) = 0;
-    virtual void append(Ast::Type type, int bop = AstListBop::UNUSED) = 0;
-    virtual void assart(Ast::Type type, int bop = AstListBop::UNUSED) = 0;
+    virtual void insert(Ast::Type type, Bop bop = Bop::UNUSED) = 0;
+    virtual void append(Ast::Type type, Bop bop = Bop::UNUSED) = 0;
+    virtual void assart(Ast::Type type, Bop bop = Bop::UNUSED) = 0;
     virtual void remove() = 0;
-    virtual void change(Ast *a) = 0;
+    virtual void change(std::unique_ptr<Ast> a) = 0;
     virtual void change(Ast::Type type) = 0;
-    virtual void nestAsLeft(Ast::Type type, int bop = AstListBop::UNUSED) = 0;
-    virtual void nestAsRight(Ast::Type type, int bop = AstListBop::UNUSED) = 0;
+    virtual void nestAsLeft(Ast::Type type, Bop bop = Bop::UNUSED) = 0;
+    virtual void nestAsRight(Ast::Type type, Bop bop = Bop::UNUSED) = 0;
     virtual void expose() = 0;
     virtual void cast(Ast::Type type) = 0;
 

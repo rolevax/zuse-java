@@ -46,14 +46,14 @@ private:
     void dollyOutBig(Ast::Type match) override;
     void siblingBig(bool match(const Ast*), bool right) override;
     void siblingBig(Ast::Type match, bool right) override;
-    void insert(Ast::Type type, int bop) override;
-    void append(Ast::Type type, int bop) override;
-    void assart(Ast::Type type, int bop) override;
+    void insert(Ast::Type type, Bop bop) override;
+    void append(Ast::Type type, Bop bop) override;
+    void assart(Ast::Type type, Bop bop) override;
     void remove() override;
-    void change(Ast *a) override;
+    void change(std::unique_ptr<Ast> a) override;
     void change(Ast::Type type) override;
-    void nestAsLeft(Ast::Type type, int bop) override;
-    void nestAsRight(Ast::Type type, int bop) override;
+    void nestAsLeft(Ast::Type type, Bop bop) override;
+    void nestAsRight(Ast::Type type, Bop bop) override;
     void expose() override;
     void cast(Ast::Type type) override;
 
@@ -82,8 +82,9 @@ private:
 
     /// \name internal detail functions
     ///@{
-    void setBop(AstListBop &blist, size_t pos, int bop);
-    Ast *newTree(Ast::Type type);
+    void setBop(AstListBop &blist, size_t pos, Bop bop);
+    std::unique_ptr<Ast> newTree(Ast::Type type);
+    std::unique_ptr<AstInternal> newInternalTree(Ast::Type type);
     ///@}
 
 private:

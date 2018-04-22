@@ -15,13 +15,14 @@ void AstFixSize<N>::dump() const
 }
 
 template<std::size_t N>
-AstFixSize<N> *AstFixSize<N>::clone() const
+std::unique_ptr<Ast> AstFixSize<N>::clone() const
 {
-    AstFixSize<N> *ret = new AstFixSize<N>(getType());
-    ret->mModifiers = mModifiers;
+    AstFixSize<N> res(getType());
+    res.mModifiers = mModifiers;
     for (size_t i = 0; i < N; i++)
-        ret->change(i, at(i).clone());
-    return ret;
+        res.change(i, at(i).clone());
+
+    return std::make_unique<AstFixSize<N>>(std::move(res));
 }
 
 template<std::size_t N>
@@ -65,10 +66,10 @@ void AstFixSize<N>::setModifiers(const Modifiers &m)
 }
 
 template<std::size_t N>
-void AstFixSize<N>::doChange(size_t pos, Ast *next)
+void AstFixSize<N>::doChange(size_t pos, std::unique_ptr<Ast> next)
 {
     assert(pos < N);
-    mSubtrees[pos].reset(next);
+    mSubtrees[pos] = std::move(next);
 }
 
 template<std::size_t N>

@@ -1788,21 +1788,21 @@ namespace yy {
 
   case 83:
 #line 484 "bison.yy" // lalr1.cc:859
-    { AstList *body = yystack_[0].value.as< Ast* > ()->bodify();
+    { AstList *body = yystack_[0].value.as< Ast* > ()->bodify().release();
 				  yylhs.value.as< Ast* > () = new AstFixSize<2>(Ast::Type::WHILE, yystack_[2].value.as< Ast* > (), body); }
 #line 1794 "bison.cc" // lalr1.cc:859
     break;
 
   case 84:
 #line 488 "bison.yy" // lalr1.cc:859
-    { AstList *body = yystack_[5].value.as< Ast* > ()->bodify();
+    { AstList *body = yystack_[5].value.as< Ast* > ()->bodify().release();
 				  yylhs.value.as< Ast* > () = new AstFixSize<2>(Ast::Type::DO_WHILE, body, yystack_[2].value.as< Ast* > ()); }
 #line 1801 "bison.cc" // lalr1.cc:859
     break;
 
   case 85:
 #line 492 "bison.yy" // lalr1.cc:859
-    { AstList *body = yystack_[0].value.as< Ast* > ()->bodify();
+    { AstList *body = yystack_[0].value.as< Ast* > ()->bodify().release();
 				  yylhs.value.as< Ast* > () = new AstFixSize<4>(Ast::Type::FOR, 
 										 yystack_[5].value.as< Ast* > (), yystack_[4].value.as< Ast* > (), yystack_[2].value.as< Ast* > (), body); }
 #line 1809 "bison.cc" // lalr1.cc:859
@@ -1876,7 +1876,7 @@ namespace yy {
   case 94:
 #line 548 "bison.yy" // lalr1.cc:859
     { Ast *cond = new AstFixSize<2>(Ast::Type::IF_CONDBODY,
-												yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > ()->bodify()); 
+												yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > ()->bodify().release()); 
 				  yylhs.value.as< AstList* > () = new AstList(Ast::Type::IF_LIST);
 				  yylhs.value.as< AstList* > ()->append(cond); }
 #line 1883 "bison.cc" // lalr1.cc:859
@@ -1885,7 +1885,7 @@ namespace yy {
   case 95:
 #line 553 "bison.yy" // lalr1.cc:859
     { Ast *cond = new AstFixSize<2>(Ast::Type::IF_CONDBODY,
-												yystack_[4].value.as< Ast* > (), yystack_[2].value.as< Ast* > ()->bodify()); 
+												yystack_[4].value.as< Ast* > (), yystack_[2].value.as< Ast* > ()->bodify().release()); 
 				  yylhs.value.as< AstList* > () = new AstList(Ast::Type::IF_LIST);
 				  yylhs.value.as< AstList* > ()->append(cond); 
 				  if (yystack_[0].value.as< Ast* > ()->getType() == Ast::Type::IF_LIST) {
@@ -1894,7 +1894,7 @@ namespace yy {
 					  for (size_t i = 0; i < size; i++)
 						  yylhs.value.as< AstList* > ()->append(tail.remove(0));
 				  } else {
-					  yylhs.value.as< AstList* > ()->append(yystack_[0].value.as< Ast* > ()->bodify());
+					  yylhs.value.as< AstList* > ()->append(yystack_[0].value.as< Ast* > ()->bodify().release());
 				  } }
 #line 1900 "bison.cc" // lalr1.cc:859
     break;
@@ -2004,7 +2004,7 @@ namespace yy {
   case 113:
 #line 609 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::LOGIC_OR_BOP_LIST, 
-									  yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), AstListBop::DEFAULT); }
+									  yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), Bop::DEFAULT); }
 #line 2009 "bison.cc" // lalr1.cc:859
     break;
 
@@ -2017,7 +2017,7 @@ namespace yy {
   case 115:
 #line 616 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::LOGIC_AND_BOP_LIST, 
-									  yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), AstListBop::DEFAULT); }
+									  yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), Bop::DEFAULT); }
 #line 2022 "bison.cc" // lalr1.cc:859
     break;
 
@@ -2144,14 +2144,14 @@ namespace yy {
   case 136:
 #line 674 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::ADD_BOP_LIST, yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), 
-									  AstListBop::ADD); }
+									  Bop::ADD); }
 #line 2149 "bison.cc" // lalr1.cc:859
     break;
 
   case 137:
 #line 677 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::ADD_BOP_LIST, yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), 
-									  AstListBop::SUB); }
+									  Bop::SUB); }
 #line 2156 "bison.cc" // lalr1.cc:859
     break;
 
@@ -2164,14 +2164,14 @@ namespace yy {
   case 139:
 #line 684 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::MUL_BOP_LIST, yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), 
-									  AstListBop::MUL); }
+									  Bop::MUL); }
 #line 2169 "bison.cc" // lalr1.cc:859
     break;
 
   case 140:
 #line 687 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::MUL_BOP_LIST, yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), 
-									  AstListBop::DIV); }
+									  Bop::DIV); }
 #line 2176 "bison.cc" // lalr1.cc:859
     break;
 
@@ -2359,21 +2359,21 @@ namespace yy {
   case 171:
 #line 772 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::DOT_BOP_LIST, yystack_[3].value.as< Ast* > (), yystack_[1].value.as< Ast* > (), 
-									  AstListBop::ARR); }
+									  Bop::ARR); }
 #line 2364 "bison.cc" // lalr1.cc:859
     break;
 
   case 172:
 #line 775 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::DOT_BOP_LIST, yystack_[3].value.as< Ast* > (), yystack_[1].value.as< Ast* > (), 
-									  AstListBop::ARR); }
+									  Bop::ARR); }
 #line 2371 "bison.cc" // lalr1.cc:859
     break;
 
   case 173:
 #line 780 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::DOT_BOP_LIST, yystack_[3].value.as< Ast* > (), yystack_[1].value.as< AstList* > (), 
-									  AstListBop::CALL); }
+									  Bop::CALL); }
 #line 2378 "bison.cc" // lalr1.cc:859
     break;
 
@@ -2430,21 +2430,21 @@ namespace yy {
   case 181:
 #line 817 "bison.yy" // lalr1.cc:859
     { Ast *hidden = new AstScalar(Ast::Type::HIDDEN, "");
-				  Ast *dimsA = AstListBop::makeDims(yystack_[0].value.as< int > ());
+				  auto dimsA = AstListBop::makeDims(yystack_[0].value.as< int > ());
 				  yylhs.value.as< Ast* > () = new AstFixSize<3>(Ast::Type::NEW_ARRAY,
-										 yystack_[1].value.as< Ast* > (), dimsA, hidden); }
+										 yystack_[1].value.as< Ast* > (), dimsA.release(), hidden); }
 #line 2437 "bison.cc" // lalr1.cc:859
     break;
 
   case 182:
 #line 824 "bison.yy" // lalr1.cc:859
-    { yylhs.value.as< Ast* > () = AstListBop::makeDims(yystack_[1].value.as< Ast* > ()); }
+    { yylhs.value.as< Ast* > () = AstListBop::makeDims(std::unique_ptr<Ast>(yystack_[1].value.as< Ast* > ())).release(); }
 #line 2443 "bison.cc" // lalr1.cc:859
     break;
 
   case 183:
 #line 826 "bison.yy" // lalr1.cc:859
-    { yystack_[3].value.as< Ast* > ()->asBopList().addDims(yystack_[1].value.as< Ast* > ());
+    { yystack_[3].value.as< Ast* > ()->asBopList().addDims(std::unique_ptr<Ast>(yystack_[1].value.as< Ast* > ()));
 				  yylhs.value.as< Ast* > () = yystack_[3].value.as< Ast* > (); }
 #line 2450 "bison.cc" // lalr1.cc:859
     break;
@@ -2476,7 +2476,7 @@ namespace yy {
   case 188:
 #line 841 "bison.yy" // lalr1.cc:859
     { yylhs.value.as< Ast* > () = new AstListBop(Ast::Type::DOT_BOP_LIST, yystack_[2].value.as< Ast* > (), yystack_[0].value.as< Ast* > (), 
-									  AstListBop::DOT); }
+									  Bop::DOT); }
 #line 2481 "bison.cc" // lalr1.cc:859
     break;
 

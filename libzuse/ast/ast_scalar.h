@@ -11,8 +11,11 @@ class AstScalar : public Ast
 public:
     AstScalar(Type t, const std::string &mText);
 
+    AstScalar(AstScalar &&move) = default;
+    AstScalar &operator=(AstScalar &&moveAssign) = default;
+
     void dump() const override;
-    AstScalar *clone() const override;
+    std::unique_ptr<Ast> clone() const override;
 
     const std::string &getText() const;
 

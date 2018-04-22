@@ -7,7 +7,6 @@ class AstRoot : public AstList
 {
 public:
     AstRoot();
-    // TODO consider to delete this class
 };
 
 #endif // ZUSE_AST_ROOT_H

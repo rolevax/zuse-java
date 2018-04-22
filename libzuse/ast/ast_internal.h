@@ -9,9 +9,12 @@ public:
     AstInternal(Type t);
     virtual ~AstInternal() = default;
 
-    void change(size_t pos, Ast *next);
-    void nestAsLeft(size_t pos, AstInternal *nester);
-    void nestAsRight(size_t pos, AstInternal *nester);
+    AstInternal(AstInternal &&move) = default;
+    AstInternal &operator=(AstInternal &&moveAssign) = default;
+
+    void change(size_t pos, std::unique_ptr<Ast> next);
+    void nestAsLeft(size_t pos, std::unique_ptr<AstInternal> nester);
+    void nestAsRight(size_t pos, std::unique_ptr<AstInternal> nester);
     void expose(size_t vanisher, size_t exposee);
     virtual size_t size() const = 0;
     virtual Ast &at(size_t pos) const = 0;
@@ -21,7 +24,7 @@ public:
     Ast::Type typeAt(size_t pos, bool allowHidden = true) const;
 
 protected:
-    virtual void doChange(size_t pos, Ast *next) = 0;
+    virtual void doChange(size_t pos, std::unique_ptr<Ast> next) = 0;
 };
 
 #endif // ZUSE_AST_INTERNAL_H

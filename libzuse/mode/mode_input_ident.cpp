@@ -126,7 +126,7 @@ Mode *ModeInputIdent::promoteToDeclVar()
             const AstListBop &bast = mDoc.getOuter().asBopList();
             assert(bast.size() >= 2);
             size_t i = 1;
-            while (i != bast.size() && bast.opAt(i) == AstListBop::DOT)
+            while (i != bast.size() && bast.opAt(i) == Bop::DOT)
                 i++;
             if (i == bast.size()) { // all op is member access
                 Ast::Type ootype = mDoc.getOuter().getParent().getType();
