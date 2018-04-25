@@ -18,10 +18,8 @@ Mode::Result ModeInputIdent::keyboard(Key key)
 {
     assert(mDoc.getInner().getType() == Ast::Type::IDENT);
 
-    if (key == Key::SPACE) {
-        Mode *nextPush = promotion();
-        return { ResultType::DONE_POP, nextPush };
-    }
+    if (key == Key::SPACE)
+        return { ResultType::DONE_POP, promotion() };
 
     if (mClear) {
         mDoc.setHotLight(DocEditable::HotLightLevel::POINT);
@@ -33,9 +31,9 @@ Mode::Result ModeInputIdent::keyboard(Key key)
             || key == Key::BACKSPACE || key == Key::UNDERSCORE
             || key == Key::DOLLAR) {
         mDoc.scalarAppend(KeyCode::toChar(key));
-        return DONE_STAY_NOPUSH;
+        return Result::doneStayNoPush();
     } else {
-        return RAISE_POP_NOPUSH;
+        return Result::raisePopNoPush();
     }
 }
 
@@ -45,7 +43,7 @@ Mode::Result ModeInputIdent::onPushed()
         mDoc.setHotLight(DocEditable::HotLightLevel::AREA);
     else
         mDoc.setHotLight(DocEditable::HotLightLevel::POINT);
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 void ModeInputIdent::onPopped()
@@ -92,18 +90,18 @@ bool ModeInputIdent::isUpperCamel(const std::string &id)
             && id.end() != std::find_if(id.begin() + 1, id.end(), islower);
 }
 
-Mode *ModeInputIdent::promotion()
+std::unique_ptr<Mode> ModeInputIdent::promotion()
 {
-    if (Mode *ret = promoteToDeclVar())
+    if (auto ret = promoteToDeclVar())
         return ret;
 
-    if (Mode *ret = promoteByKeyword())
+    if (auto ret = promoteByKeyword())
         return ret;
 
     return nullptr;
 }
 
-Mode *ModeInputIdent::promoteToDeclVar()
+std::unique_ptr<Mode> ModeInputIdent::promoteToDeclVar()
 {
     auto canHaveDeclVar = [](Ast::Type ot, size_t inner)
     {
@@ -156,7 +154,7 @@ Mode *ModeInputIdent::promoteToDeclVar()
     return nullptr;
 }
 
-Mode *ModeInputIdent::promoteByKeyword()
+std::unique_ptr<Mode> ModeInputIdent::promoteByKeyword()
 {
     const std::string &text = mDoc.getInner().asScalar().getText();
     if (text == "while") {

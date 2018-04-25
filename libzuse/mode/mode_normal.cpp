@@ -21,12 +21,11 @@ Mode::Result ModeNormal::keyboard(Key key)
     if (mDoc.getOuter().getType() == Ast::Type::CLASS_LIST
             && mDoc.getOuter().size() == 0
             && key != Key::I && key != Key::S_I)
-        return DONE_STAY_NOPUSH;
+        return Result::doneStayNoPush();
 
-    Mode *nextPush = nullptr;
-
+    std::unique_ptr<Mode> nextPush;
     if (mMacro.macro(key, nextPush))
-        return { ResultType::DONE_STAY, nextPush };
+        return { ResultType::DONE_STAY, std::move(nextPush) };
 
     switch (key) {
     // logical cursor moving
@@ -54,18 +53,18 @@ Mode::Result ModeNormal::keyboard(Key key)
         mDoc.digOut();
         break;
     case Key::S_S:
-        nextPush = new ModeMenu(mDoc, ModeMenu::Context::S_BIG);
+        nextPush = std::make_unique<ModeMenu>(mDoc, ModeMenu::Context::S_BIG);
         break;
     case Key::S_G:
-        nextPush = new ModeMenu(mDoc, ModeMenu::Context::G_BIG);
+        nextPush = std::make_unique<ModeMenu>(mDoc, ModeMenu::Context::G_BIG);
         break;
     case Key::S_F: // fall-search
         if (!mDoc.getInner().isScalar()
                 && mDoc.getInner().asInternal().size() > 0)
-            nextPush = new ModeMenu(mDoc, ModeMenu::Context::FOCUS_IN_BIG);
+            nextPush = std::make_unique<ModeMenu>(mDoc, ModeMenu::Context::FOCUS_IN_BIG);
         break;
     case Key::S_D: // dig-search
-        nextPush = new ModeMenu(mDoc, ModeMenu::Context::DOLLY_OUT_BIG);
+        nextPush = std::make_unique<ModeMenu>(mDoc, ModeMenu::Context::DOLLY_OUT_BIG);
         break;
 
     // HIJK cursor moving
@@ -86,7 +85,7 @@ Mode::Result ModeNormal::keyboard(Key key)
     case Key::I: // insert
         if (mDoc.getOuter().isList()) {
             if (mDoc.getOuter().isBopList() && mDoc.getOuter().asBopList().numOp() > 1)
-                nextPush = new ModeMenu(mDoc, ModeMenu::Context::BOP_INSERT);
+                nextPush = std::make_unique<ModeMenu>(mDoc, ModeMenu::Context::BOP_INSERT);
             else
                 nextPush = menulessListOp(ListOp::INSERT);
         } else if (mDoc.getInnerIndex() > 0
@@ -100,7 +99,7 @@ Mode::Result ModeNormal::keyboard(Key key)
     case Key::O: // oh, append
         if (mDoc.getOuter().isList()) {
             if (mDoc.getOuter().isBopList() && mDoc.getOuter().asBopList().numOp() > 1)
-                nextPush = new ModeMenu(mDoc, ModeMenu::Context::BOP_APPEND);
+                nextPush = std::make_unique<ModeMenu>(mDoc, ModeMenu::Context::BOP_APPEND);
             else
                 nextPush = menulessListOp(ListOp::APPEND);
         } else if (mDoc.getInnerIndex() + 1 < mDoc.getOuter().size()
@@ -128,7 +127,7 @@ Mode::Result ModeNormal::keyboard(Key key)
         mDoc.yank(mDoc.getInner());
         break;
     case Key::P: // switch clipslot
-        nextPush = new ModeMenu(mDoc, ModeMenu::Context::SWITCH_CLIP);
+        nextPush = std::make_unique<ModeMenu>(mDoc, ModeMenu::Context::SWITCH_CLIP);
         break;
     case Key::C: // change
     case Key::S_C: // change-clip
@@ -138,10 +137,10 @@ Mode::Result ModeNormal::keyboard(Key key)
         nextPush = mDoc.createModifyMode(true);
         break;
     case Key::N: // nest as left
-        nextPush = new ModeMenu(mDoc, ModeMenu::Context::NEST_AS_LEFT);
+        nextPush = std::make_unique<ModeMenu>(mDoc, ModeMenu::Context::NEST_AS_LEFT);
         break;
     case Key::S_N: // nest as right
-        nextPush = new ModeMenu(mDoc, ModeMenu::Context::NEST_AS_RIGHT);
+        nextPush = std::make_unique<ModeMenu>(mDoc, ModeMenu::Context::NEST_AS_RIGHT);
         break;
     case Key::X: // expose
     case Key::S_X: // expose-clip
@@ -161,7 +160,7 @@ Mode::Result ModeNormal::keyboard(Key key)
             nextPush = mDoc.createModifyMode(clear);
         else if (mDoc.getOuter().getType() == Ast::Type::MEMBER_LIST
                  || mDoc.getOuter().getType() == Ast::Type::CLASS_LIST)
-            nextPush = new ModeMoggle(mDoc);
+            nextPush = std::make_unique<ModeMoggle>(mDoc);
         else if (mDoc.getInner().getType() == Ast::Type::DECL_PARAM
                  || mDoc.getInner().getType() == Ast::Type::DECL_VAR) // local var
             mDoc.toggleFinal();
@@ -171,7 +170,7 @@ Mode::Result ModeNormal::keyboard(Key key)
         break;
     }
 
-    return { ResultType::DONE_STAY, nextPush };
+    return { ResultType::DONE_STAY, std::move(nextPush) };
 }
 
 const char *ModeNormal::name()
@@ -179,7 +178,7 @@ const char *ModeNormal::name()
     return "View";
 }
 
-Mode *ModeNormal::menulessListOp(ListOp op)
+std::unique_ptr<Mode> ModeNormal::menulessListOp(ListOp op)
 {
     const AstList &l = (op == ListOp::ASSART ? mDoc.getInner()
                                              : mDoc.getOuter()).asList();

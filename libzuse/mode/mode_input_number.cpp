@@ -17,7 +17,7 @@ Mode::Result ModeInputNumber::keyboard(Key key)
     assert(mDoc.getInner().getType() == Ast::Type::NUMBER);
 
     if (Key::SPACE == key)
-        return DONE_POP_NOPUSH;
+        return Result::donePopNoPush();
 
     char input;
     if (KeyCode::isDigit(key) || key == Key::BACKSPACE)
@@ -37,10 +37,10 @@ Mode::Result ModeInputNumber::keyboard(Key key)
     else if (Key::M == key)
         input = '0';
     else
-        return RAISE_POP_NOPUSH;
+        return Result::raisePopNoPush();
 
     mDoc.scalarAppend(input);
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 Mode::Result ModeInputNumber::onPushed()
@@ -51,7 +51,7 @@ Mode::Result ModeInputNumber::onPushed()
     }
 
     mDoc.setHotLight(DocEditable::HotLightLevel::POINT);
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 void ModeInputNumber::onPopped()

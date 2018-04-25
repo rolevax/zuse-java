@@ -23,12 +23,12 @@ Mode::Result ModeInputString::keyboard(Key key)
         for (auto it = text.rbegin(); it != text.rend() && '\\' == *it; ++it)
             backSlashCount++;
         if (0 == backSlashCount % 2) { // no '\' waiting for a character
-            return DONE_POP_NOPUSH;
+            return Result::donePopNoPush();
         }
     }
 
     mDoc.scalarAppend(KeyCode::toChar(key));
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 Mode::Result ModeInputString::onPushed()
@@ -39,7 +39,7 @@ Mode::Result ModeInputString::onPushed()
     }
 
     mDoc.setHotLight(DocEditable::HotLightLevel::POINT);
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 void ModeInputString::onPopped()

@@ -19,28 +19,41 @@ public:
     struct Result
     {
         ResultType type;
-        Mode *nextPush;
-        bool handled() const { return type != ResultType::RAISE_POP; }
+        std::unique_ptr<Mode> nextPush;
+        bool isDone() const { return type != ResultType::RAISE_POP; }
         bool toPop() const { return type != ResultType::DONE_STAY; }
-    };
 
-    static constexpr Result DONE_STAY_NOPUSH = { ResultType::DONE_STAY, nullptr };
-    static constexpr Result DONE_POP_NOPUSH = { ResultType::DONE_POP, nullptr };
-    static constexpr Result RAISE_POP_NOPUSH = { ResultType::RAISE_POP, nullptr };
+        static Result doneStayNoPush()
+        {
+            return { ResultType::DONE_STAY, nullptr };
+        }
+
+        static Result donePopNoPush()
+        {
+            return { ResultType::DONE_POP, nullptr };
+        }
+
+        static Result raisePopNoPush()
+        {
+            return { ResultType::RAISE_POP, nullptr };
+        }
+    };
 
     Mode(const Mode& copy) = delete;
     Mode &operator=(const Mode& assign) = delete;
     virtual ~Mode() = default;
 
-    virtual Result keyboard(Key key) { (void) key; return DONE_STAY_NOPUSH; }
-    virtual Result onPushed()  { return DONE_STAY_NOPUSH; }
+    virtual Result keyboard(Key key) { (void) key; return Result::doneStayNoPush(); }
+    virtual Result onPushed()  { return Result::doneStayNoPush(); }
     virtual void onPopped() {}
-    virtual Result onResume() { return DONE_STAY_NOPUSH; }
+    virtual Result onResume() { return Result::doneStayNoPush(); }
     virtual const char *name() = 0;
 
 protected:
     Mode(DocEditable &doc) : mDoc(doc) {}
     DocEditable &mDoc;
 };
+
+
 
 #endif // ZUSE_MODE_H

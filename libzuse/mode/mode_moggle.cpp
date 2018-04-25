@@ -16,7 +16,7 @@ Mode::Result ModeMoggle::keyboard(Key key)
     switch (key) {
     case Key::SPACE:
     case Key::M:
-        return DONE_POP_NOPUSH;
+        return Result::donePopNoPush();
     case Key::A:
         mDoc.toggleAbstract();
         break;
@@ -48,7 +48,7 @@ Mode::Result ModeMoggle::keyboard(Key key)
         break;
     }
 
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 Mode::Result ModeMoggle::onPushed()
@@ -56,7 +56,7 @@ Mode::Result ModeMoggle::onPushed()
     assert(mDoc.getInner().isFixSize());
 
     mDoc.toggleTension(true);
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 void ModeMoggle::onPopped()

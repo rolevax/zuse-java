@@ -11,15 +11,15 @@ public:
     MacroHandler(const MacroHandler& copy) = delete;
     MacroHandler &operator=(const MacroHandler &assign) = delete;
 
-    bool macro(Key key, Mode *&nextPush);
+    bool macro(Key key, std::unique_ptr<Mode> &nextPush);
 
 private:
-    bool macroLeftParen(Mode *&nextPush);
-    bool macroLeftBrace(Mode *&nextPush);
-    bool macroComma(Mode *&nextPush);
-    bool macroEnter(Mode *&nextPush, bool shift);
-    bool macroBop(Key key, Mode *&nextPush);
-    Mode *createMode(int offset = 0);
+    bool macroLeftParen(std::unique_ptr<Mode> &nextPush);
+    bool macroLeftBrace(std::unique_ptr<Mode> &nextPush);
+    bool macroComma(std::unique_ptr<Mode> &nextPush);
+    bool macroEnter(std::unique_ptr<Mode> &nextPush, bool shift);
+    bool macroBop(Key key, std::unique_ptr<Mode> &nextPush);
+    std::unique_ptr<Mode> createMode(int offset = 0);
 
 private:
     DocEditable &mDoc;

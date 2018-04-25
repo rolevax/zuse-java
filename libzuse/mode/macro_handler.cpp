@@ -6,7 +6,7 @@ MacroHandler::MacroHandler(DocEditable &doc)
 
 }
 
-bool MacroHandler::macro(Key key, Mode *&nextPush)
+bool MacroHandler::macro(Key key, std::unique_ptr<Mode> &nextPush)
 {
     Ast::Type ot = mDoc.getOuter().getType();
     if (ot == Ast::Type::CLASS_LIST && mDoc.getOuter().size() == 0)
@@ -30,7 +30,7 @@ bool MacroHandler::macro(Key key, Mode *&nextPush)
     }
 }
 
-bool MacroHandler::macroLeftParen(Mode *&nextPush)
+bool MacroHandler::macroLeftParen(std::unique_ptr<Mode> &nextPush)
 {
     Ast::Type ot = mDoc.getOuter().getType();
     Ast::Type it = mDoc.getInner().getType();
@@ -91,7 +91,7 @@ bool MacroHandler::macroLeftParen(Mode *&nextPush)
     }
 }
 
-bool MacroHandler::macroLeftBrace(Mode *&nextPush)
+bool MacroHandler::macroLeftBrace(std::unique_ptr<Mode> &nextPush)
 {
     Ast::Type ot = mDoc.getOuter().getType();
     Ast::Type it = mDoc.getInner().getType();
@@ -122,7 +122,7 @@ bool MacroHandler::macroLeftBrace(Mode *&nextPush)
     }
 }
 
-bool MacroHandler::macroComma(Mode *&nextPush)
+bool MacroHandler::macroComma(std::unique_ptr<Mode> &nextPush)
 {
     const Ast *a = &mDoc.getOuter();
     Ast::Type at;
@@ -160,7 +160,7 @@ bool MacroHandler::macroComma(Mode *&nextPush)
     }
 }
 
-bool MacroHandler::macroEnter(Mode *&nextPush, bool shift)
+bool MacroHandler::macroEnter(std::unique_ptr<Mode> &nextPush, bool shift)
 {
     const Ast *a = &mDoc.getOuter();
     Ast::Type at;
@@ -188,7 +188,7 @@ bool MacroHandler::macroEnter(Mode *&nextPush, bool shift)
     }
 }
 
-bool MacroHandler::macroBop(Key key, Mode *&nextPush)
+bool MacroHandler::macroBop(Key key, std::unique_ptr<Mode> &nextPush)
 {
     Ast::Type type;
     Bop op = Bop::UNUSED;
@@ -294,7 +294,7 @@ bool MacroHandler::macroBop(Key key, Mode *&nextPush)
     return true;
 }
 
-Mode *MacroHandler::createMode(int offset)
+std::unique_ptr<Mode> MacroHandler::createMode(int offset)
 {
     return mDoc.createModifyMode(true, offset, true);
 }

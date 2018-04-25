@@ -14,7 +14,7 @@ public:
 
 private:
     enum class ListOp { INSERT, APPEND, ASSART };
-    Mode *menulessListOp(ListOp op);
+    std::unique_ptr<Mode> menulessListOp(ListOp op);
 
 private:
     MacroHandler mMacro;

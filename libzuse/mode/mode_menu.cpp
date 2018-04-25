@@ -27,7 +27,7 @@ ModeMenu::ModeMenu(DocEditable &doc, Context context) :
 Mode::Result ModeMenu::keyboard(Key key)
 {
     if (key == Key::SPACE)
-        return DONE_POP_NOPUSH;
+        return Result::donePopNoPush();
 
     Ast::Type ktype = keyToType(key);
     Bop bop = keyToBop(key);
@@ -116,7 +116,7 @@ Mode::Result ModeMenu::keyboard(Key key)
             || mContext == Context::NEST_AS_RIGHT) {
         return { ResultType::DONE_POP, mDoc.createModifyMode(true) };
     } else { // big motions
-        return DONE_POP_NOPUSH;
+        return Result::donePopNoPush();
     }
 }
 
@@ -124,7 +124,7 @@ Mode::Result ModeMenu::onPushed()
 {
     if (mContext != Context::SWITCH_CLIP)
         mDoc.toggleTension(true);
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 void ModeMenu::onPopped()

@@ -23,19 +23,19 @@ Mode::Result ModeTilex::keyboard(Key key)
         mDoc.change(Ast::Type::IDENT);
         mDoc.scalarClear();
         mDoc.scalarAppend(str);
-        return { ResultType::DONE_POP, new ModeInputIdent(mDoc, false) };
+        return { ResultType::DONE_POP, std::make_unique<ModeInputIdent>(mDoc, false) };
     } else if (KeyCode::isDigit(key)) {
         mDoc.change(Ast::Type::NUMBER);
         mDoc.scalarClear();
         mDoc.scalarAppend(str);
-        return { ResultType::DONE_POP, new ModeInputNumber(mDoc, false) };
+        return { ResultType::DONE_POP, std::make_unique<ModeInputNumber>(mDoc, false) };
     } else if (key == Key::DOUBLE_QUOTE) {
         mDoc.change(Ast::Type::STRING);
-        return { ResultType::DONE_POP, new ModeInputString(mDoc, true) };
+        return { ResultType::DONE_POP, std::make_unique<ModeInputString>(mDoc, true) };
     } else if (key == Key::TAB) { // paste
         mDoc.paste();
         mDoc.setHotLight(DocEditable::HotLightLevel::OFF);
-        return DONE_POP_NOPUSH;
+        return Result::donePopNoPush();
     } else if (key == Key::SPACE) {
         return keyboardSpace();
     } else if (key == Key::EQUAL) {
@@ -53,7 +53,7 @@ Mode::Result ModeTilex::keyboard(Key key)
             castOuter(Ast::Type::SHR);
         else if (key == Key::GREATER && ot == Ast::Type::SHR) // >> -> >>>
             castOuter(Ast::Type::SHRA);
-        return DONE_STAY_NOPUSH;
+        return Result::doneStayNoPush();
     }
 }
 
@@ -61,7 +61,7 @@ Mode::Result ModeTilex::onPushed()
 {
     assert(mDoc.getInner().getType() == Ast::Type::META);
     mDoc.setHotLight(DocEditable::HotLightLevel::AREA);
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 const char *ModeTilex::name()
@@ -88,13 +88,13 @@ Mode::Result ModeTilex::keyboardSpace()
     }
 
     mDoc.setHotLight(DocEditable::HotLightLevel::OFF);
-    return DONE_POP_NOPUSH;
+    return Result::donePopNoPush();
 }
 
 Mode::Result ModeTilex::keyboardEqual()
 {
     if (mDoc.getOuter().size() != 2)
-        return DONE_STAY_NOPUSH;
+        return Result::doneStayNoPush();
 
     switch (mDoc.getOuter().getType()) {
     case Ast::Type::ASSIGN:
@@ -155,19 +155,19 @@ Mode::Result ModeTilex::keyboardEqual()
         break;
     }
 
-    return DONE_STAY_NOPUSH;
+    return Result::doneStayNoPush();
 }
 
 Mode::Result ModeTilex::ppmm(bool inc)
 {
     const AstInternal &outer = mDoc.getOuter();
     if (outer.getType() != Ast::Type::ADD_BOP_LIST || outer.size() != 2)
-        return DONE_STAY_NOPUSH;
+        return Result::doneStayNoPush();
 
     bool prefix = mDoc.getInnerIndex() == 0;
     bool plus = outer.asBopList().opAt(1) == Bop::ADD;
     if (plus != inc) // "+-" or "-+"
-        return DONE_STAY_NOPUSH;
+        return Result::doneStayNoPush();
 
     Ast::Type t = prefix ? (inc ? Ast::Type::PRE_INC : Ast::Type::PRE_DEC)
                          : (inc ? Ast::Type::POST_INC : Ast::Type::POST_DEC);
@@ -176,7 +176,7 @@ Mode::Result ModeTilex::ppmm(bool inc)
     mDoc.expose();
 
     mDoc.setHotLight(DocEditable::HotLightLevel::OFF);
-    return DONE_POP_NOPUSH;
+    return Result::donePopNoPush();
 }
 
 void ModeTilex::castOuter(Ast::Type ot)

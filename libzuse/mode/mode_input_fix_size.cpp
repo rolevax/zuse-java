@@ -29,14 +29,14 @@ Mode::Result ModeInputFixSize::keyboard(Key key)
             return { ResultType::DONE_POP, mDoc.createModifyMode(true) };
         } else if (key == Key::S) {
             mDoc.sibling(-1, true);
-            return DONE_POP_NOPUSH;
+            return Result::donePopNoPush();
         } else { // key == Key::SPACE
             return nextStage();
         }
     } else {
-        Mode *mode = nullptr;
+        std::unique_ptr<Mode> mode;
         mMacro.macro(key, mode);
-        return { ResultType::DONE_STAY, mode };
+        return { ResultType::DONE_STAY, std::move(mode) };
     }
 }
 

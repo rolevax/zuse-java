@@ -18,9 +18,9 @@ private:
     static int isModifier(const std::string &id);
     static bool isPrimitiveType(const std::string &id);
     static bool isUpperCamel(const std::string &id);
-    Mode *promotion();
-    Mode *promoteToDeclVar();
-    Mode *promoteByKeyword();
+    std::unique_ptr<Mode> promotion();
+    std::unique_ptr<Mode> promoteToDeclVar();
+    std::unique_ptr<Mode> promoteByKeyword();
     void setModifier(int modId);
 
 private:

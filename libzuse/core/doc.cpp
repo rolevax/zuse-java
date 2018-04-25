@@ -67,8 +67,9 @@ void Doc::keyboard(Key key)
     for (int i = mModes.size() - 1; i >= 0; i--) {
         assert(i < int(mModes.size()));
         Mode::Result res = mModes[i]->keyboard(key);
-        handleModeResult(res);
-        if (res.handled())
+        bool done = res.isDone();
+        handleModeResult(std::move(res));
+        if (done)
             break;
     }
 
@@ -79,18 +80,17 @@ void Doc::keyboard(Key key)
 /**
  * @brief Push 'mode' onto the mode stack,
  * Trigger the 'onPushed' callback of 'mode'
- * This will take away the ownership of 'mode'.
  */
-void Doc::push(Mode *mode)
+void Doc::push(std::unique_ptr<Mode> mode)
 {
     if (mode == nullptr)
         return;
 
-    mModes.emplace_back(mode);
+    mModes.emplace_back(std::move(mode));
     mListener.onModePushed(mModes.back()->name());
     Mode::Result res = mModes.back()->onPushed();
-    handleModeResult(res);
-    assert(res.handled());
+    assert(res.isDone());
+    handleModeResult(std::move(res));
 }
 
 /**
@@ -108,17 +108,15 @@ void Doc::pop()
     popped->onPopped();
 }
 
-void Doc::handleModeResult(const Mode::Result &res)
+void Doc::handleModeResult(Mode::Result res)
 {
     if (res.toPop()) {
         pop();
-        push(res.nextPush);
-        if (res.type == Mode::ResultType::DONE_POP) {
-            Mode::Result r = mModes.back()->onResume();
-            handleModeResult(r);
-        }
+        push(std::move(res.nextPush));
+        if (res.type == Mode::ResultType::DONE_POP)
+            handleModeResult(mModes.back()->onResume());
     } else { // stay on the stack
-        push(res.nextPush);
+        push(std::move(res.nextPush));
     }
 }
 
@@ -494,22 +492,22 @@ void Doc::cast(Ast::Type to)
     mTokens.sync(mRoot.get());
 }
 
-Mode *Doc::createModifyMode(bool clear, size_t offset, bool macroContext)
+std::unique_ptr<Mode> Doc::createModifyMode(bool clear, size_t offset, bool macroContext)
 {
     if (getInner().isList() && !getInner().isBopList())
-        return new ModeInputList(*this);
+        return std::make_unique<ModeInputList>(*this);
     else if (getInner().isFixSize())
-        return new ModeInputFixSize(*this, getInner().asInternal(), offset);
+        return std::make_unique<ModeInputFixSize>(*this, getInner().asInternal(), offset);
 
     switch (getInner().getType()) {
     case Ast::Type::META:
-        return new ModeTilex(*this, macroContext);
+        return std::make_unique<ModeTilex>(*this, macroContext);
     case Ast::Type::IDENT:
-        return new ModeInputIdent(*this, clear);
+        return std::make_unique<ModeInputIdent>(*this, clear);
     case Ast::Type::STRING:
-        return new ModeInputString(*this, clear);
+        return std::make_unique<ModeInputString>(*this, clear);
     case Ast::Type::NUMBER:
-        return new ModeInputNumber(*this, clear);
+        return std::make_unique<ModeInputNumber>(*this, clear);
     default:
         return nullptr;
     }

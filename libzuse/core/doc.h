@@ -25,9 +25,9 @@ public:
     void keyboard(Key key); // TODO XXX: change here, and be a M
 
 private:
-    void push(Mode *mode);
+    void push(std::unique_ptr<Mode> mode);
     void pop();
-    void handleModeResult(const Mode::Result &res);
+    void handleModeResult(Mode::Result res);
 
     /// \name DocEditable interface
     ///@{
@@ -57,7 +57,7 @@ private:
     void expose() override;
     void cast(Ast::Type type) override;
 
-    Mode *createModifyMode(bool clear, size_t offset, bool macroContext) override;
+    std::unique_ptr<Mode> createModifyMode(bool clear, size_t offset, bool macroContext) override;
     void scalarAppend(const char *str) override;
     void scalarAppend(char c) override;
     void scalarClear() override;
@@ -92,7 +92,7 @@ private:
     std::unique_ptr<AstRoot> mRoot;
     AstInternal *mOuter = nullptr;
     size_t mInner = 0;
-    std::unique_ptr<Ast> mClipslots[26];
+    std::array<std::unique_ptr<Ast>, 26> mClipslots;
     size_t mClipIndex = 0;
     Tokens mTokens;
     DocListener &mListener;
