@@ -6,6 +6,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 class DocEditable;
 
 class Mode
@@ -53,6 +58,10 @@ protected:
     Mode(DocEditable &doc) : mDoc(doc) {}
     DocEditable &mDoc;
 };
+
+
+
+} // namespace zuse
 
 
 

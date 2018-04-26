@@ -5,6 +5,13 @@
 
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 ModeInputNumber::ModeInputNumber(DocEditable &doc, bool clear) :
     Mode(doc),
     mClear(clear)
@@ -64,3 +71,6 @@ const char *ModeInputNumber::name()
     return "Number Input";
 }
 
+
+
+} // namespace zuse

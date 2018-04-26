@@ -1,5 +1,12 @@
 #include "macro_handler.h"
 
+
+
+namespace zuse
+{
+
+
+
 MacroHandler::MacroHandler(DocEditable &doc)
     : mDoc(doc)
 {
@@ -299,3 +306,6 @@ std::unique_ptr<Mode> MacroHandler::createMode(int offset)
     return mDoc.createModifyMode(true, offset, true);
 }
 
+
+
+} // namespace zuse

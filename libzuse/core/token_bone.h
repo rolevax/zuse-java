@@ -3,6 +3,13 @@
 
 #include "token.h"
 
+
+
+namespace zuse
+{
+
+
+
 class TokenBone : public Token
 {
 public:
@@ -35,5 +42,11 @@ private:
     Sym mSym;
     static std::string mSyms[128]; // MUST SYNC WITH # OF ENUM
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_TOKEN_BONE_H

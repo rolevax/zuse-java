@@ -3,6 +3,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 enum class Bop
 {
     UNUSED = -1, DEFAULT = 0,
@@ -10,6 +15,10 @@ enum class Bop
     MUL = 0, DIV = 1, MOD = 2,
     DOT = 0, CALL = 1, ARR = 2
 };
+
+
+
+} // namespace zuse
 
 
 

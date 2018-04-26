@@ -3,6 +3,13 @@
 
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 AstInternal::AstInternal(Type t)
     : Ast(t)
 {
@@ -117,3 +124,6 @@ Ast::Type AstInternal::typeAt(size_t pos, bool allowHidden) const
     return typeAt(getType(), pos, allowHidden);
 }
 
+
+
+} // namespace zuse

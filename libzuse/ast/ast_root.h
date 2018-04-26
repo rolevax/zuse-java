@@ -3,10 +3,21 @@
 
 #include "ast_list.h"
 
+namespace zuse
+{
+
+
+
 class AstRoot : public AstList
 {
 public:
     AstRoot();
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_AST_ROOT_H

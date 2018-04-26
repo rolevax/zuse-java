@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 		} else if (argv[i][0] == '-' && argv[i][1] == 's') {
 			traceLex = true;
 		} else {
-			using namespace yaloe;
+			using namespace zuse;
 			try {
 				AstRoot *root = parse(argv[i], traceLex, traceParse);
 				std::cout << "Pre-order dump:" << std::endl;

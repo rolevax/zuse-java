@@ -6,6 +6,11 @@
 
 #include <iostream>
 
+namespace zuse
+{
+
+
+
 class AstScalar : public Ast
 {
 public:
@@ -25,5 +30,11 @@ public:
 private:
     std::string mText;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_AST_SCALAR_H

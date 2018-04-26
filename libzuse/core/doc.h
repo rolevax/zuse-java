@@ -9,8 +9,12 @@
 
 
 
+namespace zuse
+{
+
+
+
 class AstListBop;
-class PDoc;
 
 class Doc : public DocEditable
 {
@@ -97,5 +101,11 @@ private:
     Tokens mTokens;
     DocListener &mListener;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_DOC_H

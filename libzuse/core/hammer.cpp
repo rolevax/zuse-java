@@ -8,6 +8,13 @@
 
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 Hammer::Hammer(Tokens &tokens) :
     mTokens(tokens)
 {
@@ -556,3 +563,6 @@ void Hammer::bone(const Ast &ast, Buf &buf, Sym sym)
     buf.push_back(new TokenBone(&ast, sym));
 }
 
+
+
+} // namespace zuse

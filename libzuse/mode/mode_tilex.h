@@ -3,6 +3,13 @@
 
 #include "mode.h"
 
+
+
+namespace zuse
+{
+
+
+
 class ModeTilex : public Mode
 {
 public:
@@ -22,5 +29,11 @@ private:
 private:
     bool mMacroContext;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_MODE_TILEX_H

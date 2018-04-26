@@ -7,6 +7,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 struct Region
 {
     size_t br;
@@ -35,5 +40,11 @@ private:
     const Ast *mAst;
     Role mRole;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_TOKEN_H

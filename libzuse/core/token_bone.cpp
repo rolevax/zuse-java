@@ -3,6 +3,13 @@
 #include <vector>
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 std::string TokenBone::mSyms[128]
 {
     "class ", "interface ", " extends ", " implements ",
@@ -151,3 +158,6 @@ const std::string &TokenBone::getText() const
     }
 }
 
+
+
+} // namespace zuse

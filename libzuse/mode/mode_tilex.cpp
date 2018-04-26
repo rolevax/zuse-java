@@ -7,6 +7,13 @@
 
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 ModeTilex::ModeTilex(DocEditable &doc, bool macroContext)
     : Mode(doc)
     , mMacroContext(macroContext)
@@ -241,3 +248,7 @@ void ModeTilex::relayMacro(int savedInner)
         }
     }
 }
+
+
+
+} // namespace zuse

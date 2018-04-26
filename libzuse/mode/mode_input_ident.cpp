@@ -7,6 +7,13 @@
 #include <cstdlib>
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 ModeInputIdent::ModeInputIdent(DocEditable &doc, bool clear)
     : Mode(doc),
       mClear(clear)
@@ -208,3 +215,6 @@ void ModeInputIdent::setModifier(int modId)
         mDoc.toggleSynchronized();
 }
 
+
+
+} // namespace zuse

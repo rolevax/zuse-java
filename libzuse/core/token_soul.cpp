@@ -3,6 +3,13 @@
 #include <vector>
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 TokenSoul::TokenSoul(const Ast *ast, Role role) :
     Token(ast, role)
 {
@@ -24,3 +31,6 @@ const std::string &TokenSoul::getText() const
     return tab[level];
 }
 
+
+
+} // namespace zuse

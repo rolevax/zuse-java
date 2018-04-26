@@ -3,6 +3,13 @@
 
 #include "mode.h"
 
+
+
+namespace zuse
+{
+
+
+
 class ModeInputString : public Mode
 {
 public:
@@ -16,5 +23,11 @@ public:
 private:
     bool mClear;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_MODE_INPUT_STRING_H

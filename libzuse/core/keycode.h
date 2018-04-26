@@ -1,6 +1,12 @@
 #ifndef ZUSE_KEYCODE_H
 #define ZUSE_KEYCODE_H
 
+
+namespace zuse
+{
+
+
+
 enum class Key
 {
     BACKTICK, NUM1, NUM2, NUM3, NUM4, NUM5,
@@ -32,5 +38,11 @@ char toChar(Key k);
 Key fromChar(char c);
 
 }
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_KEYCODE_H

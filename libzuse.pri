@@ -52,7 +52,8 @@ HEADERS += libzuse/zuse.h \
            libzuse/mode/mode_menu.h \
            libzuse/mode/mode_moggle.h \
            libzuse/mode/mode_normal.h \
-           libzuse/mode/mode_tilex.h
+           libzuse/mode/mode_tilex.h \
+           libzuse/util/pointers.h
 SOURCES += libzuse/ast/ast.cpp \
            libzuse/ast/ast_fix_size.cpp \
            libzuse/ast/ast_internal.cpp \

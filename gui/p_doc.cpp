@@ -34,9 +34,9 @@ void PDoc::keyboard(QString key, int modifier)
 {
     if (key.size() > 0) {
         char c = key.at(0).toLatin1();
-        Key k = KeyCode::fromChar(c);
+        zuse::Key k = zuse::KeyCode::fromChar(c);
         if (modifier & Qt::ShiftModifier)
-            k = KeyCode::makeShifted(k);
+            k = zuse::KeyCode::makeShifted(k);
         mDoc.keyboard(k);
     }
 }

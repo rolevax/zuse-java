@@ -5,6 +5,13 @@
 #include <memory>
 #include <iostream> // for Ast::dump()
 
+
+
+namespace zuse
+{
+
+
+
 class AstScalar;
 class AstInternal;
 template<std::size_t N> class AstFixSize;
@@ -103,5 +110,11 @@ private:
     Type mType;
     AstInternal *mParent;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_AST_H

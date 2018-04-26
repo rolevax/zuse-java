@@ -4,6 +4,13 @@
 #include "mode.h"
 #include "macro_handler.h"
 
+
+
+namespace zuse
+{
+
+
+
 class ModeNormal : public Mode
 {
 public:
@@ -19,5 +26,11 @@ private:
 private:
     MacroHandler mMacro;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_MODE_NORMAL_H

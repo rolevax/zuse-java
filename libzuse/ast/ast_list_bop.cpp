@@ -3,6 +3,13 @@
 
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 AstListBop::AstListBop(Ast::Type t, std::unique_ptr<Ast> lhs, std::unique_ptr<Ast> rhs, Bop op)
     : AstList(t)
 {
@@ -171,3 +178,6 @@ bool AstListBop::isRightAssoc() const
     return !isLeftAssoc();
 }
 
+
+
+} // namespace zuse

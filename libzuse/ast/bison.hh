@@ -49,9 +49,11 @@
 	#include "ast_list.h"
 	#include "ast_list_bop.h"
 	#include "ast_root.h"
-	class ParseException;
+    #include "parse_exception.h"
 
-#line 55 "bison.hh" // lalr1.cc:377
+    using namespace zuse;
+
+#line 57 "bison.hh" // lalr1.cc:377
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -128,7 +130,7 @@
 
 
 namespace yy {
-#line 132 "bison.hh" // lalr1.cc:377
+#line 134 "bison.hh" // lalr1.cc:377
 
 
 
@@ -2243,7 +2245,7 @@ namespace yy {
 
 
 } // yy
-#line 2247 "bison.hh" // lalr1.cc:377
+#line 2249 "bison.hh" // lalr1.cc:377
 
 
 

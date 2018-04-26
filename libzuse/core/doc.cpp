@@ -24,6 +24,13 @@
 #include <iostream>
 #include <cstdlib>
 
+
+
+namespace zuse
+{
+
+
+
 Doc::Doc(DocListener &listener)
     : mRoot(std::make_unique<AstRoot>())
     , mOuter(mRoot.get())
@@ -38,7 +45,7 @@ void Doc::load(const std::string &filename)
     if (mModes.size() > 1)
         throw std::runtime_error("Load failed: modifying mode not popped");
 
-    mRoot.reset(yaloe::parse(filename));
+    mRoot.reset(parse(filename));
     mOuter = mRoot.get();
     mInner = 0;
 
@@ -724,3 +731,5 @@ std::unique_ptr<AstInternal> Doc::newInternalTree(Ast::Type type)
 }
 
 
+
+} // namespace zuse

@@ -2,6 +2,12 @@
 
 #include <algorithm>
 
+
+namespace zuse
+{
+
+
+
 template<std::size_t N>
 void AstFixSize<N>::dump() const
 {
@@ -104,3 +110,7 @@ Modifiers &FixSizes::getModifiers(Ast &ast)
         return ast.asFixSize<5>().getModifiers();
     throw "WTF";
 }
+
+
+
+} // namespace zuse

@@ -16,7 +16,9 @@
 	#include "ast_list.h"
 	#include "ast_list_bop.h"
 	#include "ast_root.h"
-	class ParseException;
+    #include "parse_exception.h"
+
+    using namespace zuse;
 }
 
 /* The parsing context. */
@@ -37,7 +39,6 @@
 %code
 {
 	#include "lexproto.h"
-	#include "parse_exception.h"
 }
 
 %define api.token.prefix {TOK_}

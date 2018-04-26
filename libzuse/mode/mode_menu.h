@@ -6,6 +6,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 class ModeMenu : public Mode
 {
 public:
@@ -30,5 +35,11 @@ private:
 private:
     Context mContext;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_MODE_MENU_H

@@ -12,6 +12,13 @@
 #include <cassert>
 #include <QDebug>
 
+
+
+namespace zuse
+{
+
+
+
 static bool matchStmt(const Ast *a)
 {
     return a->getParent().getType() == Ast::Type::STMT_LIST;
@@ -233,3 +240,4 @@ Bop ModeMenu::keyToBop(Key key)
 
 
 
+} // namespace zuse

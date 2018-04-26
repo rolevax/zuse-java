@@ -9,6 +9,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 class ParseException : public std::exception
 {
 public:
@@ -27,6 +32,10 @@ public:
 private:
 	std::string msg;
 };
+
+
+
+} // namespace zuse
 
 
 

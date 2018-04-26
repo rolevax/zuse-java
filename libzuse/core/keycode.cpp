@@ -1,7 +1,15 @@
 #include "keycode.h"
 
+
+namespace zuse
+{
+
+
+
 namespace KeyCode
 {
+
+
 
 Key makeShifted(Key k)
 {
@@ -208,4 +216,10 @@ Key fromChar(char c)
     }
 }
 
-}
+
+
+} // namespace KeyCode
+
+
+
+} // namespace zuse

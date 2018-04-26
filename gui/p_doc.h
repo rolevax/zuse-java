@@ -7,7 +7,7 @@
 
 
 
-class PDoc : public QObject, public DocListener
+class PDoc : public QObject, public zuse::DocListener
 {
     Q_OBJECT
 public:
@@ -48,7 +48,7 @@ signals:
 public slots:
 
 private:
-    Doc mDoc;
+    zuse::Doc mDoc;
 };
 
 

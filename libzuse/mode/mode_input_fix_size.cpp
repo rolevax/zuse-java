@@ -6,6 +6,13 @@
 
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 ModeInputFixSize::ModeInputFixSize(DocEditable &doc, const AstInternal &f,
                                    size_t offset)
     : Mode(doc)
@@ -109,3 +116,7 @@ Mode::Result ModeInputFixSize::pushOrWait()
     else
         return { ResultType::DONE_STAY, mDoc.createModifyMode(true) };
 }
+
+
+
+} // namespace zuse

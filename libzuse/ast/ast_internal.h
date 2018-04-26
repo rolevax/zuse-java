@@ -3,6 +3,13 @@
 
 #include "ast.h"
 
+
+
+namespace zuse
+{
+
+
+
 class AstInternal : public Ast
 {
 public:
@@ -26,5 +33,11 @@ public:
 protected:
     virtual void doChange(size_t pos, std::unique_ptr<Ast> next) = 0;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_AST_INTERNAL_H

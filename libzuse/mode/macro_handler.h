@@ -3,6 +3,13 @@
 
 #include "../core/doc_editable.h"
 
+
+
+namespace zuse
+{
+
+
+
 class MacroHandler
 {
 public:
@@ -24,5 +31,11 @@ private:
 private:
     DocEditable &mDoc;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_MACRO_HANDLER_H

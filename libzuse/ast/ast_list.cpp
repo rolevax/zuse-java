@@ -4,6 +4,12 @@
 #include <algorithm>
 #include <cassert>
 
+
+namespace zuse
+{
+
+
+
 AstList::AstList(Type t)
     : AstInternal(t)
 {
@@ -127,3 +133,6 @@ void AstList::doChange(size_t pos, std::unique_ptr<Ast> next)
     mSubtrees[pos] = std::move(next);
 }
 
+
+
+} // namespace zuse

@@ -3,6 +3,13 @@
 
 #include "mode.h"
 
+
+
+namespace zuse
+{
+
+
+
 class ModeInputIdent : public Mode
 {
 public:
@@ -26,5 +33,11 @@ private:
 private:
     bool mClear;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_MODE_INPUT_IDENT_H

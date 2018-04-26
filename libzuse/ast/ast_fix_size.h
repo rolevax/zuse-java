@@ -7,6 +7,13 @@
 #include <array>
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 template<std::size_t N>
 class AstFixSize : public AstInternal
 {
@@ -67,5 +74,11 @@ namespace FixSizes
 Modifiers &getModifiers(Ast &ast);
 
 }
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_AST_FIX_SIZE_H

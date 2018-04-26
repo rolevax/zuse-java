@@ -3,6 +3,11 @@
 
 #include <ostream>
 
+namespace zuse
+{
+
+
+
 struct Modifiers
 {
     unsigned access : 2;
@@ -72,5 +77,11 @@ inline std::ostream &operator<<(std::ostream &os, Modifiers m)
 {
     return os << unsigned(m);
 }
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_MODIFIERS_H

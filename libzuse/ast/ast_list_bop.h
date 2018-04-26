@@ -6,6 +6,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 class AstListBop : public AstList
 {
 public:
@@ -48,5 +53,11 @@ private:
 private:
     std::vector<Bop> mOps;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_AST_LIST_BOP_H

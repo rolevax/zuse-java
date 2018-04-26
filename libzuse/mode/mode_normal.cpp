@@ -9,6 +9,13 @@
 #include "../core/doc_editable.h"
 #include "../ast/ast_list.h"
 
+
+
+namespace zuse
+{
+
+
+
 ModeNormal::ModeNormal(DocEditable &doc)
     : Mode(doc)
     , mMacro(doc)
@@ -213,3 +220,4 @@ std::unique_ptr<Mode> ModeNormal::menulessListOp(ListOp op)
 
 
 
+} // namespace zuse

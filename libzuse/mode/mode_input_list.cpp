@@ -4,6 +4,13 @@
 
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 ModeInputList::ModeInputList(DocEditable &doc)
     : Mode(doc)
 {
@@ -24,3 +31,7 @@ const char *ModeInputList::name()
 {
     return "";
 }
+
+
+
+} // namespace zuse

@@ -6,6 +6,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 class TokenFlesh : public Token
 {
 public:
@@ -16,5 +21,11 @@ public:
 private:
     const AstScalar *mScalar;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_TOKEN_FLESH_H

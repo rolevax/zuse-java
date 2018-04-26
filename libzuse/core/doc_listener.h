@@ -5,6 +5,13 @@
 
 #include <qdebug.h>
 
+
+
+namespace zuse
+{
+
+
+
 class DocListener
 {
 public:
@@ -60,5 +67,11 @@ public:
         (void) c;
     }
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_DOC_LISTENER_H

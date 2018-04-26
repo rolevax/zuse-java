@@ -1,5 +1,12 @@
 #include "token.h"
 
+
+
+namespace zuse
+{
+
+
+
 Token::Token(const Ast *ast, Role role) :
     mAst(ast),
     mRole(role)
@@ -19,3 +26,4 @@ Token::Role Token::getRole() const
 
 
 
+} // namespace zuse

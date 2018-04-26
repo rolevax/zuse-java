@@ -9,6 +9,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 class Tokens
 {
 public:
@@ -50,5 +55,11 @@ private:
 };
 
 std::ostream &operator<<(std::ostream &os, const Tokens &ts);
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_TOKENS_H

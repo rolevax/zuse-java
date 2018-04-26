@@ -147,8 +147,10 @@ blank 	[ \t]
 
 %%
 
-namespace yaloe
+namespace zuse
 { 
+
+
 
 void scan_begin(const std::string &filename, bool traceLex)
 {
@@ -166,5 +168,7 @@ void scan_end()
 	fclose(yyin);
 }
 
-} // namespace yaloe
+
+
+} // namespace zuse
 

@@ -3,6 +3,13 @@
 
 #include "mode.h"
 
+
+
+namespace zuse
+{
+
+
+
 class ModeMoggle : public Mode
 {
 public:
@@ -13,5 +20,11 @@ public:
     void onPopped() override;
     const char *name() override;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_MODE_MOGGLE_H

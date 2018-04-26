@@ -9,6 +9,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 class DocEditable
 {
 public:
@@ -65,5 +70,11 @@ public:
     virtual void setHotLight(HotLightLevel level) = 0;
     virtual void toggleTension(bool b) = 0;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_DOC_EDITABLE_H

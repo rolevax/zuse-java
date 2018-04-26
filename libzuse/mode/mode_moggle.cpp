@@ -5,6 +5,12 @@
 #include <cassert>
 
 
+
+namespace zuse
+{
+
+
+
 ModeMoggle::ModeMoggle(DocEditable &doc)
     : Mode(doc)
 {
@@ -68,3 +74,7 @@ const char *ModeMoggle::name()
 {
     return "Moggle";
 }
+
+
+
+} // namespace zuse

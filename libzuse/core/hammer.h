@@ -8,6 +8,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 class Token;
 class Tokens;
 
@@ -57,5 +62,11 @@ private:
 private:
     Tokens &mTokens;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_HAMMER_H

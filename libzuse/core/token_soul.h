@@ -3,6 +3,13 @@
 
 #include "token.h"
 
+
+
+namespace zuse
+{
+
+
+
 class TokenSoul : public Token
 {
 public:
@@ -10,5 +17,11 @@ public:
 
     const std::string &getText() const;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_TOKEN_SOUL_H

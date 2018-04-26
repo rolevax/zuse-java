@@ -1,7 +1,11 @@
 #include "parser.h"
 
-namespace yaloe
+
+
+namespace zuse
 {
+
+
 
 void scan_begin(const std::string &filename, bool traceLex);
 void scan_end();
@@ -19,5 +23,6 @@ AstRoot *parse(const std::string& filename, bool traceLex, bool traceParse)
 	return root;
 }
 
-}
 
+
+} // namespace zuse

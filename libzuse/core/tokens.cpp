@@ -9,6 +9,13 @@
 #include <iostream>
 #include <sstream>
 
+
+
+namespace zuse
+{
+
+
+
 Tokens::Tokens(DocListener &listener) :
     mHammer(*this),
     mListener(listener)
@@ -366,3 +373,6 @@ Region Tokens::anchor(const Region &r)
    return c;
 }
 
+
+
+} // namespace zuse

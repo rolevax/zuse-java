@@ -2,6 +2,13 @@
 
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 AstScalar::AstScalar(Type t, const std::string &text)
     : Ast(t),
       mText(text)
@@ -40,3 +47,4 @@ void AstScalar::clear()
 
 
 
+} // namespace zuse

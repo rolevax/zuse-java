@@ -8,6 +8,11 @@
 
 
 
+namespace zuse
+{
+
+
+
 class ModeInputFixSize : public Mode
 {
 public:
@@ -28,5 +33,11 @@ private:
     size_t mStage;
     MacroHandler mMacro;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_MODE_INPUT_FIX_SIZE_H

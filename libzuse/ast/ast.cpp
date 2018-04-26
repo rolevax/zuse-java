@@ -7,6 +7,13 @@
 
 #include <cassert>
 
+
+
+namespace zuse
+{
+
+
+
 Ast::Ast(Type t) :
     mType(t),
     mParent(nullptr)
@@ -260,3 +267,5 @@ template const AstFixSize<4> &Ast::asFixSize() const;
 template const AstFixSize<5> &Ast::asFixSize() const;
 
 
+
+} // namespace zuse

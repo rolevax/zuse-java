@@ -5,6 +5,11 @@
 
 #include <vector>
 
+namespace zuse
+{
+
+
+
 class AstList : public AstInternal
 {
 public:
@@ -37,5 +42,11 @@ protected:
 private:
     std::vector<std::unique_ptr<Ast>> mSubtrees;
 };
+
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_AST_LIST_H

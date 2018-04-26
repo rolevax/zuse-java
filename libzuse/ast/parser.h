@@ -5,14 +5,22 @@
 
 #include <string>
 
+
+
+namespace zuse
+{
+
+
+
 class Ast;
 
-namespace yaloe
-{
-AstRoot *parse(const std::string& f, bool traceLex = false, 
-									 bool traceParse = false);
+AstRoot *parse(const std::string& f, bool traceLex = false, bool traceParse = false);
 
-}
+
+
+} // namespace zuse
+
+
 
 #endif // ZUSE_PARSER_H
 
