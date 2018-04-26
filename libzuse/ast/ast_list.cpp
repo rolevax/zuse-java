@@ -73,7 +73,7 @@ void AstList::append(std::unique_ptr<Ast> subtree)
 ///
 /// \param subtree Owning
 ///
-void AstList::append(Ast *subtree)
+void AstList::append(util::Owner<Ast *> subtree)
 {
     append(std::unique_ptr<Ast>(subtree));
 }

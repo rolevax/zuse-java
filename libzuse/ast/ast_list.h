@@ -2,8 +2,11 @@
 #define ZUSE_AST_LIST_H
 
 #include "ast_internal.h"
+#include "../util/pointers.h"
 
 #include <vector>
+
+
 
 namespace zuse
 {
@@ -27,7 +30,7 @@ public:
 
     void insert(size_t pos, std::unique_ptr<Ast> child);
     void append(std::unique_ptr<Ast> subtree);
-    void append(Ast *subtree);
+    void append(util::Owner<Ast *> subtree);
     void erase(size_t pos);
     virtual std::unique_ptr<Ast> remove(size_t pos);
     virtual void clear();

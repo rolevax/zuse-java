@@ -22,13 +22,13 @@ AstListBop::AstListBop(std::unique_ptr<Ast> name, int dims)
     initDotList(std::move(name), dims);
 }
 
-AstListBop::AstListBop(Ast::Type t, Ast *lhs, Ast *rhs, Bop op)
+AstListBop::AstListBop(Ast::Type t, util::Owner<Ast *> lhs, util::Owner<Ast *> rhs, Bop op)
     : AstList(t)
 {
     init(t, std::unique_ptr<Ast>(lhs), std::unique_ptr<Ast>(rhs), op);
 }
 
-AstListBop::AstListBop(Ast *name, int dims)
+AstListBop::AstListBop(util::Owner<Ast *> name, int dims)
     : AstList(Type::DOT_BOP_LIST)
 {
     initDotList(std::unique_ptr<Ast>(name), dims);

@@ -94,7 +94,7 @@ private:
 private:
     std::vector<std::unique_ptr<Mode>> mModes;
     std::unique_ptr<AstRoot> mRoot;
-    AstInternal *mOuter = nullptr;
+    util::Observer<AstInternal *> mOuter = nullptr;
     size_t mInner = 0;
     std::array<std::unique_ptr<Ast>, 26> mClipslots;
     size_t mClipIndex = 0;

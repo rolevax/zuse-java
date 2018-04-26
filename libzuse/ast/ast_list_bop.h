@@ -17,8 +17,8 @@ public:
     AstListBop(Ast::Type t, std::unique_ptr<Ast> lhs, std::unique_ptr<Ast> rhs, Bop op);
     AstListBop(std::unique_ptr<Ast> name, int dims);
 
-    AstListBop(Ast::Type t, Ast *lhs, Ast *rhs, Bop op);
-    AstListBop(Ast *name, int dims);
+    AstListBop(Ast::Type t, util::Owner<Ast *> lhs, util::Owner<Ast *> rhs, Bop op);
+    AstListBop(util::Owner<Ast *> name, int dims);
 
     AstListBop(AstListBop &&move) = default;
     AstListBop &operator=(AstListBop &&moveAssign) = default;
