@@ -16,6 +16,13 @@ namespace zuse
 class Token;
 class Tokens;
 
+
+
+///
+/// \brief Serializer
+///
+/// Hit the tree with a hammer, then it becomes a text file.
+///
 class Hammer
 {
 public:

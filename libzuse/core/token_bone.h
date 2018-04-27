@@ -10,6 +10,9 @@ namespace zuse
 
 
 
+///
+/// \brief A token which structures the source code
+///
 class TokenBone : public Token
 {
 public:

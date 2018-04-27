@@ -7,6 +7,9 @@ namespace zuse
 
 
 
+///
+/// \brief Keys on the keyboard
+///
 enum class Key
 {
     BACKTICK, NUM1, NUM2, NUM3, NUM4, NUM5,

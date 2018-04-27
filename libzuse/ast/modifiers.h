@@ -8,6 +8,9 @@ namespace zuse
 
 
 
+///
+/// \brief Java modifiers like 'public', 'static', etc.
+///
 struct Modifiers
 {
     unsigned access : 2;

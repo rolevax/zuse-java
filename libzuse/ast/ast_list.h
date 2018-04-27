@@ -13,6 +13,9 @@ namespace zuse
 
 
 
+///
+/// \brief List abstract syntax tree node
+///
 class AstList : public AstInternal
 {
 public:
@@ -31,7 +34,6 @@ public:
     void insert(size_t pos, std::unique_ptr<Ast> child);
     void append(std::unique_ptr<Ast> subtree);
     void append(util::Owner<Ast *> subtree);
-    void erase(size_t pos);
     virtual std::unique_ptr<Ast> remove(size_t pos);
     virtual void clear();
 

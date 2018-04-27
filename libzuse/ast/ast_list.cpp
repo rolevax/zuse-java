@@ -70,17 +70,9 @@ void AstList::append(std::unique_ptr<Ast> subtree)
     insert(size(), std::move(subtree));
 }
 
-///
-/// \param subtree Owning
-///
 void AstList::append(util::Owner<Ast *> subtree)
 {
     append(std::unique_ptr<Ast>(subtree));
-}
-
-void AstList::erase(size_t pos)
-{
-    remove(pos); // return value discarded
 }
 
 std::unique_ptr<Ast> AstList::remove(size_t pos)
@@ -96,6 +88,10 @@ void AstList::clear()
     mSubtrees.clear();
 }
 
+///
+/// \return True if this node has no subtree and is therefore ill-formed
+/// \param assumeSize Assume the size is zero
+///
 bool AstList::illZero(bool assumeSize) const
 {
     if (!assumeSize && 0 != size())
@@ -109,6 +105,10 @@ bool AstList::illZero(bool assumeSize) const
             || t == Type::NAME_LIST;
 }
 
+///
+/// \return True if this node has onne subtree and is therefore ill-formed
+/// \param assumeSize Assume the size is one
+///
 bool AstList::illOne(bool assumeSize) const
 {
     if (!assumeSize && 1 != size())

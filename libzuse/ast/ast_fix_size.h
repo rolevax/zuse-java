@@ -14,6 +14,10 @@ namespace zuse
 
 
 
+///
+/// \brief Fix-sized abstract syntax tree
+/// \tparam N number of subtrees
+///
 template<std::size_t N>
 class AstFixSize : public AstInternal
 {

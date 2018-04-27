@@ -18,7 +18,14 @@ Ast::Ast(Type t) :
     mType(t),
     mParent(nullptr)
 {
+}
 
+///
+/// \brief Dump for debugging
+///
+void Ast::dump() const
+{
+    // do nothing
 }
 
 bool Ast::isList(Ast::Type type)
@@ -56,50 +63,78 @@ bool Ast::isScalar(Ast::Type type)
     return !isList(type) && !isFixSize(type);
 }
 
+///
+/// \return True if this node is of list class
+///
 bool Ast::isList() const
 {
     return isList(mType);
 }
 
+///
+/// \return True if this node is of binary operator list class
+///
 bool Ast::isBopList() const
 {
     return isBopList(mType);
 }
 
+///
+/// \return True if this node is of fix-sized class
+///
 bool Ast::isFixSize(size_t s) const
 {
     return isFixSize(mType, s);
 }
 
+///
+/// \return True if this node is of scalar class
+///
 bool Ast::isScalar() const
 {
     return isScalar(mType);
 }
 
+///
+/// \brief Type assertion of scalar node
+///
 AstScalar &Ast::asScalar()
 {
     assert(isScalar());
     return static_cast<AstScalar&>(*this);
 }
 
+///
+/// \brief Type assertion of scalar node
+///
 const AstScalar &Ast::asScalar() const
 {
     assert(isScalar());
     return static_cast<const AstScalar&>(*this);
 }
 
+///
+/// \brief Type assertion of internal node
+///
 AstInternal &Ast::asInternal()
 {
     assert(!isScalar());
     return static_cast<AstInternal&>(*this);
 }
 
+///
+/// \brief Type assertion of internal node
+///
 const AstInternal &Ast::asInternal() const
 {
     assert(!isScalar());
     return static_cast<const AstInternal&>(*this);
 }
 
+///
+/// \brief Type assertion of fix-sized node
+/// \tparam N number of subtrees
+///
 template<std::size_t N>
 AstFixSize<N> &Ast::asFixSize()
 {
@@ -107,6 +142,10 @@ AstFixSize<N> &Ast::asFixSize()
     return static_cast<AstFixSize<N>&>(*this);
 }
 
+///
+/// \brief Type assertion of fix-sized node
+/// \tparam N number of subtrees
+///
 template<std::size_t N>
 const AstFixSize<N> &Ast::asFixSize() const
 {
@@ -114,30 +153,46 @@ const AstFixSize<N> &Ast::asFixSize() const
     return static_cast<const AstFixSize<N>&>(*this);
 }
 
+///
+/// \brief Type assertion of list node
+///
 AstList &Ast::asList()
 {
     assert(isList());
     return static_cast<AstList&>(*this);
 }
 
+///
+/// \brief Type assertion of list node
+///
 const AstList &Ast::asList() const
 {
     assert(isList());
     return static_cast<const AstList&>(*this);
 }
 
+///
+/// \brief Type assertion of binary operator list node
+///
 AstListBop &Ast::asBopList()
 {
     assert(isBopList());
     return static_cast<AstListBop&>(*this);
 }
 
+///
+/// \brief Type assertion of binary operator list node
+///
 const AstListBop &Ast::asBopList() const
 {
     assert(isBopList());
     return static_cast<const AstListBop&>(*this);
 }
 
+///
+/// \brief Make a statement list node from this statement node
+/// \return A new statement list
+///
 std::unique_ptr<AstList> Ast::bodify()
 {
     if (getType() == Type::STMT_LIST)
@@ -149,6 +204,10 @@ std::unique_ptr<AstList> Ast::bodify()
     return res;
 }
 
+///
+/// \return Precedence weight of the given type,
+///         greater number indicates higher precedence
+///
 int Ast::precedence(Ast::Type type)
 {
     switch (type) {
@@ -214,32 +273,50 @@ int Ast::precedence(Ast::Type type)
     }
 }
 
+///
+/// \return Precedence of this node
+///
 int Ast::precedence() const
 {
     return precedence(mType);
 }
 
+///
+/// \return Node type of this node
+///
 Ast::Type Ast::getType() const
 {
     return mType;
 }
 
+///
+/// \return Parent of this node. If no parent, cause assertion failure.
+///
 AstInternal &Ast::getParent() const
 {
     return *mParent;
 }
 
-void Ast::setParent(AstInternal *next)
+///
+/// \brief Set the parent of this node
+///
+void Ast::setParent(util::Observer<AstInternal *> next)
 {
     mParent = next;
 }
 
+///
+/// \return True of subtrees of this node should be indented
+///
 bool Ast::hasIndent() const
 {
     Type ptype = mParent->mType;
     return ptype == Type::MEMBER_LIST || ptype == Type::STMT_LIST;
 }
 
+///
+/// \return Indentation level of this node
+///
 int Ast::indentLevel() const
 {
     int ret = 0;

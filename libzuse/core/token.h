@@ -12,14 +12,22 @@ namespace zuse
 
 
 
+///
+/// \brief A selection region in a text file
+///
 struct Region
 {
-    size_t br;
-    size_t bc;
-    size_t er;
-    size_t ec;
+    size_t br; ///< begin of row
+    size_t bc; ///< begin of column
+    size_t er; ///< end of row
+    size_t ec; ///< end of column
 };
 
+
+
+///
+/// \brief A token in source files
+///
 class Token
 {
 public:

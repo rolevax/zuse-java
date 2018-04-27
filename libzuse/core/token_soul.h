@@ -10,6 +10,9 @@ namespace zuse
 
 
 
+///
+/// \brief An invisible token in the source code
+///
 class TokenSoul : public Token
 {
 public:

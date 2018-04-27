@@ -8,6 +8,9 @@ namespace zuse
 
 
 
+///
+/// \brief Binary operator
+///
 enum class Bop
 {
     UNUSED = -1, DEFAULT = 0,

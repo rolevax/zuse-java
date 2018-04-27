@@ -11,6 +11,9 @@ namespace zuse
 
 
 
+///
+/// \brief A token which provides textual infomation in the source code
+///
 class TokenFlesh : public Token
 {
 public:

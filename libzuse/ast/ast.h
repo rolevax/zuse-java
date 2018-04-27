@@ -1,6 +1,8 @@
 #ifndef ZUSE_AST_H
 #define ZUSE_AST_H
 
+#include "../util/pointers.h"
+
 #include <cstddef>
 #include <memory>
 #include <iostream> // for Ast::dump()
@@ -18,6 +20,11 @@ template<std::size_t N> class AstFixSize;
 class AstList;
 class AstListBop;
 
+
+
+///
+/// \brief Abstract syntax tree base class
+///
 class Ast
 {
 public:
@@ -67,7 +74,7 @@ public:
     Ast(Ast &&move) = default;
     Ast &operator=(Ast &&moveAssign) = default;
 
-    virtual void dump() const {} // for debug use
+    virtual void dump() const;
 
     static bool isList(Type mType);
     static bool isBopList(Type mType);
@@ -101,14 +108,14 @@ public:
 
     Type getType() const;
     AstInternal &getParent() const;
-    void setParent(AstInternal *next);
+    void setParent(util::Observer<AstInternal *> next);
 
     bool hasIndent() const;
     int indentLevel() const;
 
 private:
     Type mType;
-    AstInternal *mParent;
+    util::Observer<AstInternal *> mParent;
 };
 
 

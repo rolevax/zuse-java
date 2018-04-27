@@ -10,6 +10,9 @@ namespace zuse
 
 
 
+///
+/// \brief Tiny-lexer mode
+///
 class ModeTilex : public Mode
 {
 public:

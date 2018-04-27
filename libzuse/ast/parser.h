@@ -4,6 +4,7 @@
 #include "bison.hh"
 
 #include <string>
+#include <memory>
 
 
 
@@ -14,7 +15,7 @@ namespace zuse
 
 class Ast;
 
-AstRoot *parse(const std::string& f, bool traceLex = false, bool traceParse = false);
+std::unique_ptr<AstRoot> parse(const std::string& f, bool traceLex = false, bool traceParse = false);
 
 
 

@@ -11,6 +11,9 @@ namespace zuse
 
 
 
+///
+/// \brief Binary operator list abstract syntax tree node
+///
 class AstListBop : public AstList
 {
 public:

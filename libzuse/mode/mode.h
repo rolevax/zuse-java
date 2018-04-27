@@ -13,6 +13,11 @@ namespace zuse
 
 class DocEditable;
 
+
+
+///
+/// \brief Base class for editing modes
+///
 class Mode
 {
 public:

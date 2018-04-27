@@ -40,12 +40,15 @@ Doc::Doc(DocListener &listener)
     mModes.emplace_back(new ModeNormal(*this));
 }
 
+///
+/// \brief Load and parse a source file
+///
 void Doc::load(const std::string &filename)
 {
     if (mModes.size() > 1)
         throw std::runtime_error("Load failed: modifying mode not popped");
 
-    mRoot.reset(parse(filename));
+    mRoot = parse(filename);
     mOuter = mRoot.get();
     mInner = 0;
 
@@ -53,6 +56,9 @@ void Doc::load(const std::string &filename)
     mTokens.light(&mOuter->at(mInner));
 }
 
+///
+/// \brief Save the edit tree as a pretty-printed text file
+///
 void Doc::save(const std::string &filename)
 {
     if (mModes.size() > 1)
@@ -63,10 +69,9 @@ void Doc::save(const std::string &filename)
     ofs.close();
 }
 
-/**
- * @brief Accept a key stroke
- * Handle it with the mode on the top of the mode stack.
- */
+///
+/// \brief Handle a key stroke
+///
 void Doc::keyboard(Key key)
 {
     assert(mModes.size() > 0);
@@ -84,10 +89,10 @@ void Doc::keyboard(Key key)
         mTokens.light(&mOuter->at(mInner));
 }
 
-/**
- * @brief Push 'mode' onto the mode stack,
- * Trigger the 'onPushed' callback of 'mode'
- */
+///
+/// \brief Push a mode onto the mode stack,
+///        Trigger the 'onPushed' callback of 'mode'
+///
 void Doc::push(std::unique_ptr<Mode> mode)
 {
     if (mode == nullptr)
@@ -100,10 +105,9 @@ void Doc::push(std::unique_ptr<Mode> mode)
     handleModeResult(std::move(res));
 }
 
-/**
- * @brief Pop the top of the mode stack,
- * @param nextPush the next mode to push
- */
+///
+/// \brief Pop the top of the mode stack
+///
 void Doc::pop()
 {
     assert(mModes.size() > 1); // bottom normal mode reserved
@@ -396,7 +400,7 @@ void Doc::remove()
     // hidden node issues are done in normal mode
     if (mOuter->isList()) {
         AstList *l = &mOuter->asList();
-        l->erase(mInner);
+        l->remove(mInner);
 
         bool toRemoveSelf = l->illZero();
         bool toExposeChild = l->illOne();

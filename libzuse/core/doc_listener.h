@@ -12,6 +12,9 @@ namespace zuse
 
 
 
+///
+/// \brief Interface for subscribing Doc's event
+///
 class DocListener
 {
 public:

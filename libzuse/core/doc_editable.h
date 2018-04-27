@@ -14,6 +14,9 @@ namespace zuse
 
 
 
+///
+/// \brief Internal interface for the Doc class
+///
 class DocEditable
 {
 public:

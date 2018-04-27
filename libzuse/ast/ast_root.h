@@ -8,6 +8,9 @@ namespace zuse
 
 
 
+///
+/// \brief Root node of the abstract syntax tree
+///
 class AstRoot : public AstList
 {
 public:

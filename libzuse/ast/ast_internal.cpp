@@ -16,6 +16,9 @@ AstInternal::AstInternal(Type t)
     assert(!isScalar());
 }
 
+///
+/// \brief Replace a subtree at given position
+///
 void AstInternal::change(size_t pos, std::unique_ptr<Ast> next)
 {
     if (next != nullptr)
@@ -23,6 +26,9 @@ void AstInternal::change(size_t pos, std::unique_ptr<Ast> next)
     doChange(pos, std::move(next));
 }
 
+///
+/// \brief Nest a subtree at given position as the left child of a given nester node
+///
 void AstInternal::nestAsLeft(size_t pos, std::unique_ptr<AstInternal> nester)
 {
     if (nester->size() >= 1) {
@@ -34,6 +40,9 @@ void AstInternal::nestAsLeft(size_t pos, std::unique_ptr<AstInternal> nester)
     change(pos, std::move(nester));
 }
 
+///
+/// \brief Nest a subtree at given position as the right child of a given nester node
+///
 void AstInternal::nestAsRight(size_t pos, std::unique_ptr<AstInternal> nester)
 {
     if (nester->size() >= 1) {
@@ -45,6 +54,11 @@ void AstInternal::nestAsRight(size_t pos, std::unique_ptr<AstInternal> nester)
     change(pos, std::move(nester));
 }
 
+///
+/// \brief Make a subtree's subtree into a subtree
+/// \param vanisher The index of the subtree to eliminate
+/// \param exposee The index of the subtree's subtree to preserve
+///
 void AstInternal::expose(size_t vanisher, size_t exposee)
 {
     change(vanisher, at(vanisher).asInternal().at(exposee).clone());
@@ -119,6 +133,10 @@ Ast::Type AstInternal::typeAt(Ast::Type type, size_t pos, bool allowHidden)
     }
 }
 
+///
+/// \brief Get type of a subtree at given position
+/// \param allowHidden Take hidden nodes into concern
+///
 Ast::Type AstInternal::typeAt(size_t pos, bool allowHidden) const
 {
     return typeAt(getType(), pos, allowHidden);

@@ -11,6 +11,9 @@ namespace zuse
 
 
 
+///
+/// \brief Scalar abstract syntax tree nnode
+///
 class AstScalar : public Ast
 {
 public:

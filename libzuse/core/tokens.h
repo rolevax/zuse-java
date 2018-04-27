@@ -14,6 +14,9 @@ namespace zuse
 
 
 
+///
+/// \brief All tokens of a source file
+///
 class Tokens
 {
 public:

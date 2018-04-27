@@ -10,17 +10,17 @@ namespace zuse
 void scan_begin(const std::string &filename, bool traceLex);
 void scan_end();
 
-AstRoot *parse(const std::string& filename, bool traceLex, bool traceParse)
+std::unique_ptr<AstRoot> parse(const std::string& filename, bool traceLex, bool traceParse)
 {
-	AstRoot *root = new AstRoot;
+    auto root = std::make_unique<AstRoot>();
 
 	scan_begin(filename, traceLex); 
-	yy::BisonParser parser(filename, root);
+    yy::BisonParser parser(filename, root.get());
 	parser.set_debug_level(traceParse);
 	parser.parse(); 
 	scan_end();
 
-	return root;
+    return root;
 }
 
 

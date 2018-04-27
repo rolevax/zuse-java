@@ -48,12 +48,20 @@ std::unique_ptr<AstListBop> AstListBop::makeDims(int dims)
     return std::make_unique<AstListBop>(std::move(res));
 }
 
+///
+/// \brief Append an array referencing operation (the square [] expression)
+/// \param a Expression inside the square brackets
+///
 void AstListBop::addDims(std::unique_ptr<Ast> a)
 {
     append(std::move(a));
     setOpAt(size() - 1, Bop::ARR);
 }
 
+///
+/// \brief Append [][][]...
+/// \param dims Number of []'s
+///
 void AstListBop::addDims(int dims)
 {
     while (dims --> 0) {

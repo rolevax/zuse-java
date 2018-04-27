@@ -6,6 +6,7 @@
 #include "tokens.h"
 
 #include "../ast/ast_root.h"
+#include "../ast/ast_list_bop.h"
 
 
 
@@ -14,8 +15,9 @@ namespace zuse
 
 
 
-class AstListBop;
-
+///
+/// \brief One single Java source file
+///
 class Doc : public DocEditable
 {
 public:
@@ -34,7 +36,7 @@ private:
     void handleModeResult(Mode::Result res);
 
     /// \name DocEditable interface
-    ///@{
+    /// \{
     const AstInternal &getOuter() const override;
     const Ast &getInner() const override;
     size_t getInnerIndex() const override;
@@ -82,14 +84,11 @@ private:
 
     void setHotLight(HotLightLevel level) override;
     void toggleTension(bool b) override;
-    ///@}
+    /// \}
 
-    /// \name internal detail functions
-    ///@{
     void setBop(AstListBop &blist, size_t pos, Bop bop);
     std::unique_ptr<Ast> newTree(Ast::Type type);
     std::unique_ptr<AstInternal> newInternalTree(Ast::Type type);
-    ///@}
 
 private:
     std::vector<std::unique_ptr<Mode>> mModes;

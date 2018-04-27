@@ -10,6 +10,9 @@ namespace zuse
 
 
 
+///
+/// \brief Base class for internal AST nodes
+///
 class AstInternal : public Ast
 {
 public:
