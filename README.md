@@ -2,11 +2,7 @@
 
 (TODO: introduction video)
 
-Zuse is a code editor that is:
-
-- Structured
-- Usable
-- Experimental
+Zuse is a _structured_, _usable_, and _experimental_ code editor.
 
 ## Structured?
 
@@ -15,8 +11,8 @@ Code is structure, not text.
 A structured code editor is a code editor
 that edits the underlying structure instead of the text representation.
 A structured code editor
-can free you from handling syntax matters, 
-and thus improve your coding efficiency.
+can free you from handling syntax matters
+to improve your coding efficiency.
 
 ## Usable?
 
@@ -27,7 +23,7 @@ only text editors are usable,
 and existing structured editors are awkward to use.
 
 However, we believe that text editors are not the end,
-and here we are trying to create a better structured editor.
+and structured editors are the future. 
 
 ## Experimental?
 
