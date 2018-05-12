@@ -22,6 +22,7 @@ public:
     AstScalar(AstScalar &&move) = default;
     AstScalar &operator=(AstScalar &&moveAssign) = default;
 
+    void visit(std::function<void (const Ast &)> f) const override;
     void dump() const override;
     std::unique_ptr<Ast> clone() const override;
 

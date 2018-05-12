@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <functional>
 #include <iostream> // for Ast::dump()
 
 
@@ -75,6 +76,7 @@ public:
     Ast &operator=(Ast &&moveAssign) = default;
 
     virtual void dump() const;
+    virtual void visit(std::function<void (const Ast &)> f) const = 0;
 
     static bool isList(Type mType);
     static bool isBopList(Type mType);

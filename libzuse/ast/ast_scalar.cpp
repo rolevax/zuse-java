@@ -16,6 +16,11 @@ AstScalar::AstScalar(Type t, const std::string &text)
     assert(isScalar());
 }
 
+void AstScalar::visit(std::function<void (const Ast &)> f) const
+{
+    f(*this);
+}
+
 void AstScalar::dump() const
 {
     std::cout << mText;

@@ -22,6 +22,8 @@ public:
     AstInternal(AstInternal &&move) = default;
     AstInternal &operator=(AstInternal &&moveAssign) = default;
 
+    void visit(std::function<void (const Ast &)> f) const override;
+
     void change(size_t pos, std::unique_ptr<Ast> next);
     void nestAsLeft(size_t pos, std::unique_ptr<AstInternal> nester);
     void nestAsRight(size_t pos, std::unique_ptr<AstInternal> nester);

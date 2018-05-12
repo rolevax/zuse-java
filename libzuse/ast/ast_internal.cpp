@@ -16,6 +16,13 @@ AstInternal::AstInternal(Type t)
     assert(!isScalar());
 }
 
+void AstInternal::visit(std::function<void (const Ast &)> f) const
+{
+    f(*this);
+    for (size_t i = 0; i < size(); i++)
+        at(i).visit(f);
+}
+
 ///
 /// \brief Replace a subtree at given position
 ///
