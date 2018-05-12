@@ -39,9 +39,7 @@ ApplicationWindow {
         title: "Please choose a source file"
         nameFilters: [ "Java source files (*.java)", "All files (*)" ]
         onAccepted: {
-            // slice() to get rid of "file://" prefix
-            var filename = fileUrl.toString().slice(7);
-            editor.load(filename);
+            editor.load(fileUrl);
         }
     }
 

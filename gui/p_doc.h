@@ -4,6 +4,7 @@
 #include "libzuse/zuse.h"
 
 #include <QObject>
+#include <QUrl>
 
 
 
@@ -13,8 +14,8 @@ class PDoc : public QObject, public zuse::DocListener
 public:
     explicit PDoc(QObject *parent = nullptr);
 
-    Q_INVOKABLE void load(QString filename);
-    Q_INVOKABLE void save(QString filename);
+    Q_INVOKABLE void load(QUrl fileUrl);
+    Q_INVOKABLE void save(QUrl fileUrl);
     Q_INVOKABLE void keyboard(QString key, int modifier);
 
     void onLineInserted(size_t r, size_t ct) override;

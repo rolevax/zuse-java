@@ -3,7 +3,8 @@ import QtQuick.Dialogs 1.2
 import zuse 1.0
 
 Rectangle {
-    property string filename
+    property url _fileUrl
+    property string filename: _fileUrl.toLocaleString()
 
     id: frame
     width: 800; height: 500
@@ -96,13 +97,13 @@ Rectangle {
         event.accepted = true;
     }
 
-    function load(fn) {
-        filename = fn;
-        pDoc.load(filename);
+    function load(fileUrl) {
+        _fileUrl = fileUrl;
+        pDoc.load(_fileUrl);
     }
 
     function save() {
-        pDoc.save(filename);
+        pDoc.save(_fileUrl);
     }
 }
 

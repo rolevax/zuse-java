@@ -12,19 +12,19 @@ PDoc::PDoc(QObject *parent)
 {
 }
 
-void PDoc::load(QString filename)
+void PDoc::load(QUrl fileUrl)
 {
     try {
-        mDoc.load(filename.toStdString());
+        mDoc.load(fileUrl.toLocalFile().toStdString());
     } catch (const std::exception &e) {
         emit message(e.what());
     }
 }
 
-void PDoc::save(QString filename)
+void PDoc::save(QUrl fileUrl)
 {
     try {
-        mDoc.save(filename.toStdString());
+        mDoc.save(fileUrl.toLocalFile().toStdString());
     } catch (const std::exception &e) {
         emit message(e.what());
     }
