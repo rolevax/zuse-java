@@ -9,6 +9,28 @@ namespace zuse
 
 
 template<std::size_t N>
+AstFixSize<N>::AstFixSize(AstFixSize &&that)
+    : AstInternal(that.getType())
+{
+    size_t index = 0;
+    for (auto &child : that.mSubtrees)
+        change(index++, std::move(child));
+}
+
+template<std::size_t N>
+auto AstFixSize<N>::operator=(AstFixSize &&that) -> AstFixSize &
+{
+    // assume base's move leave that's children untouched
+    AstInternal::operator=(std::move(that));
+
+    size_t index = 0;
+    for (auto &child : that.mSubtrees)
+        change(index++, std::move(child));
+
+    return *this;
+}
+
+template<std::size_t N>
 void AstFixSize<N>::dump() const
 {
     std::cout << "(";

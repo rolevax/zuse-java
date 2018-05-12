@@ -16,6 +16,24 @@ AstList::AstList(Type t)
     assert(isList());
 }
 
+AstList::AstList(AstList &&that)
+    : AstInternal(that.getType())
+{
+    for (auto &child : that.mSubtrees)
+        append(std::move(child));
+}
+
+AstList &AstList::operator=(AstList &&that)
+{
+    // assume base's move leave that's children untouched
+    AstInternal::operator=(std::move(that));
+
+    for (auto &child : that.mSubtrees)
+        append(std::move(child));
+
+    return *this;
+}
+
 void AstList::dump() const
 {
     std::cout << '[';

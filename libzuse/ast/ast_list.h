@@ -22,8 +22,8 @@ public:
     AstList(Type t);
     virtual ~AstList() = default;
 
-    AstList(AstList &&move) = default;
-    AstList &operator=(AstList &&moveAssign) = default;
+    AstList(AstList &&move);
+    AstList &operator=(AstList &&moveAssign);
 
     void dump() const override;
     std::unique_ptr<Ast> clone() const override;

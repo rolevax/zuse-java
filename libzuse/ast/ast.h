@@ -29,9 +29,9 @@ class AstListBop;
 class Ast
 {
 public:
-    /**
-     * @brief type of a node in the language tree
-     */
+    ///
+    /// \brief Type of a node in the language tree
+    ///
     enum class Type {
         // LIST, sync with isList() definition
         CLASS_LIST, MEMBER_LIST, DECL_PARAM_LIST, STMT_LIST,

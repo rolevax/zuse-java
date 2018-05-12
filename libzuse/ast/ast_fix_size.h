@@ -25,8 +25,8 @@ public:
     template<typename... T> AstFixSize(Type t, T... ts);
     virtual ~AstFixSize() = default;
 
-    AstFixSize(AstFixSize &&move) = default;
-    AstFixSize &operator=(AstFixSize &&moveAssign) = default;
+    AstFixSize(AstFixSize &&move);
+    AstFixSize &operator=(AstFixSize &&moveAssign);
 
     void dump() const override;
     std::unique_ptr<Ast> clone() const override;
