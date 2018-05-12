@@ -184,7 +184,7 @@ void Doc::sibling(int step, bool skipHidden)
         // such that this loop always terminate
         int dir = step > 0 ? 1 : -1;
         while (step != 0) {
-            mInner = (mInner + dir) % size;
+            mInner = (mInner + size + dir) % size;
             if (getInner().getType() != Ast::Type::HIDDEN)
                 step -= dir;
         }
