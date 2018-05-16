@@ -1,6 +1,6 @@
 # Zuse Usable Structured Editor
 
-(TODO: introduction video)
+[中文版演示视频](https://www.bilibili.com/video/av23465482)
 
 Zuse is a _structured_, _usable_, and _experimental_ code editor.
 
