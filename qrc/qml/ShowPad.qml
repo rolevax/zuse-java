@@ -25,7 +25,7 @@ ListView {
 
     delegate: Row {
         width: parent.width
-        height: 20
+        height: 24
         objectName: "delegateItem"
         property int rowId: index
         spacing: 5
@@ -79,7 +79,7 @@ ListView {
                 text: modelText
                 color: "white"
                 font.family: "Monospace"
-                font.pixelSize: parent.height
+                font.pixelSize: 20
             }
         }
     }
